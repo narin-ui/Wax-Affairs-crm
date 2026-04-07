@@ -1,0 +1,32 @@
+[
+  {
+    "id": "studio-bad-soden",
+    "naam": "Wax Affairs Bad Soden",
+    "adres": "Bad Soden am Taunus",
+    "telefoon": "+491715643076",
+    "whatsapp": "https://wa.me/491715643076",
+    "openingstijden": "Ma-Vr 9:00-19:00, Za 9:00-15:00",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z"
+  },
+  {
+    "id": "studio-wiesbaden",
+    "naam": "Wax Affairs Wiesbaden",
+    "adres": "Wiesbaden",
+    "telefoon": "+491708528346",
+    "whatsapp": "https://wa.me/491708528346",
+    "openingstijden": "Ma-Vr 9:00-19:00, Za 9:00-15:00",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z"
+  },
+  {
+    "id": "studio-bad-homburg",
+    "naam": "Wax Affairs Bad Homburg",
+    "adres": "Bad Homburg",
+    "telefoon": "+4915124202898",
+    "whatsapp": "https://wa.me/4915124202898",
+    "openingstijden": "Ma-Vr 9:00-19:00, Za 9:00-15:00",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z"
+  }
+]

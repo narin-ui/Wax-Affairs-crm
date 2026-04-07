@@ -1,0 +1,47 @@
+{
+  "modules": [
+    {
+      "id": "mod-1",
+      "titel": "Wax Basics — Theorie & Hygiëne",
+      "beschrijving": "Leer de basisprincipes van professioneel waxen, huidtypen en hygiëneprotocollen.",
+      "categorie": "basis",
+      "duur": "4 uur",
+      "lessen": [
+        { "id": "les-1", "titel": "Introductie tot professioneel waxen", "type": "video", "duur": "30 min" },
+        { "id": "les-2", "titel": "Huidtypen & contra-indicaties", "type": "tekst", "duur": "20 min" },
+        { "id": "les-3", "titel": "Hygiëne & werkplekinrichting", "type": "video", "duur": "25 min" },
+        { "id": "les-4", "titel": "Productkennis: Não Depilatory Wax", "type": "tekst", "duur": "20 min" },
+        { "id": "les-5", "titel": "Quiz: Basiskennis", "type": "quiz", "duur": "15 min" }
+      ]
+    },
+    {
+      "id": "mod-2",
+      "titel": "Wax Technieken — Praktijk",
+      "beschrijving": "Hands-on technieken voor verschillende lichaamsdelen en wax-methoden.",
+      "categorie": "praktijk",
+      "duur": "6 uur",
+      "lessen": [
+        { "id": "les-6", "titel": "Brazilian Wax techniek", "type": "video", "duur": "45 min" },
+        { "id": "les-7", "titel": "Gezichtswax (wenkbrauwen, bovenlip)", "type": "video", "duur": "30 min" },
+        { "id": "les-8", "titel": "Been- en armwax", "type": "video", "duur": "30 min" },
+        { "id": "les-9", "titel": "Aftercare protocollen", "type": "tekst", "duur": "20 min" },
+        { "id": "les-10", "titel": "Praktijkexamen", "type": "quiz", "duur": "60 min" }
+      ]
+    },
+    {
+      "id": "mod-3",
+      "titel": "Business & Franchise Operations",
+      "beschrijving": "Alles over het runnen van je eigen Wax Affairs studio als franchisee.",
+      "categorie": "business",
+      "duur": "5 uur",
+      "lessen": [
+        { "id": "les-11", "titel": "Het Wax Affairs franchise model", "type": "video", "duur": "30 min" },
+        { "id": "les-12", "titel": "Klantenservice & reviews", "type": "tekst", "duur": "25 min" },
+        { "id": "les-13", "titel": "Boekhouding & prijsstelling", "type": "tekst", "duur": "30 min" },
+        { "id": "les-14", "titel": "Marketing voor je studio", "type": "video", "duur": "35 min" },
+        { "id": "les-15", "titel": "Final Assessment", "type": "quiz", "duur": "45 min" }
+      ]
+    }
+  ],
+  "voortgang": {}
+}

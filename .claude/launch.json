@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wax-affairs",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["server.js"],
+      "port": 3001,
+      "cwd": "/Users/lisannegarretsen/wax-affairs-crm"
+    }
+  ]
+}

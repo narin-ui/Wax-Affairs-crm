@@ -1,0 +1,24 @@
+[
+  {
+    "id": "a3b7c9d2e1f04567",
+    "naam": "Narin Eggink",
+    "email": "",
+    "taal": "nl",
+    "rol": "Algemeen Directeur",
+    "color": "#a8875c",
+    "passwordHash": "25363bc1faf3d1a95589a2eaab0dbd36e4ed2421253a115b5839b580eee67847",
+    "isAdmin": true,
+    "aangemaakt": "2026-04-07T17:38:18.609Z"
+  },
+  {
+    "id": "086993258a83714b",
+    "naam": "Simone Costa",
+    "email": "",
+    "taal": "de",
+    "rol": "Founder / CEO",
+    "color": "#6366f1",
+    "passwordHash": "25363bc1faf3d1a95589a2eaab0dbd36e4ed2421253a115b5839b580eee67847",
+    "isAdmin": true,
+    "aangemaakt": "2026-04-07T17:38:18.610Z"
+  }
+]

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Termin buchen — Wax Affairs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { 400: '#c2a47e', 500: '#b5956a', 600: '#a8875c', 700: '#927548' },
+            dark: { 800: '#1a1a2e', 900: '#12122a' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, .brand { font-family: 'Playfair Display', serif; }
+    .gold-gradient { background: linear-gradient(135deg, #a8875c, #c2a47e); }
+    .gold-text { background: linear-gradient(135deg, #a8875c, #c2a47e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    .slide-up { animation: slideUp 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .service-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(168, 135, 92, 0.15); }
+    .service-card.selected { border-color: #a8875c; background: linear-gradient(135deg, rgba(168,135,92,0.06), rgba(194,164,126,0.06)); }
+    .time-slot:hover:not(.booked) { border-color: #a8875c; background: rgba(168,135,92,0.06); }
+    .time-slot.selected { background: linear-gradient(135deg, #a8875c, #c2a47e); color: white; border-color: transparent; }
+    .step-dot.active { background: linear-gradient(135deg, #a8875c, #c2a47e); }
+    .step-dot.done { background: linear-gradient(135deg, #a8875c, #c2a47e); }
+    .step-line.active { background: linear-gradient(90deg, #a8875c, #c2a47e); }
+    input:focus, textarea:focus { border-color: #a8875c; box-shadow: 0 0 0 3px rgba(168,135,92,0.12); }
+    .cal-day:hover:not(.disabled):not(.selected) { background: rgba(168,135,92,0.08); }
+    .cal-day.selected { background: linear-gradient(135deg, #a8875c, #c2a47e); color: white; }
+    .cal-day.today { border: 2px solid #a8875c; }
+    .cal-day.disabled { color: #d1d5db; cursor: not-allowed; }
+    .btn-primary { background: linear-gradient(135deg, #a8875c, #c2a47e); transition: all 0.2s; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(168,135,92,0.35); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .spinner { border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; width: 20px; height: 20px; animation: spin 0.6s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-dark-800 text-white">
+    <div class="max-w-3xl mx-auto px-4 py-6 text-center">
+      <div class="inline-flex items-center justify-center w-14 h-14 gold-gradient rounded-2xl text-white font-bold text-2xl mb-3 brand">W</div>
+      <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">Wax Affairs</h1>
+      <p class="text-gray-400 text-sm mt-1">Premium Waxing Studio</p>
+    </div>
+  </header>
+
+  <!-- Progress Steps -->
+  <div class="max-w-3xl mx-auto px-4 py-6">
+    <div class="flex items-center justify-center gap-0" id="progressBar">
+      <div class="flex flex-col items-center">
+        <div class="step-dot active w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold transition-all duration-300" data-step="1">1</div>
+        <span class="text-xs mt-1.5 font-medium text-gray-600 hidden sm:block">Dienst</span>
+      </div>
+      <div class="step-line h-0.5 w-12 sm:w-20 bg-gray-200 mx-2 transition-all duration-500" data-line="1"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-sm font-semibold transition-all duration-300" data-step="2">2</div>
+        <span class="text-xs mt-1.5 font-medium text-gray-400 hidden sm:block">Termin</span>
+      </div>
+      <div class="step-line h-0.5 w-12 sm:w-20 bg-gray-200 mx-2 transition-all duration-500" data-line="2"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-sm font-semibold transition-all duration-300" data-step="3">3</div>
+        <span class="text-xs mt-1.5 font-medium text-gray-400 hidden sm:block">Daten</span>
+      </div>
+      <div class="step-line h-0.5 w-12 sm:w-20 bg-gray-200 mx-2 transition-all duration-500" data-line="3"></div>
+      <div class="flex flex-col items-center">
+        <div class="step-dot bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-sm font-semibold transition-all duration-300" data-step="4">&#10003;</div>
+        <span class="text-xs mt-1.5 font-medium text-gray-400 hidden sm:block">Fertig</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="max-w-3xl mx-auto px-4 pb-12">
+
+    <!-- Step 1: Select Service -->
+    <section id="step1" class="fade-in">
+      <div class="text-center mb-6">
+        <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Dienst w&auml;hlen</h2>
+        <p class="text-gray-500 text-sm mt-1">W&auml;hlen Sie Ihre gew&uuml;nschte Behandlung</p>
+      </div>
+      <div id="servicesList" class="space-y-3">
+        <div class="text-center py-12 text-gray-400">Dienste werden geladen...</div>
+      </div>
+    </section>
+
+    <!-- Step 2: Date & Time -->
+    <section id="step2" class="hidden">
+      <div class="text-center mb-6">
+        <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Datum &amp; Uhrzeit</h2>
+        <p class="text-gray-500 text-sm mt-1">W&auml;hlen Sie Ihren Wunschtermin</p>
+      </div>
+
+      <!-- Calendar -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-5">
+        <div class="flex items-center justify-between mb-4">
+          <button onclick="changeMonth(-1)" class="w-9 h-9 rounded-xl hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <h3 id="calendarTitle" class="text-base font-semibold text-gray-800"></h3>
+          <button onclick="changeMonth(1)" class="w-9 h-9 rounded-xl hover:bg-gray-100 flex items-center justify-center text-gray-500 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <div class="grid grid-cols-7 gap-1 mb-2">
+          <div class="text-center text-xs font-medium text-gray-400 py-1">Mo</div>
+          <div class="text-center text-xs font-medium text-gray-400 py-1">Di</div>
+          <div class="text-center text-xs font-medium text-gray-400 py-1">Mi</div>
+          <div class="text-center text-xs font-medium text-gray-400 py-1">Do</div>
+          <div class="text-center text-xs font-medium text-gray-400 py-1">Fr</div>
+          <div class="text-center text-xs font-medium text-gray-400 py-1">Sa</div>
+          <div class="text-center text-xs font-medium text-gray-400 py-1">So</div>
+        </div>
+        <div id="calendarGrid" class="grid grid-cols-7 gap-1"></div>
+      </div>
+
+      <!-- Time Slots -->
+      <div id="timeSlotsContainer" class="hidden">
+        <h3 class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">Verf&uuml;gbare Zeiten</h3>
+        <div id="timeSlots" class="grid grid-cols-3 sm:grid-cols-4 gap-2"></div>
+        <div id="timeSlotsLoading" class="hidden text-center py-8 text-gray-400 text-sm">Zeiten werden geladen...</div>
+        <div id="timeSlotsEmpty" class="hidden text-center py-8">
+          <p class="text-gray-400 text-sm">Keine Termine an diesem Tag verf&uuml;gbar.</p>
+          <p class="text-gray-400 text-xs mt-1">Bitte w&auml;hlen Sie einen anderen Tag.</p>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button onclick="goToStep(1)" class="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors">Zur&uuml;ck</button>
+        <button id="btnToStep3" onclick="goToStep(3)" disabled class="flex-1 btn-primary py-3 rounded-xl text-white font-semibold text-sm">Weiter</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Your Details -->
+    <section id="step3" class="hidden">
+      <div class="text-center mb-6">
+        <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Ihre Daten</h2>
+        <p class="text-gray-500 text-sm mt-1">Bitte geben Sie Ihre Kontaktdaten ein</p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Name <span class="text-red-400">*</span></label>
+          <input type="text" id="inputName" placeholder="Vor- und Nachname" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none transition-all" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">E-Mail <span class="text-red-400">*</span></label>
+          <input type="email" id="inputEmail" placeholder="ihre@email.de" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none transition-all" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Telefon <span class="text-red-400">*</span></label>
+          <input type="tel" id="inputPhone" placeholder="+49 123 456 789" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none transition-all" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">Anmerkungen <span class="text-gray-400 font-normal">(optional)</span></label>
+          <textarea id="inputNotes" rows="3" placeholder="Besondere W&uuml;nsche oder Hinweise..." class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-sm outline-none transition-all resize-none"></textarea>
+        </div>
+      </div>
+
+      <!-- Booking Summary -->
+      <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 p-5 mt-4">
+        <h3 class="text-sm font-semibold text-gray-600 mb-3 uppercase tracking-wide">&Uuml;bersicht</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between"><span class="text-gray-500">Behandlung</span><span id="summaryService" class="font-medium text-gray-800">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Datum</span><span id="summaryDate" class="font-medium text-gray-800">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Uhrzeit</span><span id="summaryTime" class="font-medium text-gray-800">—</span></div>
+          <div class="flex justify-between"><span class="text-gray-500">Dauer</span><span id="summaryDuration" class="font-medium text-gray-800">—</span></div>
+          <hr class="my-2">
+          <div class="flex justify-between"><span class="text-gray-700 font-semibold">Preis</span><span id="summaryPrice" class="font-bold gold-text text-lg">—</span></div>
+        </div>
+      </div>
+
+      <div class="flex gap-3 mt-6">
+        <button onclick="goToStep(2)" class="flex-1 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold text-sm hover:bg-gray-50 transition-colors">Zur&uuml;ck</button>
+        <button id="btnSubmit" onclick="submitBooking()" class="flex-1 btn-primary py-3 rounded-xl text-white font-semibold text-sm">Buchung best&auml;tigen</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Confirmation -->
+    <section id="step4" class="hidden">
+      <div class="text-center slide-up">
+        <div class="inline-flex items-center justify-center w-20 h-20 gold-gradient rounded-full text-white text-3xl mb-5">&#10003;</div>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-2">Buchung best&auml;tigt!</h2>
+        <p class="text-gray-500 text-sm mb-8">Vielen Dank f&uuml;r Ihre Buchung. Wir freuen uns auf Ihren Besuch.</p>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-left max-w-md mx-auto">
+          <h3 class="text-sm font-semibold text-gray-600 mb-4 uppercase tracking-wide">Buchungsdetails</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between"><span class="text-gray-500">Behandlung</span><span id="confirmService" class="font-medium text-gray-800">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">Datum</span><span id="confirmDate" class="font-medium text-gray-800">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">Uhrzeit</span><span id="confirmTime" class="font-medium text-gray-800">—</span></div>
+            <div class="flex justify-between"><span class="text-gray-500">Name</span><span id="confirmName" class="font-medium text-gray-800">—</span></div>
+            <hr class="my-1">
+            <div class="flex justify-between"><span class="text-gray-700 font-semibold">Preis</span><span id="confirmPrice" class="font-bold gold-text text-lg">—</span></div>
+          </div>
+          <p id="confirmId" class="text-xs text-gray-400 mt-4 text-center">Buchungs-ID: —</p>
+        </div>
+
+        <button onclick="location.reload()" class="mt-8 btn-primary px-8 py-3 rounded-xl text-white font-semibold text-sm inline-block">Neuen Termin buchen</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-dark-800 text-center py-6">
+    <p class="text-gray-500 text-xs">&copy; 2026 Wax Affairs &mdash; Premium Waxing Studio</p>
+  </footer>
+
+  <script>
+    // ─── State ───
+    let services = [];
+    let selectedService = null;
+    let selectedDate = null;
+    let selectedTime = null;
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const monthNames = ['Januar','Februar','M\u00e4rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    const categoryIcons = { 'Gesicht': '\uD83D\uDE4D', 'Body': '\u2728', 'Intim': '\uD83D\uDD12' };
+
+    // ─── Load Services ───
+    async function loadServices() {
+      try {
+        const res = await fetch('/api/public/services');
+        services = await res.json();
+        renderServices();
+      } catch(e) {
+        document.getElementById('servicesList').innerHTML = '<div class="text-center py-12 text-red-400">Fehler beim Laden der Dienste.</div>';
+      }
+    }
+
+    function renderServices() {
+      const grouped = {};
+      services.forEach(s => {
+        if (!grouped[s.categorie]) grouped[s.categorie] = [];
+        grouped[s.categorie].push(s);
+      });
+
+      let html = '';
+      for (const [cat, items] of Object.entries(grouped)) {
+        const icon = categoryIcons[cat] || '\u2728';
+        html += `<div class="mb-5">
+          <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+            <span>${icon}</span> ${cat}
+          </h3>`;
+        items.forEach(s => {
+          const isSelected = selectedService && selectedService.id === s.id;
+          html += `<div class="service-card bg-white rounded-xl border-2 ${isSelected ? 'selected border-gold-600' : 'border-gray-100'} p-4 cursor-pointer transition-all duration-200 mb-2 flex items-center justify-between" onclick="selectService('${s.id}')">
+            <div class="flex-1">
+              <h4 class="font-semibold text-gray-800 text-sm">${s.naam}</h4>
+              <p class="text-xs text-gray-400 mt-0.5">${s.duur} Min.</p>
+            </div>
+            <div class="text-right ml-4">
+              <span class="text-lg font-bold gold-text">${s.prijs}\u20AC</span>
+            </div>
+            <div class="ml-3 w-6 h-6 rounded-full border-2 ${isSelected ? 'gold-gradient border-transparent' : 'border-gray-200'} flex items-center justify-center flex-shrink-0 transition-all">
+              ${isSelected ? '<svg class="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>' : ''}
+            </div>
+          </div>`;
+        });
+        html += '</div>';
+      }
+      document.getElementById('servicesList').innerHTML = html;
+    }
+
+    function selectService(id) {
+      selectedService = services.find(s => s.id === id);
+      renderServices();
+      setTimeout(() => goToStep(2), 300);
+    }
+
+    // ─── Calendar ───
+    function renderCalendar() {
+      const title = `${monthNames[currentMonth]} ${currentYear}`;
+      document.getElementById('calendarTitle').textContent = title;
+
+      const firstDay = new Date(currentYear, currentMonth, 1);
+      let startDay = firstDay.getDay() - 1;
+      if (startDay < 0) startDay = 6;
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      let html = '';
+      for (let i = 0; i < startDay; i++) {
+        html += '<div></div>';
+      }
+      for (let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(currentYear, currentMonth, d);
+        date.setHours(0,0,0,0);
+        const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const isPast = date < today;
+        const isSunday = date.getDay() === 0;
+        const isDisabled = isPast || isSunday;
+        const isToday = date.getTime() === today.getTime();
+        const isSelected = selectedDate === dateStr;
+
+        html += `<button ${isDisabled ? 'disabled' : ''} onclick="selectDate('${dateStr}')"
+          class="cal-day w-full aspect-square rounded-xl text-sm font-medium flex items-center justify-center transition-all
+          ${isSelected ? 'selected' : ''} ${isToday && !isSelected ? 'today' : ''} ${isDisabled ? 'disabled' : 'hover:bg-gray-50 cursor-pointer text-gray-700'}">${d}</button>`;
+      }
+      document.getElementById('calendarGrid').innerHTML = html;
+    }
+
+    function changeMonth(dir) {
+      currentMonth += dir;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      renderCalendar();
+    }
+
+    async function selectDate(dateStr) {
+      selectedDate = dateStr;
+      selectedTime = null;
+      document.getElementById('btnToStep3').disabled = true;
+      renderCalendar();
+
+      const container = document.getElementById('timeSlotsContainer');
+      const slotsEl = document.getElementById('timeSlots');
+      const loadingEl = document.getElementById('timeSlotsLoading');
+      const emptyEl = document.getElementById('timeSlotsEmpty');
+
+      container.classList.remove('hidden');
+      slotsEl.innerHTML = '';
+      loadingEl.classList.remove('hidden');
+      emptyEl.classList.add('hidden');
+
+      try {
+        const res = await fetch(`/api/public/beschikbaarheid?datum=${dateStr}`);
+        const slots = await res.json();
+        loadingEl.classList.add('hidden');
+
+        if (slots.length === 0) {
+          emptyEl.classList.remove('hidden');
+          return;
+        }
+
+        // Group into morning / afternoon
+        const morning = slots.filter(s => parseInt(s.split(':')[0]) < 12);
+        const afternoon = slots.filter(s => parseInt(s.split(':')[0]) >= 12);
+
+        let html = '';
+        if (morning.length) {
+          html += '<div class="col-span-full text-xs font-medium text-gray-400 uppercase tracking-wide mt-1 mb-1">Vormittag</div>';
+          morning.forEach(t => {
+            html += `<button onclick="selectTime('${t}')" class="time-slot py-2.5 px-3 rounded-xl border-2 border-gray-100 text-sm font-medium text-gray-700 transition-all cursor-pointer">${t}</button>`;
+          });
+        }
+        if (afternoon.length) {
+          html += '<div class="col-span-full text-xs font-medium text-gray-400 uppercase tracking-wide mt-3 mb-1">Nachmittag</div>';
+          afternoon.forEach(t => {
+            html += `<button onclick="selectTime('${t}')" class="time-slot py-2.5 px-3 rounded-xl border-2 border-gray-100 text-sm font-medium text-gray-700 transition-all cursor-pointer">${t}</button>`;
+          });
+        }
+        slotsEl.innerHTML = html;
+      } catch(e) {
+        loadingEl.classList.add('hidden');
+        emptyEl.classList.remove('hidden');
+      }
+    }
+
+    function selectTime(time) {
+      selectedTime = time;
+      document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
+      event.target.classList.add('selected');
+      document.getElementById('btnToStep3').disabled = false;
+    }
+
+    // ─── Step Navigation ───
+    function goToStep(step) {
+      document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(`step${step}`).classList.remove('hidden');
+      document.getElementById(`step${step}`).classList.add('fade-in');
+
+      // Update progress dots
+      for (let i = 1; i <= 4; i++) {
+        const dot = document.querySelector(`.step-dot[data-step="${i}"]`);
+        const line = document.querySelector(`.step-line[data-line="${i-1}"]`);
+        if (i < step) {
+          dot.className = 'step-dot done w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold transition-all duration-300';
+          dot.innerHTML = '&#10003;';
+          if (line) line.classList.add('active');
+        } else if (i === step) {
+          dot.className = 'step-dot active w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-semibold transition-all duration-300';
+          dot.innerHTML = i === 4 ? '&#10003;' : i;
+          if (line) line.classList.add('active');
+        } else {
+          dot.className = 'step-dot bg-gray-200 w-9 h-9 rounded-full flex items-center justify-center text-gray-500 text-sm font-semibold transition-all duration-300';
+          dot.innerHTML = i === 4 ? '&#10003;' : i;
+          if (line) line.classList.remove('active');
+        }
+      }
+
+      // Populate summary on step 3
+      if (step === 3 && selectedService && selectedDate && selectedTime) {
+        const d = new Date(selectedDate + 'T00:00:00');
+        const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+        const formattedDate = `${days[d.getDay()]}, ${d.getDate()}. ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+        document.getElementById('summaryService').textContent = selectedService.naam;
+        document.getElementById('summaryDate').textContent = formattedDate;
+        document.getElementById('summaryTime').textContent = selectedTime + ' Uhr';
+        document.getElementById('summaryDuration').textContent = selectedService.duur + ' Min.';
+        document.getElementById('summaryPrice').textContent = selectedService.prijs + '\u20AC';
+      }
+
+      // Init calendar on step 2
+      if (step === 2) {
+        renderCalendar();
+        if (selectedDate) selectDate(selectedDate);
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ─── Submit Booking ───
+    async function submitBooking() {
+      const naam = document.getElementById('inputName').value.trim();
+      const email = document.getElementById('inputEmail').value.trim();
+      const telefoon = document.getElementById('inputPhone').value.trim();
+      const notities = document.getElementById('inputNotes').value.trim();
+
+      if (!naam || !email || !telefoon) {
+        alert('Bitte f\u00fcllen Sie alle Pflichtfelder aus.');
+        return;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        alert('Bitte geben Sie eine g\u00fcltige E-Mail-Adresse ein.');
+        return;
+      }
+
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Wird gebucht...';
+
+      try {
+        const res = await fetch('/api/public/boeken', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            dienst: selectedService.id,
+            dienstNaam: selectedService.naam,
+            prijs: selectedService.prijs,
+            duur: selectedService.duur,
+            datum: selectedDate,
+            tijd: selectedTime,
+            klant: naam,
+            email: email,
+            telefoon: telefoon,
+            notities: notities || ''
+          })
+        });
+
+        const booking = await res.json();
+
+        // Fill confirmation
+        const d = new Date(selectedDate + 'T00:00:00');
+        const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+        document.getElementById('confirmService').textContent = selectedService.naam;
+        document.getElementById('confirmDate').textContent = `${days[d.getDay()]}, ${d.getDate()}. ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+        document.getElementById('confirmTime').textContent = selectedTime + ' Uhr';
+        document.getElementById('confirmName').textContent = naam;
+        document.getElementById('confirmPrice').textContent = selectedService.prijs + '\u20AC';
+        document.getElementById('confirmId').textContent = 'Buchungs-ID: ' + booking.id;
+
+        goToStep(4);
+      } catch(e) {
+        alert('Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.');
+        btn.disabled = false;
+        btn.innerHTML = 'Buchung best\u00e4tigen';
+      }
+    }
+
+    // ─── Init ───
+    loadServices();
+  </script>
+</body>
+</html>

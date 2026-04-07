@@ -1,0 +1,25 @@
+[
+  {
+    "id": "7ff1aa15f322e65c",
+    "status": "lead",
+    "onboarding": {
+      "locatieGoedgekeurd": false,
+      "huurcontract": false,
+      "trainingAfgerond": false,
+      "inrichtingCompleet": false,
+      "proefdag": false,
+      "grandOpening": false,
+      "systemen": false,
+      "eersteVoorraad": false
+    },
+    "maandomzet": [],
+    "naam": "Maria Schmidt",
+    "bedrijfsnaam": "Wax Affairs Berlin",
+    "email": "maria@example.com",
+    "telefoon": "",
+    "locatie": "Berlin",
+    "notities": "",
+    "aangemaakt": "2026-04-07T14:13:30.746Z",
+    "gewijzigd": "2026-04-07T14:13:30.746Z"
+  }
+]

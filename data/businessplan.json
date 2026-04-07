@@ -1,0 +1,25 @@
+{
+  "revenueStreams": [
+    { "id": "rs1", "naam": "Training Academy", "type": "academy", "beschrijving": "In-person en online certificeringscursussen voor waxing professionals", "model": "Per student", "prijsInPerson": 4000, "prijsOnline": 1000, "marge": 91 },
+    { "id": "rs2", "naam": "Não Productlijn", "type": "producten", "beschrijving": "Eigen cosmeticalijn: wax (wholesale) + aftercare (wholesale + DTC webshop)", "model": "Wholesale + DTC", "margeWholesale": 43, "margeRetail": 71 },
+    { "id": "rs3", "naam": "Friendchise", "type": "franchise", "beschrijving": "Full-brand franchise studio met exclusief territorium, training en begeleiding", "model": "Onboarding fee + royalty", "onboardingFee": 15000, "royaltyPct": 5, "royaltyPctHoog": 6, "royaltyDrempel": 120000 },
+    { "id": "rs4", "naam": "DTC Webshop", "type": "dtc", "beschrijving": "Directe consumentenverkoop van Não producten via waxaffairs.de", "model": "E-commerce", "marge": 70 }
+  ],
+  "projectie": [
+    { "jaar": 2026, "omzet": 401000, "academy": 240000, "producten": 74000, "franchiseFees": 60000, "royalties": 27000, "kosten": 380000, "locaties": 3, "studenten": 40 },
+    { "jaar": 2027, "omzet": 769000, "academy": 470000, "producten": 132000, "franchiseFees": 100000, "royalties": 67000, "kosten": 415000, "locaties": 6, "studenten": 150 },
+    { "jaar": 2028, "omzet": 1270000, "academy": 730000, "producten": 240000, "franchiseFees": 120000, "royalties": 180000, "kosten": 575000, "locaties": 11, "studenten": 270 },
+    { "jaar": 2029, "omzet": 1652000, "academy": 920000, "producten": 360000, "franchiseFees": 80000, "royalties": 292000, "kosten": 715000, "locaties": 17, "studenten": 380 },
+    { "jaar": 2030, "omzet": 2010000, "academy": 1080000, "producten": 480000, "franchiseFees": 60000, "royalties": 390000, "kosten": 860000, "locaties": 24, "studenten": 480 }
+  ],
+  "startupBudget": {
+    "branding": 0, "technologie": 400, "juridisch": 0, "productvoorraad": 4000, "marketing": 1500, "totaalMin": 4300, "totaalMax": 7500
+  },
+  "franchiseTerms": {
+    "onboardingFee": 15000, "royalty": "5% (6% boven €120k)", "contractduur": "5 jaar, verlengbaar", "territoriaal": "Exclusieve radius", "studioInvestering": "€60.000-75.000", "minOrder": 200
+  },
+  "team": [
+    { "naam": "Simone Costa", "rol": "CEO & Head Trainer", "land": "Duitsland", "beschrijving": "20 jaar waxing expertise. Brand, Academy, kwaliteitsstandaarden." },
+    { "naam": "Narin Eggink", "rol": "COO & Managing Director", "land": "Nederland", "beschrijving": "12 jaar ondernemen. Operations, finance, franchise partnerships." }
+  ]
+}

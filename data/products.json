@@ -1,0 +1,74 @@
+[
+  {
+    "id": "nao-wax-001",
+    "naam": "Depilatory Wax (Premium)",
+    "categorie": "wax",
+    "cogs": 9,
+    "wholesalePrijs": 12,
+    "retailPrijs": 0,
+    "eenheid": "kg",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "notities": "B2B only - exclusief voor franchise partners. Premium versie met beeswax en jojoba oil."
+  },
+  {
+    "id": "nao-scrub-002",
+    "naam": "Body Scrub (200g)",
+    "categorie": "aftercare",
+    "cogs": 2.6,
+    "wholesalePrijs": 7,
+    "retailPrijs": 14,
+    "eenheid": "stuk",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "notities": "Wheat straw jar + bamboo lid. 13 natural ingredients, EU-certified."
+  },
+  {
+    "id": "nao-oil-003",
+    "naam": "Post-Depilatory Oil (200ml)",
+    "categorie": "aftercare",
+    "cogs": 2.5,
+    "wholesalePrijs": 5,
+    "retailPrijs": 16,
+    "eenheid": "stuk",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "notities": "Frosted glass + bamboo pump. Post-wax calming oil."
+  },
+  {
+    "id": "nao-spray-004",
+    "naam": "Lavender Hydrosol Spray",
+    "categorie": "aftercare",
+    "cogs": 1.15,
+    "wholesalePrijs": 5,
+    "retailPrijs": 12,
+    "eenheid": "stuk",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "notities": "Frosted glass + bamboo spray. 4 ingredients - simplest product to certify."
+  },
+  {
+    "id": "nao-powder-005",
+    "naam": "Pre-Depilatory Powder (100g)",
+    "categorie": "aftercare",
+    "cogs": 2,
+    "wholesalePrijs": 5,
+    "retailPrijs": 11.5,
+    "eenheid": "stuk",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "notities": "Wheat straw jar + bamboo sifter. 4 natural ingredients, no talc."
+  },
+  {
+    "id": "nao-cream-006",
+    "naam": "Aftercare Cream",
+    "categorie": "aftercare",
+    "cogs": 4,
+    "wholesalePrijs": 7,
+    "retailPrijs": 16,
+    "eenheid": "stuk",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "notities": "Post-treatment cream. Formula TBD."
+  }
+]

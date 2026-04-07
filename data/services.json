@@ -1,0 +1,16 @@
+[
+  { "id": "svc-brow", "naam": "Augenbrauen Waxing", "categorie": "Gesicht", "duur": 15, "prijs": 18, "actief": true },
+  { "id": "svc-upperlip", "naam": "Oberlippe Waxing", "categorie": "Gesicht", "duur": 10, "prijs": 12, "actief": true },
+  { "id": "svc-chin", "naam": "Kinn Waxing", "categorie": "Gesicht", "duur": 10, "prijs": 12, "actief": true },
+  { "id": "svc-full-face", "naam": "Komplettes Gesicht", "categorie": "Gesicht", "duur": 30, "prijs": 35, "actief": true },
+  { "id": "svc-underarm", "naam": "Achsel Waxing", "categorie": "Body", "duur": 15, "prijs": 22, "actief": true },
+  { "id": "svc-half-arm", "naam": "Halbe Arme", "categorie": "Body", "duur": 20, "prijs": 27, "actief": true },
+  { "id": "svc-full-arm", "naam": "Ganze Arme", "categorie": "Body", "duur": 30, "prijs": 37, "actief": true },
+  { "id": "svc-half-leg", "naam": "Halbe Beine", "categorie": "Body", "duur": 25, "prijs": 32, "actief": true },
+  { "id": "svc-full-leg", "naam": "Ganze Beine", "categorie": "Body", "duur": 40, "prijs": 47, "actief": true },
+  { "id": "svc-back", "naam": "Rucken Waxing", "categorie": "Body", "duur": 30, "prijs": 47, "actief": true },
+  { "id": "svc-chest", "naam": "Brust Waxing", "categorie": "Body", "duur": 25, "prijs": 37, "actief": true },
+  { "id": "svc-bikini", "naam": "Bikini Waxing", "categorie": "Intim", "duur": 20, "prijs": 37, "actief": true },
+  { "id": "svc-brazilian-f", "naam": "Brazilian Waxing (Damen)", "categorie": "Intim", "duur": 30, "prijs": 47, "actief": true },
+  { "id": "svc-brazilian-m", "naam": "Brazilian Waxing (Herren)", "categorie": "Intim", "duur": 35, "prijs": 57, "actief": true }
+]

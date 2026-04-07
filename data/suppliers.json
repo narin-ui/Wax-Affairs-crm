@@ -1,0 +1,38 @@
+[
+  {
+    "id": "sup-epifutur",
+    "naam": "Epifutur",
+    "locatie": "Leiria, Portugal",
+    "website": "epifutur.com",
+    "email": "geral@epifutur.com",
+    "producten": "Professional depilatory wax specialist. Manufacturer van de Nao wax lijn.",
+    "aangemaakt": "2026-04-07T00:00:00.000Z"
+  },
+  {
+    "id": "sup-nisha",
+    "naam": "NISHA Manufacturing",
+    "locatie": "Polen (nabij Berlijn)",
+    "website": "nishamanufacturing.com",
+    "email": "",
+    "producten": "PhD-led R&D. Specialists in salon/spa products. Eco-friendly packaging. Body Scrub, Oil, Hydrosol, Powder productie.",
+    "aangemaakt": "2026-04-07T00:00:00.000Z"
+  },
+  {
+    "id": "sup-clover",
+    "naam": "Clover Cosmetics",
+    "locatie": "Polen",
+    "website": "privatelabelscosmetics.com",
+    "email": "info@privatelabelscosmetics.com",
+    "producten": "18 jaar ervaring. 96%+ natural ingredients. Own Safety Assessor. Min order 1.000 units.",
+    "aangemaakt": "2026-04-07T00:00:00.000Z"
+  },
+  {
+    "id": "sup-pinopine",
+    "naam": "PinoPine",
+    "locatie": "Aveiro, Portugal",
+    "website": "pinopine.com",
+    "email": "info@pinopine.com",
+    "producten": "Main ingredient supplier: Glyceryl Hydrogenated Rosinate (50% of wax formula).",
+    "aangemaakt": "2026-04-07T00:00:00.000Z"
+  }
+]
