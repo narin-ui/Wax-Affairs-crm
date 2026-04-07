@@ -74,6 +74,61 @@
       .sidebar-overlay.open { display: block; }
       .main-content { margin-left: 0 !important; padding-top: 56px !important; }
       .mobile-header { display: flex !important; }
+      /* Page headers: stack title + buttons */
+      .page-header { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
+      .page-header .header-actions { width: 100%; }
+      .page-header .header-actions .flex { flex-wrap: wrap; }
+      /* Pipeline: horizontal scroll */
+      #pipeline-board { grid-template-columns: repeat(6, minmax(200px, 1fr)) !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      #pipeline-board { display: flex !important; gap: 12px; padding-bottom: 8px; }
+      #pipeline-board > div { min-width: 200px; flex-shrink: 0; }
+      /* Modal full width */
+      #modal .absolute.right-0 { max-width: 100% !important; width: 100% !important; }
+      /* Reduce padding on pages */
+      .main-content [class*="p-6"] { padding: 16px !important; }
+      .main-content [class*="lg:p-8"] { padding: 16px !important; }
+      /* Dashboard buttons */
+      .dash-actions { flex-wrap: wrap !important; }
+      .dash-actions button { flex: 1; min-width: 0; font-size: 12px; padding: 8px 10px; }
+      /* Agenda controls */
+      .agenda-controls { flex-wrap: wrap !important; gap: 6px !important; }
+      .agenda-controls select { width: 100%; }
+      /* Tabs: horizontal scroll */
+      .tab-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap !important; }
+      .tab-scroll button { flex-shrink: 0; }
+      /* Touch targets: minimum 44px */
+      .sidebar-item { min-height: 44px; }
+      button, a, select { min-height: 40px; }
+      /* KPI grid: full width on very small screens */
+      @media (max-width: 400px) {
+        .grid.grid-cols-2 { grid-template-columns: 1fr !important; }
+      }
+      /* Tables overflow */
+      .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      /* Businessplan nav */
+      #bp-nav-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      /* Financial grid */
+      .grid.lg\\:grid-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
+      /* Comms tabs */
+      .comms-tabs { flex-wrap: wrap !important; }
+      /* Academy tabs */
+      .academy-tabs { flex-wrap: wrap !important; }
+      /* Franchise filter */
+      .franchise-filters { flex-direction: column !important; gap: 8px !important; }
+      .franchise-filters > * { width: 100% !important; }
+      /* Hide date columns on mobile for compact list view */
+      .table-row .text-xs.text-gray-400:last-child { display: none; }
+      /* Ensure list rows have good padding for touch */
+      .table-row { padding: 12px 16px !important; gap: 12px !important; }
+      /* Fix search overlay for mobile */
+      #search-overlay .max-w-xl { margin-top: 16px; margin-left: 8px; margin-right: 8px; }
+      /* Comms feed cadence tabs scroll */
+      #comms-cadence-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap !important; }
+      #comms-cadence-tabs button { flex-shrink: 0; }
+      /* Kanban cards better touch */
+      .kanban-card { padding: 16px !important; }
+      /* Toast positioning */
+      #toast-container { left: 16px; right: 16px; }
     }
     @media (min-width: 769px) {
       .mobile-header { display: none !important; }
@@ -233,12 +288,12 @@
 
 <!-- ═══════════════ PAGE: DASHBOARD ═══════════════ -->
 <div id="page-dashboard" class="p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="flex items-center justify-between mb-6 page-header">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
       <p class="text-sm text-gray-500 mt-1">Welkom bij Wax Affairs HQ</p>
     </div>
-    <div class="flex gap-2">
+    <div class="flex gap-2 dash-actions header-actions">
       <button onclick="openModal('franchisee')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Franchisee</button>
       <button onclick="openModal('student')" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium">+ Student</button>
       <button onclick="openModal('taak')" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium">+ Taak</button>
@@ -296,12 +351,12 @@
 
 <!-- ═══════════════ PAGE: AGENDA (Boekingen) ═══════════════ -->
 <div id="page-agenda" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Agenda</h1>
       <p class="text-sm text-gray-500 mt-1">Afspraken en boekingen</p>
     </div>
-    <div class="flex gap-2">
+    <div class="agenda-controls header-actions flex gap-2">
       <button onclick="agendaNav(-1)" class="btn-secondary px-3 py-2 rounded-lg text-sm">←</button>
       <button onclick="agendaNav(0)" class="btn-secondary px-3 py-2 rounded-lg text-sm font-medium" id="agenda-datum-btn">Vandaag</button>
       <button onclick="agendaNav(1)" class="btn-secondary px-3 py-2 rounded-lg text-sm">→</button>
@@ -330,7 +385,7 @@
 
 <!-- ═══════════════ PAGE: STUDIOS ═══════════════ -->
 <div id="page-studios" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Studios</h1>
       <p class="text-sm text-gray-500 mt-1">Wax Affairs locaties</p>
@@ -345,7 +400,7 @@
 
 <!-- ═══════════════ PAGE: SERVICES ═══════════════ -->
 <div id="page-services" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Services</h1>
       <p class="text-sm text-gray-500 mt-1">Behandelingen en prijzen</p>
@@ -357,7 +412,7 @@
 
 <!-- ═══════════════ PAGE: FRANCHISEES ═══════════════ -->
 <div id="page-franchisees" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Franchisees</h1>
       <p class="text-sm text-gray-500 mt-1">Beheer je franchise netwerk</p>
@@ -365,7 +420,7 @@
     <button onclick="openModal('franchisee')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Franchisee</button>
   </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3">
+    <div class="franchise-filters px-5 py-3 border-b border-gray-100 flex items-center gap-3">
       <input type="text" id="franchisee-zoek" placeholder="Zoeken..." class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="renderFranchisees()">
       <select id="franchisee-filter" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderFranchisees()">
         <option value="">Alle statussen</option>
@@ -384,7 +439,7 @@
 
 <!-- ═══════════════ PAGE: PIPELINE ═══════════════ -->
 <div id="page-pipeline" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Pipeline</h1>
       <p class="text-sm text-gray-500 mt-1">Kanban overzicht van je franchise pipeline</p>
@@ -396,7 +451,7 @@
 
 <!-- ═══════════════ PAGE: STUDENTEN ═══════════════ -->
 <div id="page-studenten" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Studenten</h1>
       <p class="text-sm text-gray-500 mt-1">Training Academy inschrijvingen</p>
@@ -423,7 +478,7 @@
 
 <!-- ═══════════════ PAGE: COHORTEN ═══════════════ -->
 <div id="page-cohorten" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Cohorten</h1>
       <p class="text-sm text-gray-500 mt-1">Training Academy groepen</p>
@@ -440,7 +495,7 @@
 
 <!-- ═══════════════ PAGE: PRODUCTEN ═══════════════ -->
 <div id="page-producten" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Productcatalogus</h1>
       <p class="text-sm text-gray-500 mt-1">Nao by Wax Affairs productlijn</p>
@@ -469,7 +524,7 @@
 
 <!-- ═══════════════ PAGE: BESTELLINGEN ═══════════════ -->
 <div id="page-bestellingen" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Bestellingen</h1>
       <p class="text-sm text-gray-500 mt-1">Wholesale & DTC orders</p>
@@ -486,7 +541,7 @@
 
 <!-- ═══════════════ PAGE: LEVERANCIERS ═══════════════ -->
 <div id="page-leveranciers" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Leveranciers</h1>
       <p class="text-sm text-gray-500 mt-1">Producenten & suppliers</p>
@@ -521,12 +576,12 @@
 <div id="page-comms" class="hidden fade-in">
   <div class="p-6 lg:p-8">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-6 page-header">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">🧠 Business Coach</h1>
         <p class="text-sm text-gray-400 mt-1" id="comms-subtitle"></p>
       </div>
-      <div class="flex gap-2">
+      <div class="flex gap-2 header-actions">
         <button onclick="commsCadence='coach'; renderComms()" id="comms-tab-coach" class="px-4 py-2 rounded-xl text-sm font-medium">🎯 Coach</button>
         <button onclick="commsCadence='feed'; renderComms()" id="comms-tab-feed" class="px-4 py-2 rounded-xl text-sm font-medium">💬 Feed</button>
       </div>
@@ -566,7 +621,7 @@
 
 <!-- ═══════════════ PAGE: CONTACTEN ═══════════════ -->
 <div id="page-contacten" class="hidden p-6 lg:p-8 fade-in">
-  <div class="flex items-center justify-between mb-6">
+  <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Contacten</h1>
       <p class="text-sm text-gray-500 mt-1">Alle relaties op een plek</p>
@@ -1096,7 +1151,7 @@ function renderMarketing() {
   const el = document.getElementById('marketing-content');
   const m = data.marketing || { campaigns:[], content:[], leads:[] };
   const tabs = [{id:'content',label:'Content Kalender',icon:'\u{1F4C5}'},{id:'leads',label:'Lead Tracking',icon:'\u{1F3AF}'},{id:'campaigns',label:'Campagnes',icon:'\u{1F4CA}'}];
-  el.innerHTML = '<div class="flex items-center justify-between mb-6"><div><h1 class="text-2xl font-bold text-gray-900">' + (lang==='de'?'Marketing':'Marketing') + '</h1><p class="text-sm text-gray-500 mt-1">' + (lang==='de'?'Content, Leads & Kampagnen':'Content, leads & campagnes') + '</p></div></div><div class="flex gap-2 mb-6">' + tabs.map(t => '<button onclick="marketingTab=\'' + t.id + '\'; renderMarketing()" class="px-4 py-2 rounded-xl text-sm font-medium transition-all ' + (marketingTab===t.id ? 'bg-wax-500 text-white shadow-lg' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50') + '">' + t.icon + ' ' + t.label + '</button>').join('') + '</div><div id="marketing-tab-content"></div>';
+  el.innerHTML = '<div class="flex items-center justify-between mb-6 page-header"><div><h1 class="text-2xl font-bold text-gray-900">' + (lang==='de'?'Marketing':'Marketing') + '</h1><p class="text-sm text-gray-500 mt-1">' + (lang==='de'?'Content, Leads & Kampagnen':'Content, leads & campagnes') + '</p></div></div><div class="flex gap-2 mb-6 tab-scroll">' + tabs.map(t => '<button onclick="marketingTab=\'' + t.id + '\'; renderMarketing()" class="px-4 py-2 rounded-xl text-sm font-medium transition-all ' + (marketingTab===t.id ? 'bg-wax-500 text-white shadow-lg' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50') + '">' + t.icon + ' ' + t.label + '</button>').join('') + '</div><div id="marketing-tab-content"></div>';
   if (marketingTab === 'content') renderMarketingContent(m);
   else if (marketingTab === 'leads') renderMarketingLeads(m);
   else if (marketingTab === 'campaigns') renderMarketingCampaigns(m);
@@ -1837,12 +1892,12 @@ function renderAcademy() {
     return `<span class="badge ${colors[cat] || 'badge-contact'}">${cat}</span>`;
   };
 
-  let html = `<div class="flex items-center justify-between mb-6">
+  let html = `<div class="flex items-center justify-between mb-6 page-header">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">${t('title')}</h1>
       <p class="text-sm text-gray-500 mt-1">${t('sub')}</p>
     </div>
-    <div class="flex gap-2">
+    <div class="flex gap-2 header-actions">
       <button onclick="academyView='modules'; academyOpenModule=null; renderAcademy()" class="px-4 py-2 rounded-xl text-sm font-medium ${academyView==='modules' ? 'btn-primary' : 'btn-secondary'}">📚 ${t('modules')}</button>
       <button onclick="academyView='progress'; renderAcademy()" class="px-4 py-2 rounded-xl text-sm font-medium ${academyView==='progress' ? 'btn-primary' : 'btn-secondary'}">📊 ${t('progress')}</button>
     </div>
