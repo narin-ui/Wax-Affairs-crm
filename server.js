@@ -934,6 +934,57 @@ app.delete('/api/clients/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// ─── API: Personeel (Urenregistratie) ───
+app.get('/api/personeel', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const d = laadJSON('personeel.json');
+  res.json(d && d.medewerkers ? d : { medewerkers: [], uren: [] });
+});
+
+app.post('/api/personeel', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  slaJSON('personeel.json', req.body);
+  res.json(req.body);
+});
+
+app.put('/api/personeel/medewerker/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const d = laadJSON('personeel.json') || { medewerkers: [], uren: [] };
+  const idx = d.medewerkers.findIndex(m => m.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Niet gevonden' });
+  d.medewerkers[idx] = { ...d.medewerkers[idx], ...req.body };
+  slaJSON('personeel.json', d);
+  res.json(d.medewerkers[idx]);
+});
+
+app.post('/api/personeel/uren', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const d = laadJSON('personeel.json') || { medewerkers: [], uren: [] };
+  if (!d.uren) d.uren = [];
+  const entry = { id: crypto.randomBytes(8).toString('hex'), ...req.body, aangemaakt: new Date().toISOString() };
+  d.uren.push(entry);
+  slaJSON('personeel.json', d);
+  res.json(entry);
+});
+
+app.put('/api/personeel/uren/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const d = laadJSON('personeel.json') || { medewerkers: [], uren: [] };
+  const idx = (d.uren || []).findIndex(u => u.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Niet gevonden' });
+  d.uren[idx] = { ...d.uren[idx], ...req.body };
+  slaJSON('personeel.json', d);
+  res.json(d.uren[idx]);
+});
+
+app.delete('/api/personeel/uren/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const d = laadJSON('personeel.json') || { medewerkers: [], uren: [] };
+  d.uren = (d.uren || []).filter(u => u.id !== req.params.id);
+  slaJSON('personeel.json', d);
+  res.json({ ok: true });
+});
+
 // ─── API: Dashboard KPIs ───
 app.get('/api/dashboard', (req, res) => {
   if (!requireAuth(req, res)) return;

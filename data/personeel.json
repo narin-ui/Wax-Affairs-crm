@@ -1,0 +1,15 @@
+{
+  "medewerkers": [
+    {
+      "id": "mw-1",
+      "naam": "Bad Homburg",
+      "functie": "Wax Specialist",
+      "uurloon": 14,
+      "contractUren": 40,
+      "status": "actief",
+      "email": "",
+      "telefoon": ""
+    }
+  ],
+  "uren": []
+}

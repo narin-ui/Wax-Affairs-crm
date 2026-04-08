@@ -52,6 +52,10 @@
     .badge-hoog { background:#fee2e2; color:#991b1b; }
     .badge-normaal { background:#fef3c7; color:#92400e; }
     .badge-laag { background:#f3f4f6; color:#6b7280; }
+    .badge-concept { background:#f3f4f6; color:#6b7280; }
+    .badge-ingediend { background:#dbeafe; color:#1e40af; }
+    .badge-goedgekeurd { background:#dcfce7; color:#166534; }
+    .badge-inactief { background:#f3f4f6; color:#6b7280; }
     .card { transition: box-shadow .15s, transform .15s; }
     .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-1px); }
     .btn-primary { background:#a8875c; color:#fff; transition:background .15s; }
@@ -234,6 +238,9 @@
     <div class="nav-divider mt-3">Team</div>
     <a href="#" onclick="return showPage('team')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="team">
       <span class="icon text-lg">👩‍💼</span><span class="text-sm">Team</span>
+    </a>
+    <a href="#" onclick="return showPage('personeel')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="personeel">
+      <span class="icon text-lg">🕐</span><span class="text-sm">Urenregistratie</span>
     </a>
 
     <div class="nav-divider mt-3">CRM</div>
@@ -741,13 +748,34 @@
   <div id="roadmap-fases"></div>
 </div>
 
+<!-- ═══════════════ PAGE: PERSONEEL (URENREGISTRATIE) ═══════════════ -->
+<div id="page-personeel" class="hidden p-6 lg:p-8 fade-in">
+  <div class="page-header flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Urenregistratie</h1>
+      <p class="text-sm text-gray-500">Personeel & uren bijhouden</p>
+    </div>
+    <div class="header-actions">
+      <div class="flex items-center gap-2">
+        <select id="personeel-tab" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderPersoneel()">
+          <option value="uren">Uren</option>
+          <option value="medewerkers">Medewerkers</option>
+        </select>
+        <button onclick="openModal('uur-toevoegen')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Uren toevoegen</button>
+      </div>
+    </div>
+  </div>
+  <div id="personeel-kpis" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
+  <div id="personeel-content"></div>
+</div>
+
 </main>
 
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 // ─── State ───
-const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','contacten','taken'];
-let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} } };
+const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken'];
+let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} }, personeel:{ medewerkers:[], uren:[] } };
 let klantenPage = 1;
 const KLANTEN_PER_PAGE = 25;
 let lang = localStorage.getItem('wax-lang') || 'nl';
@@ -818,6 +846,7 @@ function showPage(p) {
     team: renderTeam,
     contacten: renderContacten,
     taken: renderTaken,
+    personeel: renderPersoneel,
   };
   if (renderers[p]) renderers[p]();
   // Close sidebar on mobile
@@ -840,7 +869,7 @@ async function laadAlleData() {
       if (currentUser?.taal) { lang = currentUser.taal; localStorage.setItem('wax-lang', lang); }
     } catch(e) {}
 
-    const [franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients, notes, bp, huddles, users, marketing, academy] = await Promise.all([
+    const [franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients, notes, bp, huddles, users, marketing, academy, personeel] = await Promise.all([
       fetch('/api/franchisees').then(r=>r.json()),
       fetch('/api/students').then(r=>r.json()),
       fetch('/api/cohorts').then(r=>r.json()),
@@ -860,8 +889,9 @@ async function laadAlleData() {
       fetch('/api/users').then(r=>r.json()),
       fetch('/api/marketing').then(r=>r.json()),
       fetch('/api/academy').then(r=>r.json()),
+      fetch('/api/personeel').then(r=>r.json()),
     ]);
-    data = { franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients: clients || [], notes: notes || {}, bp: bp || {}, huddles: huddles || [], users: users || [], marketing: marketing || { campaigns:[], content:[], leads:[] }, academy: academy || { modules:[], voortgang:{} }, settings: data.settings };
+    data = { franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients: clients || [], notes: notes || {}, bp: bp || {}, huddles: huddles || [], users: users || [], marketing: marketing || { campaigns:[], content:[], leads:[] }, academy: academy || { modules:[], voortgang:{} }, personeel: personeel || { medewerkers:[], uren:[] }, settings: data.settings };
   } catch(e) { console.error('Data laden mislukt:', e); }
 }
 
@@ -3282,6 +3312,388 @@ function renderServices() {
   `).join('');
 }
 
+// ─── RENDER: Personeel (Urenregistratie) ───
+function renderPersoneel() {
+  const p = data.personeel || { medewerkers:[], uren:[] };
+  const medewerkers = p.medewerkers || [];
+  const uren = p.uren || [];
+  const tab = document.getElementById('personeel-tab')?.value || 'uren';
+
+  const nu = new Date();
+  const maand = nu.getMonth();
+  const jaar = nu.getFullYear();
+
+  // Current month entries
+  const urenDezeMaand = uren.filter(u => {
+    if (!u.datum) return false;
+    const d = new Date(u.datum);
+    return d.getMonth() === maand && d.getFullYear() === jaar;
+  });
+
+  const totaalUren = urenDezeMaand.reduce((s,u) => s + (u.uren || 0), 0);
+  const brutoloon = urenDezeMaand.reduce((s,u) => s + (u.loon || 0), 0);
+  const vakantiegeld = brutoloon * 0.08;
+  const totaleKosten = brutoloon + vakantiegeld;
+
+  document.getElementById('personeel-kpis').innerHTML =
+    statCard('Totale uren deze maand', totaalUren.toFixed(1) + ' uur', '🕐') +
+    statCard('Bruto loon deze maand', fe(brutoloon), '💶') +
+    statCard('Vakantiegeld (8%)', fe(vakantiegeld), '🏖️') +
+    statCard('Totale kosten', fe(totaleKosten), '📊');
+
+  if (tab === 'medewerkers') {
+    renderMedewerkersList(medewerkers);
+  } else {
+    renderUrenOverview(uren, medewerkers);
+  }
+}
+
+function renderMedewerkersList(medewerkers) {
+  const el = document.getElementById('personeel-content');
+  el.innerHTML = `
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="font-bold text-gray-900">Medewerkers</h2>
+        <button onclick="openModal('medewerker')" class="btn-primary px-3 py-1.5 rounded-lg text-sm font-medium">+ Medewerker</button>
+      </div>
+      <div class="table-responsive">
+        <table class="w-full text-sm">
+          <thead><tr class="border-b border-gray-100 text-left text-xs text-gray-500 uppercase">
+            <th class="px-6 py-3">Naam</th>
+            <th class="px-6 py-3">Functie</th>
+            <th class="px-6 py-3">Uurloon</th>
+            <th class="px-6 py-3">Contract uren</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3">Acties</th>
+          </tr></thead>
+          <tbody>
+            ${medewerkers.length === 0 ? '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Geen medewerkers gevonden</td></tr>' :
+              medewerkers.map(m => `<tr class="border-b border-gray-50 table-row hover:bg-wax-50 cursor-pointer">
+                <td class="px-6 py-3 font-medium text-gray-900">${m.naam}</td>
+                <td class="px-6 py-3 text-gray-600">${m.functie || '-'}</td>
+                <td class="px-6 py-3">${fe(m.uurloon)}</td>
+                <td class="px-6 py-3">${m.contractUren || '-'} uur</td>
+                <td class="px-6 py-3">${badge(m.status === 'actief' ? 'Actief' : 'Inactief', m.status)}</td>
+                <td class="px-6 py-3">
+                  <button onclick="openModal('medewerker-edit', '${m.id}')" class="text-wax-500 hover:text-wax-700 text-xs font-medium">Bewerken</button>
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function renderUrenOverview(uren, medewerkers) {
+  const el = document.getElementById('personeel-content');
+
+  // Group by month
+  const maanden = {};
+  uren.forEach(u => {
+    if (!u.datum) return;
+    const d = new Date(u.datum);
+    const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    if (!maanden[key]) maanden[key] = { uren: 0, dagen: new Set(), loon: 0 };
+    maanden[key].uren += u.uren || 0;
+    maanden[key].dagen.add(u.datum);
+    maanden[key].loon += u.loon || 0;
+  });
+
+  const maandKeys = Object.keys(maanden).sort().reverse();
+
+  // Sorted entries (newest first)
+  const gesorteerd = [...uren].sort((a,b) => (b.datum||'').localeCompare(a.datum||''));
+
+  el.innerHTML = `
+    <!-- Monthly overview -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h2 class="font-bold text-gray-900">Maandoverzicht</h2>
+      </div>
+      <div class="table-responsive">
+        <table class="w-full text-sm">
+          <thead><tr class="border-b border-gray-100 text-left text-xs text-gray-500 uppercase">
+            <th class="px-6 py-3">Maand</th>
+            <th class="px-6 py-3">Dagen gewerkt</th>
+            <th class="px-6 py-3">Uren</th>
+            <th class="px-6 py-3">Bruto loon</th>
+            <th class="px-6 py-3">Vakantiegeld (8%)</th>
+            <th class="px-6 py-3">Totale kosten</th>
+          </tr></thead>
+          <tbody>
+            ${maandKeys.length === 0 ? '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Nog geen uren geregistreerd</td></tr>' :
+              maandKeys.map(key => {
+                const m = maanden[key];
+                const vak = m.loon * 0.08;
+                const [y, mn] = key.split('-');
+                const maandNaam = new Date(y, mn-1).toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' });
+                return `<tr class="border-b border-gray-50 table-row">
+                  <td class="px-6 py-3 font-medium text-gray-900 capitalize">${maandNaam}</td>
+                  <td class="px-6 py-3">${m.dagen.size}</td>
+                  <td class="px-6 py-3">${m.uren.toFixed(1)}</td>
+                  <td class="px-6 py-3">${fe(m.loon)}</td>
+                  <td class="px-6 py-3">${fe(vak)}</td>
+                  <td class="px-6 py-3 font-bold">${fe(m.loon + vak)}</td>
+                </tr>`;
+              }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Detailed entries -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="font-bold text-gray-900">Uren detail</h2>
+        <button onclick="openModal('uur-toevoegen')" class="btn-primary px-3 py-1.5 rounded-lg text-sm font-medium">+ Toevoegen</button>
+      </div>
+      <div class="table-responsive">
+        <table class="w-full text-sm">
+          <thead><tr class="border-b border-gray-100 text-left text-xs text-gray-500 uppercase">
+            <th class="px-6 py-3">Datum</th>
+            <th class="px-6 py-3">Medewerker</th>
+            <th class="px-6 py-3">Start</th>
+            <th class="px-6 py-3">Eind</th>
+            <th class="px-6 py-3">Pauze</th>
+            <th class="px-6 py-3">Uren</th>
+            <th class="px-6 py-3">Loon</th>
+            <th class="px-6 py-3">Status</th>
+            <th class="px-6 py-3">Omschrijving</th>
+            <th class="px-6 py-3">Acties</th>
+          </tr></thead>
+          <tbody>
+            ${gesorteerd.length === 0 ? '<tr><td colspan="10" class="px-6 py-8 text-center text-gray-400">Nog geen uren geregistreerd</td></tr>' :
+              gesorteerd.map(u => {
+                const mw = medewerkers.find(m => m.id === u.medewerkerId);
+                return `<tr class="border-b border-gray-50 table-row">
+                  <td class="px-6 py-3 font-medium text-gray-900">${fd(u.datum)}</td>
+                  <td class="px-6 py-3">${mw ? mw.naam : u.medewerkerId || '-'}</td>
+                  <td class="px-6 py-3">${u.start || '-'}</td>
+                  <td class="px-6 py-3">${u.eind || '-'}</td>
+                  <td class="px-6 py-3">${u.pauze || 0} min</td>
+                  <td class="px-6 py-3 font-medium">${(u.uren || 0).toFixed(1)}</td>
+                  <td class="px-6 py-3">${fe(u.loon || 0)}</td>
+                  <td class="px-6 py-3">${badge(u.status === 'goedgekeurd' ? 'Goedgekeurd' : u.status === 'ingediend' ? 'Ingediend' : 'Concept', u.status || 'concept')}</td>
+                  <td class="px-6 py-3 text-gray-500 max-w-[200px] truncate">${u.omschrijving || '-'}</td>
+                  <td class="px-6 py-3">
+                    <div class="flex items-center gap-2">
+                      <button onclick="openModal('uur-edit', '${u.id}')" class="text-wax-500 hover:text-wax-700 text-xs font-medium">✏️</button>
+                      <button onclick="verwijderUur('${u.id}')" class="text-red-400 hover:text-red-600 text-xs font-medium">🗑️</button>
+                    </div>
+                  </td>
+                </tr>`;
+              }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function berekenUren(start, eind, pauze) {
+  if (!start || !eind) return 0;
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = eind.split(':').map(Number);
+  let minuten = (eh * 60 + em) - (sh * 60 + sm) - (pauze || 0);
+  if (minuten < 0) minuten += 24 * 60; // overnight shift
+  return Math.max(0, minuten / 60);
+}
+
+function updateUurPreview() {
+  const start = document.getElementById('uur-start')?.value;
+  const eind = document.getElementById('uur-eind')?.value;
+  const pauze = parseInt(document.getElementById('uur-pauze')?.value) || 0;
+  const uurloon = parseFloat(document.getElementById('uur-tarief')?.value) || 0;
+  const uren = berekenUren(start, eind, pauze);
+  const loon = uren * uurloon;
+  const previewEl = document.getElementById('uur-preview');
+  if (previewEl) {
+    previewEl.innerHTML = `<div class="grid grid-cols-3 gap-3">
+      <div class="bg-wax-50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-wax-700">${uren.toFixed(1)}</div><div class="text-xs text-gray-500">Uren</div></div>
+      <div class="bg-wax-50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-wax-700">${fe(loon)}</div><div class="text-xs text-gray-500">Bruto loon</div></div>
+      <div class="bg-wax-50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-wax-700">${fe(loon * 1.08)}</div><div class="text-xs text-gray-500">Incl. vakantiegeld</div></div>
+    </div>`;
+  }
+}
+
+function modalUurToevoegen(editId) {
+  const p = data.personeel || { medewerkers:[], uren:[] };
+  const medewerkers = p.medewerkers || [];
+  const isEdit = !!editId;
+  const entry = isEdit ? (p.uren || []).find(u => u.id === editId) : null;
+
+  const selMedewerker = entry ? entry.medewerkerId : (medewerkers[0]?.id || '');
+  const mw = medewerkers.find(m => m.id === selMedewerker);
+  const vandaag = new Date().toISOString().slice(0,10);
+
+  return `${modalHeader(isEdit ? 'Uren bewerken' : 'Uren toevoegen', 'Registreer gewerkte uren')}
+    <div class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Medewerker</label>
+        <select id="uur-medewerker" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="prefillUurloon()">
+          ${medewerkers.map(m => `<option value="${m.id}" ${m.id === selMedewerker ? 'selected' : ''}>${m.naam} — ${m.functie || ''}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Datum</label>
+        <input type="date" id="uur-datum" value="${entry?.datum || vandaag}" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Starttijd</label>
+          <input type="time" id="uur-start" value="${entry?.start || '09:00'}" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="updateUurPreview()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Eindtijd</label>
+          <input type="time" id="uur-eind" value="${entry?.eind || '17:00'}" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="updateUurPreview()">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Pauze (minuten)</label>
+          <input type="number" id="uur-pauze" value="${entry?.pauze || 30}" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="updateUurPreview()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Uurloon (\u20AC)</label>
+          <input type="number" id="uur-tarief" value="${entry?.uurloon || mw?.uurloon || 14}" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="updateUurPreview()">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Omschrijving</label>
+        <input type="text" id="uur-omschrijving" value="${entry?.omschrijving || ''}" placeholder="Bijv. Klanten behandeld, training, schoonmaak..." class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+      </div>
+      <div id="uur-preview" class="mt-2"></div>
+      <div class="pt-4 border-t border-gray-100 flex gap-2">
+        <button onclick="slaUurOp('${editId || ''}')" class="btn-primary flex-1 py-2.5 rounded-lg text-sm font-medium">${isEdit ? 'Opslaan' : 'Toevoegen'}</button>
+        <button onclick="sluitModal()" class="btn-secondary px-4 py-2.5 rounded-lg text-sm font-medium">Annuleren</button>
+      </div>
+    </div>`;
+}
+
+function prefillUurloon() {
+  const mwId = document.getElementById('uur-medewerker')?.value;
+  const p = data.personeel || { medewerkers:[] };
+  const mw = (p.medewerkers || []).find(m => m.id === mwId);
+  if (mw) {
+    document.getElementById('uur-tarief').value = mw.uurloon || 14;
+    updateUurPreview();
+  }
+}
+
+async function slaUurOp(editId) {
+  const medewerkerId = document.getElementById('uur-medewerker').value;
+  const datum = document.getElementById('uur-datum').value;
+  const start = document.getElementById('uur-start').value;
+  const eind = document.getElementById('uur-eind').value;
+  const pauze = parseInt(document.getElementById('uur-pauze').value) || 0;
+  const uurloon = parseFloat(document.getElementById('uur-tarief').value) || 0;
+  const omschrijving = document.getElementById('uur-omschrijving').value;
+  const uren = berekenUren(start, eind, pauze);
+  const loon = uren * uurloon;
+
+  const entry = { medewerkerId, datum, start, eind, pauze, uurloon, uren, loon, omschrijving, status: 'ingediend' };
+
+  try {
+    if (editId) {
+      await apiPut('/api/personeel/uren/' + editId, entry);
+    } else {
+      await apiPost('/api/personeel/uren', entry);
+    }
+    sluitModal();
+    await laadAlleData();
+    renderPersoneel();
+    toast(editId ? 'Uren bijgewerkt' : 'Uren toegevoegd');
+  } catch(e) { toast('Fout bij opslaan', 'error'); }
+}
+
+async function verwijderUur(id) {
+  if (!confirm('Weet je zeker dat je deze registratie wilt verwijderen?')) return;
+  try {
+    await apiDelete('/api/personeel/uren/' + id);
+    await laadAlleData();
+    renderPersoneel();
+    toast('Uren verwijderd');
+  } catch(e) { toast('Fout bij verwijderen', 'error'); }
+}
+
+function modalMedewerker(editId) {
+  const p = data.personeel || { medewerkers:[] };
+  const isEdit = !!editId;
+  const mw = isEdit ? (p.medewerkers || []).find(m => m.id === editId) : null;
+
+  return `${modalHeader(isEdit ? 'Medewerker bewerken' : 'Medewerker toevoegen', 'Beheer medewerkergegevens')}
+    <div class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Naam</label>
+        <input type="text" id="mw-naam" value="${mw?.naam || ''}" placeholder="Volledige naam" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Functie</label>
+        <input type="text" id="mw-functie" value="${mw?.functie || ''}" placeholder="Bijv. Wax Specialist" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Uurloon (\u20AC)</label>
+          <input type="number" id="mw-uurloon" value="${mw?.uurloon || 14}" step="0.01" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Contract uren/week</label>
+          <input type="number" id="mw-contracturen" value="${mw?.contractUren || 40}" min="0" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+          <input type="email" id="mw-email" value="${mw?.email || ''}" placeholder="E-mail" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Telefoon</label>
+          <input type="text" id="mw-telefoon" value="${mw?.telefoon || ''}" placeholder="Telefoonnummer" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+        <select id="mw-status" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+          <option value="actief" ${mw?.status === 'actief' || !mw ? 'selected' : ''}>Actief</option>
+          <option value="inactief" ${mw?.status === 'inactief' ? 'selected' : ''}>Inactief</option>
+        </select>
+      </div>
+      <div class="pt-4 border-t border-gray-100 flex gap-2">
+        <button onclick="slaMedewerkerOp('${editId || ''}')" class="btn-primary flex-1 py-2.5 rounded-lg text-sm font-medium">${isEdit ? 'Opslaan' : 'Toevoegen'}</button>
+        <button onclick="sluitModal()" class="btn-secondary px-4 py-2.5 rounded-lg text-sm font-medium">Annuleren</button>
+      </div>
+    </div>`;
+}
+
+async function slaMedewerkerOp(editId) {
+  const naam = document.getElementById('mw-naam').value.trim();
+  if (!naam) { toast('Naam is verplicht', 'error'); return; }
+  const medewerker = {
+    naam,
+    functie: document.getElementById('mw-functie').value.trim(),
+    uurloon: parseFloat(document.getElementById('mw-uurloon').value) || 14,
+    contractUren: parseInt(document.getElementById('mw-contracturen').value) || 40,
+    email: document.getElementById('mw-email').value.trim(),
+    telefoon: document.getElementById('mw-telefoon').value.trim(),
+    status: document.getElementById('mw-status').value
+  };
+
+  try {
+    if (editId) {
+      await apiPut('/api/personeel/medewerker/' + editId, medewerker);
+    } else {
+      // Add new medewerker
+      const p = data.personeel || { medewerkers:[], uren:[] };
+      medewerker.id = 'mw-' + nieuweId();
+      p.medewerkers.push(medewerker);
+      await apiPost('/api/personeel', p);
+    }
+    sluitModal();
+    await laadAlleData();
+    renderPersoneel();
+    toast(editId ? 'Medewerker bijgewerkt' : 'Medewerker toegevoegd');
+  } catch(e) { toast('Fout bij opslaan', 'error'); }
+}
+
 // ─── MODAL SYSTEM ───
 function openModal(type, id) {
   const modal = document.getElementById('modal');
@@ -3315,6 +3727,10 @@ function openModal(type, id) {
   else if (type === 'taak-detail') content.innerHTML = modalTaakDetail(id);
   else if (type === 'client') content.innerHTML = modalClient();
   else if (type === 'client-detail') { openWideModal(modalClientDetail(id)); return; }
+  else if (type === 'uur-toevoegen') { content.innerHTML = modalUurToevoegen(); setTimeout(updateUurPreview, 50); }
+  else if (type === 'uur-edit') { content.innerHTML = modalUurToevoegen(id); setTimeout(updateUurPreview, 50); }
+  else if (type === 'medewerker') content.innerHTML = modalMedewerker();
+  else if (type === 'medewerker-edit') content.innerHTML = modalMedewerker(id);
 }
 
 function sluitModal() {
