@@ -1,14 +1,43 @@
 {
   "medewerkers": [
     {
+      "id": "mw-narin",
+      "naam": "Narin Eggink",
+      "functie": "Co-Founder & CEO",
+      "categorie": "Directie",
+      "uurloon": 0,
+      "contractUren": 40,
+      "startdatum": "2025-10-01",
+      "status": "actief",
+      "email": "narin@bloomoflife.nl",
+      "telefoon": "+31 6 15907865",
+      "notities": ""
+    },
+    {
+      "id": "mw-simone",
+      "naam": "Simone Costa",
+      "functie": "Co-Founder & Creative Director",
+      "categorie": "Directie",
+      "uurloon": 0,
+      "contractUren": 40,
+      "startdatum": "2025-10-01",
+      "status": "actief",
+      "email": "",
+      "telefoon": "",
+      "notities": ""
+    },
+    {
       "id": "mw-1",
       "naam": "Bad Homburg",
       "functie": "Wax Specialist",
+      "categorie": "Studio Bad Homburg",
       "uurloon": 14,
       "contractUren": 40,
+      "startdatum": "2025-10-01",
       "status": "actief",
       "email": "",
-      "telefoon": ""
+      "telefoon": "",
+      "notities": ""
     }
   ],
   "uren": []
