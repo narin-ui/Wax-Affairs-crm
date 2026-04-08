@@ -901,6 +901,39 @@ app.delete('/api/bookings/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// ─── API: Klanten (Clients) ───
+app.get('/api/clients', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  res.json(laadJSON('clients.json'));
+});
+
+app.post('/api/clients', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const list = laadJSON('clients.json');
+  const item = { id: 'client-' + crypto.randomBytes(8).toString('hex'), ...req.body, aangemaakt: new Date().toISOString() };
+  list.push(item);
+  slaJSON('clients.json', list);
+  res.json(item);
+});
+
+app.put('/api/clients/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const list = laadJSON('clients.json');
+  const idx = list.findIndex(c => c.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Niet gevonden' });
+  list[idx] = { ...list[idx], ...req.body };
+  slaJSON('clients.json', list);
+  res.json(list[idx]);
+});
+
+app.delete('/api/clients/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  let list = laadJSON('clients.json');
+  list = list.filter(c => c.id !== req.params.id);
+  slaJSON('clients.json', list);
+  res.json({ ok: true });
+});
+
 // ─── API: Dashboard KPIs ───
 app.get('/api/dashboard', (req, res) => {
   if (!requireAuth(req, res)) return;
@@ -914,6 +947,8 @@ app.get('/api/dashboard', (req, res) => {
   const nu = new Date();
   const maand = nu.getMonth();
   const jaar = nu.getFullYear();
+
+  const clients = laadJSON('clients.json');
 
   const activeFranchisees = franchisees.filter(f => f.status === 'live').length;
   const activeStudents = students.filter(s => ['ingeschreven', 'in-opleiding'].includes(s.status)).length;
@@ -946,7 +981,7 @@ app.get('/api/dashboard', (req, res) => {
   if (vandaagBookings.length) alerts.push({ type: 'info', tekst: `${vandaagBookings.length} afspraak/afspraken vandaag`, link: 'agenda' });
 
   res.json({
-    kpis: { activeFranchisees, activeStudents, certifiedStudents, openOrders, totalFranchisees: franchisees.length, totalStudents: students.length, todayBookings: vandaagBookings.length },
+    kpis: { activeFranchisees, activeStudents, certifiedStudents, openOrders, totalFranchisees: franchisees.length, totalStudents: students.length, todayBookings: vandaagBookings.length, totalClients: clients.length },
     pipeline,
     alerts
   });

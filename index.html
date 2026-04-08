@@ -41,6 +41,9 @@
     .badge-geplaatst { background:#d1fae5; color:#065f46; }
     .badge-nieuw { background:#dbeafe; color:#1e40af; }
     .badge-bevestigd { background:#fef3c7; color:#92400e; }
+    .badge-voltooid { background:#dcfce7; color:#166534; }
+    .badge-no-show { background:#fee2e2; color:#991b1b; }
+    .badge-geannuleerd { background:#f3f4f6; color:#6b7280; }
     .badge-verzonden { background:#ede9fe; color:#5b21b6; }
     .badge-afgeleverd { background:#dcfce7; color:#166534; }
     .badge-todo { background:#e6d9c8; color:#5e442a; }
@@ -193,6 +196,9 @@
     </a>
     <a href="#" onclick="return showPage('services')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="services">
       <span class="icon text-lg">✂️</span><span class="text-sm">Services</span>
+    </a>
+    <a href="#" onclick="return showPage('klanten')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="klanten">
+      <span class="icon text-lg">👤</span><span class="text-sm">Klanten</span>
     </a>
 
     <div class="nav-divider mt-3">Academy</div>
@@ -410,7 +416,41 @@
   <div id="services-per-categorie"></div>
 </div>
 
-<!-- ═══════════════ PAGE: FRANCHISEES ═══════════════ -->
+<!-- ═══════════════ PAGE: KLANTEN ═══════════���═══ -->
+<div id="page-klanten" class="hidden p-6 lg:p-8 fade-in">
+  <div class="page-header flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Klanten</h1>
+      <p class="text-sm text-gray-500 mt-1">Alle klanten uit Fresha</p>
+    </div>
+    <div class="flex gap-2 header-actions">
+      <button onclick="openModal('client')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Neue Kundin</button>
+    </div>
+  </div>
+  <!-- KPI row -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="klanten-kpis"></div>
+  <!-- Search & filter -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3 flex-wrap">
+      <input type="text" id="klanten-zoek" placeholder="Zoek op naam, email of telefoon..." class="flex-1 min-w-[200px] px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="renderKlanten()">
+      <select id="klanten-sort" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderKlanten()">
+        <option value="naam">Naam A-Z</option>
+        <option value="recent">Laatste bezoek</option>
+        <option value="afspraken">Meeste afspraken</option>
+      </select>
+    </div>
+    <div class="table-responsive">
+      <div id="klanten-tabel" class="divide-y divide-gray-100"></div>
+    </div>
+    <div id="klanten-paginering" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500"></div>
+    <div id="klanten-leeg" class="hidden p-12 text-center text-gray-400">
+      <div class="text-4xl mb-3">👤</div>
+      <p class="font-medium">Nog geen klanten</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: FRANCHISEES ═══════��═══════ -->
 <div id="page-franchisees" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
@@ -680,8 +720,10 @@
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 // ─── State ───
-const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','contacten','taken'];
-let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} } };
+const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','contacten','taken'];
+let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} } };
+let klantenPage = 1;
+const KLANTEN_PER_PAGE = 25;
 let lang = localStorage.getItem('wax-lang') || 'nl';
 let currentUser = null;
 let agendaDatum = new Date();
@@ -734,6 +776,7 @@ function showPage(p) {
     agenda: renderAgenda,
     studios: renderStudios,
     services: renderServices,
+    klanten: renderKlanten,
     franchisees: renderFranchisees,
     pipeline: renderPipeline,
     studenten: renderStudenten,
@@ -771,7 +814,7 @@ async function laadAlleData() {
       if (currentUser?.taal) { lang = currentUser.taal; localStorage.setItem('wax-lang', lang); }
     } catch(e) {}
 
-    const [franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, notes, bp, huddles, users, marketing, academy] = await Promise.all([
+    const [franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients, notes, bp, huddles, users, marketing, academy] = await Promise.all([
       fetch('/api/franchisees').then(r=>r.json()),
       fetch('/api/students').then(r=>r.json()),
       fetch('/api/cohorts').then(r=>r.json()),
@@ -784,6 +827,7 @@ async function laadAlleData() {
       fetch('/api/studios').then(r=>r.json()),
       fetch('/api/services').then(r=>r.json()),
       fetch('/api/bookings').then(r=>r.json()),
+      fetch('/api/clients').then(r=>r.json()),
       fetch('/api/notes').then(r=>r.json()),
       fetch('/api/businessplan').then(r=>r.json()),
       fetch('/api/huddles').then(r=>r.json()),
@@ -791,7 +835,7 @@ async function laadAlleData() {
       fetch('/api/marketing').then(r=>r.json()),
       fetch('/api/academy').then(r=>r.json()),
     ]);
-    data = { franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, notes: notes || {}, bp: bp || {}, huddles: huddles || [], users: users || [], marketing: marketing || { campaigns:[], content:[], leads:[] }, academy: academy || { modules:[], voortgang:{} }, settings: data.settings };
+    data = { franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients: clients || [], notes: notes || {}, bp: bp || {}, huddles: huddles || [], users: users || [], marketing: marketing || { campaigns:[], content:[], leads:[] }, academy: academy || { modules:[], voortgang:{} }, settings: data.settings };
   } catch(e) { console.error('Data laden mislukt:', e); }
 }
 
@@ -2967,33 +3011,58 @@ function renderAgenda() {
   if (curFilter) dagBookings = dagBookings.filter(b => b.studioId === curFilter);
   dagBookings.sort((a,b) => (a.tijd||'').localeCompare(b.tijd||''));
 
-  // Time slots 9:00 - 19:00
+  // Time slots 9:00 - 19:00 (every 15 min for better granularity)
   const slots = [];
   for (let h = 9; h < 19; h++) {
     for (let m = 0; m < 60; m += 30) {
       const t = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-      const booked = dagBookings.filter(b => b.tijd === t);
-      slots.push({ tijd: t, bookings: booked });
+      // Find bookings that START in this slot (within 30 min window)
+      const slotMin = h * 60 + m;
+      const booked = dagBookings.filter(b => {
+        if (!b.tijd) return false;
+        const [bh, bm] = b.tijd.split(':').map(Number);
+        const bMin = bh * 60 + bm;
+        return bMin >= slotMin && bMin < slotMin + 30;
+      });
+      slots.push({ tijd: t, bookings: booked, slotMin });
     }
   }
 
+  const statusColors = {
+    'bevestigd': 'bg-wax-100 text-wax-800 border-l-4 border-wax-500',
+    'voltooid': 'bg-green-50 text-green-800 border-l-4 border-green-500',
+    'no-show': 'bg-red-50 text-red-800 border-l-4 border-red-400',
+    'geannuleerd': 'bg-gray-100 text-gray-500 border-l-4 border-gray-400'
+  };
+
   document.getElementById('agenda-slots').innerHTML = slots.map(slot => {
     const isNu = dagStr === new Date().toISOString().slice(0,10) && slot.tijd === `${String(new Date().getHours()).padStart(2,'0')}:${new Date().getMinutes() < 30 ? '00' : '30'}`;
-    return `<div class="flex ${isNu ? 'bg-wax-50' : ''} ${slot.bookings.length ? '' : 'opacity-60'}">
+    return `<div class="flex ${isNu ? 'bg-wax-50/50 ring-1 ring-wax-300' : ''} ${slot.bookings.length ? '' : 'opacity-60'}">
       <div class="w-16 py-2 px-3 text-xs font-medium text-gray-400 text-right border-r border-gray-100 flex-shrink-0">${slot.tijd}</div>
-      <div class="flex-1 py-1 px-3 min-h-[40px] flex items-center gap-2 flex-wrap">
+      <div class="flex-1 py-1 px-3 min-h-[44px] flex flex-col gap-1.5 justify-center">
         ${slot.bookings.map(b => {
           const svc = data.services.find(s => s.id === b.serviceId);
           const studio = data.studios.find(s => s.id === b.studioId);
-          return `<div class="inline-flex items-center gap-2 bg-wax-100 text-wax-800 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer hover:bg-wax-200 transition-colors" onclick="openModal('booking-detail','${b.id}')">
-            <span class="font-bold">${b.klantNaam||'Klant'}</span>
-            <span class="text-wax-500">·</span>
-            <span>${svc?.naam||b.service||'Service'}</span>
-            ${studio ? `<span class="text-wax-500">·</span><span>${studio.naam.replace('Wax Affairs ','')}</span>` : ''}
-            ${b.status==='voltooid'?'<span class="text-green-600">✓</span>':''}
+          const duur = svc?.duur || 30;
+          const colorClass = statusColors[b.status] || statusColors['bevestigd'];
+          return `<div class="${colorClass} px-3 py-2 rounded-lg cursor-pointer hover:shadow-md transition-all" onclick="openModal('booking-detail','${b.id}')">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="text-sm font-bold truncate">${b.klantNaam||'Klant'}</span>
+                <span class="opacity-50">|</span>
+                <span class="text-xs truncate">${svc?.naam||b.service||'Service'}</span>
+              </div>
+              <div class="flex items-center gap-2 flex-shrink-0 ml-2">
+                <span class="text-xs opacity-70">${b.tijd}${b.eindTijd ? ' - '+b.eindTijd : ''}</span>
+                <span class="text-xs opacity-70">${duur}min</span>
+                <span class="text-xs font-semibold">${fe(svc?.prijs || b.prijs || 0)}</span>
+                ${b.status==='voltooid'?'<span class="text-green-600 text-xs">&#10003;</span>':''}
+              </div>
+            </div>
+            ${studio ? `<div class="text-[10px] opacity-60 mt-0.5">${studio.naam.replace('Wax Affairs ','')}</div>` : ''}
           </div>`;
         }).join('')}
-        ${!slot.bookings.length ? `<button onclick="openModal('booking','','${dagStr}','${slot.tijd}')" class="text-xs text-gray-300 hover:text-wax-500 transition-colors">+ afspraak</button>` : ''}
+        ${!slot.bookings.length ? `<button onclick="openModal('booking','','${dagStr}','${slot.tijd}')" class="text-xs text-gray-300 hover:text-wax-500 transition-colors self-start">+ afspraak</button>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -3125,6 +3194,8 @@ function openModal(type, id) {
   else if (type === 'contact-detail') content.innerHTML = modalContactDetail(id);
   else if (type === 'taak') content.innerHTML = modalTaak();
   else if (type === 'taak-detail') content.innerHTML = modalTaakDetail(id);
+  else if (type === 'client') content.innerHTML = modalClient();
+  else if (type === 'client-detail') content.innerHTML = modalClientDetail(id);
 }
 
 function sluitModal() {
@@ -3771,10 +3842,17 @@ async function snelTaakVanBP(form, sectieTitel) {
 function modalBooking(prefillDatum, prefillTijd) {
   const studioOpts = [{value:'',label:'Selecteer studio...'}, ...data.studios.map(s => ({value:s.id, label:s.naam}))];
   const serviceOpts = [{value:'',label:'Selecteer service...'}, ...data.services.filter(s=>s.actief).map(s => ({value:s.id, label:`${s.naam} (${s.duur}min - ${fe(s.prijs)})`}))];
+  const clientOpts = [{value:'',label:'Selecteer klant of typ naam...'}, ...data.clients.sort((a,b) => (a.naam||'').localeCompare(b.naam||'')).map(c => ({value:c.id, label:`${c.naam}${c.telefoon ? ' ('+c.telefoon+')' : ''}`}))];
   const datum = prefillDatum || new Date().toISOString().slice(0,10);
   const tijd = prefillTijd || '10:00';
-  return modalHeader('Nieuwe Afspraak', 'Plan een behandeling in') +
+  return modalHeader('Neue Buchung', 'Plan een behandeling in') +
     `<form onsubmit="event.preventDefault(); saveBooking(this)" class="p-6 space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Klant</label>
+        <select name="clientId" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="bookingClientSelected(this)">
+          ${clientOpts.map(o => `<option value="${o.value}">${o.label}</option>`).join('')}
+        </select>
+      </div>
       ${formField('Klantnaam', 'klantNaam')}
       ${formField('Telefoon / Email', 'klantContact')}
       ${formField('Studio', 'studioId', 'select', '', studioOpts)}
@@ -3784,6 +3862,18 @@ function modalBooking(prefillDatum, prefillTijd) {
       ${formField('Notities', 'notities', 'textarea')}
       <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">Afspraak Boeken</button>
     </form>`;
+}
+
+function bookingClientSelected(sel) {
+  const clientId = sel.value;
+  if (!clientId) return;
+  const c = data.clients.find(x => x.id === clientId);
+  if (!c) return;
+  const form = sel.closest('form');
+  const naamField = form.querySelector('[name=klantNaam]');
+  const contactField = form.querySelector('[name=klantContact]');
+  if (naamField) naamField.value = c.naam || '';
+  if (contactField) contactField.value = c.email || c.telefoon || '';
 }
 
 function modalBookingDetail(id) {
@@ -3820,7 +3910,16 @@ function modalBookingDetail(id) {
 
 async function saveBooking(form) {
   const fd = new FormData(form);
-  const result = await apiPost('/api/bookings', Object.fromEntries(fd));
+  const obj = Object.fromEntries(fd);
+  // Calculate end time based on service duration
+  const svc = data.services.find(s => s.id === obj.serviceId);
+  if (svc && obj.tijd) {
+    const [h, m] = obj.tijd.split(':').map(Number);
+    const endMin = h * 60 + m + (svc.duur || 30);
+    obj.eindTijd = `${String(Math.floor(endMin/60)).padStart(2,'0')}:${String(endMin%60).padStart(2,'0')}`;
+    obj.prijs = svc.prijs;
+  }
+  const result = await apiPost('/api/bookings', obj);
   data.bookings.push(result);
   sluitModal(); toast('Afspraak geboekt!'); renderAgenda();
 }
@@ -3895,7 +3994,7 @@ function modalService() {
   return modalHeader('Nieuwe Service') +
     `<form onsubmit="event.preventDefault(); saveService(this)" class="p-6 space-y-4">
       ${formField('Naam', 'naam')}
-      ${formField('Categorie', 'categorie', 'select', '', [{value:'Gesicht',label:'Gesicht'},{value:'Body',label:'Body'},{value:'Intim',label:'Intim'}])}
+      ${formField('Categorie', 'categorie', 'select', '', [{value:'Intim und Beine',label:'Intim und Beine'},{value:'Oberkörper und Arme',label:'Oberkörper und Arme'},{value:'Gesicht',label:'Gesicht'}])}
       ${formField('Duur (minuten)', 'duur', 'number', '30')}
       ${formField('Prijs', 'prijs', 'number')}
       <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">Toevoegen</button>
@@ -3908,7 +4007,7 @@ function modalServiceDetail(id) {
   return modalHeader(s.naam, `${s.duur} min · ${fe(s.prijs)}`) +
     `<form onsubmit="event.preventDefault(); updateService('${id}', this)" class="p-6 space-y-4">
       ${formField('Naam', 'naam', 'text', s.naam)}
-      ${formField('Categorie', 'categorie', 'select', s.categorie, [{value:'Gesicht',label:'Gesicht'},{value:'Body',label:'Body'},{value:'Intim',label:'Intim'}])}
+      ${formField('Categorie', 'categorie', 'select', s.categorie, [{value:'Intim und Beine',label:'Intim und Beine'},{value:'Oberkörper und Arme',label:'Oberkörper und Arme'},{value:'Gesicht',label:'Gesicht'}])}
       ${formField('Duur (minuten)', 'duur', 'number', s.duur)}
       ${formField('Prijs', 'prijs', 'number', s.prijs)}
       ${formField('Actief', 'actief', 'select', s.actief?'true':'false', [{value:'true',label:'Ja'},{value:'false',label:'Nee'}])}
@@ -3971,6 +4070,8 @@ function zoekResultaten(query) {
     .forEach(c => results.push({ type:'contact', icon:'👤', naam: c.naam, sub: c.categorie, onclick: `openModal('contact-detail','${c.id}')` }));
   data.tasks.filter(t => (t.titel||'').toLowerCase().includes(q))
     .forEach(t => results.push({ type:'taak', icon:'✅', naam: t.titel, sub: t.status, onclick: `openModal('taak-detail','${t.id}')` }));
+  data.clients.filter(c => (c.naam||'').toLowerCase().includes(q) || (c.email||'').toLowerCase().includes(q) || (c.telefoon||'').toLowerCase().includes(q))
+    .forEach(c => results.push({ type:'klant', icon:'👤', naam: c.naam, sub: c.email||c.telefoon||'', onclick: `openModal('client-detail','${c.id}')` }));
 
   document.getElementById('search-results').innerHTML = results.length ?
     results.slice(0,10).map(r => `<a href="#" onclick="${r.onclick}; sluitZoeken(); return false" class="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors">
@@ -3978,6 +4079,172 @@ function zoekResultaten(query) {
       <div class="flex-1"><div class="text-sm font-medium">${r.naam}</div><div class="text-xs text-gray-400">${r.type} · ${r.sub||''}</div></div>
     </a>`).join('')
     : '<div class="px-5 py-6 text-center text-gray-400 text-sm">Geen resultaten</div>';
+}
+
+// ─── RENDER: Klanten ───
+function renderKlanten() {
+  const zoek = (document.getElementById('klanten-zoek')?.value || '').toLowerCase();
+  const sort = document.getElementById('klanten-sort')?.value || 'naam';
+
+  // Enrich clients with booking counts
+  let lijst = data.clients.map(c => {
+    const afspraken = data.bookings.filter(b => b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam)).length;
+    return { ...c, aantalAfspraken: afspraken };
+  });
+
+  // Filter
+  if (zoek) {
+    lijst = lijst.filter(c =>
+      (c.naam||'').toLowerCase().includes(zoek) ||
+      (c.email||'').toLowerCase().includes(zoek) ||
+      (c.telefoon||'').toLowerCase().includes(zoek)
+    );
+  }
+
+  // Sort
+  if (sort === 'naam') lijst.sort((a,b) => (a.naam||'').localeCompare(b.naam||''));
+  else if (sort === 'recent') lijst.sort((a,b) => (b.laatsteBezoek||'').localeCompare(a.laatsteBezoek||''));
+  else if (sort === 'afspraken') lijst.sort((a,b) => (b.aantalAfspraken||0) - (a.aantalAfspraken||0));
+
+  // KPIs
+  const kpisEl = document.getElementById('klanten-kpis');
+  const vandaag = new Date().toISOString().slice(0,10);
+  const vandaagBookings = data.bookings.filter(b => b.datum === vandaag && b.status !== 'geannuleerd');
+  const dezeWeek = data.bookings.filter(b => {
+    if (!b.datum || b.status === 'geannuleerd') return false;
+    const bd = new Date(b.datum);
+    const nu = new Date();
+    const weekStart = new Date(nu); weekStart.setDate(nu.getDate() - nu.getDay() + 1);
+    const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+    return bd >= weekStart && bd <= weekEnd;
+  });
+  kpisEl.innerHTML =
+    statCard('Totaal Klanten', data.clients.length, '👤') +
+    statCard('Afspraken Vandaag', vandaagBookings.length, '📅') +
+    statCard('Afspraken Deze Week', dezeWeek.length, '📊') +
+    statCard('Totaal Afspraken', data.bookings.filter(b => b.status !== 'geannuleerd').length, '✂️');
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(lijst.length / KLANTEN_PER_PAGE));
+  if (klantenPage > totalPages) klantenPage = totalPages;
+  const start = (klantenPage - 1) * KLANTEN_PER_PAGE;
+  const pageLijst = lijst.slice(start, start + KLANTEN_PER_PAGE);
+
+  const tabelEl = document.getElementById('klanten-tabel');
+  const leegEl = document.getElementById('klanten-leeg');
+  const pagEl = document.getElementById('klanten-paginering');
+
+  if (!lijst.length) {
+    tabelEl.innerHTML = '';
+    leegEl.classList.remove('hidden');
+    pagEl.innerHTML = '';
+    return;
+  }
+  leegEl.classList.add('hidden');
+
+  tabelEl.innerHTML =
+    `<div class="hidden md:flex items-center gap-4 px-5 py-2 bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
+      <div class="flex-1">Naam</div>
+      <div class="w-48">Email</div>
+      <div class="w-36">Telefoon</div>
+      <div class="w-20 text-center">Afspraken</div>
+      <div class="w-28">Laatste Bezoek</div>
+    </div>` +
+    pageLijst.map(c => {
+      const initialen = (c.naam || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+      return `<div class="table-row flex items-center gap-4 px-5 py-3 cursor-pointer hover:bg-wax-50 transition-colors" onclick="openModal('client-detail','${c.id}')">
+        <div class="flex-1 flex items-center gap-3 min-w-0">
+          <div class="w-9 h-9 rounded-lg bg-wax-100 flex items-center justify-center text-wax-700 text-xs font-bold flex-shrink-0">${initialen}</div>
+          <div class="min-w-0">
+            <div class="text-sm font-medium text-gray-900 truncate">${c.naam || '-'}</div>
+            <div class="text-xs text-gray-400 md:hidden truncate">${c.email || ''}</div>
+          </div>
+        </div>
+        <div class="w-48 text-sm text-gray-500 truncate hidden md:block">${c.email || '-'}</div>
+        <div class="w-36 text-sm text-gray-500 hidden md:block">${c.telefoon || '-'}</div>
+        <div class="w-20 text-center"><span class="inline-flex items-center justify-center w-7 h-7 rounded-full ${c.aantalAfspraken > 0 ? 'bg-wax-100 text-wax-700' : 'bg-gray-100 text-gray-400'} text-xs font-bold">${c.aantalAfspraken}</span></div>
+        <div class="w-28 text-xs text-gray-400 hidden md:block">${c.laatsteBezoek ? fd(c.laatsteBezoek) : '-'}</div>
+      </div>`;
+    }).join('');
+
+  pagEl.innerHTML = `
+    <span>${lijst.length} klant${lijst.length !== 1 ? 'en' : ''} gevonden</span>
+    <div class="flex items-center gap-1">
+      <button onclick="klantenPage=Math.max(1,klantenPage-1); renderKlanten()" class="px-2 py-1 rounded hover:bg-gray-100 ${klantenPage <= 1 ? 'opacity-30' : ''}" ${klantenPage <= 1 ? 'disabled' : ''}>&#8592;</button>
+      <span class="px-2">${klantenPage} / ${totalPages}</span>
+      <button onclick="klantenPage=Math.min(${totalPages},klantenPage+1); renderKlanten()" class="px-2 py-1 rounded hover:bg-gray-100 ${klantenPage >= totalPages ? 'opacity-30' : ''}" ${klantenPage >= totalPages ? 'disabled' : ''}>&#8594;</button>
+    </div>`;
+}
+
+// ─── MODAL: Client ───
+function modalClient() {
+  return modalHeader('Neue Kundin', 'Nieuwe klant toevoegen') +
+    `<form onsubmit="event.preventDefault(); saveClient(this)" class="p-6 space-y-4">
+      ${formField('Naam', 'naam')}
+      ${formField('Email', 'email', 'email')}
+      ${formField('Telefoon', 'telefoon', 'tel')}
+      ${formField('Notities', 'notities', 'textarea')}
+      <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">Toevoegen</button>
+    </form>`;
+}
+
+function modalClientDetail(id) {
+  const c = data.clients.find(x => x.id === id);
+  if (!c) return '<p class="p-6">Niet gevonden</p>';
+  const clientBookings = data.bookings.filter(b => b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam))
+    .sort((a,b) => (b.datum+b.tijd).localeCompare(a.datum+a.tijd));
+  return modalHeader(c.naam || 'Klant', c.email || c.telefoon || '') +
+    `<div class="p-6 space-y-5">
+      <div class="bg-wax-50 rounded-xl p-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div><span class="text-xs text-gray-400">Email</span><div class="text-sm font-medium">${c.email || '-'}</div></div>
+          <div><span class="text-xs text-gray-400">Telefoon</span><div class="text-sm font-medium">${c.telefoon || '-'}</div></div>
+          <div><span class="text-xs text-gray-400">Klant sinds</span><div class="text-sm font-medium">${fd(c.aangemaakt)}</div></div>
+          <div><span class="text-xs text-gray-400">Laatste bezoek</span><div class="text-sm font-medium">${c.laatsteBezoek ? fd(c.laatsteBezoek) : '-'}</div></div>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-semibold text-gray-900 mb-3">Afspraken (${clientBookings.length})</h4>
+        ${clientBookings.length ? clientBookings.slice(0,15).map(b => {
+          const svc = data.services.find(s => s.id === b.serviceId);
+          const studio = data.studios.find(s => s.id === b.studioId);
+          return `<div class="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
+            <div class="w-12 text-center flex-shrink-0">
+              <div class="text-xs text-gray-400">${b.datum ? new Date(b.datum).toLocaleDateString('nl-NL',{weekday:'short'}) : ''}</div>
+              <div class="text-lg font-bold text-gray-900">${b.datum ? new Date(b.datum).getDate() : '?'}</div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm font-medium text-gray-900">${svc?.naam || b.service || 'Service'}</div>
+              <div class="text-xs text-gray-400">${b.tijd || ''} &middot; ${svc?.duur || '?'} min &middot; ${studio?.naam?.replace('Wax Affairs ','') || ''}</div>
+            </div>
+            <div class="text-sm font-medium text-gray-900">${fe(svc?.prijs || b.prijs || 0)}</div>
+            <div>${badge(b.status)}</div>
+          </div>`;
+        }).join('') : '<p class="text-sm text-gray-400">Nog geen afspraken</p>'}
+      </div>
+      ${c.notities ? `<div class="bg-gray-50 rounded-lg p-3 text-sm">${c.notities}</div>` : ''}
+      <div class="flex gap-2 pt-4 border-t">
+        <button onclick="openModal('booking','','${new Date().toISOString().slice(0,10)}','10:00'); setTimeout(()=>{const f=document.querySelector('#modal-content [name=klantNaam]'); if(f) f.value='${(c.naam||'').replace(/'/g,"\\'")}';},100)" class="btn-primary px-4 py-2 rounded-lg text-sm">+ Neue Buchung</button>
+        <button onclick="verwijderClient('${id}')" class="btn-danger px-4 py-2 rounded-lg text-sm">Verwijderen</button>
+      </div>
+    </div>`;
+}
+
+async function saveClient(form) {
+  const fd = new FormData(form);
+  const obj = Object.fromEntries(fd);
+  obj.laatsteBezoek = '';
+  obj.omzet = 0;
+  const result = await apiPost('/api/clients', obj);
+  data.clients.push(result);
+  sluitModal(); toast('Klant toegevoegd!'); renderKlanten();
+}
+
+async function verwijderClient(id) {
+  if (!confirm('Klant verwijderen?')) return;
+  await apiDelete(`/api/clients/${id}`);
+  data.clients = data.clients.filter(c => c.id !== id);
+  sluitModal(); renderKlanten(); toast('Klant verwijderd');
 }
 
 // ─── KEYBOARD SHORTCUTS ───
