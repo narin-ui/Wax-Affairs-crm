@@ -1,0 +1,11 @@
+[
+  {
+    "id": "vl-1",
+    "studioId": "studio-bad-homburg",
+    "categorie": "Huur",
+    "omschrijving": "Maandelijkse huur studio",
+    "bedrag": 0,
+    "frequentie": "maandelijks",
+    "actief": true
+  }
+]

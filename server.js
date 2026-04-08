@@ -1038,6 +1038,39 @@ app.get('/api/dashboard', (req, res) => {
   });
 });
 
+// ─── API: Vaste Lasten ───
+app.get('/api/vastelasten', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  res.json(laadJSON('vastelasten.json'));
+});
+
+app.post('/api/vastelasten', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const list = laadJSON('vastelasten.json');
+  const item = { id: 'vl-' + crypto.randomBytes(8).toString('hex'), actief: true, ...req.body, aangemaakt: new Date().toISOString() };
+  list.push(item);
+  slaJSON('vastelasten.json', list);
+  res.json(item);
+});
+
+app.put('/api/vastelasten/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const list = laadJSON('vastelasten.json');
+  const idx = list.findIndex(v => v.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Niet gevonden' });
+  list[idx] = { ...list[idx], ...req.body, gewijzigd: new Date().toISOString() };
+  slaJSON('vastelasten.json', list);
+  res.json(list[idx]);
+});
+
+app.delete('/api/vastelasten/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  let list = laadJSON('vastelasten.json');
+  list = list.filter(v => v.id !== req.params.id);
+  slaJSON('vastelasten.json', list);
+  res.json({ ok: true });
+});
+
 // ─── Start ───
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n  Wax Affairs CRM draait op http://localhost:${PORT}\n`);
