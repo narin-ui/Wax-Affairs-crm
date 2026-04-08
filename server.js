@@ -988,52 +988,68 @@ app.delete('/api/personeel/uren/:id', (req, res) => {
 // ─── API: Dashboard KPIs ───
 app.get('/api/dashboard', (req, res) => {
   if (!requireAuth(req, res)) return;
-  const franchisees = laadJSON('franchisees.json');
-  const students = laadJSON('students.json');
-  const orders = laadJSON('orders.json');
   const tasks = laadJSON('tasks.json');
-  const cohorts = laadJSON('cohorts.json');
   const bookings = laadJSON('bookings.json');
+  const clients = laadJSON('clients.json');
+  const studios = laadJSON('studios.json');
+  const services = laadJSON('services.json');
+  const personeel = laadJSON('personeel.json');
 
   const nu = new Date();
   const maand = nu.getMonth();
   const jaar = nu.getFullYear();
+  const vandaagStr = nu.toISOString().slice(0,10);
 
-  const clients = laadJSON('clients.json');
+  // Current month string prefix (e.g. "2026-04")
+  const maandPrefix = `${jaar}-${String(maand+1).padStart(2,'0')}`;
 
-  const activeFranchisees = franchisees.filter(f => f.status === 'live').length;
-  const activeStudents = students.filter(s => ['ingeschreven', 'in-opleiding'].includes(s.status)).length;
-  const certifiedStudents = students.filter(s => s.status === 'gecertificeerd' || s.status === 'geplaatst').length;
-  const openOrders = orders.filter(o => o.status !== 'afgeleverd').length;
+  // Revenue this month
+  const boekingDezeMaand = bookings.filter(b =>
+    ['bevestigd','voltooid'].includes(b.status) &&
+    b.datum && b.datum.startsWith(maandPrefix)
+  );
+  const omzetDezeMaand = boekingDezeMaand.reduce((s, b) => {
+    if (b.prijs) return s + (parseFloat(b.prijs) || 0);
+    const svc = services.find(sv => sv.id === b.serviceId);
+    return s + (svc ? (parseFloat(svc.prijs) || 0) : 0);
+  }, 0);
 
-  // Pipeline counts
-  const pipeline = {};
-  ['lead', 'contact', 'termsheet', 'getekend', 'onboarding', 'live'].forEach(s => {
-    pipeline[s] = franchisees.filter(f => f.status === s).length;
-  });
+  // Today's bookings
+  const vandaagBookings = bookings.filter(b => b.datum && b.datum.startsWith(vandaagStr) && b.status !== 'geannuleerd');
+
+  // Team members
+  const medewerkers = (personeel && personeel.medewerkers) ? personeel.medewerkers : [];
+  const teamLeden = medewerkers.filter(m => m.status === 'actief').length;
+
+  // Active studios
+  const activeStudios = studios.filter(s => s.actief !== false).length;
 
   // Alerts
   const alerts = [];
-  const leadsNoActivity = franchisees.filter(f => f.status === 'lead' && (!f.gewijzigd || (nu - new Date(f.gewijzigd)) > 7 * 86400000));
-  if (leadsNoActivity.length) alerts.push({ type: 'warning', tekst: `${leadsNoActivity.length} lead(s) wachten op follow-up`, link: 'franchisees' });
-
-  const upcomingCohorts = cohorts.filter(c => c.status === 'gepland' && c.startdatum && (new Date(c.startdatum) - nu) < 14 * 86400000 && (new Date(c.startdatum) - nu) > 0);
-  upcomingCohorts.forEach(c => alerts.push({ type: 'info', tekst: `Cohort "${c.naam}" start binnenkort`, link: 'cohorten' }));
-
   const overdueTasks = tasks.filter(t => t.status !== 'klaar' && t.deadline && new Date(t.deadline) < nu);
   if (overdueTasks.length) alerts.push({ type: 'danger', tekst: `${overdueTasks.length} verlopen taak/taken`, link: 'taken' });
 
-  const openOrderCount = orders.filter(o => o.status === 'nieuw').length;
-  if (openOrderCount) alerts.push({ type: 'info', tekst: `${openOrderCount} nieuwe bestelling(en) te verwerken`, link: 'bestellingen' });
-
-  // Booking alerts
-  const vandaagStr = nu.toISOString().slice(0,10);
-  const vandaagBookings = bookings.filter(b => b.datum && b.datum.startsWith(vandaagStr) && b.status !== 'geannuleerd');
   if (vandaagBookings.length) alerts.push({ type: 'info', tekst: `${vandaagBookings.length} afspraak/afspraken vandaag`, link: 'agenda' });
 
+  // Bookings without confirmation
+  const nieuwBookings = bookings.filter(b => b.status === 'nieuw' && b.datum >= vandaagStr);
+  if (nieuwBookings.length) alerts.push({ type: 'warning', tekst: `${nieuwBookings.length} onbevestigde boeking(en)`, link: 'agenda' });
+
+  // No-shows this week
+  const weekAgo = new Date(nu); weekAgo.setDate(weekAgo.getDate() - 7);
+  const weekAgoStr = weekAgo.toISOString().slice(0,10);
+  const noShows = bookings.filter(b => b.status === 'no-show' && b.datum >= weekAgoStr && b.datum <= vandaagStr);
+  if (noShows.length) alerts.push({ type: 'warning', tekst: `${noShows.length} no-show(s) deze week`, link: 'agenda' });
+
   res.json({
-    kpis: { activeFranchisees, activeStudents, certifiedStudents, openOrders, totalFranchisees: franchisees.length, totalStudents: students.length, todayBookings: vandaagBookings.length, totalClients: clients.length },
-    pipeline,
+    kpis: {
+      omzetDezeMaand,
+      boekingDezeMaand: boekingDezeMaand.length,
+      todayBookings: vandaagBookings.length,
+      totalClients: clients.length,
+      teamLeden,
+      activeStudios
+    },
     alerts
   });
 });

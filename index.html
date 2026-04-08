@@ -259,7 +259,7 @@
   <div class="flex items-center justify-between mb-6 page-header">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-      <p class="text-sm text-gray-500 mt-1">Welkom bij Wax Affairs HQ</p>
+      <p class="text-sm text-gray-500 mt-1" id="dashboard-greeting">Welkom bij Wax Affairs</p>
     </div>
     <div class="flex gap-2 dash-actions header-actions">
       <button onclick="openModal('booking')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Afspraak</button>
@@ -273,19 +273,19 @@
   <!-- Alerts -->
   <div id="dashboard-alerts" class="mb-6"></div>
 
-  <!-- Charts + Pipeline -->
+  <!-- Omzet Trend + Vandaag's Agenda -->
   <div class="grid lg:grid-cols-2 gap-6 mb-6">
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">Franchise Pipeline</h3>
-      <div id="dashboard-pipeline"></div>
+      <h3 class="font-semibold text-gray-900 mb-4">Omzet Trend (laatste 3 maanden)</h3>
+      <canvas id="dashboard-chart" height="200"></canvas>
     </div>
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">Overzicht</h3>
-      <canvas id="dashboard-chart" height="200"></canvas>
+      <h3 class="font-semibold text-gray-900 mb-4">Agenda Vandaag</h3>
+      <div id="dashboard-agenda-vandaag"></div>
     </div>
   </div>
 
-  <!-- Recent items -->
+  <!-- Open tasks + Recent activity -->
   <div class="grid lg:grid-cols-2 gap-6">
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
       <h3 class="font-semibold text-gray-900 mb-3">Openstaande Taken</h3>
@@ -596,6 +596,9 @@
     <h3 class="font-semibold text-gray-900 mb-4">Omzet Overzicht</h3>
     <canvas id="fin-revenue-chart" height="250"></canvas>
   </div>
+
+  <!-- Prognose / Forecast Section -->
+  <div id="fin-prognose" class="mb-6"></div>
 
   <!-- Revenue Breakdown Tabs -->
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
@@ -918,11 +921,20 @@ async function renderDashboard() {
     const dash = await fetch('/api/dashboard').then(r=>r.json());
     const k = dash.kpis;
 
+    // Greeting
+    const greetEl = document.getElementById('dashboard-greeting');
+    if (greetEl && currentUser) {
+      const hour = new Date().getHours();
+      const greeting = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
+      greetEl.textContent = `${greeting}, ${currentUser.naam.split(' ')[0]}`;
+    }
+
+    // KPI Cards
     document.getElementById('dashboard-kpis').innerHTML =
-      statCard('Actieve Franchisees', k.activeFranchisees, '🏪', `${k.totalFranchisees} totaal in pipeline`) +
-      statCard('Studenten in Opleiding', k.activeStudents, '🎓', `${k.certifiedStudents} gecertificeerd`) +
-      statCard('Openstaande Orders', k.openOrders, '📦') +
-      statCard('Totaal Contacten', data.contacts.length, '👥');
+      statCard('Omzet Deze Maand', fe(k.omzetDezeMaand), '💶', `${k.boekingDezeMaand} boekingen`) +
+      statCard('Boekingen Vandaag', k.todayBookings, '📅', k.todayBookings > 0 ? 'Bekijk agenda' : 'Geen afspraken') +
+      statCard('Actieve Klanten', fn(k.totalClients), '👤', 'Totaal in database') +
+      statCard('Team Leden', k.teamLeden, '👩‍💼', `${k.activeStudios} studio${k.activeStudios !== 1 ? '\'s' : ''} actief`);
 
     // Alerts
     const alertsEl = document.getElementById('dashboard-alerts');
@@ -939,18 +951,30 @@ async function renderDashboard() {
       alertsEl.innerHTML = '';
     }
 
-    // Pipeline
-    const stages = ['lead','contact','termsheet','getekend','onboarding','live'];
-    const stageLabels = { lead:'Lead', contact:'Contact', termsheet:'Termsheet', getekend:'Getekend', onboarding:'Onboarding', live:'Live' };
-    const pl = dash.pipeline;
-    const total = Object.values(pl).reduce((s,v)=>s+v,0) || 1;
-    document.getElementById('dashboard-pipeline').innerHTML = `
-      <div class="flex gap-1 h-8 rounded-lg overflow-hidden mb-3">
-        ${stages.map(s => pl[s] ? `<div class="bg-wax-${s==='live'?'500':s==='getekend'?'400':s==='onboarding'?'300':'200'} flex items-center justify-center text-xs font-medium text-wax-900" style="width:${(pl[s]/total*100)}%">${pl[s]}</div>` : '').join('')}
-      </div>
-      <div class="flex justify-between text-xs text-gray-500">
-        ${stages.map(s => `<span>${stageLabels[s]}: ${pl[s]}</span>`).join('')}
-      </div>`;
+    // Today's Agenda
+    const vandaagStr = new Date().toISOString().slice(0,10);
+    const vandaagBookings = data.bookings
+      .filter(b => b.datum === vandaagStr && b.status !== 'geannuleerd')
+      .sort((a,b) => (a.tijd||'').localeCompare(b.tijd||''));
+    const agendaEl = document.getElementById('dashboard-agenda-vandaag');
+    if (agendaEl) {
+      agendaEl.innerHTML = vandaagBookings.length ?
+        vandaagBookings.map(b => {
+          const svc = data.services.find(s => s.id === b.serviceId);
+          const client = data.clients.find(c => c.id === b.clientId);
+          const studio = data.studios.find(s => s.id === b.studioId);
+          return `<div class="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+            <span class="text-xs font-mono bg-wax-100 text-wax-700 px-2 py-1 rounded font-medium">${b.tijd || '--:--'}</span>
+            <div class="flex-1 min-w-0">
+              <span class="text-sm font-medium text-gray-900 truncate block">${client?.naam || b.klantNaam || '-'}</span>
+              <span class="text-xs text-gray-400">${svc?.naam || b.serviceNaam || '-'}${studio ? ' · ' + studio.naam.replace('Wax Affairs ','') : ''}</span>
+            </div>
+            <span class="text-sm font-medium text-gray-700">${fe(bookingPrijs(b))}</span>
+            ${badge(b.status)}
+          </div>`;
+        }).join('')
+        : '<div class="text-center py-8 text-gray-400"><div class="text-3xl mb-2">📅</div><p class="text-sm">Geen afspraken vandaag</p></div>';
+    }
 
     // Open taken
     const openTaken = data.tasks.filter(t => t.status !== 'klaar').sort((a,b) => (a.deadline||'z').localeCompare(b.deadline||'z')).slice(0,5);
@@ -963,17 +987,27 @@ async function renderDashboard() {
       </div>`).join('')
       : '<p class="text-sm text-gray-400">Geen openstaande taken</p>';
 
-    // Recente activiteit
-    const recent = [...data.franchisees,...data.students,...data.contacts].sort((a,b) => (b.gewijzigd||b.aangemaakt||'').localeCompare(a.gewijzigd||a.aangemaakt||'')).slice(0,5);
-    document.getElementById('dashboard-activiteit').innerHTML = recent.length ?
-      recent.map(r => `<div class="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
-        <span class="text-lg">${r.status==='live'?'🏪':r.status==='gecertificeerd'?'🎓':'👤'}</span>
-        <span class="text-sm flex-1">${r.naam||r.bedrijfsnaam||'Onbekend'}</span>
-        <span class="text-xs text-gray-400">${fd(r.gewijzigd||r.aangemaakt)}</span>
-      </div>`).join('')
-      : '<p class="text-sm text-gray-400">Nog geen activiteit</p>';
+    // Recente activiteit - show recent bookings instead
+    const recentBookings = data.bookings
+      .filter(b => b.status !== 'geannuleerd')
+      .sort((a,b) => ((b.datum||'')+(b.tijd||'')).localeCompare((a.datum||'')+(a.tijd||'')))
+      .slice(0,5);
+    document.getElementById('dashboard-activiteit').innerHTML = recentBookings.length ?
+      recentBookings.map(b => {
+        const client = data.clients.find(c => c.id === b.clientId);
+        const svc = data.services.find(s => s.id === b.serviceId);
+        return `<div class="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+          <span class="text-lg">${b.status==='voltooid'?'✅':b.status==='bevestigd'?'📋':'📌'}</span>
+          <div class="flex-1 min-w-0">
+            <span class="text-sm text-gray-900 truncate block">${client?.naam || b.klantNaam || '-'}</span>
+            <span class="text-xs text-gray-400">${svc?.naam || b.serviceNaam || '-'}</span>
+          </div>
+          <span class="text-xs text-gray-400">${fd(b.datum)}</span>
+        </div>`;
+      }).join('')
+      : '<p class="text-sm text-gray-400">Nog geen boekingen</p>';
 
-    // Chart
+    // Chart - Omzet Trend
     renderDashboardChart();
   } catch(e) { console.error(e); }
 }
@@ -981,20 +1015,42 @@ async function renderDashboard() {
 function renderDashboardChart() {
   const ctx = document.getElementById('dashboard-chart');
   if (dashboardChart) dashboardChart.destroy();
-  const counts = {
-    'Franchisees': data.franchisees.length,
-    'Studenten': data.students.length,
-    'Producten': data.products.length,
-    'Bestellingen': data.orders.length,
-    'Contacten': data.contacts.length,
-  };
+
+  // Calculate revenue for the last 3 months
+  const now = new Date();
+  const months = [];
+  for (let i = 2; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push(d.toISOString().slice(0,7));
+  }
+
+  const monthData = months.map(m => {
+    const mb = data.bookings.filter(b =>
+      ['bevestigd','voltooid'].includes(b.status) &&
+      (b.datum||'').startsWith(m)
+    );
+    return mb.reduce((s,b) => s + bookingPrijs(b), 0);
+  });
+
+  const labels = months.map(m => {
+    const d = new Date(m + '-01T00:00:00');
+    return d.toLocaleDateString('nl-NL', {month:'short', year:'2-digit'});
+  });
+
   dashboardChart = new Chart(ctx, {
-    type: 'doughnut',
+    type: 'bar',
     data: {
-      labels: Object.keys(counts),
-      datasets: [{ data: Object.values(counts), backgroundColor: ['#a8875c','#e28568','#c2a47e','#d4bfa5','#eda892'] }]
+      labels,
+      datasets: [
+        { label: 'Omzet', data: monthData, backgroundColor: '#a8875c', borderRadius: 6, order: 2 },
+        { label: 'Trend', data: monthData, type: 'line', borderColor: '#e28568', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 4, pointBackgroundColor: '#e28568', tension: 0.3, order: 1 }
+      ]
     },
-    options: { responsive:true, plugins:{ legend:{ position:'bottom', labels:{ padding:12, usePointStyle:true } } } }
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true, position: 'top', labels: { font: { size: 11 } } } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => fe(v) } } }
+    }
   });
 }
 
@@ -1312,6 +1368,9 @@ function renderFinancieel() {
   // Revenue Chart - bar with trend line
   renderFinRevenueChart(filtered);
 
+  // Prognose / Forecast
+  renderFinPrognose();
+
   // Breakdown tabs
   renderFinTabs();
 
@@ -1371,6 +1430,201 @@ function renderFinRevenueChart(filtered) {
       scales: { y: { beginAtZero: true, ticks: { callback: v => fe(v) } } }
     }
   });
+}
+
+function renderFinPrognose() {
+  const el = document.getElementById('fin-prognose');
+  if (!el) return;
+
+  const bp = data.bp || {};
+  const proj2026 = (bp.projectie || []).find(p => p.jaar === 2026) || {};
+  const franchiseTerms = bp.franchiseTerms || {};
+
+  // Configurable targets from businessplan
+  const prognoseTargets = bp.prognoseTargets || {};
+  const jaarTarget = prognoseTargets.studioJaarTarget || 120000;
+  const maandTarget = prognoseTargets.studioMaandTarget || (jaarTarget / 12);
+
+  const studios = data.studios || [];
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth(); // 0-based
+
+  // Build monthly data for all studios
+  const allMonths = [];
+  for (let m = 0; m < 12; m++) {
+    const prefix = `${currentYear}-${String(m+1).padStart(2,'0')}`;
+    allMonths.push(prefix);
+  }
+
+  // Calculate per-studio stats
+  const studioStats = studios.map(s => {
+    // This month's actual
+    const thisMonthPrefix = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
+    const thisMonthBookings = data.bookings.filter(b =>
+      ['bevestigd','voltooid'].includes(b.status) &&
+      b.studioId === s.id &&
+      (b.datum||'').startsWith(thisMonthPrefix)
+    );
+    const thisMonthActual = thisMonthBookings.reduce((sum,b) => sum + bookingPrijs(b), 0);
+
+    // Year-to-date
+    const ytdBookings = data.bookings.filter(b =>
+      ['bevestigd','voltooid'].includes(b.status) &&
+      b.studioId === s.id &&
+      (b.datum||'').startsWith(String(currentYear))
+    );
+    const ytdActual = ytdBookings.reduce((sum,b) => sum + bookingPrijs(b), 0);
+
+    // Per-month breakdown
+    const monthlyData = allMonths.map(prefix => {
+      const mb = data.bookings.filter(b =>
+        ['bevestigd','voltooid'].includes(b.status) &&
+        b.studioId === s.id &&
+        (b.datum||'').startsWith(prefix)
+      );
+      return mb.reduce((sum,b) => sum + bookingPrijs(b), 0);
+    });
+
+    return {
+      id: s.id,
+      naam: s.naam.replace('Wax Affairs ', ''),
+      thisMonthActual,
+      ytdActual,
+      monthlyData
+    };
+  });
+
+  // Overall stats
+  const totalThisMonth = studioStats.reduce((s,st) => s + st.thisMonthActual, 0);
+  const totalYtd = studioStats.reduce((s,st) => s + st.ytdActual, 0);
+
+  // Last full month for run-rate calculation
+  const lastFullMonth = currentMonth > 0 ? currentMonth - 1 : 11;
+  const lastFullMonthPrefix = `${currentYear}-${String(lastFullMonth+1).padStart(2,'0')}`;
+  const lastFullMonthRevenue = data.bookings
+    .filter(b => ['bevestigd','voltooid'].includes(b.status) && (b.datum||'').startsWith(lastFullMonthPrefix))
+    .reduce((s,b) => s + bookingPrijs(b), 0);
+
+  const runRate = lastFullMonthRevenue;
+  const projectedYearly = runRate * 12;
+  const totalJaarTarget = jaarTarget * studios.length;
+
+  // Month names
+  const maandNamen = ['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+  const lastFullMonthName = maandNamen[lastFullMonth];
+
+  // Stand-up summary
+  const pctOfTarget = totalJaarTarget > 0 ? Math.round(runRate / maandTarget * 100) : 0;
+  const topStudio = studioStats.length > 0 ? studioStats.reduce((best,s) => s.thisMonthActual > best.thisMonthActual ? s : best, studioStats[0]) : null;
+
+  el.innerHTML = `
+    <div class="bg-gradient-to-r from-wax-600 to-wax-400 rounded-2xl p-6 text-white shadow-lg mb-6">
+      <div class="flex items-start gap-3 mb-1">
+        <span class="text-2xl">📊</span>
+        <div>
+          <h3 class="font-bold text-lg">Stand-up Samenvatting</h3>
+          <p class="text-white/90 text-sm mt-1">
+            ${topStudio ? `${topStudio.naam} draait ${fe(runRate)} run-rate in ${lastFullMonthName} (${pctOfTarget}% van maand-target).` : 'Nog geen data beschikbaar.'}
+            Projected yearly: ${fe(projectedYearly)} van ${fe(totalJaarTarget)} target${studios.length > 1 ? ' ('+studios.length+' studios)' : ''}.
+            ${pctOfTarget >= 100 ? 'On track!' : `Nodig: ${fe(maandTarget)}/maand per studio om jaardoel te halen.`}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Studio Targets vs Actual -->
+    <div class="grid ${studios.length > 1 ? 'md:grid-cols-'+Math.min(studios.length,3) : ''} gap-4 mb-6">
+      ${studioStats.map(st => {
+        const pct = maandTarget > 0 ? Math.min(100, Math.round(st.thisMonthActual / maandTarget * 100)) : 0;
+        const onTrack = pct >= 80;
+        const yearPct = jaarTarget > 0 ? Math.min(100, Math.round(st.ytdActual / (jaarTarget * (currentMonth + 1) / 12) * 100)) : 0;
+        return `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="font-semibold text-gray-900 text-sm">${st.naam}</h4>
+            <span class="text-xs font-medium px-2 py-1 rounded-full ${onTrack ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${onTrack ? 'On Track' : 'Behind'}</span>
+          </div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(st.thisMonthActual)}</div>
+          <div class="text-xs text-gray-500 mb-3">van ${fe(maandTarget)} maand-target</div>
+          <div class="w-full bg-gray-100 rounded-full h-3 mb-2">
+            <div class="h-3 rounded-full transition-all ${pct >= 80 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-400'}" style="width:${pct}%"></div>
+          </div>
+          <div class="flex justify-between text-xs text-gray-400">
+            <span>${pct}% van maand</span>
+            <span>YTD: ${fe(st.ytdActual)}</span>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- Year Projection -->
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
+      <h3 class="font-semibold text-gray-900 mb-4">Jaarprojectie ${currentYear}</h3>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="text-3xl font-bold text-gray-900">${fe(projectedYearly)}</div>
+          <div class="text-sm text-gray-500 mt-1">Geprojecteerd (run-rate x12)</div>
+          <div class="text-xs text-gray-400 mt-1">Gebaseerd op ${lastFullMonthName}: ${fe(runRate)}</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-gray-900">${fe(totalJaarTarget)}</div>
+          <div class="text-sm text-gray-500 mt-1">Jaardoel (${studios.length} studio${studios.length!==1?'\'s':''})</div>
+          <div class="text-xs text-gray-400 mt-1">${fe(jaarTarget)} per studio</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold ${projectedYearly >= totalJaarTarget ? 'text-green-600' : 'text-red-600'}">${totalJaarTarget > 0 ? Math.round(projectedYearly / totalJaarTarget * 100) : 0}%</div>
+          <div class="text-sm text-gray-500 mt-1">Van jaardoel</div>
+          <div class="text-xs text-gray-400 mt-1">${projectedYearly >= totalJaarTarget ? 'On track' : 'Verschil: ' + fe(totalJaarTarget - projectedYearly)}</div>
+        </div>
+      </div>
+      <div class="mt-4 w-full bg-gray-100 rounded-full h-4">
+        <div class="h-4 rounded-full transition-all ${projectedYearly >= totalJaarTarget ? 'bg-green-500' : projectedYearly >= totalJaarTarget*0.5 ? 'bg-yellow-500' : 'bg-red-400'}" style="width:${Math.min(100, totalJaarTarget > 0 ? Math.round(projectedYearly / totalJaarTarget * 100) : 0)}%"></div>
+      </div>
+    </div>
+
+    <!-- Monthly Growth Tracker -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-100">
+        <h3 class="font-semibold text-gray-900">Maandelijks Groei Overzicht</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-xs font-semibold text-gray-500 uppercase border-b border-gray-100">
+              <th class="text-left px-5 py-3">Maand</th>
+              <th class="text-right px-3 py-3">Target</th>
+              <th class="text-right px-3 py-3">Actueel</th>
+              <th class="text-right px-3 py-3">Verschil</th>
+              <th class="text-right px-5 py-3">Cumulatief</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${(() => {
+              let cumTarget = 0;
+              let cumActual = 0;
+              const totalMonthTarget = maandTarget * studios.length;
+              return allMonths.slice(0, currentMonth + 1).map((prefix, i) => {
+                const monthActual = data.bookings
+                  .filter(b => ['bevestigd','voltooid'].includes(b.status) && (b.datum||'').startsWith(prefix))
+                  .reduce((s,b) => s + bookingPrijs(b), 0);
+                cumTarget += totalMonthTarget;
+                cumActual += monthActual;
+                const verschil = monthActual - totalMonthTarget;
+                const cumVerschil = cumActual - cumTarget;
+                return '<tr class="border-b border-gray-50 table-row">' +
+                  '<td class="px-5 py-3 font-medium text-gray-900">' + maandNamen[i] + ' ' + currentYear + '</td>' +
+                  '<td class="px-3 py-3 text-right text-gray-500">' + fe(totalMonthTarget) + '</td>' +
+                  '<td class="px-3 py-3 text-right font-medium text-gray-900">' + fe(monthActual) + '</td>' +
+                  '<td class="px-3 py-3 text-right font-medium ' + (verschil >= 0 ? 'text-green-600' : 'text-red-600') + '">' + (verschil >= 0 ? '+' : '') + fe(verschil) + '</td>' +
+                  '<td class="px-5 py-3 text-right ' + (cumVerschil >= 0 ? 'text-green-600' : 'text-red-600') + '">' + (cumVerschil >= 0 ? '+' : '') + fe(cumVerschil) + '</td>' +
+                  '</tr>';
+              }).join('');
+            })()}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
 }
 
 function renderFinTabs() {

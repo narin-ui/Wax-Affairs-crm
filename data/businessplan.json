@@ -21,5 +21,11 @@
   "team": [
     { "naam": "Simone Costa", "rol": "CEO & Head Trainer", "land": "Duitsland", "beschrijving": "20 jaar waxing expertise. Brand, Academy, kwaliteitsstandaarden." },
     { "naam": "Narin Eggink", "rol": "COO & Managing Director", "land": "Nederland", "beschrijving": "12 jaar ondernemen. Operations, finance, franchise partnerships." }
-  ]
+  ],
+  "prognoseTargets": {
+    "studioJaarTarget": 120000,
+    "studioMaandTarget": 10000,
+    "totaalJaarTarget2026": 401000,
+    "royaltyDrempel": 120000
+  }
 }
