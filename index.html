@@ -273,7 +273,7 @@
 <!-- ─── MODAL ─── -->
 <div id="modal" class="hidden fixed inset-0 z-40">
   <div class="modal-backdrop absolute inset-0 bg-black/30" onclick="sluitModal()"></div>
-  <div class="absolute right-0 top-0 bottom-0 w-full max-w-lg bg-white shadow-2xl overflow-y-auto fade-in">
+  <div class="absolute right-0 top-0 bottom-0 w-full max-w-lg bg-white shadow-2xl overflow-y-auto fade-in" id="modal-panel">
     <div id="modal-content"></div>
   </div>
 </div>
@@ -430,23 +430,26 @@
   <!-- KPI row -->
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="klanten-kpis"></div>
   <!-- Search & filter -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3 flex-wrap">
-      <input type="text" id="klanten-zoek" placeholder="Zoek op naam, email of telefoon..." class="flex-1 min-w-[200px] px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="renderKlanten()">
-      <select id="klanten-sort" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderKlanten()">
-        <option value="naam">Naam A-Z</option>
-        <option value="recent">Laatste bezoek</option>
-        <option value="afspraken">Meeste afspraken</option>
-      </select>
-    </div>
-    <div class="table-responsive">
-      <div id="klanten-tabel" class="divide-y divide-gray-100"></div>
-    </div>
-    <div id="klanten-paginering" class="px-5 py-3 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500"></div>
-    <div id="klanten-leeg" class="hidden p-12 text-center text-gray-400">
-      <div class="text-4xl mb-3">👤</div>
-      <p class="font-medium">Nog geen klanten</p>
-    </div>
+  <div class="flex items-center gap-3 flex-wrap mb-6">
+    <input type="text" id="klanten-zoek" placeholder="Zoek op naam, email of telefoon..." class="flex-1 min-w-[200px] px-4 py-2.5 border border-gray-200 rounded-xl text-sm bg-white shadow-sm" oninput="renderKlanten()">
+    <select id="klanten-sort" class="px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white shadow-sm" onchange="renderKlanten()">
+      <option value="naam">Naam A-Z</option>
+      <option value="recent">Laatste bezoek</option>
+      <option value="afspraken">Meeste afspraken</option>
+    </select>
+    <select id="klanten-status-filter" class="px-3 py-2.5 border border-gray-200 rounded-xl text-sm bg-white shadow-sm" onchange="renderKlanten()">
+      <option value="">Alle klanten</option>
+      <option value="neu">Neu (0 afspraken)</option>
+      <option value="stammkunde">Stammkunde (1-5)</option>
+      <option value="vip">VIP (6+)</option>
+    </select>
+  </div>
+  <!-- Card grid -->
+  <div id="klanten-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <div id="klanten-paginering" class="mt-6 flex items-center justify-between text-sm text-gray-500"></div>
+  <div id="klanten-leeg" class="hidden p-12 text-center text-gray-400">
+    <div class="text-4xl mb-3">👤</div>
+    <p class="font-medium">Nog geen klanten</p>
   </div>
 </div>
 
@@ -597,17 +600,40 @@
 <!-- ═══════════════ PAGE: FINANCIEEL ═══════════════ -->
 <div id="page-financieel" class="hidden p-6 lg:p-8 fade-in">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Financieel Overzicht</h1>
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Financieel Overzicht</h1>
+      <p class="text-sm text-gray-500 mt-1">Omzet op basis van boekingen</p>
+    </div>
   </div>
-  <div class="grid lg:grid-cols-4 gap-4 mb-6" id="fin-kpis"></div>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="fin-kpis"></div>
   <div class="grid lg:grid-cols-2 gap-6 mb-6">
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">Omzet per Stream</h3>
-      <canvas id="fin-revenue-chart" height="200"></canvas>
+      <h3 class="font-semibold text-gray-900 mb-4">Omzet Laatste 14 Dagen</h3>
+      <canvas id="fin-daily-chart" height="200"></canvas>
     </div>
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">Royalty Overzicht</h3>
-      <div id="fin-royalties"></div>
+      <h3 class="font-semibold text-gray-900 mb-4">Omzet per Categorie</h3>
+      <canvas id="fin-category-chart" height="200"></canvas>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+      <h3 class="font-semibold text-gray-900 mb-4">Omzet per Studio</h3>
+      <canvas id="fin-studio-chart" height="200"></canvas>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+      <h3 class="font-semibold text-gray-900 mb-4">Top 10 Populairste Services</h3>
+      <div id="fin-top-services"></div>
+    </div>
+  </div>
+  <div class="grid lg:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+      <h3 class="font-semibold text-gray-900 mb-4">Omzet per Studio</h3>
+      <div id="fin-studio-table"></div>
+    </div>
+    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+      <h3 class="font-semibold text-gray-900 mb-4">Recente Transacties</h3>
+      <div id="fin-transactions" style="max-height:400px; overflow-y:auto;"></div>
     </div>
   </div>
 </div>
@@ -728,7 +754,7 @@ let lang = localStorage.getItem('wax-lang') || 'nl';
 let currentUser = null;
 let agendaDatum = new Date();
 let dashboardChart = null;
-let finRevenueChart = null;
+// finRevenueChart removed - see finDailyChart, finCategoryChart, finStudioChart in renderFinancieel
 let takenViewMode = 'list';
 
 // ─── Helpers ───
@@ -1127,43 +1153,136 @@ function renderLeveranciers() {
 }
 
 // ─── RENDER: Financieel ───
+let finDailyChart = null, finCategoryChart = null, finStudioChart = null;
 function renderFinancieel() {
-  // KPI cards
-  const totalOrders = data.orders.reduce((s,o) => s + (o.totaal||0), 0);
-  const totalFranchiseFees = data.franchisees.filter(f => ['getekend','onboarding','live'].includes(f.status)).length * 15000;
-  const totalAcademy = data.students.filter(s => s.status !== 'lead').reduce((s,st) => s + (st.type === 'in-person' ? 4000 : 1000), 0);
+  // Helper: get price for a booking
+  function bookingPrijs(b) {
+    if (b.prijs) return parseFloat(b.prijs) || 0;
+    const svc = data.services.find(s => s.id === b.serviceId);
+    return svc ? (parseFloat(svc.prijs) || 0) : 0;
+  }
+  // Only count confirmed/completed bookings as revenue
+  const revenueBookings = data.bookings.filter(b => ['bevestigd','voltooid'].includes(b.status));
+
+  const vandaag = new Date().toISOString().slice(0,10);
+  const nu = new Date();
+  const weekStart = new Date(nu); weekStart.setDate(nu.getDate() - nu.getDay() + 1); weekStart.setHours(0,0,0,0);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+  const maandStart = new Date(nu.getFullYear(), nu.getMonth(), 1).toISOString().slice(0,10);
+
+  const omzetVandaag = revenueBookings.filter(b => b.datum === vandaag).reduce((s,b) => s + bookingPrijs(b), 0);
+  const omzetWeek = revenueBookings.filter(b => { const d = new Date(b.datum); return d >= weekStart && d <= weekEnd; }).reduce((s,b) => s + bookingPrijs(b), 0);
+  const omzetMaand = revenueBookings.filter(b => b.datum >= maandStart).reduce((s,b) => s + bookingPrijs(b), 0);
+  const omzetTotaal = revenueBookings.reduce((s,b) => s + bookingPrijs(b), 0);
 
   document.getElementById('fin-kpis').innerHTML =
-    statCard('Product Omzet', fe(totalOrders), '🧴') +
-    statCard('Franchise Fees', fe(totalFranchiseFees), '🏪') +
-    statCard('Academy Omzet', fe(totalAcademy), '🎓') +
-    statCard('Totaal', fe(totalOrders + totalFranchiseFees + totalAcademy), '💰');
+    statCard('Omzet Vandaag', fe(omzetVandaag), '💶') +
+    statCard('Omzet Deze Week', fe(omzetWeek), '📅') +
+    statCard('Omzet Deze Maand', fe(omzetMaand), '📊') +
+    statCard('Totale Omzet', fe(omzetTotaal), '💰');
 
-  // Revenue chart
-  const ctx = document.getElementById('fin-revenue-chart');
-  if (finRevenueChart) finRevenueChart.destroy();
-  finRevenueChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Producten', 'Franchise Fees', 'Academy', 'Royalties'],
-      datasets: [{ label: 'Omzet', data: [totalOrders, totalFranchiseFees, totalAcademy, 0], backgroundColor: ['#a8875c','#e28568','#c2a47e','#d4bfa5'] }]
-    },
-    options: { responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true, ticks:{ callback: v => fe(v) } } } }
+  // ── Bar chart: daily revenue last 14 days ──
+  const dailyData = {};
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(nu); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0,10);
+    dailyData[key] = 0;
+  }
+  revenueBookings.forEach(b => { if (dailyData[b.datum] !== undefined) dailyData[b.datum] += bookingPrijs(b); });
+  const dailyLabels = Object.keys(dailyData).map(d => new Date(d).toLocaleDateString('de-DE',{day:'numeric',month:'short'}));
+  const dailyValues = Object.values(dailyData);
+
+  if (finDailyChart) finDailyChart.destroy();
+  finDailyChart = new Chart(document.getElementById('fin-daily-chart'), {
+    type:'bar', data:{ labels:dailyLabels, datasets:[{label:'Omzet',data:dailyValues,backgroundColor:'#a8875c',borderRadius:4}] },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>fe(v)}}}}
   });
 
-  // Royalties
-  const liveFranchisees = data.franchisees.filter(f => f.status === 'live');
-  document.getElementById('fin-royalties').innerHTML = liveFranchisees.length ?
-    `<div class="space-y-2">${liveFranchisees.map(f => {
-      const omzet = (f.maandomzet||[]).reduce((s,m)=>s+(m.bedrag||0),0);
-      const royaltyPct = omzet > 120000 ? 6 : 5;
-      return `<div class="flex items-center justify-between py-2 border-b border-gray-50">
-        <span class="text-sm">${f.naam || f.bedrijfsnaam}</span>
-        <span class="text-sm text-gray-500">${fe(omzet)} omzet</span>
-        <span class="text-sm font-medium">${royaltyPct}% = ${fe(omzet * royaltyPct / 100)}</span>
-      </div>`;
-    }).join('')}</div>`
-    : '<p class="text-sm text-gray-400">Nog geen live franchisees met omzet</p>';
+  // ── Doughnut chart: revenue by category ──
+  const catRevenue = {};
+  revenueBookings.forEach(b => {
+    const svc = data.services.find(s => s.id === b.serviceId);
+    const cat = svc?.categorie || 'Overig';
+    catRevenue[cat] = (catRevenue[cat]||0) + bookingPrijs(b);
+  });
+  const catLabels = Object.keys(catRevenue);
+  const catValues = Object.values(catRevenue);
+  const catColors = ['#a8875c','#e28568','#c2a47e','#d4bfa5','#6366f1','#059669'];
+
+  if (finCategoryChart) finCategoryChart.destroy();
+  finCategoryChart = new Chart(document.getElementById('fin-category-chart'), {
+    type:'doughnut', data:{ labels:catLabels, datasets:[{data:catValues,backgroundColor:catColors.slice(0,catLabels.length)}] },
+    options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:12}}}}}
+  });
+
+  // ── Bar chart: revenue per studio ──
+  const studioRevenue = {};
+  data.studios.forEach(s => { studioRevenue[s.id] = {naam:s.naam,omzet:0}; });
+  revenueBookings.forEach(b => { if (studioRevenue[b.studioId]) studioRevenue[b.studioId].omzet += bookingPrijs(b); });
+  const studioEntries = Object.values(studioRevenue).filter(s => s.omzet > 0 || true);
+  const studioLabels = studioEntries.map(s => s.naam.replace('Wax Affairs ',''));
+  const studioValues = studioEntries.map(s => s.omzet);
+
+  if (finStudioChart) finStudioChart.destroy();
+  finStudioChart = new Chart(document.getElementById('fin-studio-chart'), {
+    type:'bar', data:{ labels:studioLabels, datasets:[{label:'Omzet',data:studioValues,backgroundColor:'#e28568',borderRadius:4}] },
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>fe(v)}},x:{ticks:{font:{size:11}}}},indexAxis:'y'}
+  });
+
+  // ── Top 10 services table ──
+  const svcStats = {};
+  revenueBookings.forEach(b => {
+    const svc = data.services.find(s => s.id === b.serviceId);
+    const naam = svc?.naam || b.service || 'Onbekend';
+    if (!svcStats[naam]) svcStats[naam] = {naam, count:0, omzet:0};
+    svcStats[naam].count++;
+    svcStats[naam].omzet += bookingPrijs(b);
+  });
+  const top10 = Object.values(svcStats).sort((a,b) => b.count - a.count).slice(0,10);
+  document.getElementById('fin-top-services').innerHTML = top10.length ?
+    `<div class="divide-y divide-gray-50">${top10.map((s,i) =>
+      `<div class="flex items-center gap-3 py-2">
+        <span class="w-6 h-6 rounded-full bg-wax-100 text-wax-700 text-xs font-bold flex items-center justify-center">${i+1}</span>
+        <span class="flex-1 text-sm text-gray-900">${s.naam}</span>
+        <span class="text-xs text-gray-400">${s.count}x</span>
+        <span class="text-sm font-medium text-gray-900">${fe(s.omzet)}</span>
+      </div>`).join('')}</div>`
+    : '<p class="text-sm text-gray-400">Nog geen boekingen</p>';
+
+  // ── Studio revenue table ──
+  document.getElementById('fin-studio-table').innerHTML = studioEntries.length ?
+    `<div class="divide-y divide-gray-50">
+      <div class="flex items-center gap-4 py-2 text-xs font-semibold text-gray-500 uppercase">
+        <div class="flex-1">Studio</div><div class="w-20 text-right">Boekingen</div><div class="w-28 text-right">Omzet</div>
+      </div>
+      ${studioEntries.map(s => {
+        const count = revenueBookings.filter(b => data.studios.find(st => st.id === b.studioId)?.naam === s.naam).length;
+        return `<div class="flex items-center gap-4 py-2.5">
+          <div class="flex-1 text-sm text-gray-900">${s.naam}</div>
+          <div class="w-20 text-right text-sm text-gray-500">${count}</div>
+          <div class="w-28 text-right text-sm font-medium text-gray-900">${fe(s.omzet)}</div>
+        </div>`;
+      }).join('')}
+    </div>` : '<p class="text-sm text-gray-400">Nog geen studios</p>';
+
+  // ── Recent transactions ──
+  const recent = [...data.bookings].sort((a,b) => ((b.datum||'')+(b.tijd||'')).localeCompare((a.datum||'')+(a.tijd||''))).slice(0,20);
+  document.getElementById('fin-transactions').innerHTML = recent.length ?
+    `<div class="divide-y divide-gray-50">
+      ${recent.map(b => {
+        const svc = data.services.find(s => s.id === b.serviceId);
+        const client = data.clients.find(c => c.id === b.clientId);
+        return `<div class="flex items-center gap-3 py-2.5">
+          <div class="w-20 flex-shrink-0"><div class="text-xs text-gray-500">${b.datum ? fd(b.datum) : '-'}</div><div class="text-xs text-gray-400">${b.tijd||''}</div></div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm text-gray-900 truncate">${client?.naam || b.klantNaam || '-'}</div>
+            <div class="text-xs text-gray-400 truncate">${svc?.naam || b.service || '-'}</div>
+          </div>
+          <div class="text-sm font-medium text-gray-900">${fe(bookingPrijs(b))}</div>
+          <div>${badge(b.status)}</div>
+        </div>`;
+      }).join('')}
+    </div>` : '<p class="text-sm text-gray-400">Nog geen transacties</p>';
 }
 
 // ─── RENDER: Contacten ───
@@ -3132,7 +3251,7 @@ function renderStudios() {
       </div>
       <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
         <span class="text-xs text-gray-400">${bookingCount} boekingen</span>
-        <button onclick="openModal('studio-detail','${s.id}')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">Bewerken →</button>
+        <button onclick="openModal('studio-detail','${s.id}')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">Details →</button>
       </div>
     </div>`;
   }).join('');
@@ -3176,7 +3295,7 @@ function openModal(type, id) {
   else if (type === 'booking') content.innerHTML = modalBooking(arguments[2], arguments[3]);
   else if (type === 'booking-detail') content.innerHTML = modalBookingDetail(id);
   else if (type === 'studio') content.innerHTML = modalStudio();
-  else if (type === 'studio-detail') content.innerHTML = modalStudioDetail(id);
+  else if (type === 'studio-detail') { openWideModal(modalStudioDetail(id)); return; }
   else if (type === 'service') content.innerHTML = modalService();
   else if (type === 'service-detail') content.innerHTML = modalServiceDetail(id);
   else if (type === 'franchisee') content.innerHTML = modalFranchisee();
@@ -3195,11 +3314,21 @@ function openModal(type, id) {
   else if (type === 'taak') content.innerHTML = modalTaak();
   else if (type === 'taak-detail') content.innerHTML = modalTaakDetail(id);
   else if (type === 'client') content.innerHTML = modalClient();
-  else if (type === 'client-detail') content.innerHTML = modalClientDetail(id);
+  else if (type === 'client-detail') { openWideModal(modalClientDetail(id)); return; }
 }
 
 function sluitModal() {
   document.getElementById('modal').classList.add('hidden');
+  document.getElementById('modal-panel').style.maxWidth = '';
+}
+
+function openWideModal(html) {
+  const modal = document.getElementById('modal');
+  const panel = document.getElementById('modal-panel');
+  const content = document.getElementById('modal-content');
+  panel.style.maxWidth = '56rem';
+  content.innerHTML = html;
+  modal.classList.remove('hidden');
 }
 
 function modalHeader(titel, subtitle) {
@@ -3952,19 +4081,149 @@ function modalStudio() {
     </form>`;
 }
 
+let studioDetailTab = 'heute';
+let studioDetailCharts = {};
 function modalStudioDetail(id) {
   const s = data.studios.find(x => x.id === id);
   if (!s) return '<p class="p-6">Niet gevonden</p>';
-  return modalHeader(s.naam, s.adres) +
-    `<form onsubmit="event.preventDefault(); updateStudio('${id}', this)" class="p-6 space-y-4">
+  const studioBookings = data.bookings.filter(b => b.studioId === s.id);
+
+  // Header
+  let html = `<div class="px-6 py-5 border-b border-gray-100">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-xl bg-wax-100 flex items-center justify-center text-2xl">💈</div>
+        <div>
+          <h2 class="text-xl font-bold text-gray-900">${s.naam}</h2>
+          <p class="text-sm text-gray-500">${s.adres || ''}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        ${s.actief ? '<span class="badge bg-green-100 text-green-700">Actief</span>' : '<span class="badge bg-gray-100 text-gray-500">Inactief</span>'}
+        ${s.whatsapp ? `<a href="${s.whatsapp}" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-50 text-green-700 text-xs font-medium hover:bg-green-100">💬 WhatsApp</a>` : ''}
+        <button onclick="sluitModal()" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400">✕</button>
+      </div>
+    </div>
+    <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
+      <span>📞 ${s.telefoon || '-'}</span>
+      <span>🕐 ${s.openingstijden || '-'}</span>
+    </div>
+  </div>`;
+
+  // Tabs
+  const tabs = [{id:'heute',label:'Heute',icon:'📅'},{id:'statistiken',label:'Statistiken',icon:'📊'},{id:'buchungen',label:'Alle Buchungen',icon:'📋'},{id:'info',label:'Info',icon:'⚙️'}];
+  html += `<div class="flex gap-1 px-6 pt-4 pb-0 border-b border-gray-100 tab-scroll">
+    ${tabs.map(t => `<button onclick="studioDetailTab='${t.id}'; document.getElementById('modal-content').innerHTML=modalStudioDetail('${id}')" class="px-4 py-2.5 rounded-t-lg text-sm font-medium transition-colors ${studioDetailTab===t.id ? 'bg-wax-50 text-wax-700 border-b-2 border-wax-500' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}">${t.icon} ${t.label}</button>`).join('')}
+  </div>`;
+
+  html += '<div class="p-6">';
+
+  if (studioDetailTab === 'heute') {
+    // Today's bookings as timeline
+    const vandaag = new Date().toISOString().slice(0,10);
+    const todayBookings = studioBookings.filter(b => b.datum === vandaag && b.status !== 'geannuleerd').sort((a,b) => (a.tijd||'').localeCompare(b.tijd||''));
+    if (todayBookings.length === 0) {
+      html += '<div class="text-center py-12 text-gray-400"><div class="text-4xl mb-3">📅</div><p class="font-medium">Keine Termine heute</p><p class="text-sm mt-1">Heute sind keine Buchungen geplant</p></div>';
+    } else {
+      html += '<div class="space-y-3">';
+      todayBookings.forEach(b => {
+        const svc = data.services.find(sv => sv.id === b.serviceId);
+        const client = data.clients.find(c => c.id === b.clientId);
+        const prijs = b.prijs ? parseFloat(b.prijs) : (svc?.prijs || 0);
+        html += `<div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-shadow">
+          <div class="text-center flex-shrink-0 w-16">
+            <div class="text-lg font-bold text-wax-600">${b.tijd || '?'}</div>
+            <div class="text-xs text-gray-400">${svc?.duur || '?'} min</div>
+          </div>
+          <div class="w-px h-10 bg-gray-200"></div>
+          <div class="flex-1 min-w-0">
+            <div class="font-medium text-gray-900 text-sm">${svc?.naam || b.service || 'Service'}</div>
+            <div class="text-xs text-gray-500">${client?.naam || b.klantNaam || '-'}</div>
+          </div>
+          <div class="text-sm font-medium text-gray-900">${fe(prijs)}</div>
+          <div>${badge(b.status)}</div>
+        </div>`;
+      });
+      html += '</div>';
+    }
+  } else if (studioDetailTab === 'statistiken') {
+    // KPIs
+    const nu = new Date();
+    const maandStart = new Date(nu.getFullYear(), nu.getMonth(), 1).toISOString().slice(0,10);
+    const revenueB = studioBookings.filter(b => ['bevestigd','voltooid'].includes(b.status));
+    const maandOmzet = revenueB.filter(b => b.datum >= maandStart).reduce((s,b) => {
+      const svc = data.services.find(sv => sv.id === b.serviceId);
+      return s + (b.prijs ? parseFloat(b.prijs) : (svc?.prijs || 0));
+    }, 0);
+    const uniqueClients = new Set(studioBookings.map(b => b.clientId || b.klantNaam)).size;
+    // Popular service
+    const svcCount = {};
+    studioBookings.forEach(b => { const n = data.services.find(sv => sv.id === b.serviceId)?.naam || b.service || '?'; svcCount[n] = (svcCount[n]||0) + 1; });
+    const popService = Object.entries(svcCount).sort((a,b) => b[1]-a[1])[0];
+
+    html += `<div class="grid grid-cols-3 gap-4 mb-6">
+      ${statCard('Omzet Deze Maand', fe(maandOmzet), '💰')}
+      ${statCard('Unieke Klanten', uniqueClients, '👤')}
+      ${statCard('Populairste Service', popService ? popService[0] : '-', '⭐', popService ? popService[1]+'x geboekt' : '')}
+    </div>`;
+
+    // Booking count last 14 days chart
+    html += '<div class="bg-white rounded-xl p-5 border border-gray-100"><h4 class="font-semibold text-sm text-gray-900 mb-3">Boekingen Laatste 14 Dagen</h4><canvas id="studio-booking-chart" height="180"></canvas></div>';
+
+    // Use setTimeout to render chart after DOM is ready
+    setTimeout(() => {
+      const ctx = document.getElementById('studio-booking-chart');
+      if (!ctx) return;
+      if (studioDetailCharts.bookings) studioDetailCharts.bookings.destroy();
+      const dData = {};
+      for (let i = 13; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate()-i); dData[d.toISOString().slice(0,10)] = 0; }
+      studioBookings.filter(b => b.status !== 'geannuleerd').forEach(b => { if (dData[b.datum] !== undefined) dData[b.datum]++; });
+      studioDetailCharts.bookings = new Chart(ctx, {
+        type:'bar', data:{ labels:Object.keys(dData).map(d => new Date(d).toLocaleDateString('de-DE',{day:'numeric',month:'short'})), datasets:[{label:'Boekingen',data:Object.values(dData),backgroundColor:'#a8875c',borderRadius:4}] },
+        options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}
+      });
+    }, 50);
+
+  } else if (studioDetailTab === 'buchungen') {
+    // All bookings for this studio
+    const sorted = [...studioBookings].sort((a,b) => ((b.datum||'')+(b.tijd||'')).localeCompare((a.datum||'')+(a.tijd||'')));
+    if (!sorted.length) {
+      html += '<p class="text-sm text-gray-400 text-center py-8">Nog geen boekingen voor deze studio</p>';
+    } else {
+      html += `<div class="overflow-x-auto"><table class="w-full text-sm">
+        <thead><tr class="text-xs font-semibold text-gray-500 uppercase border-b border-gray-100">
+          <th class="text-left py-2 pr-3">Datum</th><th class="text-left py-2 pr-3">Tijd</th><th class="text-left py-2 pr-3">Klant</th><th class="text-left py-2 pr-3">Service</th><th class="text-right py-2 pr-3">Prijs</th><th class="text-left py-2">Status</th>
+        </tr></thead><tbody class="divide-y divide-gray-50">`;
+      sorted.forEach(b => {
+        const svc = data.services.find(sv => sv.id === b.serviceId);
+        const client = data.clients.find(c => c.id === b.clientId);
+        const prijs = b.prijs ? parseFloat(b.prijs) : (svc?.prijs || 0);
+        html += `<tr class="hover:bg-gray-50">
+          <td class="py-2.5 pr-3 text-gray-900">${b.datum ? fd(b.datum) : '-'}</td>
+          <td class="py-2.5 pr-3 text-gray-500">${b.tijd || '-'}</td>
+          <td class="py-2.5 pr-3 text-gray-900">${client?.naam || b.klantNaam || '-'}</td>
+          <td class="py-2.5 pr-3 text-gray-500">${svc?.naam || b.service || '-'}</td>
+          <td class="py-2.5 pr-3 text-right font-medium">${fe(prijs)}</td>
+          <td class="py-2.5">${badge(b.status)}</td>
+        </tr>`;
+      });
+      html += '</tbody></table></div>';
+    }
+  } else if (studioDetailTab === 'info') {
+    // Edit form
+    html += `<form onsubmit="event.preventDefault(); updateStudio('${id}', this)" class="space-y-4">
       ${formField('Studionaam', 'naam', 'text', s.naam)}
       ${formField('Adres', 'adres', 'text', s.adres||'')}
       ${formField('Telefoon', 'telefoon', 'tel', s.telefoon||'')}
       ${formField('WhatsApp Link', 'whatsapp', 'url', s.whatsapp||'')}
       ${formField('Openingstijden', 'openingstijden', 'text', s.openingstijden||'')}
       <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">Opslaan</button>
-      <button type="button" onclick="verwijderStudio('${id}')" class="btn-danger w-full py-2 rounded-lg text-sm">Verwijderen</button>
+      <button type="button" onclick="verwijderStudio('${id}')" class="btn-danger w-full py-2 rounded-lg text-sm mt-2">Verwijderen</button>
     </form>`;
+  }
+
+  html += '</div>';
+  return html;
 }
 
 async function saveStudio(form) {
@@ -4082,17 +4341,33 @@ function zoekResultaten(query) {
 }
 
 // ─── RENDER: Klanten ───
+function clientStatus(aantalAfspraken) {
+  if (aantalAfspraken === 0) return {label:'Neu', kleur:'bg-blue-100 text-blue-700'};
+  if (aantalAfspraken <= 5) return {label:'Stammkunde', kleur:'bg-wax-100 text-wax-700'};
+  return {label:'VIP', kleur:'bg-yellow-100 text-yellow-800'};
+}
+
+const avatarColors = ['#a8875c','#6366f1','#059669','#dc2626','#8b5cf6','#0891b2','#d97706','#e11d48','#4f46e5','#16a34a'];
+function clientAvatarColor(naam) {
+  let hash = 0;
+  for (let i = 0; i < (naam||'').length; i++) hash = naam.charCodeAt(i) + ((hash << 5) - hash);
+  return avatarColors[Math.abs(hash) % avatarColors.length];
+}
+
 function renderKlanten() {
   const zoek = (document.getElementById('klanten-zoek')?.value || '').toLowerCase();
   const sort = document.getElementById('klanten-sort')?.value || 'naam';
+  const statusFilter = document.getElementById('klanten-status-filter')?.value || '';
 
   // Enrich clients with booking counts
   let lijst = data.clients.map(c => {
-    const afspraken = data.bookings.filter(b => b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam)).length;
-    return { ...c, aantalAfspraken: afspraken };
+    const bookings = data.bookings.filter(b => b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam));
+    const afspraken = bookings.filter(b => b.status !== 'geannuleerd').length;
+    const laatsteBooking = bookings.sort((a,b) => ((b.datum||'')+(b.tijd||'')).localeCompare((a.datum||'')+(a.tijd||'')))[0];
+    return { ...c, aantalAfspraken: afspraken, laatsteBezoekCalc: laatsteBooking?.datum || c.laatsteBezoek || '' };
   });
 
-  // Filter
+  // Filter by search
   if (zoek) {
     lijst = lijst.filter(c =>
       (c.naam||'').toLowerCase().includes(zoek) ||
@@ -4101,78 +4376,83 @@ function renderKlanten() {
     );
   }
 
+  // Filter by status
+  if (statusFilter === 'neu') lijst = lijst.filter(c => c.aantalAfspraken === 0);
+  else if (statusFilter === 'stammkunde') lijst = lijst.filter(c => c.aantalAfspraken >= 1 && c.aantalAfspraken <= 5);
+  else if (statusFilter === 'vip') lijst = lijst.filter(c => c.aantalAfspraken >= 6);
+
   // Sort
   if (sort === 'naam') lijst.sort((a,b) => (a.naam||'').localeCompare(b.naam||''));
-  else if (sort === 'recent') lijst.sort((a,b) => (b.laatsteBezoek||'').localeCompare(a.laatsteBezoek||''));
+  else if (sort === 'recent') lijst.sort((a,b) => (b.laatsteBezoekCalc||'').localeCompare(a.laatsteBezoekCalc||''));
   else if (sort === 'afspraken') lijst.sort((a,b) => (b.aantalAfspraken||0) - (a.aantalAfspraken||0));
 
   // KPIs
   const kpisEl = document.getElementById('klanten-kpis');
-  const vandaag = new Date().toISOString().slice(0,10);
-  const vandaagBookings = data.bookings.filter(b => b.datum === vandaag && b.status !== 'geannuleerd');
-  const dezeWeek = data.bookings.filter(b => {
-    if (!b.datum || b.status === 'geannuleerd') return false;
-    const bd = new Date(b.datum);
-    const nu = new Date();
-    const weekStart = new Date(nu); weekStart.setDate(nu.getDate() - nu.getDay() + 1);
-    const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
-    return bd >= weekStart && bd <= weekEnd;
-  });
+  const vipCount = data.clients.filter(c => data.bookings.filter(b => (b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam)) && b.status !== 'geannuleerd').length >= 6).length;
+  const stammCount = data.clients.filter(c => { const n = data.bookings.filter(b => (b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam)) && b.status !== 'geannuleerd').length; return n >= 1 && n <= 5; }).length;
+  const neuCount = data.clients.filter(c => data.bookings.filter(b => (b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam)) && b.status !== 'geannuleerd').length === 0).length;
   kpisEl.innerHTML =
     statCard('Totaal Klanten', data.clients.length, '👤') +
-    statCard('Afspraken Vandaag', vandaagBookings.length, '📅') +
-    statCard('Afspraken Deze Week', dezeWeek.length, '📊') +
-    statCard('Totaal Afspraken', data.bookings.filter(b => b.status !== 'geannuleerd').length, '✂️');
+    statCard('VIP Klanten', vipCount, '⭐', '6+ afspraken') +
+    statCard('Stammkunden', stammCount, '🔄', '1-5 afspraken') +
+    statCard('Neue Kunden', neuCount, '🆕', '0 afspraken');
 
   // Pagination
-  const totalPages = Math.max(1, Math.ceil(lijst.length / KLANTEN_PER_PAGE));
+  const CARDS_PER_PAGE = 18;
+  const totalPages = Math.max(1, Math.ceil(lijst.length / CARDS_PER_PAGE));
   if (klantenPage > totalPages) klantenPage = totalPages;
-  const start = (klantenPage - 1) * KLANTEN_PER_PAGE;
-  const pageLijst = lijst.slice(start, start + KLANTEN_PER_PAGE);
+  const start = (klantenPage - 1) * CARDS_PER_PAGE;
+  const pageLijst = lijst.slice(start, start + CARDS_PER_PAGE);
 
-  const tabelEl = document.getElementById('klanten-tabel');
+  const gridEl = document.getElementById('klanten-grid');
   const leegEl = document.getElementById('klanten-leeg');
   const pagEl = document.getElementById('klanten-paginering');
 
   if (!lijst.length) {
-    tabelEl.innerHTML = '';
+    gridEl.innerHTML = '';
     leegEl.classList.remove('hidden');
     pagEl.innerHTML = '';
     return;
   }
   leegEl.classList.add('hidden');
 
-  tabelEl.innerHTML =
-    `<div class="hidden md:flex items-center gap-4 px-5 py-2 bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
-      <div class="flex-1">Naam</div>
-      <div class="w-48">Email</div>
-      <div class="w-36">Telefoon</div>
-      <div class="w-20 text-center">Afspraken</div>
-      <div class="w-28">Laatste Bezoek</div>
-    </div>` +
-    pageLijst.map(c => {
-      const initialen = (c.naam || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
-      return `<div class="table-row flex items-center gap-4 px-5 py-3 cursor-pointer hover:bg-wax-50 transition-colors" onclick="openModal('client-detail','${c.id}')">
-        <div class="flex-1 flex items-center gap-3 min-w-0">
-          <div class="w-9 h-9 rounded-lg bg-wax-100 flex items-center justify-center text-wax-700 text-xs font-bold flex-shrink-0">${initialen}</div>
-          <div class="min-w-0">
-            <div class="text-sm font-medium text-gray-900 truncate">${c.naam || '-'}</div>
-            <div class="text-xs text-gray-400 md:hidden truncate">${c.email || ''}</div>
+  gridEl.innerHTML = pageLijst.map(c => {
+    const initialen = (c.naam || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+    const status = clientStatus(c.aantalAfspraken);
+    const color = clientAvatarColor(c.naam);
+    return `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card cursor-pointer hover:border-wax-200 transition-all" onclick="openModal('client-detail','${c.id}')">
+      <div class="flex items-start gap-4">
+        <div class="w-14 h-14 rounded-xl flex items-center justify-center text-white text-lg font-bold flex-shrink-0" style="background:${color}">${initialen}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <h3 class="font-bold text-gray-900 text-sm truncate">${c.naam || '-'}</h3>
+            <span class="badge ${status.kleur} flex-shrink-0">${status.label}</span>
+          </div>
+          ${c.email ? `<div class="text-xs text-gray-500 truncate">${c.email}</div>` : ''}
+          ${c.telefoon ? `<div class="text-xs text-gray-500">${c.telefoon}</div>` : ''}
+        </div>
+      </div>
+      <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="text-center">
+            <div class="text-lg font-bold text-gray-900">${c.aantalAfspraken}</div>
+            <div class="text-xs text-gray-400">Termine</div>
           </div>
         </div>
-        <div class="w-48 text-sm text-gray-500 truncate hidden md:block">${c.email || '-'}</div>
-        <div class="w-36 text-sm text-gray-500 hidden md:block">${c.telefoon || '-'}</div>
-        <div class="w-20 text-center"><span class="inline-flex items-center justify-center w-7 h-7 rounded-full ${c.aantalAfspraken > 0 ? 'bg-wax-100 text-wax-700' : 'bg-gray-100 text-gray-400'} text-xs font-bold">${c.aantalAfspraken}</span></div>
-        <div class="w-28 text-xs text-gray-400 hidden md:block">${c.laatsteBezoek ? fd(c.laatsteBezoek) : '-'}</div>
-      </div>`;
-    }).join('');
+        <div class="text-right">
+          <div class="text-xs text-gray-400">Letzter Besuch</div>
+          <div class="text-sm text-gray-600">${c.laatsteBezoekCalc ? fd(c.laatsteBezoekCalc) : '-'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 
   pagEl.innerHTML = `
     <span>${lijst.length} klant${lijst.length !== 1 ? 'en' : ''} gevonden</span>
     <div class="flex items-center gap-1">
-      <button onclick="klantenPage=Math.max(1,klantenPage-1); renderKlanten()" class="px-2 py-1 rounded hover:bg-gray-100 ${klantenPage <= 1 ? 'opacity-30' : ''}" ${klantenPage <= 1 ? 'disabled' : ''}>&#8592;</button>
-      <span class="px-2">${klantenPage} / ${totalPages}</span>
-      <button onclick="klantenPage=Math.min(${totalPages},klantenPage+1); renderKlanten()" class="px-2 py-1 rounded hover:bg-gray-100 ${klantenPage >= totalPages ? 'opacity-30' : ''}" ${klantenPage >= totalPages ? 'disabled' : ''}>&#8594;</button>
+      <button onclick="klantenPage=Math.max(1,klantenPage-1); renderKlanten()" class="px-3 py-1.5 rounded-lg hover:bg-gray-100 text-sm ${klantenPage <= 1 ? 'opacity-30' : ''}" ${klantenPage <= 1 ? 'disabled' : ''}>&#8592; Vorige</button>
+      <span class="px-3 text-sm font-medium">${klantenPage} / ${totalPages}</span>
+      <button onclick="klantenPage=Math.min(${totalPages},klantenPage+1); renderKlanten()" class="px-3 py-1.5 rounded-lg hover:bg-gray-100 text-sm ${klantenPage >= totalPages ? 'opacity-30' : ''}" ${klantenPage >= totalPages ? 'disabled' : ''}>Volgende &#8594;</button>
     </div>`;
 }
 
@@ -4192,42 +4472,133 @@ function modalClientDetail(id) {
   const c = data.clients.find(x => x.id === id);
   if (!c) return '<p class="p-6">Niet gevonden</p>';
   const clientBookings = data.bookings.filter(b => b.clientId === c.id || (b.klantNaam && b.klantNaam === c.naam))
-    .sort((a,b) => (b.datum+b.tijd).localeCompare(a.datum+a.tijd));
-  return modalHeader(c.naam || 'Klant', c.email || c.telefoon || '') +
-    `<div class="p-6 space-y-5">
-      <div class="bg-wax-50 rounded-xl p-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div><span class="text-xs text-gray-400">Email</span><div class="text-sm font-medium">${c.email || '-'}</div></div>
-          <div><span class="text-xs text-gray-400">Telefoon</span><div class="text-sm font-medium">${c.telefoon || '-'}</div></div>
-          <div><span class="text-xs text-gray-400">Klant sinds</span><div class="text-sm font-medium">${fd(c.aangemaakt)}</div></div>
-          <div><span class="text-xs text-gray-400">Laatste bezoek</span><div class="text-sm font-medium">${c.laatsteBezoek ? fd(c.laatsteBezoek) : '-'}</div></div>
+    .sort((a,b) => ((b.datum||'')+(b.tijd||'')).localeCompare((a.datum||'')+(a.tijd||'')));
+  const revenueBookings = clientBookings.filter(b => ['bevestigd','voltooid'].includes(b.status));
+
+  // Calculate stats
+  const totalSpent = revenueBookings.reduce((s,b) => {
+    const svc = data.services.find(sv => sv.id === b.serviceId);
+    return s + (b.prijs ? parseFloat(b.prijs) : (svc?.prijs || 0));
+  }, 0);
+  const visitCount = revenueBookings.length;
+  const avgSpend = visitCount > 0 ? totalSpent / visitCount : 0;
+  const initialen = (c.naam || '?').split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  const color = clientAvatarColor(c.naam);
+  const status = clientStatus(clientBookings.filter(b => b.status !== 'geannuleerd').length);
+
+  // Favorite services
+  const svcCount = {};
+  clientBookings.forEach(b => {
+    const svc = data.services.find(sv => sv.id === b.serviceId);
+    const n = svc?.naam || b.service || 'Onbekend';
+    svcCount[n] = (svcCount[n]||0) + 1;
+  });
+  const favServices = Object.entries(svcCount).sort((a,b) => b[1]-a[1]).slice(0,5);
+
+  // Header with avatar and contact info
+  let html = `<div class="px-6 py-6 bg-gradient-to-r from-wax-50 to-white border-b border-gray-100">
+    <div class="flex items-start gap-5">
+      <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 shadow-lg" style="background:${color}">${initialen}</div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-xl font-bold text-gray-900">${c.naam || 'Klant'}</h2>
+          <span class="badge ${status.kleur}">${status.label}</span>
+        </div>
+        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
+          ${c.email ? `<span>${c.email}</span>` : ''}
+          ${c.telefoon ? `<span>${c.telefoon}</span>` : ''}
+          <span>Klant seit ${fd(c.aangemaakt)}</span>
+        </div>
+        <div class="flex gap-2 mt-3">
+          ${c.telefoon ? `<a href="tel:${c.telefoon}" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-100 text-gray-700 text-xs font-medium hover:bg-gray-200">📞 Anrufen</a>` : ''}
+          ${c.telefoon ? `<a href="https://wa.me/${(c.telefoon||'').replace(/[^0-9+]/g,'')}" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-50 text-green-700 text-xs font-medium hover:bg-green-100">💬 WhatsApp</a>` : ''}
+          <button onclick="openModal('booking','','${new Date().toISOString().slice(0,10)}','10:00'); setTimeout(()=>{const f=document.querySelector('#modal-content [name=klantNaam]'); if(f) f.value='${(c.naam||'').replace(/'/g,"\\'")}';},100)" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-wax-100 text-wax-700 text-xs font-medium hover:bg-wax-200">📅 Neue Buchung</button>
         </div>
       </div>
-      <div>
-        <h4 class="font-semibold text-gray-900 mb-3">Afspraken (${clientBookings.length})</h4>
-        ${clientBookings.length ? clientBookings.slice(0,15).map(b => {
-          const svc = data.services.find(s => s.id === b.serviceId);
-          const studio = data.studios.find(s => s.id === b.studioId);
-          return `<div class="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
-            <div class="w-12 text-center flex-shrink-0">
-              <div class="text-xs text-gray-400">${b.datum ? new Date(b.datum).toLocaleDateString('nl-NL',{weekday:'short'}) : ''}</div>
-              <div class="text-lg font-bold text-gray-900">${b.datum ? new Date(b.datum).getDate() : '?'}</div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="text-sm font-medium text-gray-900">${svc?.naam || b.service || 'Service'}</div>
-              <div class="text-xs text-gray-400">${b.tijd || ''} &middot; ${svc?.duur || '?'} min &middot; ${studio?.naam?.replace('Wax Affairs ','') || ''}</div>
-            </div>
-            <div class="text-sm font-medium text-gray-900">${fe(svc?.prijs || b.prijs || 0)}</div>
-            <div>${badge(b.status)}</div>
-          </div>`;
-        }).join('') : '<p class="text-sm text-gray-400">Nog geen afspraken</p>'}
-      </div>
-      ${c.notities ? `<div class="bg-gray-50 rounded-lg p-3 text-sm">${c.notities}</div>` : ''}
-      <div class="flex gap-2 pt-4 border-t">
-        <button onclick="openModal('booking','','${new Date().toISOString().slice(0,10)}','10:00'); setTimeout(()=>{const f=document.querySelector('#modal-content [name=klantNaam]'); if(f) f.value='${(c.naam||'').replace(/'/g,"\\'")}';},100)" class="btn-primary px-4 py-2 rounded-lg text-sm">+ Neue Buchung</button>
-        <button onclick="verwijderClient('${id}')" class="btn-danger px-4 py-2 rounded-lg text-sm">Verwijderen</button>
+      <button onclick="sluitModal()" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0">✕</button>
+    </div>
+  </div>`;
+
+  // KPI row
+  html += `<div class="grid grid-cols-4 gap-3 px-6 py-4 bg-gray-50 border-b border-gray-100">
+    <div class="text-center">
+      <div class="text-lg font-bold text-gray-900">${fe(totalSpent)}</div>
+      <div class="text-xs text-gray-500">Gesamt Ausgaben</div>
+    </div>
+    <div class="text-center">
+      <div class="text-lg font-bold text-gray-900">${visitCount}</div>
+      <div class="text-xs text-gray-500">Besuche</div>
+    </div>
+    <div class="text-center">
+      <div class="text-lg font-bold text-gray-900">${fe(avgSpend)}</div>
+      <div class="text-xs text-gray-500">Durchschnitt</div>
+    </div>
+    <div class="text-center">
+      <div class="text-lg font-bold text-gray-900">${c.aangemaakt ? fd(c.aangemaakt) : '-'}</div>
+      <div class="text-xs text-gray-500">Mitglied seit</div>
+    </div>
+  </div>`;
+
+  html += '<div class="p-6 space-y-6">';
+
+  // Favorite services
+  if (favServices.length) {
+    html += `<div>
+      <h4 class="font-semibold text-gray-900 text-sm mb-3">Lieblings-Services</h4>
+      <div class="flex flex-wrap gap-2">
+        ${favServices.map(([name,count]) => `<span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-wax-50 border border-wax-100 text-sm text-wax-700"><span class="font-medium">${name}</span><span class="text-xs text-wax-500">${count}x</span></span>`).join('')}
       </div>
     </div>`;
+  }
+
+  // Appointment history table
+  html += `<div>
+    <h4 class="font-semibold text-gray-900 text-sm mb-3">Terminverlauf (${clientBookings.length})</h4>`;
+  if (clientBookings.length) {
+    html += '<div class="overflow-x-auto border border-gray-100 rounded-xl"><table class="w-full text-sm"><thead><tr class="text-xs font-semibold text-gray-500 uppercase bg-gray-50"><th class="text-left py-2.5 px-3">Datum</th><th class="text-left py-2.5 px-3">Service</th><th class="text-left py-2.5 px-3">Studio</th><th class="text-right py-2.5 px-3">Dauer</th><th class="text-right py-2.5 px-3">Preis</th><th class="text-left py-2.5 px-3">Status</th></tr></thead><tbody class="divide-y divide-gray-50">';
+    clientBookings.forEach(b => {
+      const svc = data.services.find(sv => sv.id === b.serviceId);
+      const studio = data.studios.find(st => st.id === b.studioId);
+      const prijs = b.prijs ? parseFloat(b.prijs) : (svc?.prijs || 0);
+      html += `<tr class="hover:bg-gray-50">
+        <td class="py-2.5 px-3"><div class="text-gray-900">${b.datum ? fd(b.datum) : '-'}</div><div class="text-xs text-gray-400">${b.tijd || ''}</div></td>
+        <td class="py-2.5 px-3 text-gray-900">${svc?.naam || b.service || '-'}</td>
+        <td class="py-2.5 px-3 text-gray-500">${studio?.naam?.replace('Wax Affairs ','') || '-'}</td>
+        <td class="py-2.5 px-3 text-right text-gray-500">${svc?.duur || '?'} min</td>
+        <td class="py-2.5 px-3 text-right font-medium">${fe(prijs)}</td>
+        <td class="py-2.5 px-3">${badge(b.status)}</td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+  } else {
+    html += '<p class="text-sm text-gray-400">Noch keine Termine</p>';
+  }
+  html += '</div>';
+
+  // Notes section
+  html += `<div>
+    <h4 class="font-semibold text-gray-900 text-sm mb-2">Notizen</h4>
+    <textarea id="client-notes-${id}" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none" rows="3" placeholder="Notizen zu dieser Kundin...">${c.notities || ''}</textarea>
+    <button onclick="saveClientNotes('${id}')" class="mt-2 btn-secondary px-4 py-2 rounded-lg text-xs font-medium">Notizen speichern</button>
+  </div>`;
+
+  // Actions
+  html += `<div class="flex gap-2 pt-4 border-t border-gray-100">
+    <button onclick="verwijderClient('${id}')" class="btn-danger px-4 py-2 rounded-lg text-sm">Kundin entfernen</button>
+  </div>`;
+
+  html += '</div>';
+  return html;
+}
+
+async function saveClientNotes(id) {
+  const textarea = document.getElementById('client-notes-' + id);
+  if (!textarea) return;
+  const notities = textarea.value;
+  await apiPut('/api/clients/' + id, { notities });
+  const c = data.clients.find(x => x.id === id);
+  if (c) c.notities = notities;
+  toast('Notizen gespeichert!');
 }
 
 async function saveClient(form) {
