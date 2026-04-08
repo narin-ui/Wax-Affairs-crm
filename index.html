@@ -4169,25 +4169,51 @@ function renderStudios() {
   const leeg = document.getElementById('studio-leeg');
   if (!data.studios.length) { el.innerHTML = ''; leeg.classList.remove('hidden'); return; }
   leeg.classList.add('hidden');
+
+  const nu = new Date();
+  const maandStart = new Date(nu.getFullYear(), nu.getMonth(), 1).toISOString().slice(0, 10);
+  const maandEnd = new Date(nu.getFullYear(), nu.getMonth() + 1, 0).toISOString().slice(0, 10);
+  const bp = data.bp || {};
+  const targets = bp.prognoseTargets || {};
+  const monthTarget = targets.studioMaandTarget || ((targets.studioJaarTarget || 120000) / 12);
+
   el.innerHTML = data.studios.map(s => {
     const bookingCount = data.bookings.filter(b => b.studioId === s.id && b.status !== 'geannuleerd').length;
-    return `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 rounded-xl bg-wax-100 flex items-center justify-center text-xl">💈</div>
-        <div>
-          <div class="font-bold text-gray-900">${s.naam}</div>
-          <div class="text-xs text-gray-400">${s.adres||''}</div>
+    const monthRevenue = data.bookings
+      .filter(b => b.studioId === s.id && ['bevestigd','voltooid'].includes(b.status) && b.datum >= maandStart && b.datum <= maandEnd)
+      .reduce((sum, b) => sum + bookingPrijs(b), 0);
+    const monthPct = monthTarget > 0 ? Math.round((monthRevenue / monthTarget) * 100) : 0;
+    const tl = monthPct >= 100 ? { emoji: '\uD83D\uDFE2', color: '#16a34a', bg: '#dcfce7' } : monthPct >= 70 ? { emoji: '\uD83D\uDFE1', color: '#ca8a04', bg: '#fef9c3' } : { emoji: '\uD83D\uDD34', color: '#dc2626', bg: '#fee2e2' };
+    const progressWidth = Math.min(monthPct, 100);
+
+    return `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card cursor-pointer" onclick="openModal('studio-detail','${s.id}')">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-11 h-11 rounded-xl bg-wax-500 flex items-center justify-center text-white text-lg font-bold">${(s.naam||'S')[0]}</div>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-gray-900 truncate">${s.naam}</div>
+          <div class="text-xs text-gray-400 truncate">${s.adres||''}</div>
         </div>
         <div class="ml-auto">${s.actief ? '<span class="badge bg-green-100 text-green-700">Actief</span>' : '<span class="badge bg-gray-100 text-gray-500">Inactief</span>'}</div>
       </div>
-      <div class="space-y-2 text-sm">
-        <div class="flex items-center gap-2 text-gray-600"><span>📞</span>${s.telefoon||'-'}</div>
-        <div class="flex items-center gap-2 text-gray-600"><span>🕐</span>${s.openingstijden||'-'}</div>
-        ${s.whatsapp ? `<a href="${s.whatsapp}" target="_blank" class="flex items-center gap-2 text-green-600 hover:text-green-700"><span>💬</span>WhatsApp</a>` : ''}
+
+      <div class="rounded-lg p-3 mb-3" style="background:${tl.bg}">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-bold uppercase" style="color:${tl.color}">Omzet deze maand</span>
+          <span class="text-sm">${tl.emoji}</span>
+        </div>
+        <div class="text-xl font-bold mb-1" style="color:${tl.color}">${fe(monthRevenue)}</div>
+        <div class="w-full bg-white/60 rounded-full h-1.5 mb-1">
+          <div class="h-1.5 rounded-full" style="width:${progressWidth}%; background:${tl.color}"></div>
+        </div>
+        <div class="flex justify-between text-xs">
+          <span style="color:${tl.color}">${monthPct}% van target</span>
+          <span class="text-gray-500">${fe(monthTarget)}</span>
+        </div>
       </div>
-      <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-        <span class="text-xs text-gray-400">${bookingCount} boekingen</span>
-        <button onclick="openModal('studio-detail','${s.id}')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">Details →</button>
+
+      <div class="flex items-center justify-between text-xs text-gray-500">
+        <span>${bookingCount} boekingen</span>
+        <span class="text-wax-600 font-medium">Dashboard →</span>
       </div>
     </div>`;
   }).join('');
@@ -4652,7 +4678,7 @@ function openWideModal(html) {
   const modal = document.getElementById('modal');
   const panel = document.getElementById('modal-panel');
   const content = document.getElementById('modal-content');
-  panel.style.maxWidth = '56rem';
+  panel.style.maxWidth = '64rem';
   content.innerHTML = html;
   modal.classList.remove('hidden');
 }
@@ -5407,110 +5433,353 @@ function modalStudio() {
     </form>`;
 }
 
-let studioDetailTab = 'heute';
+let studioDetailTab = 'dashboard';
 let studioDetailCharts = {};
+
+function getStudioRevenueForPeriod(studioId, startDate, endDate) {
+  return data.bookings
+    .filter(b => b.studioId === studioId && ['bevestigd','voltooid'].includes(b.status) && b.datum >= startDate && b.datum <= endDate)
+    .reduce((s, b) => s + bookingPrijs(b), 0);
+}
+
+function getStudioCostsMonthly(studioId) {
+  const vl = (data.vastelasten || []).filter(v => v.studioId === studioId && v.actief !== false);
+  let monthly = 0;
+  vl.forEach(v => {
+    const bedrag = parseFloat(v.bedrag) || 0;
+    if (v.frequentie === 'jaarlijks') monthly += bedrag / 12;
+    else if (v.frequentie === 'kwartaal') monthly += bedrag / 3;
+    else if (v.frequentie === 'wekelijks') monthly += bedrag * 4.33;
+    else monthly += bedrag; // maandelijks or default
+  });
+  return { monthly, items: vl };
+}
+
+function getStudioPersoneelMonthly(studioId) {
+  const nu = new Date();
+  const maandStart = new Date(nu.getFullYear(), nu.getMonth(), 1).toISOString().slice(0, 10);
+  const maandEnd = new Date(nu.getFullYear(), nu.getMonth() + 1, 0).toISOString().slice(0, 10);
+  return (data.personeel?.uren || [])
+    .filter(u => u.studioId === studioId && u.datum >= maandStart && u.datum <= maandEnd)
+    .reduce((s, u) => s + ((parseFloat(u.uren) || 0) * (parseFloat(u.uurloon || u.tarief) || 0)), 0);
+}
+
+function trafficLight(pct) {
+  if (pct >= 100) return { color: '#16a34a', bg: '#dcfce7', border: '#bbf7d0', emoji: '', label: 'Op target' };
+  if (pct >= 70) return { color: '#ca8a04', bg: '#fef9c3', border: '#fef08a', emoji: '', label: 'Bijna' };
+  return { color: '#dc2626', bg: '#fee2e2', border: '#fecaca', emoji: '', label: 'Actie nodig' };
+}
+
 function modalStudioDetail(id) {
   const s = data.studios.find(x => x.id === id);
   if (!s) return '<p class="p-6">Niet gevonden</p>';
-  const studioBookings = data.bookings.filter(b => b.studioId === s.id);
 
-  // Header
-  let html = `<div class="px-6 py-5 border-b border-gray-100">
+  const studioBookings = data.bookings.filter(b => b.studioId === s.id);
+  const revenueBookings = studioBookings.filter(b => ['bevestigd','voltooid'].includes(b.status));
+
+  // --- DATES ---
+  const nu = new Date();
+  const vandaag = nu.toISOString().slice(0, 10);
+  const maandStart = new Date(nu.getFullYear(), nu.getMonth(), 1).toISOString().slice(0, 10);
+  const maandEnd = new Date(nu.getFullYear(), nu.getMonth() + 1, 0).toISOString().slice(0, 10);
+  const jaarStart = nu.getFullYear() + '-01-01';
+  const jaarEnd = nu.getFullYear() + '-12-31';
+
+  // Week: Monday to Sunday
+  const dayOfWeek = nu.getDay() === 0 ? 6 : nu.getDay() - 1;
+  const weekStart = new Date(nu); weekStart.setDate(nu.getDate() - dayOfWeek);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+  const weekStartStr = weekStart.toISOString().slice(0, 10);
+  const weekEndStr = weekEnd.toISOString().slice(0, 10);
+
+  // --- TARGETS from businessplan ---
+  const bp = data.bp || {};
+  const targets = bp.prognoseTargets || {};
+  const yearTarget = targets.studioJaarTarget || 120000;
+  const monthTarget = targets.studioMaandTarget || (yearTarget / 12);
+  const weekTarget = Math.round(monthTarget / 4.33);
+  const dayTarget = Math.round(monthTarget / 26);
+
+  // --- REVENUE ---
+  const dayRevenue = getStudioRevenueForPeriod(s.id, vandaag, vandaag);
+  const weekRevenue = getStudioRevenueForPeriod(s.id, weekStartStr, weekEndStr);
+  const monthRevenue = getStudioRevenueForPeriod(s.id, maandStart, maandEnd);
+  const yearRevenue = getStudioRevenueForPeriod(s.id, jaarStart, jaarEnd);
+
+  const dayPct = dayTarget > 0 ? Math.round((dayRevenue / dayTarget) * 100) : 0;
+  const weekPct = weekTarget > 0 ? Math.round((weekRevenue / weekTarget) * 100) : 0;
+  const monthPct = monthTarget > 0 ? Math.round((monthRevenue / monthTarget) * 100) : 0;
+  const yearPct = yearTarget > 0 ? Math.round((yearRevenue / yearTarget) * 100) : 0;
+
+  // --- COSTS ---
+  const costData = getStudioCostsMonthly(s.id);
+  const personeelKosten = getStudioPersoneelMonthly(s.id);
+  const totalCosts = costData.monthly + personeelKosten;
+  const winst = monthRevenue - totalCosts;
+  const marge = monthRevenue > 0 ? Math.round((winst / monthRevenue) * 100) : 0;
+  const costRatio = monthRevenue > 0 ? Math.round((totalCosts / monthRevenue) * 100) : 0;
+
+  // --- CATEGORY BREAKDOWN (this month) ---
+  const monthBookings = revenueBookings.filter(b => b.datum >= maandStart && b.datum <= maandEnd);
+  const catData = {};
+  monthBookings.forEach(b => {
+    const svc = data.services.find(sv => sv.id === b.serviceId);
+    const cat = svc?.categorie || 'Overig';
+    if (!catData[cat]) catData[cat] = { count: 0, revenue: 0 };
+    catData[cat].count++;
+    catData[cat].revenue += bookingPrijs(b);
+  });
+  const catEntries = Object.entries(catData).sort((a, b) => b[1].revenue - a[1].revenue);
+  const catTotal = catEntries.reduce((s, [, v]) => s + v.revenue, 0);
+
+  // Top 3 services this month
+  const svcCountMonth = {};
+  monthBookings.forEach(b => {
+    const svc = data.services.find(sv => sv.id === b.serviceId);
+    const naam = svc?.naam || b.service || '?';
+    if (!svcCountMonth[naam]) svcCountMonth[naam] = { count: 0, revenue: 0 };
+    svcCountMonth[naam].count++;
+    svcCountMonth[naam].revenue += bookingPrijs(b);
+  });
+  const topServices = Object.entries(svcCountMonth).sort((a, b) => b[1].revenue - a[1].revenue).slice(0, 3);
+
+  // --- PREVIOUS MONTH for growth ---
+  const prevMonthStart = new Date(nu.getFullYear(), nu.getMonth() - 1, 1).toISOString().slice(0, 10);
+  const prevMonthEnd = new Date(nu.getFullYear(), nu.getMonth(), 0).toISOString().slice(0, 10);
+  const prevMonthRevenue = getStudioRevenueForPeriod(s.id, prevMonthStart, prevMonthEnd);
+  const growthPct = prevMonthRevenue > 0 ? Math.round(((monthRevenue - prevMonthRevenue) / prevMonthRevenue) * 100) : 0;
+
+  // --- BOOKING STATS ---
+  const daysInMonth = nu.getDate();
+  const avgBookingsPerDay = daysInMonth > 0 ? monthBookings.length / daysInMonth : 0;
+  const noShowCount = studioBookings.filter(b => b.status === 'no-show' && b.datum >= maandStart && b.datum <= maandEnd).length;
+  const totalMonthBookings = studioBookings.filter(b => b.datum >= maandStart && b.datum <= maandEnd).length;
+  const noShowPct = totalMonthBookings > 0 ? Math.round((noShowCount / totalMonthBookings) * 100) : 0;
+  const newClientsThisMonth = data.clients.filter(c => {
+    const firstBooking = studioBookings.filter(b => (b.clientId === c.id) && b.status !== 'geannuleerd').sort((a, b) => (a.datum || '').localeCompare(b.datum || ''))[0];
+    return firstBooking && firstBooking.datum >= maandStart && firstBooking.datum <= maandEnd;
+  }).length;
+
+  // --- HEADER ---
+  let html = `<div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-wax-50 to-white">
     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <div class="w-14 h-14 rounded-xl bg-wax-100 flex items-center justify-center text-2xl">💈</div>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-wax-500 flex items-center justify-center text-white text-lg font-bold">${(s.naam||'S')[0]}</div>
         <div>
-          <h2 class="text-xl font-bold text-gray-900">${s.naam}</h2>
-          <p class="text-sm text-gray-500">${s.adres || ''}</p>
+          <h2 class="text-lg font-bold text-gray-900">${s.naam}</h2>
+          <div class="flex items-center gap-3 text-xs text-gray-500">
+            <span>${s.adres || ''}</span>
+            ${s.telefoon ? `<span>| ${s.telefoon}</span>` : ''}
+            ${s.actief ? '<span class="text-green-600 font-semibold">Actief</span>' : '<span class="text-gray-400">Inactief</span>'}
+          </div>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        ${s.actief ? '<span class="badge bg-green-100 text-green-700">Actief</span>' : '<span class="badge bg-gray-100 text-gray-500">Inactief</span>'}
-        ${s.whatsapp ? `<a href="${s.whatsapp}" target="_blank" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-50 text-green-700 text-xs font-medium hover:bg-green-100">💬 WhatsApp</a>` : ''}
-        <button onclick="sluitModal()" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400">✕</button>
-      </div>
-    </div>
-    <div class="flex items-center gap-4 mt-3 text-sm text-gray-500">
-      <span>📞 ${s.telefoon || '-'}</span>
-      <span>🕐 ${s.openingstijden || '-'}</span>
+      <button onclick="sluitModal()" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400">✕</button>
     </div>
   </div>`;
 
-  // Tabs
-  const tabs = [{id:'heute',label:'Heute',icon:'📅'},{id:'statistiken',label:'Statistiken',icon:'📊'},{id:'buchungen',label:'Alle Buchungen',icon:'📋'},{id:'info',label:'Info',icon:'⚙️'}];
-  html += `<div class="flex gap-1 px-6 pt-4 pb-0 border-b border-gray-100 tab-scroll">
+  // --- TABS ---
+  const tabs = [{id:'dashboard',label:'Dashboard',icon:'📊'},{id:'transacties',label:'Transacties',icon:'📋'},{id:'info',label:'Bewerken',icon:'⚙️'}];
+  html += `<div class="flex gap-1 px-6 pt-3 pb-0 border-b border-gray-100 tab-scroll">
     ${tabs.map(t => `<button onclick="studioDetailTab='${t.id}'; document.getElementById('modal-content').innerHTML=modalStudioDetail('${id}')" class="px-4 py-2.5 rounded-t-lg text-sm font-medium transition-colors ${studioDetailTab===t.id ? 'bg-wax-50 text-wax-700 border-b-2 border-wax-500' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'}">${t.icon} ${t.label}</button>`).join('')}
   </div>`;
 
-  html += '<div class="p-6">';
+  html += '<div class="p-6 space-y-6">';
 
-  if (studioDetailTab === 'heute') {
-    // Today's bookings as timeline
-    const vandaag = new Date().toISOString().slice(0,10);
-    const todayBookings = studioBookings.filter(b => b.datum === vandaag && b.status !== 'geannuleerd').sort((a,b) => (a.tijd||'').localeCompare(b.tijd||''));
-    if (todayBookings.length === 0) {
-      html += '<div class="text-center py-12 text-gray-400"><div class="text-4xl mb-3">📅</div><p class="font-medium">Keine Termine heute</p><p class="text-sm mt-1">Heute sind keine Buchungen geplant</p></div>';
-    } else {
-      html += '<div class="space-y-3">';
-      todayBookings.forEach(b => {
-        const svc = data.services.find(sv => sv.id === b.serviceId);
-        const client = data.clients.find(c => c.id === b.clientId);
-        const prijs = b.prijs ? parseFloat(b.prijs) : (svc?.prijs || 0);
-        html += `<div class="flex items-center gap-4 p-4 bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-shadow">
-          <div class="text-center flex-shrink-0 w-16">
-            <div class="text-lg font-bold text-wax-600">${b.tijd || '?'}</div>
-            <div class="text-xs text-gray-400">${svc?.duur || '?'} min</div>
-          </div>
-          <div class="w-px h-10 bg-gray-200"></div>
-          <div class="flex-1 min-w-0">
-            <div class="font-medium text-gray-900 text-sm">${svc?.naam || b.service || 'Service'}</div>
-            <div class="text-xs text-gray-500">${client?.naam || b.klantNaam || '-'}</div>
-          </div>
-          <div class="text-sm font-medium text-gray-900">${fe(prijs)}</div>
-          <div>${badge(b.status)}</div>
-        </div>`;
-      });
-      html += '</div>';
-    }
-  } else if (studioDetailTab === 'statistiken') {
-    // KPIs
-    const nu = new Date();
-    const maandStart = new Date(nu.getFullYear(), nu.getMonth(), 1).toISOString().slice(0,10);
-    const revenueB = studioBookings.filter(b => ['bevestigd','voltooid'].includes(b.status));
-    const maandOmzet = revenueB.filter(b => b.datum >= maandStart).reduce((s,b) => {
-      const svc = data.services.find(sv => sv.id === b.serviceId);
-      return s + (b.prijs ? parseFloat(b.prijs) : (svc?.prijs || 0));
-    }, 0);
-    const uniqueClients = new Set(studioBookings.map(b => b.clientId || b.klantNaam)).size;
-    // Popular service
-    const svcCount = {};
-    studioBookings.forEach(b => { const n = data.services.find(sv => sv.id === b.serviceId)?.naam || b.service || '?'; svcCount[n] = (svcCount[n]||0) + 1; });
-    const popService = Object.entries(svcCount).sort((a,b) => b[1]-a[1])[0];
+  if (studioDetailTab === 'dashboard') {
 
-    html += `<div class="grid grid-cols-3 gap-4 mb-6">
-      ${statCard('Omzet Deze Maand', fe(maandOmzet), '💰')}
-      ${statCard('Unieke Klanten', uniqueClients, '👤')}
-      ${statCard('Populairste Service', popService ? popService[0] : '-', '⭐', popService ? popService[1]+'x geboekt' : '')}
+    // ══════════════ SECTION 1: Traffic Light Score Card ══════════════
+    html += `<div>
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Hoe staan we ervoor?</h3>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">`;
+
+    const periods = [
+      { label: 'Vandaag', revenue: dayRevenue, target: dayTarget, pct: dayPct },
+      { label: 'Deze Week', revenue: weekRevenue, target: weekTarget, pct: weekPct },
+      { label: 'Deze Maand', revenue: monthRevenue, target: monthTarget, pct: monthPct },
+      { label: 'Dit Jaar', revenue: yearRevenue, target: yearTarget, pct: yearPct }
+    ];
+
+    periods.forEach(p => {
+      const tl = trafficLight(p.pct);
+      const progressWidth = Math.min(p.pct, 100);
+      html += `<div class="rounded-xl p-4 text-center" style="background:${tl.bg}; border: 2px solid ${tl.border}">
+        <div class="text-xs font-bold uppercase tracking-wide mb-2" style="color:${tl.color}">${p.label}</div>
+        <div class="text-2xl font-bold mb-1" style="color:${tl.color}">${fe(p.revenue)}</div>
+        <div class="text-xs text-gray-500 mb-2">target: ${fe(p.target)}</div>
+        <div class="w-full bg-white/60 rounded-full h-2 mb-1.5">
+          <div class="h-2 rounded-full transition-all" style="width:${progressWidth}%; background:${tl.color}"></div>
+        </div>
+        <div class="text-sm font-bold" style="color:${tl.color}">${p.pct}% ${tl.emoji}</div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+
+    // ══════════════ SECTION 2: Revenue Breakdown ══════════════
+    html += `<div>
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Waar komt de omzet vandaan? <span class="font-normal normal-case">(deze maand)</span></h3>
+      <div class="grid lg:grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl p-5 border border-gray-100 flex items-center justify-center">
+          <canvas id="studio-cat-donut" width="200" height="200"></canvas>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-gray-100">
+          <h4 class="text-xs font-bold text-gray-500 uppercase mb-3">Per Categorie</h4>
+          ${catEntries.length ? catEntries.map(([cat, v]) => {
+            const pct = catTotal > 0 ? Math.round((v.revenue / catTotal) * 100) : 0;
+            return `<div class="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
+              <div class="flex-1 text-sm font-medium text-gray-900">${cat}</div>
+              <div class="text-xs text-gray-500">${v.count}x</div>
+              <div class="text-sm font-bold text-gray-900 w-20 text-right">${fe(v.revenue)}</div>
+              <div class="text-xs font-medium w-10 text-right" style="color:${pct > 50 ? '#ca8a04' : '#6b7280'}">${pct}%</div>
+            </div>`;
+          }).join('') : '<p class="text-sm text-gray-400">Geen data deze maand</p>'}
+
+          ${topServices.length ? `<div class="mt-4 pt-3 border-t border-gray-100">
+            <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Top 3 Behandelingen</h4>
+            ${topServices.map(([naam, v], i) => `<div class="flex items-center gap-2 py-1.5">
+              <span class="w-5 h-5 rounded-full bg-wax-100 text-wax-700 text-xs font-bold flex items-center justify-center">${i+1}</span>
+              <span class="flex-1 text-sm text-gray-700">${naam}</span>
+              <span class="text-xs text-gray-500">${v.count}x</span>
+              <span class="text-sm font-medium text-gray-900">${fe(v.revenue)}</span>
+            </div>`).join('')}
+          </div>` : ''}
+        </div>
+      </div>
     </div>`;
 
-    // Booking count last 14 days chart
-    html += '<div class="bg-white rounded-xl p-5 border border-gray-100"><h4 class="font-semibold text-sm text-gray-900 mb-3">Boekingen Laatste 14 Dagen</h4><canvas id="studio-booking-chart" height="180"></canvas></div>';
+    // ══════════════ SECTION 3: Kosten & Winst ══════════════
+    // Group cost items by category
+    const costByCategory = {};
+    costData.items.forEach(v => {
+      const cat = v.categorie || 'Overig';
+      const bedrag = parseFloat(v.bedrag) || 0;
+      let monthlyAmount = bedrag;
+      if (v.frequentie === 'jaarlijks') monthlyAmount = bedrag / 12;
+      else if (v.frequentie === 'kwartaal') monthlyAmount = bedrag / 3;
+      else if (v.frequentie === 'wekelijks') monthlyAmount = bedrag * 4.33;
+      if (!costByCategory[cat]) costByCategory[cat] = 0;
+      costByCategory[cat] += monthlyAmount;
+    });
 
-    // Use setTimeout to render chart after DOM is ready
+    html += `<div>
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Kosten & Winst <span class="font-normal normal-case">(deze maand)</span></h3>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-white rounded-xl p-5 border border-gray-100 text-center">
+          <div class="text-xs font-bold text-gray-500 uppercase mb-2">Omzet</div>
+          <div class="text-2xl font-bold text-gray-900">${fe(monthRevenue)}</div>
+          <div class="text-xs text-gray-400 mt-1">deze maand</div>
+        </div>
+        <div class="bg-white rounded-xl p-5 border border-gray-100 text-center">
+          <div class="text-xs font-bold text-gray-500 uppercase mb-2">Kosten</div>
+          <div class="text-2xl font-bold text-red-600">${fe(totalCosts)}</div>
+          <div class="text-xs text-gray-400 mt-1">deze maand</div>
+          <div class="mt-3 space-y-1 text-left">
+            ${Object.entries(costByCategory).map(([cat, amt]) => `<div class="flex justify-between text-xs"><span class="text-gray-500">${cat}</span><span class="text-gray-700 font-medium">${fe(amt)}</span></div>`).join('')}
+            ${personeelKosten > 0 ? `<div class="flex justify-between text-xs"><span class="text-gray-500">Personeel</span><span class="text-gray-700 font-medium">${fe(personeelKosten)}</span></div>` : ''}
+            ${Object.keys(costByCategory).length === 0 && personeelKosten === 0 ? '<div class="text-xs text-gray-400 text-center">Geen kosten ingesteld</div>' : ''}
+          </div>
+        </div>
+        <div class="rounded-xl p-5 border-2 text-center ${winst >= 0 ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
+          <div class="text-xs font-bold uppercase mb-2 ${winst >= 0 ? 'text-green-600' : 'text-red-600'}">Winst</div>
+          <div class="text-2xl font-bold ${winst >= 0 ? 'text-green-700' : 'text-red-700'}">${fe(winst)}</div>
+          <div class="text-xs text-gray-400 mt-1">deze maand</div>
+          <div class="mt-3 text-lg font-bold ${winst >= 0 ? 'text-green-600' : 'text-red-600'}">${marge}% marge</div>
+        </div>
+      </div>
+    </div>`;
+
+    // ══════════════ SECTION 4: Actiepunten ══════════════
+    const actiepunten = [];
+
+    // Revenue vs target
+    if (monthPct < 50) {
+      actiepunten.push({ border: '#dc2626', priority: 'Urgent', tekst: 'Omzet is ' + monthPct + '% van target. Overweeg extra marketing of promotie-acties.' });
+    } else if (monthPct < 70) {
+      actiepunten.push({ border: '#ca8a04', priority: 'Aandacht', tekst: 'Omzet is ' + monthPct + '% van target. Extra inzet nodig om target te halen.' });
+    }
+
+    // Top service dominance
+    const topService = catEntries[0];
+    if (topService && catTotal > 0) {
+      const topPct = Math.round((topService[1].revenue / catTotal) * 100);
+      if (topPct > 60) {
+        actiepunten.push({ border: '#3b82f6', priority: 'Tip', tekst: topService[0] + ' is ' + topPct + '% van je omzet. Probeer andere behandelingen te upsellen.' });
+      }
+    }
+
+    // Growth trend
+    if (prevMonthRevenue > 0) {
+      if (monthRevenue > prevMonthRevenue) {
+        actiepunten.push({ border: '#16a34a', priority: 'Positief', tekst: 'Groei van ' + growthPct + '% t.o.v. vorige maand. Goed bezig!' });
+      } else if (monthRevenue < prevMonthRevenue) {
+        actiepunten.push({ border: '#ca8a04', priority: 'Aandacht', tekst: 'Omzet daalde ' + Math.abs(growthPct) + '% t.o.v. vorige maand. Analyseer wat er veranderd is.' });
+      }
+    }
+
+    // Booking frequency
+    if (avgBookingsPerDay < 3 && monthBookings.length > 0) {
+      actiepunten.push({ border: '#3b82f6', priority: 'Tip', tekst: 'Gemiddeld ' + avgBookingsPerDay.toFixed(1) + ' boekingen/dag. Doel: minimaal 5. Vergroot online zichtbaarheid.' });
+    }
+
+    // No-show rate
+    if (noShowPct > 5) {
+      actiepunten.push({ border: '#ca8a04', priority: 'Aandacht', tekst: noShowPct + '% no-shows. Stuur herinneringsberichten 24u voor de afspraak.' });
+    }
+
+    // Cost ratio
+    if (costRatio > 70 && totalCosts > 0) {
+      actiepunten.push({ border: '#ca8a04', priority: 'Aandacht', tekst: 'Kosten zijn ' + costRatio + '% van omzet. Bekijk waar je kunt besparen.' });
+    }
+
+    // New clients
+    if (newClientsThisMonth < 5 && daysInMonth > 7) {
+      actiepunten.push({ border: '#3b82f6', priority: 'Tip', tekst: 'Maar ' + newClientsThisMonth + ' nieuwe klanten deze maand. Investeer in acquisitie.' });
+    }
+
+    // Positive: good margin
+    if (marge > 40 && monthRevenue > 0) {
+      actiepunten.push({ border: '#16a34a', priority: 'Positief', tekst: 'Winstmarge van ' + marge + '% is gezond. Blijf kosten bewaken.' });
+    }
+
+    if (actiepunten.length > 0) {
+      html += `<div>
+        <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Actiepunten</h3>
+        <div class="space-y-2">
+          ${actiepunten.slice(0, 5).map(a => `<div class="flex items-start gap-3 p-3 bg-white rounded-xl border border-gray-100" style="border-left: 4px solid ${a.border}">
+            <div>
+              <span class="text-xs font-bold uppercase" style="color:${a.border}">${a.priority}</span>
+              <p class="text-sm text-gray-700 mt-0.5">${a.tekst}</p>
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    // ══════════════ SECTION 5: Quick Actions ══════════════
+    html += `<div class="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
+      <button onclick="studioDetailTab='transacties'; document.getElementById('modal-content').innerHTML=modalStudioDetail('${id}')" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium">📋 Alle Transacties</button>
+      <button onclick="sluitModal(); openModal('vastelasten')" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium">💰 Vaste Lasten Beheren</button>
+      <button onclick="studioDetailTab='info'; document.getElementById('modal-content').innerHTML=modalStudioDetail('${id}')" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium">✏️ Studio Bewerken</button>
+    </div>`;
+
+    // Render donut chart after DOM ready
+    const catColors = ['#a8875c', '#d46a4a', '#6366f1', '#059669', '#ca8a04', '#8b5cf6'];
     setTimeout(() => {
-      const ctx = document.getElementById('studio-booking-chart');
+      const ctx = document.getElementById('studio-cat-donut');
       if (!ctx) return;
-      if (studioDetailCharts.bookings) studioDetailCharts.bookings.destroy();
-      const dData = {};
-      for (let i = 13; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate()-i); dData[d.toISOString().slice(0,10)] = 0; }
-      studioBookings.filter(b => b.status !== 'geannuleerd').forEach(b => { if (dData[b.datum] !== undefined) dData[b.datum]++; });
-      studioDetailCharts.bookings = new Chart(ctx, {
-        type:'bar', data:{ labels:Object.keys(dData).map(d => new Date(d).toLocaleDateString('de-DE',{day:'numeric',month:'short'})), datasets:[{label:'Boekingen',data:Object.values(dData),backgroundColor:'#a8875c',borderRadius:4}] },
-        options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}
+      if (studioDetailCharts.catDonut) studioDetailCharts.catDonut.destroy();
+      const labels = catEntries.map(([c]) => c);
+      const values = catEntries.map(([, v]) => v.revenue);
+      if (values.length === 0) { labels.push('Geen data'); values.push(1); }
+      studioDetailCharts.catDonut = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels, datasets: [{ data: values, backgroundColor: values.length === 1 && labels[0] === 'Geen data' ? ['#e5e7eb'] : catColors.slice(0, values.length), borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: true, cutout: '60%', plugins: { legend: { position: 'bottom', labels: { padding: 12, font: { size: 11 } } } } }
       });
     }, 50);
 
-  } else if (studioDetailTab === 'buchungen') {
+  } else if (studioDetailTab === 'transacties') {
     // All bookings for this studio
     const sorted = [...studioBookings].sort((a,b) => ((b.datum||'')+(b.tijd||'')).localeCompare((a.datum||'')+(a.tijd||'')));
     if (!sorted.length) {
@@ -5535,6 +5804,10 @@ function modalStudioDetail(id) {
       });
       html += '</tbody></table></div>';
     }
+    html += `<div class="mt-4 pt-3 border-t border-gray-100">
+      <button onclick="studioDetailTab='dashboard'; document.getElementById('modal-content').innerHTML=modalStudioDetail('${id}')" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium">← Terug naar Dashboard</button>
+    </div>`;
+
   } else if (studioDetailTab === 'info') {
     // Edit form
     html += `<form onsubmit="event.preventDefault(); updateStudio('${id}', this)" class="space-y-4">
@@ -5545,7 +5818,10 @@ function modalStudioDetail(id) {
       ${formField('Openingstijden', 'openingstijden', 'text', s.openingstijden||'')}
       <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">Opslaan</button>
       <button type="button" onclick="verwijderStudio('${id}')" class="btn-danger w-full py-2 rounded-lg text-sm mt-2">Verwijderen</button>
-    </form>`;
+    </form>
+    <div class="mt-4 pt-3 border-t border-gray-100">
+      <button onclick="studioDetailTab='dashboard'; document.getElementById('modal-content').innerHTML=modalStudioDetail('${id}')" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium">← Terug naar Dashboard</button>
+    </div>`;
   }
 
   html += '</div>';
