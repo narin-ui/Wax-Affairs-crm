@@ -173,21 +173,30 @@
     <a href="#" onclick="return showPage('dashboard')" class="sidebar-item active flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="dashboard">
       <span class="icon text-lg">📊</span><span class="text-sm">Dashboard</span>
     </a>
-
-    <div class="nav-divider mt-3">Boekingen</div>
     <a href="#" onclick="return showPage('agenda')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="agenda">
       <span class="icon text-lg">📅</span><span class="text-sm">Agenda</span>
     </a>
-    <a href="#" onclick="return showPage('klanten')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="klanten">
-      <span class="icon text-lg">👤</span><span class="text-sm">Klanten</span>
-    </a>
 
-    <div class="nav-divider mt-3">Studio</div>
+    <div class="nav-divider mt-3">Studio Beheer</div>
     <a href="#" onclick="return showPage('studios')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="studios">
       <span class="icon text-lg">💈</span><span class="text-sm">Studios</span>
     </a>
     <a href="#" onclick="return showPage('services')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="services">
       <span class="icon text-lg">✂️</span><span class="text-sm">Services</span>
+    </a>
+    <a href="#" onclick="return showPage('klanten')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="klanten">
+      <span class="icon text-lg">👤</span><span class="text-sm">Klanten</span>
+    </a>
+
+    <div class="nav-divider mt-3">Franchise</div>
+    <a href="#" onclick="return showPage('franchisees')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="franchisees">
+      <span class="icon text-lg">🏢</span><span class="text-sm">Franchisees</span>
+    </a>
+    <a href="#" onclick="return showPage('academy')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="academy">
+      <span class="icon text-lg">🎓</span><span class="text-sm">Academy</span>
+    </a>
+    <a href="#" onclick="return showPage('producten')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="producten">
+      <span class="icon text-lg">📦</span><span class="text-sm">Producten</span>
     </a>
 
     <div class="nav-divider mt-3">Team</div>
@@ -206,6 +215,12 @@
     <div class="nav-divider mt-3">Planning</div>
     <a href="#" onclick="return showPage('taken')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="taken">
       <span class="icon text-lg">✅</span><span class="text-sm">Taken</span>
+    </a>
+    <a href="#" onclick="return showPage('comms')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="comms">
+      <span class="icon text-lg">💬</span><span class="text-sm">Communicatie</span>
+    </a>
+    <a href="#" onclick="return showPage('marketing')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="marketing">
+      <span class="icon text-lg">📣</span><span class="text-sm">Marketing</span>
     </a>
   </nav>
   <div class="px-4 py-4 border-t border-gray-800 space-y-2">
@@ -564,80 +579,20 @@
   <div class="flex items-center justify-between mb-6 page-header">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Financieel Overzicht</h1>
-      <p class="text-sm text-gray-500 mt-1">Omzet, kosten en winstanalyse</p>
+      <p class="text-sm text-gray-500 mt-1">Directie dashboard, omzet, kosten en winst</p>
     </div>
   </div>
 
-  <!-- Period Selector -->
-  <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-6">
-    <div class="flex items-center gap-3 flex-wrap">
-      <div class="flex gap-1.5 flex-wrap">
-        <button onclick="setFinPeriod('vandaag')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Vandaag</button>
-        <button onclick="setFinPeriod('week')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Deze Week</button>
-        <button onclick="setFinPeriod('maand')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Deze Maand</button>
-        <button onclick="setFinPeriod('kwartaal')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Dit Kwartaal</button>
-        <button onclick="setFinPeriod('jaar')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Dit Jaar</button>
-        <button onclick="setFinPeriod('alles')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-wax-500 text-white">Alles</button>
-      </div>
-      <div class="flex items-center gap-2 ml-auto">
-        <span class="text-xs text-gray-400">Van</span>
-        <input type="date" id="fin-van" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs" onchange="finPeriod.van=this.value; renderFinancieel()">
-        <span class="text-xs text-gray-400">Tot</span>
-        <input type="date" id="fin-tot" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs" onchange="finPeriod.tot=this.value; renderFinancieel()">
-      </div>
-    </div>
+  <!-- Main Tabs -->
+  <div class="flex gap-1 mb-6 flex-wrap tab-scroll">
+    <button onclick="setFinMainTab('directie')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">📊 Directie Overzicht</button>
+    <button onclick="setFinMainTab('omzet')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">💶 Omzet Details</button>
+    <button onclick="setFinMainTab('kosten')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">🏠 Kosten</button>
+    <button onclick="setFinMainTab('pnl')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">📈 Winst & Verlies</button>
   </div>
 
-  <!-- KPI Cards -->
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="fin-kpis"></div>
-
-  <!-- Revenue Chart -->
-  <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
-    <h3 class="font-semibold text-gray-900 mb-4">Omzet Overzicht</h3>
-    <canvas id="fin-revenue-chart" height="250"></canvas>
-  </div>
-
-  <!-- Prognose / Forecast Section -->
-  <div id="fin-prognose" class="mb-6"></div>
-
-  <!-- Revenue Breakdown Tabs -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
-    <div class="flex gap-1 p-3 border-b border-gray-100 flex-wrap">
-      <button onclick="finTab='behandeling'; renderFinTabs()" class="fin-tab-btn px-4 py-2 rounded-lg text-sm font-medium">Per Behandeling</button>
-      <button onclick="finTab='maand'; renderFinTabs()" class="fin-tab-btn px-4 py-2 rounded-lg text-sm font-medium">Per Maand</button>
-      <button onclick="finTab='studio'; renderFinTabs()" class="fin-tab-btn px-4 py-2 rounded-lg text-sm font-medium">Per Studio</button>
-    </div>
-    <div id="fin-breakdown" class="p-5"></div>
-  </div>
-
-  <!-- Recente Transacties -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
-    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-      <h3 class="font-semibold text-gray-900">Recente Transacties</h3>
-      <div class="flex items-center gap-2">
-        <span id="fin-trans-count" class="text-xs text-gray-400"></span>
-        <button onclick="finTransPage=Math.max(1,finTransPage-1); renderFinTransacties()" class="px-2 py-1 rounded text-xs bg-gray-100 hover:bg-gray-200">&laquo;</button>
-        <span id="fin-trans-page" class="text-xs text-gray-500"></span>
-        <button onclick="finTransPage++; renderFinTransacties()" class="px-2 py-1 rounded text-xs bg-gray-100 hover:bg-gray-200">&raquo;</button>
-      </div>
-    </div>
-    <div id="fin-transactions" style="max-height:600px; overflow-y:auto;"></div>
-  </div>
-
-  <!-- Kosten Overview -->
-  <div class="grid lg:grid-cols-2 gap-6 mb-6">
-    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-semibold text-gray-900">Vaste Lasten per Studio</h3>
-        <button onclick="openModal('vastelasten')" class="btn-primary px-3 py-1.5 rounded-lg text-xs font-medium">+ Toevoegen</button>
-      </div>
-      <div id="fin-vastelasten"></div>
-    </div>
-    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">Kostenverdeling</h3>
-      <canvas id="fin-kosten-chart" height="250"></canvas>
-    </div>
-  </div>
+  <!-- Tab Content Container -->
+  <div id="fin-tab-content"></div>
 </div>
 
 <!-- ═══════════════ PAGE: COMMUNICATIE ═══════════════ -->
@@ -1244,6 +1199,13 @@ let finPeriod = { van: '2025-10-01', tot: new Date().toISOString().slice(0,10) }
 let finTab = 'behandeling';
 let finTransPage = 1;
 const FIN_TRANS_PER_PAGE = 50;
+let finMainTab = 'directie';
+let financieelMaand = new Date().toISOString().slice(0, 7); // YYYY-MM format
+
+function setFinMainTab(tab) {
+  finMainTab = tab;
+  renderFinancieel();
+}
 function bookingPrijs(b) {
   if (b.prijs) return parseFloat(b.prijs) || 0;
   const svc = data.services.find(s => s.id === b.serviceId);
@@ -1344,441 +1306,252 @@ function getPersoneelKostenInPeriod() {
 }
 
 function renderFinancieel() {
-  // Set date inputs
-  document.getElementById('fin-van').value = finPeriod.van;
-  document.getElementById('fin-tot').value = finPeriod.tot;
-
-  const filtered = getFilteredBookings();
-  const omzet = filtered.reduce((s,b) => s + bookingPrijs(b), 0);
-  const vasteLasten = getVasteLastenInPeriod();
-  const personeelskosten = getPersoneelKostenInPeriod();
-  const winst = omzet - vasteLasten - personeelskosten;
-
-  // KPI Cards
-  document.getElementById('fin-kpis').innerHTML =
-    statCard('Omzet', fe(omzet), '💶', `${filtered.length} boekingen`) +
-    statCard('Vaste Lasten', fe(vasteLasten), '🏠', 'In geselecteerde periode') +
-    statCard('Personeelskosten', fe(personeelskosten), '👩‍💼', 'Uren x tarief') +
-    `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card ${winst >= 0 ? 'border-l-4 border-l-green-400' : 'border-l-4 border-l-red-400'}">
-      <div class="flex items-center justify-between mb-2"><span class="text-2xl">${winst >= 0 ? '📈' : '📉'}</span></div>
-      <div class="text-2xl font-bold ${winst >= 0 ? 'text-green-600' : 'text-red-600'}">${fe(winst)}</div>
-      <div class="text-sm text-gray-500 mt-1">Winst/Verlies</div>
-    </div>`;
-
-  // Revenue Chart - bar with trend line
-  renderFinRevenueChart(filtered);
-
-  // Prognose / Forecast
-  renderFinPrognose();
-
-  // Breakdown tabs
-  renderFinTabs();
-
-  // Transactions
-  renderFinTransacties();
-
-  // Vaste Lasten overview
-  renderFinVasteLasten();
-
-  // Kosten pie chart
-  renderFinKostenChart(omzet, vasteLasten, personeelskosten);
-}
-
-function renderFinRevenueChart(filtered) {
-  const months = getMonthsBetween(finPeriod.van, finPeriod.tot);
-  const isShortPeriod = months.length <= 1;
-
-  let labels, values;
-  if (isShortPeriod) {
-    // Daily view
-    const dayData = {};
-    const start = new Date(finPeriod.van + 'T00:00:00');
-    const end = new Date(finPeriod.tot + 'T00:00:00');
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)) {
-      dayData[d.toISOString().slice(0,10)] = 0;
-    }
-    filtered.forEach(b => { if (dayData[b.datum] !== undefined) dayData[b.datum] += bookingPrijs(b); });
-    labels = Object.keys(dayData).map(d => new Date(d+'T00:00:00').toLocaleDateString('de-DE',{day:'numeric',month:'short'}));
-    values = Object.values(dayData);
-  } else {
-    // Monthly view
-    const monthData = {};
-    months.forEach(m => { monthData[m] = 0; });
-    filtered.forEach(b => {
-      const m = (b.datum||'').slice(0,7);
-      if (monthData[m] !== undefined) monthData[m] += bookingPrijs(b);
-    });
-    labels = months.map(m => { const d = new Date(m+'-01T00:00:00'); return d.toLocaleDateString('de-DE',{month:'short',year:'2-digit'}); });
-    values = Object.values(monthData);
-  }
-
-  if (finRevenueChart) finRevenueChart.destroy();
-  const ctx = document.getElementById('fin-revenue-chart');
-  if (!ctx) return;
-  finRevenueChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [
-        { label: 'Omzet', data: values, backgroundColor: '#a8875c', borderRadius: 6, order: 2 },
-        { label: 'Trend', data: values, type: 'line', borderColor: '#e28568', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#e28568', tension: 0.3, order: 1 }
-      ]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: true, position: 'top', labels: { font: { size: 11 } } } },
-      scales: { y: { beginAtZero: true, ticks: { callback: v => fe(v) } } }
-    }
+  // Update main tab styling
+  document.querySelectorAll('.fin-main-tab').forEach(btn => {
+    const isActive = (btn.textContent.includes('Directie') && finMainTab === 'directie') ||
+                     (btn.textContent.includes('Omzet') && finMainTab === 'omzet') ||
+                     (btn.textContent.includes('Kosten') && finMainTab === 'kosten') ||
+                     (btn.textContent.includes('Winst') && finMainTab === 'pnl');
+    btn.className = `fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors ${isActive ? 'bg-wax-500 text-white shadow-lg' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`;
   });
-}
 
-function renderFinPrognose() {
-  const el = document.getElementById('fin-prognose');
+  const el = document.getElementById('fin-tab-content');
   if (!el) return;
 
-  const bp = data.bp || {};
-  const proj2026 = (bp.projectie || []).find(p => p.jaar === 2026) || {};
-  const franchiseTerms = bp.franchiseTerms || {};
+  if (finMainTab === 'directie') renderFinDirectie(el);
+  else if (finMainTab === 'omzet') renderFinOmzet(el);
+  else if (finMainTab === 'kosten') renderFinKosten(el);
+  else if (finMainTab === 'pnl') renderFinPnL(el);
+}
 
-  // Configurable targets from businessplan
+// ── Helper: navigate financieel month ──
+function finMaandNav(dir) {
+  const d = new Date(financieelMaand + '-01');
+  d.setMonth(d.getMonth() + dir);
+  financieelMaand = d.toISOString().slice(0, 7);
+  renderFinancieel();
+}
+
+function getMonthLabel(ym) {
+  const d = new Date(ym + '-01T00:00:00');
+  return d.toLocaleDateString('nl-NL', { month: 'long', year: 'numeric' });
+}
+
+// ══════════════ TAB 1: DIRECTIE OVERZICHT ══════════════
+function renderFinDirectie(el) {
+  const maandStart = financieelMaand + '-01';
+  const mDate = new Date(maandStart);
+  const maandEnd = new Date(mDate.getFullYear(), mDate.getMonth() + 1, 0).toISOString().slice(0, 10);
+  const jaarStart = financieelMaand.slice(0, 4) + '-01-01';
+  const jaarEnd = financieelMaand.slice(0, 4) + '-12-31';
+
+  const bp = data.bp || {};
+  const franchiseTerms = bp.franchiseTerms || {};
   const prognoseTargets = bp.prognoseTargets || {};
   const jaarTarget = prognoseTargets.studioJaarTarget || 120000;
   const maandTarget = prognoseTargets.studioMaandTarget || (jaarTarget / 12);
 
   const studios = data.studios || [];
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth(); // 0-based
 
-  // Build monthly data for all studios
-  const allMonths = [];
-  for (let m = 0; m < 12; m++) {
-    const prefix = `${currentYear}-${String(m+1).padStart(2,'0')}`;
-    allMonths.push(prefix);
-  }
+  // Per studio stats
+  const studioRows = studios.map(s => {
+    const naam = s.naam.replace('Wax Affairs ', '');
+    const bookings = data.bookings.filter(b => b.studioId === s.id && ['bevestigd','voltooid'].includes(b.status) && b.datum >= maandStart && b.datum <= maandEnd);
+    const omzet = bookings.reduce((sum, b) => sum + bookingPrijs(b), 0);
+    const yearBookings = data.bookings.filter(b => b.studioId === s.id && ['bevestigd','voltooid'].includes(b.status) && b.datum >= jaarStart && b.datum <= jaarEnd);
+    const yearOmzet = yearBookings.reduce((sum, b) => sum + bookingPrijs(b), 0);
+    const costData = getStudioCostsMonthly(s.id);
+    const personeelKosten = getStudioPersoneelMonthly(s.id);
+    const royaltyPct = yearOmzet > 120000 ? 0.06 : 0.05;
+    const royalty = omzet * royaltyPct;
+    const totalCosts = costData.monthly + personeelKosten + royalty;
+    const winst = omzet - totalCosts;
+    const marge = omzet > 0 ? Math.round((winst / omzet) * 100) : 0;
+    const targetPct = maandTarget > 0 ? Math.round((omzet / maandTarget) * 100) : 0;
 
-  // Calculate per-studio stats
-  const studioStats = studios.map(s => {
-    // This month's actual
-    const thisMonthPrefix = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
-    const thisMonthBookings = data.bookings.filter(b =>
-      ['bevestigd','voltooid'].includes(b.status) &&
-      b.studioId === s.id &&
-      (b.datum||'').startsWith(thisMonthPrefix)
-    );
-    const thisMonthActual = thisMonthBookings.reduce((sum,b) => sum + bookingPrijs(b), 0);
-
-    // Year-to-date
-    const ytdBookings = data.bookings.filter(b =>
-      ['bevestigd','voltooid'].includes(b.status) &&
-      b.studioId === s.id &&
-      (b.datum||'').startsWith(String(currentYear))
-    );
-    const ytdActual = ytdBookings.reduce((sum,b) => sum + bookingPrijs(b), 0);
-
-    // Per-month breakdown
-    const monthlyData = allMonths.map(prefix => {
-      const mb = data.bookings.filter(b =>
-        ['bevestigd','voltooid'].includes(b.status) &&
-        b.studioId === s.id &&
-        (b.datum||'').startsWith(prefix)
-      );
-      return mb.reduce((sum,b) => sum + bookingPrijs(b), 0);
-    });
-
-    return {
-      id: s.id,
-      naam: s.naam.replace('Wax Affairs ', ''),
-      thisMonthActual,
-      ytdActual,
-      monthlyData
-    };
+    return { id: s.id, naam, omzet, target: maandTarget, targetPct, vasteLasten: costData.monthly, personeel: personeelKosten, royalty, winst, marge, yearOmzet, royaltyPct, actief: s.actief !== false };
   });
 
-  // Overall stats
-  const totalThisMonth = studioStats.reduce((s,st) => s + st.thisMonthActual, 0);
-  const totalYtd = studioStats.reduce((s,st) => s + st.ytdActual, 0);
+  const totaalOmzet = studioRows.reduce((s, r) => s + r.omzet, 0);
+  const totaalTarget = maandTarget * studios.length;
+  const totaalTargetPct = totaalTarget > 0 ? Math.round((totaalOmzet / totaalTarget) * 100) : 0;
+  const totaalVasteLasten = studioRows.reduce((s, r) => s + r.vasteLasten, 0);
+  const totaalPersoneel = studioRows.reduce((s, r) => s + r.personeel, 0);
+  const totaalRoyalty = studioRows.reduce((s, r) => s + r.royalty, 0);
+  const totaalWinst = studioRows.reduce((s, r) => s + r.winst, 0);
 
-  // Last full month for run-rate calculation
-  const lastFullMonth = currentMonth > 0 ? currentMonth - 1 : 11;
-  const lastFullMonthPrefix = `${currentYear}-${String(lastFullMonth+1).padStart(2,'0')}`;
-  const lastFullMonthRevenue = data.bookings
-    .filter(b => ['bevestigd','voltooid'].includes(b.status) && (b.datum||'').startsWith(lastFullMonthPrefix))
-    .reduce((s,b) => s + bookingPrijs(b), 0);
+  const tlColor = (pct) => pct >= 100 ? '#10b981' : pct >= 70 ? '#f59e0b' : '#ef4444';
+  const tlEmoji = (pct) => pct >= 100 ? '\u{1F7E2}' : pct >= 70 ? '\u{1F7E1}' : '\u{1F534}';
 
-  const runRate = lastFullMonthRevenue;
-  const projectedYearly = runRate * 12;
-  const totalJaarTarget = jaarTarget * studios.length;
+  // Franchise inkomsten
+  const onboardingFee = parseFloat(franchiseTerms.onboardingFee) || 15000;
+  const productOrders = 1200; // placeholder
+  const academyInkomsten = 4000; // placeholder
+  const totaalFranchiseInkomsten = totaalRoyalty + onboardingFee + productOrders + academyInkomsten;
 
-  // Month names
-  const maandNamen = ['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
-  const lastFullMonthName = maandNamen[lastFullMonth];
-
-  // Stand-up summary
-  const pctOfTarget = totalJaarTarget > 0 ? Math.round(runRate / maandTarget * 100) : 0;
-  const topStudio = studioStats.length > 0 ? studioStats.reduce((best,s) => s.thisMonthActual > best.thisMonthActual ? s : best, studioStats[0]) : null;
-
-  el.innerHTML = `
-    <div class="bg-gradient-to-r from-wax-600 to-wax-400 rounded-2xl p-6 text-white shadow-lg mb-6">
-      <div class="flex items-start gap-3 mb-1">
-        <span class="text-2xl">📊</span>
-        <div>
-          <h3 class="font-bold text-lg">Stand-up Samenvatting</h3>
-          <p class="text-white/90 text-sm mt-1">
-            ${topStudio ? `${topStudio.naam} draait ${fe(runRate)} run-rate in ${lastFullMonthName} (${pctOfTarget}% van maand-target).` : 'Nog geen data beschikbaar.'}
-            Projected yearly: ${fe(projectedYearly)} van ${fe(totalJaarTarget)} target${studios.length > 1 ? ' ('+studios.length+' studios)' : ''}.
-            ${pctOfTarget >= 100 ? 'On track!' : `Nodig: ${fe(maandTarget)}/maand per studio om jaardoel te halen.`}
-          </p>
+  let html = `
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+          \u{1F4CA} Directie Overzicht \u2014 ${getMonthLabel(financieelMaand)}
+        </h2>
+        <div class="flex items-center gap-2">
+          <button onclick="finMaandNav(-1)" class="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold transition-colors">\u25C0</button>
+          <button onclick="financieelMaand=new Date().toISOString().slice(0,7); renderFinancieel()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors">Vandaag</button>
+          <button onclick="finMaandNav(1)" class="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold transition-colors">\u25B6</button>
         </div>
       </div>
-    </div>
 
-    <!-- Studio Targets vs Actual -->
-    <div class="grid ${studios.length > 1 ? 'md:grid-cols-'+Math.min(studios.length,3) : ''} gap-4 mb-6">
-      ${studioStats.map(st => {
-        const pct = maandTarget > 0 ? Math.min(100, Math.round(st.thisMonthActual / maandTarget * 100)) : 0;
-        const onTrack = pct >= 80;
-        const yearPct = jaarTarget > 0 ? Math.min(100, Math.round(st.ytdActual / (jaarTarget * (currentMonth + 1) / 12) * 100)) : 0;
-        return `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-          <div class="flex items-center justify-between mb-3">
-            <h4 class="font-semibold text-gray-900 text-sm">${st.naam}</h4>
-            <span class="text-xs font-medium px-2 py-1 rounded-full ${onTrack ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">${onTrack ? 'On Track' : 'Behind'}</span>
-          </div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(st.thisMonthActual)}</div>
-          <div class="text-xs text-gray-500 mb-3">van ${fe(maandTarget)} maand-target</div>
-          <div class="w-full bg-gray-100 rounded-full h-3 mb-2">
-            <div class="h-3 rounded-full transition-all ${pct >= 80 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-400'}" style="width:${pct}%"></div>
-          </div>
-          <div class="flex justify-between text-xs text-gray-400">
-            <span>${pct}% van maand</span>
-            <span>YTD: ${fe(st.ytdActual)}</span>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-
-    <!-- Year Projection -->
-    <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
-      <h3 class="font-semibold text-gray-900 mb-4">Jaarprojectie ${currentYear}</h3>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="text-center">
-          <div class="text-3xl font-bold text-gray-900">${fe(projectedYearly)}</div>
-          <div class="text-sm text-gray-500 mt-1">Geprojecteerd (run-rate x12)</div>
-          <div class="text-xs text-gray-400 mt-1">Gebaseerd op ${lastFullMonthName}: ${fe(runRate)}</div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl font-bold text-gray-900">${fe(totalJaarTarget)}</div>
-          <div class="text-sm text-gray-500 mt-1">Jaardoel (${studios.length} studio${studios.length!==1?'\'s':''})</div>
-          <div class="text-xs text-gray-400 mt-1">${fe(jaarTarget)} per studio</div>
-        </div>
-        <div class="text-center">
-          <div class="text-3xl font-bold ${projectedYearly >= totalJaarTarget ? 'text-green-600' : 'text-red-600'}">${totalJaarTarget > 0 ? Math.round(projectedYearly / totalJaarTarget * 100) : 0}%</div>
-          <div class="text-sm text-gray-500 mt-1">Van jaardoel</div>
-          <div class="text-xs text-gray-400 mt-1">${projectedYearly >= totalJaarTarget ? 'On track' : 'Verschil: ' + fe(totalJaarTarget - projectedYearly)}</div>
-        </div>
-      </div>
-      <div class="mt-4 w-full bg-gray-100 rounded-full h-4">
-        <div class="h-4 rounded-full transition-all ${projectedYearly >= totalJaarTarget ? 'bg-green-500' : projectedYearly >= totalJaarTarget*0.5 ? 'bg-yellow-500' : 'bg-red-400'}" style="width:${Math.min(100, totalJaarTarget > 0 ? Math.round(projectedYearly / totalJaarTarget * 100) : 0)}%"></div>
-      </div>
-    </div>
-
-    <!-- Monthly Growth Tracker -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-      <div class="px-5 py-4 border-b border-gray-100">
-        <h3 class="font-semibold text-gray-900">Maandelijks Groei Overzicht</h3>
-      </div>
-      <div class="overflow-x-auto">
+      <!-- Per Studio Performance Table -->
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Per Studio Performance</h3>
+      <div class="overflow-x-auto mb-8">
         <table class="w-full text-sm">
           <thead>
-            <tr class="text-xs font-semibold text-gray-500 uppercase border-b border-gray-100">
-              <th class="text-left px-5 py-3">Maand</th>
-              <th class="text-right px-3 py-3">Target</th>
-              <th class="text-right px-3 py-3">Actueel</th>
-              <th class="text-right px-3 py-3">Verschil</th>
-              <th class="text-right px-5 py-3">Cumulatief</th>
+            <tr class="text-xs font-semibold text-gray-500 uppercase border-b-2 border-gray-200">
+              <th class="text-left py-3 pr-4"></th>
+              ${studioRows.map(r => `<th class="text-right py-3 px-3">${r.naam}</th>`).join('')}
+              <th class="text-right py-3 pl-3 bg-wax-50 rounded-tr-lg font-bold">TOTAAL</th>
             </tr>
           </thead>
           <tbody>
-            ${(() => {
-              let cumTarget = 0;
-              let cumActual = 0;
-              const totalMonthTarget = maandTarget * studios.length;
-              return allMonths.slice(0, currentMonth + 1).map((prefix, i) => {
-                const monthActual = data.bookings
-                  .filter(b => ['bevestigd','voltooid'].includes(b.status) && (b.datum||'').startsWith(prefix))
-                  .reduce((s,b) => s + bookingPrijs(b), 0);
-                cumTarget += totalMonthTarget;
-                cumActual += monthActual;
-                const verschil = monthActual - totalMonthTarget;
-                const cumVerschil = cumActual - cumTarget;
-                return '<tr class="border-b border-gray-50 table-row">' +
-                  '<td class="px-5 py-3 font-medium text-gray-900">' + maandNamen[i] + ' ' + currentYear + '</td>' +
-                  '<td class="px-3 py-3 text-right text-gray-500">' + fe(totalMonthTarget) + '</td>' +
-                  '<td class="px-3 py-3 text-right font-medium text-gray-900">' + fe(monthActual) + '</td>' +
-                  '<td class="px-3 py-3 text-right font-medium ' + (verschil >= 0 ? 'text-green-600' : 'text-red-600') + '">' + (verschil >= 0 ? '+' : '') + fe(verschil) + '</td>' +
-                  '<td class="px-5 py-3 text-right ' + (cumVerschil >= 0 ? 'text-green-600' : 'text-red-600') + '">' + (cumVerschil >= 0 ? '+' : '') + fe(cumVerschil) + '</td>' +
-                  '</tr>';
-              }).join('');
-            })()}
+            <tr class="border-b border-gray-50">
+              <td class="py-2.5 pr-4 font-medium text-gray-700">Omzet</td>
+              ${studioRows.map(r => `<td class="text-right py-2.5 px-3 font-medium text-gray-900">${r.actief ? fe(r.omzet) : '-'}</td>`).join('')}
+              <td class="text-right py-2.5 pl-3 bg-wax-50 font-bold text-gray-900">${fe(totaalOmzet)}</td>
+            </tr>
+            <tr class="border-b border-gray-50">
+              <td class="py-2.5 pr-4 font-medium text-gray-700">Target</td>
+              ${studioRows.map(r => `<td class="text-right py-2.5 px-3 text-gray-500">${r.actief ? fe(r.target) : '-'}</td>`).join('')}
+              <td class="text-right py-2.5 pl-3 bg-wax-50 text-gray-500">${fe(totaalTarget)}</td>
+            </tr>
+            <tr class="border-b border-gray-50">
+              <td class="py-2.5 pr-4 font-medium text-gray-700">% Target</td>
+              ${studioRows.map(r => `<td class="text-right py-2.5 px-3 font-bold" style="color:${r.actief ? tlColor(r.targetPct) : '#9ca3af'}">${r.actief ? r.targetPct + '% ' + tlEmoji(r.targetPct) : '-'}</td>`).join('')}
+              <td class="text-right py-2.5 pl-3 bg-wax-50 font-bold" style="color:${tlColor(totaalTargetPct)}">${totaalTargetPct}% ${tlEmoji(totaalTargetPct)}</td>
+            </tr>
+            <tr class="border-b border-gray-50">
+              <td class="py-2.5 pr-4 font-medium text-gray-700">Vaste lasten</td>
+              ${studioRows.map(r => `<td class="text-right py-2.5 px-3 text-gray-500">${r.actief ? fe(r.vasteLasten) : '-'}</td>`).join('')}
+              <td class="text-right py-2.5 pl-3 bg-wax-50 text-gray-500">${fe(totaalVasteLasten)}</td>
+            </tr>
+            <tr class="border-b border-gray-50">
+              <td class="py-2.5 pr-4 font-medium text-gray-700">Personeel</td>
+              ${studioRows.map(r => `<td class="text-right py-2.5 px-3 text-gray-500">${r.actief ? fe(r.personeel) : '-'}</td>`).join('')}
+              <td class="text-right py-2.5 pl-3 bg-wax-50 text-gray-500">${fe(totaalPersoneel)}</td>
+            </tr>
+            <tr class="border-b border-gray-50">
+              <td class="py-2.5 pr-4 font-medium text-gray-700">Royalty (${studioRows[0]?.royaltyPct ? Math.round(studioRows[0].royaltyPct*100) : 5}%)</td>
+              ${studioRows.map(r => `<td class="text-right py-2.5 px-3 text-gray-500">${r.actief ? fe(r.royalty) : '-'}</td>`).join('')}
+              <td class="text-right py-2.5 pl-3 bg-wax-50 text-gray-500">${fe(totaalRoyalty)}</td>
+            </tr>
+            <tr class="border-b border-gray-100">
+              <td class="py-3 pr-4 font-bold text-gray-900">Winst/Verlies</td>
+              ${studioRows.map(r => `<td class="text-right py-3 px-3 font-bold ${r.actief ? (r.winst >= 0 ? 'text-green-600' : 'text-red-600') : 'text-gray-400'}">${r.actief ? fe(r.winst) : '-'}</td>`).join('')}
+              <td class="text-right py-3 pl-3 bg-wax-50 font-bold ${totaalWinst >= 0 ? 'text-green-600' : 'text-red-600'}">${fe(totaalWinst)}</td>
+            </tr>
+            <tr>
+              <td class="py-2.5 pr-4 font-medium text-gray-700">Marge</td>
+              ${studioRows.map(r => `<td class="text-right py-2.5 px-3 text-gray-500">${r.actief && r.omzet > 0 ? r.marge + '%' : '-'}</td>`).join('')}
+              <td class="text-right py-2.5 pl-3 bg-wax-50 text-gray-500">${totaalOmzet > 0 ? Math.round((totaalWinst/totaalOmzet)*100) + '%' : '-'}</td>
+            </tr>
           </tbody>
         </table>
       </div>
-    </div>
-  `;
+
+      <!-- Franchise Inkomsten -->
+      <div class="grid lg:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Franchise Inkomsten voor Wax Affairs</h3>
+          <div class="bg-gray-50 rounded-xl p-4 space-y-2">
+            <div class="flex justify-between py-1.5 text-sm"><span class="text-gray-600">Royalties ontvangen</span><span class="font-medium text-gray-900">${fe(totaalRoyalty)}</span></div>
+            <div class="flex justify-between py-1.5 text-sm"><span class="text-gray-600">Onboarding fees ontvangen</span><span class="font-medium text-gray-900">${fe(onboardingFee)}</span></div>
+            <div class="flex justify-between py-1.5 text-sm"><span class="text-gray-600">Product orders</span><span class="font-medium text-gray-900">${fe(productOrders)}</span></div>
+            <div class="flex justify-between py-1.5 text-sm"><span class="text-gray-600">Academy inkomsten</span><span class="font-medium text-gray-900">${fe(academyInkomsten)}</span></div>
+            <div class="flex justify-between py-2 text-sm font-bold border-t border-gray-200 mt-2 pt-2"><span class="text-gray-900">TOTAAL inkomsten</span><span class="text-wax-700">${fe(totaalFranchiseInkomsten)}</span></div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">Franchise Voorwaarden <span class="font-normal normal-case text-gray-400">(vanuit businessplan)</span></h3>
+          <div class="bg-gray-50 rounded-xl p-4 space-y-2">
+            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4B6}</span><span class="text-gray-600">Onboarding fee</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.onboardingFee || 15000)} (eenmalig)</span></div>
+            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4CA}</span><span class="text-gray-600">Royalty</span><span class="ml-auto font-medium text-gray-900">${franchiseTerms.royaltyPct || '5'}% (${franchiseTerms.royaltyHighPct || '6'}% boven \u20AC${fn(franchiseTerms.royaltyThreshold || 120000)})</span></div>
+            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4C5}</span><span class="text-gray-600">Contractduur</span><span class="ml-auto font-medium text-gray-900">${franchiseTerms.contractDuur || '5 jaar, verlengbaar'}</span></div>
+            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F3D7}\uFE0F</span><span class="text-gray-600">Studio investering</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.investMin || 60000)}-${fn(franchiseTerms.investMax || 75000)}</span></div>
+            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4E6}</span><span class="text-gray-600">Min. bestelling</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.minBestelling || 200)}/maand</span></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  el.innerHTML = html;
 }
 
-function renderFinTabs() {
-  // Update tab button styling
-  document.querySelectorAll('.fin-tab-btn').forEach(btn => {
-    const tabName = btn.textContent.trim().toLowerCase().replace('per ','');
-    const isActive = (tabName.includes('behandeling') && finTab === 'behandeling') ||
-                     (tabName.includes('maand') && finTab === 'maand') ||
-                     (tabName.includes('studio') && finTab === 'studio');
-    btn.className = `fin-tab-btn px-4 py-2 rounded-lg text-sm font-medium transition-all ${isActive ? 'bg-wax-500 text-white shadow-lg' : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'}`;
-  });
+// ══════════════ TAB 2: OMZET DETAILS ══════════════
+function renderFinOmzet(el) {
+  let html = `
+    <!-- Period Selector -->
+    <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-6">
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="flex gap-1.5 flex-wrap">
+          <button onclick="setFinPeriod('vandaag')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Vandaag</button>
+          <button onclick="setFinPeriod('week')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Deze Week</button>
+          <button onclick="setFinPeriod('maand')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Deze Maand</button>
+          <button onclick="setFinPeriod('kwartaal')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Dit Kwartaal</button>
+          <button onclick="setFinPeriod('jaar')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Dit Jaar</button>
+          <button onclick="setFinPeriod('alles')" class="fin-period-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-wax-100 hover:text-wax-700 transition-colors">Alles</button>
+        </div>
+        <div class="flex items-center gap-2 ml-auto">
+          <span class="text-xs text-gray-400">Van</span>
+          <input type="date" id="fin-van" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs" value="${finPeriod.van}" onchange="finPeriod.van=this.value; renderFinancieel()">
+          <span class="text-xs text-gray-400">Tot</span>
+          <input type="date" id="fin-tot" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs" value="${finPeriod.tot}" onchange="finPeriod.tot=this.value; renderFinancieel()">
+        </div>
+      </div>
+    </div>`;
 
-  const el = document.getElementById('fin-breakdown');
-  if (!el) return;
   const filtered = getFilteredBookings();
+  const omzet = filtered.reduce((s,b) => s + bookingPrijs(b), 0);
 
-  if (finTab === 'behandeling') {
-    const svcStats = {};
-    const totalOmzet = filtered.reduce((s,b) => s + bookingPrijs(b), 0);
-    filtered.forEach(b => {
-      const svc = data.services.find(s => s.id === b.serviceId);
-      const naam = svc?.naam || b.serviceNaam || b.service || 'Onbekend';
-      if (!svcStats[naam]) svcStats[naam] = { naam, count: 0, omzet: 0, bookings: [] };
-      svcStats[naam].count++;
-      svcStats[naam].omzet += bookingPrijs(b);
-      svcStats[naam].bookings.push(b);
-    });
-    const sorted = Object.values(svcStats).sort((a,b) => b.omzet - a.omzet);
+  // Big revenue number
+  html += `
+    <div class="bg-gradient-to-r from-wax-600 to-wax-400 rounded-2xl p-6 text-white shadow-lg mb-6 text-center">
+      <div class="text-sm uppercase tracking-wide text-white/80 mb-1">Totale Omzet</div>
+      <div class="text-4xl font-bold">${fe(omzet)}</div>
+      <div class="text-sm text-white/80 mt-1">${filtered.length} boekingen</div>
+    </div>`;
 
-    el.innerHTML = sorted.length ? `
-      <div class="divide-y divide-gray-100">
-        <div class="flex items-center gap-4 py-3 text-xs font-semibold text-gray-500 uppercase px-2">
-          <div class="flex-1">Behandeling</div>
-          <div class="w-16 text-right">Aantal</div>
-          <div class="w-24 text-right">Omzet</div>
-          <div class="w-20 text-right">Gem. prijs</div>
-          <div class="w-20 text-right">% totaal</div>
-        </div>
-        ${sorted.map((s, i) => `
-          <div class="cursor-pointer hover:bg-wax-50 transition-colors" onclick="this.nextElementSibling?.classList.toggle('hidden')">
-            <div class="flex items-center gap-4 py-3 px-2">
-              <div class="flex items-center gap-2 flex-1 min-w-0">
-                <span class="w-6 h-6 rounded-full bg-wax-100 text-wax-700 text-xs font-bold flex items-center justify-center flex-shrink-0">${i+1}</span>
-                <span class="text-sm text-gray-900 truncate">${s.naam}</span>
-              </div>
-              <div class="w-16 text-right text-sm text-gray-500">${s.count}x</div>
-              <div class="w-24 text-right text-sm font-medium text-gray-900">${fe(s.omzet)}</div>
-              <div class="w-20 text-right text-sm text-gray-500">${fe(s.omzet / s.count)}</div>
-              <div class="w-20 text-right text-sm text-gray-400">${totalOmzet > 0 ? (s.omzet / totalOmzet * 100).toFixed(1) : 0}%</div>
-            </div>
+  // Category breakdown
+  const catData = {};
+  filtered.forEach(b => {
+    const svc = data.services.find(sv => sv.id === b.serviceId);
+    const cat = svc?.categorie || 'Overig';
+    if (!catData[cat]) catData[cat] = { count: 0, revenue: 0 };
+    catData[cat].count++;
+    catData[cat].revenue += bookingPrijs(b);
+  });
+  const catEntries = Object.entries(catData).sort((a, b) => b[1].revenue - a[1].revenue);
+
+  html += `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
+    <h3 class="font-semibold text-gray-900 mb-4">Omzet per Categorie</h3>
+    <div class="space-y-3">
+      ${catEntries.map(([cat, v]) => {
+        const pct = omzet > 0 ? Math.round((v.revenue / omzet) * 100) : 0;
+        return `<div>
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-700">${cat}</span>
+            <span class="text-sm font-bold text-gray-900">${fe(v.revenue)} <span class="text-xs text-gray-400 font-normal">(${pct}%)</span></span>
           </div>
-          <div class="hidden bg-gray-50 px-6 py-2">
-            <div class="text-xs text-gray-400 mb-1">Laatste boekingen:</div>
-            ${s.bookings.slice(0,5).map(b => {
-              const client = data.clients.find(c => c.id === b.clientId);
-              return `<div class="text-xs text-gray-500 py-0.5">${fd(b.datum)} ${b.tijd||''} - ${client?.naam || b.klantNaam || '-'} - ${fe(bookingPrijs(b))}</div>`;
-            }).join('')}
+          <div class="w-full bg-gray-100 rounded-full h-2.5">
+            <div class="h-2.5 rounded-full bg-wax-500" style="width:${pct}%"></div>
           </div>
-        `).join('')}
-        <div class="flex items-center gap-4 py-3 px-2 bg-wax-50 font-semibold">
-          <div class="flex-1 text-sm text-gray-900">Totaal</div>
-          <div class="w-16 text-right text-sm">${sorted.reduce((s,x) => s+x.count, 0)}x</div>
-          <div class="w-24 text-right text-sm">${fe(totalOmzet)}</div>
-          <div class="w-20 text-right text-sm">${sorted.length ? fe(totalOmzet / sorted.reduce((s,x)=>s+x.count,0)) : '-'}</div>
-          <div class="w-20 text-right text-sm">100%</div>
-        </div>
-      </div>` : '<p class="text-sm text-gray-400 p-4">Geen boekingen in deze periode</p>';
-  }
+        </div>`;
+      }).join('')}
+      ${catEntries.length === 0 ? '<p class="text-sm text-gray-400">Geen data in deze periode</p>' : ''}
+    </div>
+  </div>`;
 
-  else if (finTab === 'maand') {
-    const months = getMonthsBetween(finPeriod.van, finPeriod.tot);
-    const monthStats = months.map(m => {
-      const mb = filtered.filter(b => (b.datum||'').startsWith(m));
-      const omzet = mb.reduce((s,b) => s + bookingPrijs(b), 0);
-      return { maand: m, count: mb.length, omzet };
-    });
-
-    el.innerHTML = `
-      <div class="divide-y divide-gray-100">
-        <div class="flex items-center gap-4 py-3 text-xs font-semibold text-gray-500 uppercase px-2">
-          <div class="flex-1">Maand</div>
-          <div class="w-20 text-right">Boekingen</div>
-          <div class="w-24 text-right">Omzet</div>
-          <div class="w-24 text-right">Gem./boeking</div>
-          <div class="w-20 text-right">Groei %</div>
-        </div>
-        ${monthStats.map((m, i) => {
-          const prev = i > 0 ? monthStats[i-1].omzet : 0;
-          const growth = prev > 0 ? ((m.omzet - prev) / prev * 100).toFixed(0) : '-';
-          const growthColor = growth === '-' ? 'text-gray-400' : parseInt(growth) >= 0 ? 'text-green-600' : 'text-red-600';
-          const d = new Date(m.maand + '-01T00:00:00');
-          return `<div class="flex items-center gap-4 py-3 px-2 table-row">
-            <div class="flex-1 text-sm text-gray-900">${d.toLocaleDateString('nl-NL',{month:'long',year:'numeric'})}</div>
-            <div class="w-20 text-right text-sm text-gray-500">${m.count}</div>
-            <div class="w-24 text-right text-sm font-medium text-gray-900">${fe(m.omzet)}</div>
-            <div class="w-24 text-right text-sm text-gray-500">${m.count > 0 ? fe(m.omzet/m.count) : '-'}</div>
-            <div class="w-20 text-right text-sm font-medium ${growthColor}">${growth === '-' ? '-' : (parseInt(growth)>=0?'+':'')+growth+'%'}</div>
-          </div>`;
-        }).join('')}
-        <div class="flex items-center gap-4 py-3 px-2 bg-wax-50 font-semibold">
-          <div class="flex-1 text-sm text-gray-900">Totaal</div>
-          <div class="w-20 text-right text-sm">${monthStats.reduce((s,m)=>s+m.count,0)}</div>
-          <div class="w-24 text-right text-sm">${fe(monthStats.reduce((s,m)=>s+m.omzet,0))}</div>
-          <div class="w-24 text-right text-sm"></div>
-          <div class="w-20 text-right text-sm"></div>
-        </div>
-      </div>`;
-  }
-
-  else if (finTab === 'studio') {
-    const studioStats = {};
-    data.studios.forEach(s => {
-      studioStats[s.id] = { naam: s.naam, id: s.id, count: 0, omzet: 0 };
-    });
-    filtered.forEach(b => {
-      if (studioStats[b.studioId]) {
-        studioStats[b.studioId].count++;
-        studioStats[b.studioId].omzet += bookingPrijs(b);
-      }
-    });
-    const months = getMonthsBetween(finPeriod.van, finPeriod.tot);
-    const sorted = Object.values(studioStats).sort((a,b) => b.omzet - a.omzet);
-
-    el.innerHTML = sorted.length ? `
-      <div class="divide-y divide-gray-100">
-        <div class="flex items-center gap-4 py-3 text-xs font-semibold text-gray-500 uppercase px-2">
-          <div class="flex-1">Studio</div>
-          <div class="w-20 text-right">Boekingen</div>
-          <div class="w-24 text-right">Omzet</div>
-          <div class="w-28 text-right">Vaste Lasten</div>
-          <div class="w-28 text-right">Personeel</div>
-          <div class="w-24 text-right">Winst</div>
-        </div>
-        ${sorted.map(s => {
-          const studioVL = (data.vastelasten||[]).filter(v => v.studioId === s.id && v.actief !== false)
-            .reduce((sum, v) => sum + ((parseFloat(v.bedrag)||0) * months.length), 0);
-          const studioPers = (data.personeel?.uren||[])
-            .filter(u => u.studioId === s.id && u.datum >= finPeriod.van && u.datum <= finPeriod.tot)
-            .reduce((sum, u) => sum + ((parseFloat(u.uren)||0) * (parseFloat(u.uurloon||u.tarief)||0)), 0);
-          const studioWinst = s.omzet - studioVL - studioPers;
-          return `<div class="flex items-center gap-4 py-3 px-2 table-row">
-            <div class="flex-1 text-sm text-gray-900">${s.naam}</div>
-            <div class="w-20 text-right text-sm text-gray-500">${s.count}</div>
-            <div class="w-24 text-right text-sm font-medium text-gray-900">${fe(s.omzet)}</div>
-            <div class="w-28 text-right text-sm text-gray-500">${fe(studioVL)}</div>
-            <div class="w-28 text-right text-sm text-gray-500">${fe(studioPers)}</div>
-            <div class="w-24 text-right text-sm font-medium ${studioWinst >= 0 ? 'text-green-600' : 'text-red-600'}">${fe(studioWinst)}</div>
-          </div>`;
-        }).join('')}
-      </div>` : '<p class="text-sm text-gray-400 p-4">Geen studios beschikbaar</p>';
-  }
-}
-
-function renderFinTransacties() {
+  // Transaction table
   const all = data.bookings.filter(b =>
     b.datum >= finPeriod.van && b.datum <= finPeriod.tot
   ).sort((a,b) => ((b.datum||'')+(b.tijd||'')).localeCompare((a.datum||'')+(a.tijd||'')));
@@ -1788,99 +1561,245 @@ function renderFinTransacties() {
   const start = (finTransPage - 1) * FIN_TRANS_PER_PAGE;
   const page = all.slice(start, start + FIN_TRANS_PER_PAGE);
 
-  document.getElementById('fin-trans-count').textContent = `${all.length} transacties`;
-  document.getElementById('fin-trans-page').textContent = `${finTransPage}/${totalPages}`;
-
-  document.getElementById('fin-transactions').innerHTML = page.length ?
-    `<div class="divide-y divide-gray-50">
-      <div class="flex items-center gap-3 py-2.5 px-5 text-xs font-semibold text-gray-500 uppercase">
-        <div class="w-20">Datum</div>
-        <div class="w-14">Tijd</div>
-        <div class="flex-1">Klant</div>
-        <div class="flex-1">Behandeling</div>
-        <div class="w-14 text-right">Duur</div>
-        <div class="w-20 text-right">Prijs</div>
-        <div class="w-24 text-right">Status</div>
-      </div>
-      ${page.map(b => {
-        const svc = data.services.find(s => s.id === b.serviceId);
-        const client = data.clients.find(c => c.id === b.clientId);
-        return `<div class="flex items-center gap-3 py-2.5 px-5 table-row">
-          <div class="w-20 text-xs text-gray-500">${b.datum ? fd(b.datum) : '-'}</div>
-          <div class="w-14 text-xs text-gray-400">${b.tijd||'-'}</div>
-          <div class="flex-1 text-sm text-gray-900 truncate">${client?.naam || b.klantNaam || '-'}</div>
-          <div class="flex-1 text-xs text-gray-500 truncate">${svc?.naam || b.serviceNaam || b.service || '-'}</div>
-          <div class="w-14 text-right text-xs text-gray-400">${b.duur ? b.duur+'m' : '-'}</div>
-          <div class="w-20 text-right text-sm font-medium text-gray-900">${fe(bookingPrijs(b))}</div>
-          <div class="w-24 text-right">${badge(b.status)}</div>
-        </div>`;
-      }).join('')}
-    </div>` : '<p class="text-sm text-gray-400 p-5">Geen transacties in deze periode</p>';
-}
-
-function renderFinVasteLasten() {
-  const el = document.getElementById('fin-vastelasten');
-  if (!el) return;
-  const vl = data.vastelasten || [];
-
-  // Group by studio
-  const byStudio = {};
-  data.studios.forEach(s => { byStudio[s.id] = { naam: s.naam, items: [], total: 0 }; });
-  vl.forEach(v => {
-    if (!byStudio[v.studioId]) byStudio[v.studioId] = { naam: v.studioId, items: [], total: 0 };
-    byStudio[v.studioId].items.push(v);
-    if (v.actief !== false) byStudio[v.studioId].total += (parseFloat(v.bedrag) || 0);
-  });
-
-  const entries = Object.entries(byStudio).filter(([,v]) => v.items.length > 0);
-
-  el.innerHTML = entries.length ? entries.map(([sid, studio]) => `
-    <div class="mb-4">
-      <div class="flex items-center justify-between mb-2">
-        <h4 class="text-sm font-semibold text-gray-700">${studio.naam}</h4>
-        <span class="text-sm font-medium text-gray-900">${fe(studio.total)}/maand</span>
-      </div>
-      <div class="divide-y divide-gray-50">
-        ${studio.items.map(v => `
-          <div class="flex items-center gap-3 py-2 group">
-            <span class="text-xs px-2 py-0.5 rounded-full bg-wax-100 text-wax-700 font-medium">${v.categorie}</span>
-            <span class="flex-1 text-sm text-gray-600 truncate">${v.omschrijving || '-'}</span>
-            <span class="text-sm font-medium ${v.actief === false ? 'text-gray-300 line-through' : 'text-gray-900'}">${fe(v.bedrag)}</span>
-            <button onclick="editVasteLast('${v.id}')" class="opacity-0 group-hover:opacity-100 text-xs text-gray-400 hover:text-wax-600 transition-all">bewerk</button>
-            <button onclick="deleteVasteLast('${v.id}')" class="opacity-0 group-hover:opacity-100 text-xs text-gray-400 hover:text-red-600 transition-all">x</button>
-          </div>
-        `).join('')}
+  html += `<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+      <h3 class="font-semibold text-gray-900">Alle Transacties</h3>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-400">${all.length} transacties</span>
+        <button onclick="finTransPage=Math.max(1,finTransPage-1); renderFinancieel()" class="px-2 py-1 rounded text-xs bg-gray-100 hover:bg-gray-200">&laquo;</button>
+        <span class="text-xs text-gray-500">${finTransPage}/${totalPages}</span>
+        <button onclick="finTransPage=Math.min(${totalPages},finTransPage+1); renderFinancieel()" class="px-2 py-1 rounded text-xs bg-gray-100 hover:bg-gray-200">&raquo;</button>
       </div>
     </div>
-  `).join('') : '<p class="text-sm text-gray-400">Nog geen vaste lasten ingesteld</p>';
+    <div class="overflow-x-auto" style="max-height:600px; overflow-y:auto;">
+      ${page.length ? `<table class="w-full text-sm">
+        <thead><tr class="text-xs font-semibold text-gray-500 uppercase border-b border-gray-100">
+          <th class="text-left py-2.5 px-5">Datum</th>
+          <th class="text-left py-2.5 px-3">Klant</th>
+          <th class="text-left py-2.5 px-3">Behandeling</th>
+          <th class="text-left py-2.5 px-3">Medewerker</th>
+          <th class="text-left py-2.5 px-3">Studio</th>
+          <th class="text-right py-2.5 px-3">Prijs</th>
+          <th class="text-right py-2.5 px-5">Status</th>
+        </tr></thead>
+        <tbody class="divide-y divide-gray-50">
+          ${page.map(b => {
+            const svc = data.services.find(s => s.id === b.serviceId);
+            const client = data.clients.find(c => c.id === b.clientId);
+            const studio = data.studios.find(s => s.id === b.studioId);
+            const medewerker = (data.personeel?.medewerkers || []).find(m => m.id === b.medewerkerID) || {};
+            return `<tr class="table-row hover:bg-gray-50">
+              <td class="py-2.5 px-5 text-gray-500">${b.datum ? fd(b.datum) : '-'} ${b.tijd || ''}</td>
+              <td class="py-2.5 px-3 text-gray-900">${client?.naam || b.klantNaam || '-'}</td>
+              <td class="py-2.5 px-3 text-gray-500">${svc?.naam || b.service || '-'}</td>
+              <td class="py-2.5 px-3 text-gray-500">${medewerker.naam || b.medewerker || '-'}</td>
+              <td class="py-2.5 px-3 text-gray-500">${studio?.naam?.replace('Wax Affairs ','') || '-'}</td>
+              <td class="py-2.5 px-3 text-right font-medium text-gray-900">${fe(bookingPrijs(b))}</td>
+              <td class="py-2.5 px-5 text-right">${badge(b.status)}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>` : '<p class="text-sm text-gray-400 p-5">Geen transacties in deze periode</p>'}
+    </div>
+  </div>`;
+
+  el.innerHTML = html;
+
+  // Highlight active period button
+  setTimeout(() => {
+    document.querySelectorAll('.fin-period-btn').forEach(btn => {
+      btn.classList.remove('bg-wax-500','text-white');
+      btn.classList.add('bg-gray-100','text-gray-600');
+    });
+  }, 10);
 }
 
-function renderFinKostenChart(omzet, vasteLasten, personeelskosten) {
-  if (finKostenChart) finKostenChart.destroy();
-  const ctx = document.getElementById('fin-kosten-chart');
-  if (!ctx) return;
+// ══════════════ TAB 3: KOSTEN ══════════════
+function renderFinKosten(el) {
+  const maandStart = financieelMaand + '-01';
+  const mDate = new Date(maandStart);
+  const maandEnd = new Date(mDate.getFullYear(), mDate.getMonth() + 1, 0).toISOString().slice(0, 10);
 
-  const winst = Math.max(0, omzet - vasteLasten - personeelskosten);
-  const hasData = omzet > 0 || vasteLasten > 0 || personeelskosten > 0;
+  const studios = data.studios || [];
 
-  finKostenChart = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: hasData ? ['Vaste Lasten', 'Personeelskosten', 'Winst'] : ['Geen data'],
-      datasets: [{
-        data: hasData ? [vasteLasten, personeelskosten, winst] : [1],
-        backgroundColor: hasData ? ['#e28568', '#6366f1', '#059669'] : ['#e5e7eb'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } },
-        tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${fe(ctx.raw)}` } }
-      }
-    }
+  let html = `
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-bold text-gray-900">Kosten \u2014 ${getMonthLabel(financieelMaand)}</h2>
+      <div class="flex items-center gap-2">
+        <button onclick="finMaandNav(-1)" class="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold">\u25C0</button>
+        <button onclick="financieelMaand=new Date().toISOString().slice(0,7); renderFinancieel()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-600">Vandaag</button>
+        <button onclick="finMaandNav(1)" class="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold">\u25B6</button>
+      </div>
+    </div>`;
+
+  // Vaste lasten per studio
+  let totaalVasteLasten = 0;
+  studios.forEach(s => {
+    const vl = (data.vastelasten || []).filter(v => v.studioId === s.id && v.actief !== false);
+    let studioTotal = 0;
+    const rows = vl.map(v => {
+      const bedrag = parseFloat(v.bedrag) || 0;
+      let maandBedrag = bedrag;
+      if (v.frequentie === 'jaarlijks') maandBedrag = bedrag / 12;
+      else if (v.frequentie === 'kwartaal') maandBedrag = bedrag / 3;
+      else if (v.frequentie === 'wekelijks') maandBedrag = bedrag * 4.33;
+      studioTotal += maandBedrag;
+      return { ...v, maandBedrag };
+    });
+    totaalVasteLasten += studioTotal;
+
+    html += `<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-4 p-5">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-semibold text-gray-900">${s.naam}</h3>
+        <div class="flex items-center gap-2">
+          <span class="text-sm font-bold text-gray-900">${fe(studioTotal)}/maand</span>
+          <button onclick="openModal('vastelasten')" class="btn-primary px-3 py-1.5 rounded-lg text-xs font-medium">+ Toevoegen</button>
+        </div>
+      </div>
+      ${rows.length ? `<div class="divide-y divide-gray-50">
+        ${rows.map(v => `<div class="flex items-center gap-3 py-2 group">
+          <span class="text-xs px-2 py-0.5 rounded-full bg-wax-100 text-wax-700 font-medium">${v.categorie || 'Overig'}</span>
+          <span class="flex-1 text-sm text-gray-600">${v.omschrijving || v.naam || '-'}</span>
+          <span class="text-xs text-gray-400">${v.frequentie || 'maandelijks'}</span>
+          <span class="text-sm font-medium text-gray-900 w-20 text-right">${fe(v.maandBedrag)}</span>
+          <button onclick="editVasteLast('${v.id}')" class="opacity-0 group-hover:opacity-100 text-xs text-gray-400 hover:text-wax-600 transition-all">bewerk</button>
+          <button onclick="deleteVasteLast('${v.id}')" class="opacity-0 group-hover:opacity-100 text-xs text-gray-400 hover:text-red-600 transition-all">x</button>
+        </div>`).join('')}
+      </div>` : '<p class="text-sm text-gray-400">Geen vaste lasten ingesteld voor deze studio</p>'}
+    </div>`;
   });
+
+  // Personeel kosten
+  const uren = (data.personeel?.uren || []).filter(u => u.datum >= maandStart && u.datum <= maandEnd);
+  const totaalPersoneel = uren.reduce((s, u) => s + ((parseFloat(u.uren)||0) * (parseFloat(u.uurloon||u.tarief)||0)), 0);
+
+  html += `<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-4 p-5">
+    <h3 class="font-semibold text-gray-900 mb-3">Personeel Kosten <span class="text-sm font-normal text-gray-400">(vanuit urenregistratie)</span></h3>
+    <div class="text-2xl font-bold text-gray-900 mb-2">${fe(totaalPersoneel)}</div>
+    <div class="text-xs text-gray-400">${uren.length} uur-registraties deze maand</div>
+  </div>`;
+
+  // Total
+  const totaalKosten = totaalVasteLasten + totaalPersoneel;
+  html += `<div class="bg-wax-50 rounded-xl p-5 border-2 border-wax-200">
+    <div class="flex items-center justify-between">
+      <h3 class="font-bold text-gray-900">Totale Kosten deze maand</h3>
+      <div class="text-2xl font-bold text-gray-900">${fe(totaalKosten)}</div>
+    </div>
+    <div class="flex gap-6 mt-2 text-sm text-gray-500">
+      <span>Vaste lasten: ${fe(totaalVasteLasten)}</span>
+      <span>Personeel: ${fe(totaalPersoneel)}</span>
+    </div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+// ══════════════ TAB 4: WINST & VERLIES ══════════════
+function renderFinPnL(el) {
+  const maandStart = financieelMaand + '-01';
+  const mDate = new Date(maandStart);
+  const maandEnd = new Date(mDate.getFullYear(), mDate.getMonth() + 1, 0).toISOString().slice(0, 10);
+  const jaarStart = financieelMaand.slice(0, 4) + '-01-01';
+  const jaarEnd = financieelMaand.slice(0, 4) + '-12-31';
+
+  const bp = data.bp || {};
+  const franchiseTerms = bp.franchiseTerms || {};
+
+  // Studio omzet
+  const studioOmzet = data.bookings
+    .filter(b => ['bevestigd','voltooid'].includes(b.status) && b.datum >= maandStart && b.datum <= maandEnd)
+    .reduce((s, b) => s + bookingPrijs(b), 0);
+
+  // Year omzet for royalty threshold
+  const yearOmzet = data.bookings
+    .filter(b => ['bevestigd','voltooid'].includes(b.status) && b.datum >= jaarStart && b.datum <= jaarEnd)
+    .reduce((s, b) => s + bookingPrijs(b), 0);
+
+  const royaltyPct = yearOmzet > (franchiseTerms.royaltyThreshold || 120000) ? 0.06 : 0.05;
+  const royalties = studioOmzet * royaltyPct;
+  const onboardingFees = parseFloat(franchiseTerms.onboardingFee) || 15000;
+  const productVerkoop = 1200; // placeholder
+  const academyInkomsten = 4000; // placeholder
+  const totaalOmzet = studioOmzet + royalties + onboardingFees + productVerkoop + academyInkomsten;
+
+  // Kosten
+  let huur = 0, verzekering = 0, energie = 0, marketing = 0, software = 0, overig = 0;
+  (data.vastelasten || []).filter(v => v.actief !== false).forEach(v => {
+    const bedrag = parseFloat(v.bedrag) || 0;
+    let maandBedrag = bedrag;
+    if (v.frequentie === 'jaarlijks') maandBedrag = bedrag / 12;
+    else if (v.frequentie === 'kwartaal') maandBedrag = bedrag / 3;
+    else if (v.frequentie === 'wekelijks') maandBedrag = bedrag * 4.33;
+    const cat = (v.categorie || '').toLowerCase();
+    if (cat.includes('huur')) huur += maandBedrag;
+    else if (cat.includes('verzekering')) verzekering += maandBedrag;
+    else if (cat.includes('energie')) energie += maandBedrag;
+    else if (cat.includes('marketing')) marketing += maandBedrag;
+    else if (cat.includes('software')) software += maandBedrag;
+    else overig += maandBedrag;
+  });
+
+  const uren = (data.personeel?.uren || []).filter(u => u.datum >= maandStart && u.datum <= maandEnd);
+  const personeel = uren.reduce((s, u) => s + ((parseFloat(u.uren)||0) * (parseFloat(u.uurloon||u.tarief)||0)), 0);
+  const totaalKosten = huur + verzekering + energie + marketing + software + overig + personeel;
+  const nettoWinst = totaalOmzet - totaalKosten;
+  const marge = totaalOmzet > 0 ? (nettoWinst / totaalOmzet * 100).toFixed(1) : 0;
+
+  const row = (label, amount, bold, color) => `
+    <div class="flex justify-between py-2 ${bold ? 'font-bold' : ''}">
+      <span class="text-sm ${color || 'text-gray-700'}">${label}</span>
+      <span class="text-sm ${color || 'text-gray-900'} ${bold ? 'font-bold' : 'font-medium'}">${fe(amount)}</span>
+    </div>`;
+
+  const divider = `<div class="border-t border-gray-200 my-1"></div>`;
+  const doubleDivider = `<div class="border-t-2 border-gray-800 my-2"></div>`;
+
+  el.innerHTML = `
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-bold text-gray-900">Winst & Verlies \u2014 ${getMonthLabel(financieelMaand)}</h2>
+      <div class="flex items-center gap-2">
+        <button onclick="finMaandNav(-1)" class="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold">\u25C0</button>
+        <button onclick="financieelMaand=new Date().toISOString().slice(0,7); renderFinancieel()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 hover:bg-gray-200 text-gray-600">Vandaag</button>
+        <button onclick="finMaandNav(1)" class="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 font-bold">\u25B6</button>
+      </div>
+    </div>
+
+    <div class="max-w-lg mx-auto">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">OMZET</h3>
+        ${row('Studio omzet', studioOmzet)}
+        ${row('Royalties', royalties)}
+        ${row('Onboarding fees', onboardingFees)}
+        ${row('Product verkoop', productVerkoop)}
+        ${row('Academy', academyInkomsten)}
+        ${divider}
+        ${row('Totaal omzet', totaalOmzet, true)}
+
+        <div class="mt-6"></div>
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">KOSTEN</h3>
+        ${huur > 0 ? row('Huur', huur) : ''}
+        ${personeel > 0 ? row('Personeel', personeel) : ''}
+        ${verzekering > 0 ? row('Verzekering', verzekering) : ''}
+        ${energie > 0 ? row('Energie', energie) : ''}
+        ${marketing > 0 ? row('Marketing', marketing) : ''}
+        ${software > 0 ? row('Software', software) : ''}
+        ${overig > 0 ? row('Overig', overig) : ''}
+        ${totaalKosten === 0 ? '<div class="text-sm text-gray-400 py-2">Geen kosten geregistreerd</div>' : ''}
+        ${divider}
+        ${row('Totaal kosten', totaalKosten, true)}
+
+        ${doubleDivider}
+        <div class="flex justify-between py-3">
+          <span class="text-lg font-bold ${nettoWinst >= 0 ? 'text-green-700' : 'text-red-700'}">NETTO WINST</span>
+          <span class="text-lg font-bold ${nettoWinst >= 0 ? 'text-green-700' : 'text-red-700'}">${fe(nettoWinst)}</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-sm text-gray-500">Marge</span>
+          <span class="text-sm font-bold ${nettoWinst >= 0 ? 'text-green-600' : 'text-red-600'}">${marge}%</span>
+        </div>
+      </div>
+    </div>`;
 }
 
 // ── Vaste Lasten CRUD ──
@@ -5685,6 +5604,61 @@ function modalStudioDetail(id) {
           <div class="text-2xl font-bold ${winst >= 0 ? 'text-green-700' : 'text-red-700'}">${fe(winst)}</div>
           <div class="text-xs text-gray-400 mt-1">deze maand</div>
           <div class="mt-3 text-lg font-bold ${winst >= 0 ? 'text-green-600' : 'text-red-600'}">${marge}% marge</div>
+        </div>
+      </div>
+    </div>`;
+
+    // ══════════════ SECTION 3b: Franchise Voorwaarden ══════════════
+    const franchiseTerms = (data.bp || {}).franchiseTerms || {};
+    const ftOnboarding = franchiseTerms.onboardingFee || 15000;
+    const ftRoyaltyPct = franchiseTerms.royaltyPct || 5;
+    const ftRoyaltyHighPct = franchiseTerms.royaltyHighPct || 6;
+    const ftRoyaltyThreshold = franchiseTerms.royaltyThreshold || 120000;
+    const ftContractDuur = franchiseTerms.contractDuur || '5 jaar, verlengbaar';
+    const ftInvestMin = franchiseTerms.investMin || 60000;
+    const ftInvestMax = franchiseTerms.investMax || 75000;
+    const ftMinBestelling = franchiseTerms.minBestelling || 200;
+
+    const currentRoyaltyPct = yearRevenue > ftRoyaltyThreshold ? ftRoyaltyHighPct : ftRoyaltyPct;
+    const royaltyDezeMaand = monthRevenue * (currentRoyaltyPct / 100);
+    const royaltyDitJaar = yearRevenue * (currentRoyaltyPct / 100);
+
+    html += `<div>
+      <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wide mb-3">\u{1F4CB} Franchise Voorwaarden</h3>
+      <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
+        <div class="grid grid-cols-2 gap-x-6 gap-y-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span>\u{1F4B6}</span>
+            <span class="text-sm text-gray-600">Onboarding fee</span>
+            <span class="ml-auto text-sm font-medium text-gray-900">\u20AC${fn(ftOnboarding)} (eenmalig)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span>\u{1F4CA}</span>
+            <span class="text-sm text-gray-600">Royalty</span>
+            <span class="ml-auto text-sm font-medium text-gray-900">${ftRoyaltyPct}% (${ftRoyaltyHighPct}% boven \u20AC${fn(ftRoyaltyThreshold)})</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span>\u{1F4C5}</span>
+            <span class="text-sm text-gray-600">Contractduur</span>
+            <span class="ml-auto text-sm font-medium text-gray-900">${ftContractDuur}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span>\u{1F3D7}\uFE0F</span>
+            <span class="text-sm text-gray-600">Studio investering</span>
+            <span class="ml-auto text-sm font-medium text-gray-900">\u20AC${fn(ftInvestMin)}-${fn(ftInvestMax)}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span>\u{1F4E6}</span>
+            <span class="text-sm text-gray-600">Min. bestelling</span>
+            <span class="ml-auto text-sm font-medium text-gray-900">\u20AC${fn(ftMinBestelling)}/maand</span>
+          </div>
+        </div>
+        <div class="border-t border-gray-200 pt-3">
+          <div class="text-xs font-bold text-gray-500 uppercase mb-2">Berekend voor deze studio:</div>
+          <div class="flex gap-6">
+            <div class="text-sm text-gray-700">\u2022 Royalty deze maand: <span class="font-bold text-gray-900">${fe(royaltyDezeMaand)}</span> <span class="text-xs text-gray-400">(${currentRoyaltyPct}% van ${fe(monthRevenue)})</span></div>
+            <div class="text-sm text-gray-700">\u2022 Royalty dit jaar: <span class="font-bold text-gray-900">${fe(royaltyDitJaar)}</span></div>
+          </div>
         </div>
       </div>
     </div>`;
