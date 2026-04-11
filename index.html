@@ -202,19 +202,15 @@
     <a href="#" onclick="return showPage('taken')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="taken">
       <span class="icon text-lg">✅</span><span class="text-sm">Taken</span>
     </a>
-    <a href="#" onclick="return showPage('marketing')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="marketing">
+    <div class="nav-divider mt-3">Sales & Marketing</div>
+    <a href="#" onclick="return showPage('marketing-reports')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="marketing-reports">
       <span class="icon text-lg">📣</span><span class="text-sm">Marketing</span>
     </a>
-
-    <div class="nav-divider mt-3">Sales & Marketing</div>
     <a href="#" onclick="return showPage('friendchise-pitch')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="friendchise-pitch">
       <span class="icon text-lg">🤝</span><span class="text-sm">Friendchise Pitch</span>
     </a>
     <a href="#" onclick="return showPage('pipeline')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="pipeline">
       <span class="icon text-lg">📈</span><span class="text-sm">Pipeline</span>
-    </a>
-    <a href="#" onclick="return showPage('marketing-reports')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="marketing-reports">
-      <span class="icon text-lg">📣</span><span class="text-sm">Marketing Reports</span>
     </a>
 
     <div class="nav-divider mt-3">Strategie</div>
@@ -820,7 +816,7 @@ function showPage(p) {
     leveranciers: renderLeveranciers,
     financieel: renderFinancieel,
     comms: renderComms,
-    marketing: renderMarketing,
+    marketing: renderMarketingReports,
     team: renderTeam,
     contacten: renderContacten,
     taken: renderTaken,
@@ -1118,7 +1114,10 @@ async function renderMarketingReports() {
   const L = lang === 'de';
 
   let reports = [];
-  try { reports = await apiGet('/api/marketing'); } catch(e) {}
+  try {
+    const res = await fetch('/api/marketing');
+    if (res.ok) reports = await res.json();
+  } catch(e) { console.error('Marketing fetch error:', e); }
 
   const catInfo = {
     blog: { icon:'📝', label: L ? 'Blog Posts' : 'Blog Posts', color:'bg-blue-100 text-blue-700' },
