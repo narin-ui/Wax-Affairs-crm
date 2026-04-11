@@ -464,6 +464,10 @@
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3">
       <input type="text" id="student-zoek" placeholder="Zoeken..." class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm" oninput="renderStudenten()">
+      <select id="student-type-filter" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderStudenten()">
+        <option value="">Alle types</option>
+        <option value="workshop">Workshop</option><option value="online">Online</option><option value="academy">Academy</option>
+      </select>
       <select id="student-filter" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderStudenten()">
         <option value="">Alle statussen</option>
         <option value="lead">Lead</option><option value="ingeschreven">Ingeschreven</option>
@@ -1110,9 +1114,17 @@ function renderPipeline() {
 function renderStudenten() {
   const zoek = (document.getElementById('student-zoek')?.value || '').toLowerCase();
   const filter = document.getElementById('student-filter')?.value || '';
+  const typeFilter = document.getElementById('student-type-filter')?.value || '';
   let list = data.students;
   if (zoek) list = list.filter(s => (s.naam||'').toLowerCase().includes(zoek));
   if (filter) list = list.filter(s => s.status === filter);
+  if (typeFilter) list = list.filter(s => s.type === typeFilter);
+
+  const typeLabel = (t) => ({workshop:'Workshop',online:'Online','in-person':'In-person',academy:'Academy'}[t] || t || '');
+  const typeBadge = (t) => {
+    const c = {workshop:'bg-blue-100 text-blue-700',online:'bg-purple-100 text-purple-700',academy:'bg-wax-100 text-wax-700','in-person':'bg-wax-100 text-wax-700'};
+    return `<span class="text-xs px-2 py-0.5 rounded-full ${c[t]||'bg-gray-100 text-gray-600'}">${typeLabel(t)}</span>`;
+  };
 
   const el = document.getElementById('student-tabel');
   const leeg = document.getElementById('student-leeg');
@@ -1122,8 +1134,9 @@ function renderStudenten() {
     <div class="w-10 h-10 rounded-lg bg-terra-100 flex items-center justify-center text-terra-600 font-bold text-sm">${(s.naam||'?')[0].toUpperCase()}</div>
     <div class="flex-1 min-w-0">
       <div class="font-medium text-gray-900 text-sm truncate">${s.naam || 'Onbekend'}</div>
-      <div class="text-xs text-gray-400">${s.type === 'in-person' ? 'In-person' : 'Online'} ${s.email ? '· '+s.email : ''}</div>
+      <div class="text-xs text-gray-400">${s.email ? s.email : ''}</div>
     </div>
+    <div>${typeBadge(s.type)}</div>
     <div>${badge(s.status)}</div>
     <div class="text-xs text-gray-400">${fd(s.aangemaakt)}</div>
   </div>`).join('');
@@ -2663,35 +2676,47 @@ async function reageerHuddle(huddleId) {
 // ─── RENDER: Academy (LMS) ───
 let academyOpenModule = null;
 let academySelectedStudent = null;
-let academyView = 'modules'; // 'modules' | 'progress'
+let academySelectedProgramma = null;
+let academyView = 'overzicht'; // 'overzicht' | 'modules' | 'progress'
 
 function renderAcademy() {
   const el = document.getElementById('academy-content');
-  const academy = data.academy || { modules: [], voortgang: {} };
-  const modules = academy.modules || [];
+  const academy = data.academy || { programmas: [], modules: [], voortgang: {} };
+  // Support new (programmas) and legacy (modules) format
+  const programmas = academy.programmas || [];
+  const legacyModules = academy.modules || [];
   const voortgang = academy.voortgang || {};
   const studenten = data.students || [];
 
   if (!academySelectedStudent && studenten.length) academySelectedStudent = studenten[0].id;
 
   const T = {
-    nl: { title:'Academy', sub:'Wax Affairs Training Modules', modules:'Modules', progress:'Studentvoortgang',
+    nl: { title:'Academy', sub:'Workshops, Online Trainingen & Certificeringsprogramma', modules:'Modules', progress:'Studentvoortgang',
       lessen:'lessen', completed:'Afgerond', inProgress:'Bezig', notStarted:'Niet gestart',
       markDone:'Markeer als afgerond', markUndone:'Markeer als niet afgerond', certificate:'Certificaat behalen',
       allComplete:'Alle modules afgerond!', selectStudent:'Selecteer student',
-      noStudents:'Nog geen studenten ingeschreven', backToModules:'Terug naar overzicht',
-      video:'Video', tekst:'Theorie', quiz:'Quiz', overallProgress:'Totale voortgang' },
-    de: { title:'Akademie', sub:'Wax Affairs Schulungsmodule', modules:'Module', progress:'Fortschritt',
+      noStudents:'Nog geen studenten ingeschreven', backToModules:'Terug naar modules', backToOverview:'Terug naar overzicht',
+      video:'Video', tekst:'Theorie', quiz:'Quiz', overallProgress:'Totale voortgang', overzicht:'Overzicht' },
+    de: { title:'Akademie', sub:'Workshops, Online Schulungen & Zertifizierungsprogramm', modules:'Module', progress:'Fortschritt',
       lessen:'Lektionen', completed:'Abgeschlossen', inProgress:'In Bearbeitung', notStarted:'Nicht gestartet',
       markDone:'Als erledigt markieren', markUndone:'Als nicht erledigt markieren', certificate:'Zertifikat erhalten',
       allComplete:'Alle Module abgeschlossen!', selectStudent:'Student auswaehlen',
-      noStudents:'Noch keine Studenten eingeschrieben', backToModules:'Zurueck zur Uebersicht',
-      video:'Video', tekst:'Theorie', quiz:'Quiz', overallProgress:'Gesamtfortschritt' }
+      noStudents:'Noch keine Studenten eingeschrieben', backToModules:'Zurueck zu Modulen', backToOverview:'Zurueck zur Uebersicht',
+      video:'Video', tekst:'Theorie', quiz:'Quiz', overallProgress:'Gesamtfortschritt', overzicht:'Uebersicht' }
   }[lang] || {};
   const t = (k) => T[k] || k;
 
   const typeIcon = (type) => type === 'video' ? '🎥' : type === 'quiz' ? '❓' : '📖';
   const typeName = (type) => type === 'video' ? t('video') : type === 'quiz' ? t('quiz') : t('tekst');
+
+  // Get all modules from selected programma or legacy format
+  function getActiveModules() {
+    if (programmas.length && academySelectedProgramma) {
+      const prog = programmas.find(p => p.id === academySelectedProgramma);
+      return prog ? prog.modules : [];
+    }
+    return legacyModules;
+  }
 
   function getStudentProgress(studentId) { return voortgang[studentId] || {}; }
 
@@ -2702,8 +2727,8 @@ function renderAcademy() {
     return { done, total: mod.lessen.length, pct: mod.lessen.length ? Math.round(done / mod.lessen.length * 100) : 0 };
   }
 
-  function getOverallProgress(studentId) {
-    const allLessons = modules.flatMap(m => m.lessen);
+  function getOverallProgress(studentId, mods) {
+    const allLessons = mods.flatMap(m => m.lessen);
     const sp = getStudentProgress(studentId);
     let done = 0;
     allLessons.forEach(les => { if (sp[les.id]?.status === 'completed') done++; });
@@ -2715,19 +2740,84 @@ function renderAcademy() {
     return `<span class="badge ${colors[cat] || 'badge-contact'}">${cat}</span>`;
   };
 
+  const progKleur = (type) => {
+    const k = { workshop:'blue', online:'purple', academy:'wax' };
+    return k[type] || 'wax';
+  };
+
+  const progBg = (type) => {
+    const k = { workshop:'from-blue-50 to-white', online:'from-purple-50 to-white', academy:'from-wax-50 to-white' };
+    return k[type] || 'from-wax-50 to-white';
+  };
+
+  const progBorder = (type) => {
+    const k = { workshop:'border-blue-200', online:'border-purple-200', academy:'border-wax-200' };
+    return k[type] || 'border-gray-100';
+  };
+
   let html = `<div class="flex items-center justify-between mb-6 page-header">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">${t('title')}</h1>
       <p class="text-sm text-gray-500 mt-1">${t('sub')}</p>
     </div>
     <div class="flex gap-2 header-actions">
-      <button onclick="academyView='modules'; academyOpenModule=null; renderAcademy()" class="px-4 py-2 rounded-xl text-sm font-medium ${academyView==='modules' ? 'btn-primary' : 'btn-secondary'}">📚 ${t('modules')}</button>
+      <button onclick="academyView='overzicht'; academySelectedProgramma=null; academyOpenModule=null; renderAcademy()" class="px-4 py-2 rounded-xl text-sm font-medium ${academyView==='overzicht' ? 'btn-primary' : 'btn-secondary'}">🏠 ${t('overzicht')}</button>
       <button onclick="academyView='progress'; renderAcademy()" class="px-4 py-2 rounded-xl text-sm font-medium ${academyView==='progress' ? 'btn-primary' : 'btn-secondary'}">📊 ${t('progress')}</button>
     </div>
   </div>`;
 
-  // ══════════ MODULES VIEW ══════════
+  // ══════════ OVERZICHT: 3 Programmakaarten ══════════
+  if (academyView === 'overzicht') {
+    html += `<div class="grid md:grid-cols-3 gap-6 mb-6">`;
+    programmas.forEach(prog => {
+      const totalModules = prog.modules.length;
+      const totalLessen = prog.modules.reduce((s,m) => s + m.lessen.length, 0);
+      const borderColor = { workshop:'border-blue-300 hover:border-blue-400', online:'border-purple-300 hover:border-purple-400', academy:'border-wax-300 hover:border-wax-400' }[prog.type] || '';
+      const bgGrad = { workshop:'from-blue-50 via-white to-white', online:'from-purple-50 via-white to-white', academy:'from-wax-50 via-white to-white' }[prog.type] || '';
+      const textColor = { workshop:'text-blue-700', online:'text-purple-700', academy:'text-wax-700' }[prog.type] || '';
+      const badgeBg = { workshop:'bg-blue-100 text-blue-700', online:'bg-purple-100 text-purple-700', academy:'bg-wax-100 text-wax-700' }[prog.type] || '';
+
+      html += `<div class="bg-gradient-to-b ${bgGrad} rounded-2xl p-6 shadow-sm border-2 ${borderColor} card cursor-pointer transition-all hover:shadow-md" onclick="academySelectedProgramma='${prog.id}'; academyView='modules'; academyOpenModule=null; renderAcademy()">
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-4xl">${prog.icoon || '📚'}</span>
+          <span class="text-xs px-3 py-1 rounded-full font-medium ${badgeBg}">${prog.prijsRange}</span>
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${prog.titel}</h2>
+        <p class="text-sm text-gray-600 mb-4 leading-relaxed">${prog.beschrijving}</p>
+        <div class="flex items-center gap-4 text-xs text-gray-500 pt-4 border-t border-gray-200">
+          <span class="font-medium">${totalModules} modules</span>
+          <span>·</span>
+          <span>${totalLessen} lessen</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+
+    if (!programmas.length) {
+      html += `<div class="text-center text-gray-400 py-12"><div class="text-4xl mb-3">🎓</div><p class="font-medium">Nog geen programma's</p></div>`;
+    }
+  }
+
+  // ══════════ MODULES VIEW (within a programme) ══════════
   if (academyView === 'modules') {
+    const modules = getActiveModules();
+    const prog = programmas.find(p => p.id === academySelectedProgramma);
+    const progType = prog?.type || 'academy';
+
+    html += `<button onclick="academyView='overzicht'; academySelectedProgramma=null; academyOpenModule=null; renderAcademy()" class="text-sm text-wax-600 hover:text-wax-700 font-medium mb-4 inline-flex items-center gap-1">← ${t('backToOverview')}</button>`;
+
+    if (prog) {
+      const bgGrad = progBg(progType);
+      html += `<div class="bg-gradient-to-r ${bgGrad} rounded-xl p-5 border ${progBorder(progType)} mb-6">
+        <div class="flex items-center gap-3 mb-1">
+          <span class="text-2xl">${prog.icoon || '📚'}</span>
+          <h2 class="text-xl font-bold text-gray-900">${prog.titel}</h2>
+          <span class="text-xs px-2 py-1 rounded-full bg-white/70 font-medium text-gray-600">${prog.prijsRange}</span>
+        </div>
+        <p class="text-sm text-gray-600 mt-1">${prog.beschrijving}</p>
+      </div>`;
+    }
+
     if (studenten.length) {
       html += `<div class="mb-6 flex items-center gap-3">
         <label class="text-sm font-medium text-gray-600">${t('selectStudent')}:</label>
@@ -2737,37 +2827,40 @@ function renderAcademy() {
       </div>`;
     }
 
-    if (academySelectedStudent) {
-      const op = getOverallProgress(academySelectedStudent);
+    if (academySelectedStudent && modules.length) {
+      const op = getOverallProgress(academySelectedStudent, modules);
+      const barColor = op.pct === 100 ? 'bg-green-500' : progType === 'workshop' ? 'bg-blue-500' : progType === 'online' ? 'bg-purple-500' : 'bg-wax-500';
       html += `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 mb-6">
         <div class="flex items-center justify-between mb-2">
           <span class="text-sm font-semibold text-gray-700">${t('overallProgress')}</span>
-          <span class="text-sm font-bold ${op.pct === 100 ? 'text-green-600' : 'text-wax-600'}">${op.done}/${op.total} (${op.pct}%)</span>
+          <span class="text-sm font-bold ${op.pct === 100 ? 'text-green-600' : 'text-gray-700'}">${op.done}/${op.total} (${op.pct}%)</span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-3">
-          <div class="h-3 rounded-full transition-all duration-500 ${op.pct === 100 ? 'bg-green-500' : 'bg-wax-500'}" style="width:${op.pct}%"></div>
+          <div class="h-3 rounded-full transition-all duration-500 ${barColor}" style="width:${op.pct}%"></div>
         </div>
-        ${op.pct === 100 ? `<div class="mt-4 flex items-center gap-3">
+        ${op.pct === 100 && progType === 'academy' ? `<div class="mt-4 flex items-center gap-3">
           <span class="text-green-600 font-semibold">${t('allComplete')}</span>
           <button onclick="academyShowCertificate()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">🏆 ${t('certificate')}</button>
         </div>` : ''}
       </div>`;
     }
 
+    // ── Open module detail ──
     if (academyOpenModule) {
       const mod = modules.find(m => m.id === academyOpenModule);
       if (mod) {
         const mp = academySelectedStudent ? getModuleProgress(mod, academySelectedStudent) : { done:0, total:mod.lessen.length, pct:0 };
+        const barColor = mp.pct === 100 ? 'bg-green-500' : progType === 'workshop' ? 'bg-blue-500' : progType === 'online' ? 'bg-purple-500' : 'bg-wax-500';
         html += `<div class="mb-4">
           <button onclick="academyOpenModule=null; renderAcademy()" class="text-sm text-wax-600 hover:text-wax-700 font-medium mb-3 inline-flex items-center gap-1">← ${t('backToModules')}</button>
         </div>
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-          <div class="p-5 border-b border-gray-100 bg-gradient-to-r from-wax-50 to-white">
-            <div class="flex items-center gap-3 mb-2">${catBadge(mod.categorie)}<span class="text-xs text-gray-400">${mod.duur}</span></div>
+          <div class="p-5 border-b border-gray-100 bg-gradient-to-r ${progBg(progType)}">
+            <div class="flex items-center gap-3 mb-2">${catBadge(mod.categorie)}<span class="text-xs text-gray-400">${mod.duur}</span>${mod.prijs ? `<span class="text-xs font-semibold text-gray-600">${fe(mod.prijs)}</span>` : ''}</div>
             <h2 class="text-xl font-bold text-gray-900">${mod.titel}</h2>
             <p class="text-sm text-gray-500 mt-1">${mod.beschrijving}</p>
             <div class="mt-3 flex items-center gap-3">
-              <div class="flex-1 bg-gray-200 rounded-full h-2"><div class="h-2 rounded-full ${mp.pct===100?'bg-green-500':'bg-wax-500'} transition-all" style="width:${mp.pct}%"></div></div>
+              <div class="flex-1 bg-gray-200 rounded-full h-2"><div class="h-2 rounded-full ${barColor} transition-all" style="width:${mp.pct}%"></div></div>
               <span class="text-xs font-semibold text-gray-500">${mp.done}/${mp.total}</span>
             </div>
           </div>
@@ -2805,11 +2898,16 @@ function renderAcademy() {
       }
     }
 
+    // ── Module grid ──
     html += `<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">`;
     modules.forEach(mod => {
       const mp = academySelectedStudent ? getModuleProgress(mod, academySelectedStudent) : { done:0, total:mod.lessen.length, pct:0 };
+      const barColor = mp.pct === 100 ? 'bg-green-500' : progType === 'workshop' ? 'bg-blue-500' : progType === 'online' ? 'bg-purple-500' : 'bg-wax-500';
       html += `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card cursor-pointer" onclick="academyOpenModule='${mod.id}'; renderAcademy()">
-        <div class="flex items-center gap-2 mb-3">${catBadge(mod.categorie)}<span class="text-xs text-gray-400">${mod.duur}</span></div>
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">${catBadge(mod.categorie)}<span class="text-xs text-gray-400">${mod.duur}</span></div>
+          ${mod.prijs ? `<span class="text-sm font-bold text-gray-700">${fe(mod.prijs)}</span>` : ''}
+        </div>
         <h3 class="font-bold text-gray-900 mb-1">${mod.titel}</h3>
         <p class="text-sm text-gray-500 mb-3 line-clamp-2">${mod.beschrijving}</p>
         <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
@@ -2820,7 +2918,7 @@ function renderAcademy() {
           <span>❓ ${mod.lessen.filter(l=>l.type==='quiz').length} quiz</span>
         </div>
         <div class="flex items-center gap-3">
-          <div class="flex-1 bg-gray-200 rounded-full h-2"><div class="h-2 rounded-full ${mp.pct===100?'bg-green-500':'bg-wax-500'} transition-all" style="width:${mp.pct}%"></div></div>
+          <div class="flex-1 bg-gray-200 rounded-full h-2"><div class="h-2 rounded-full ${barColor} transition-all" style="width:${mp.pct}%"></div></div>
           <span class="text-xs font-semibold ${mp.pct===100?'text-green-600':'text-gray-500'}">${mp.pct}%</span>
         </div>
       </div>`;
@@ -2828,7 +2926,7 @@ function renderAcademy() {
     html += `</div>`;
 
     if (!modules.length) {
-      html += `<div class="text-center text-gray-400 py-12"><div class="text-4xl mb-3">📚</div><p class="font-medium">Nog geen modules</p></div>`;
+      html += `<div class="text-center text-gray-400 py-12"><div class="text-4xl mb-3">📚</div><p class="font-medium">Nog geen modules in dit programma</p></div>`;
     }
   }
 
@@ -2837,40 +2935,69 @@ function renderAcademy() {
     if (!studenten.length) {
       html += `<div class="text-center text-gray-400 py-12"><div class="text-4xl mb-3">🎓</div><p class="font-medium">${t('noStudents')}</p></div>`;
     } else {
-      html += `<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      // Show progress per programma
+      programmas.forEach(prog => {
+        const modules = prog.modules;
+        if (!modules.length) return;
+        const progIcon = prog.icoon || '📚';
+        const headerBg = { workshop:'bg-blue-50', online:'bg-purple-50', academy:'bg-wax-50' }[prog.type] || 'bg-gray-50';
+
+        html += `<h3 class="text-lg font-bold text-gray-900 mt-6 mb-3 flex items-center gap-2">${progIcon} ${prog.titel}</h3>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-4">
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
             <thead>
-              <tr class="bg-gray-50 border-b border-gray-200">
+              <tr class="${headerBg} border-b border-gray-200">
                 <th class="text-left px-5 py-3 font-semibold text-gray-600">Student</th>
-                ${modules.map(m => `<th class="text-center px-3 py-3 font-semibold text-gray-600 min-w-[120px]">${m.titel.split('—')[0].trim()}</th>`).join('')}
+                ${modules.map(m => `<th class="text-center px-3 py-3 font-semibold text-gray-600 min-w-[120px]">${m.titel.split('—')[0].split(':')[0].trim()}</th>`).join('')}
                 <th class="text-center px-5 py-3 font-semibold text-gray-600">${t('overallProgress')}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">`;
-      studenten.forEach(s => {
-        const op = getOverallProgress(s.id);
-        html += `<tr class="table-row">
-          <td class="px-5 py-3">
-            <div class="font-medium text-gray-900">${s.naam}</div>
-            <div class="text-xs text-gray-400">${s.status ? badge(s.status) : ''}</div>
-          </td>`;
-        modules.forEach(mod => {
-          const mp = getModuleProgress(mod, s.id);
-          const color = mp.pct === 100 ? 'text-green-600' : mp.pct > 0 ? 'text-yellow-600' : 'text-gray-400';
-          html += `<td class="text-center px-3 py-3">
-            <div class="font-semibold ${color}">${mp.pct}%</div>
-            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1"><div class="h-1.5 rounded-full ${mp.pct===100?'bg-green-500':mp.pct>0?'bg-yellow-400':'bg-gray-200'}" style="width:${mp.pct}%"></div></div>
-            <div class="text-xs text-gray-400 mt-0.5">${mp.done}/${mp.total}</div>
-          </td>`;
+        studenten.forEach(s => {
+          const op = getOverallProgress(s.id, modules);
+          html += `<tr class="table-row">
+            <td class="px-5 py-3">
+              <div class="font-medium text-gray-900">${s.naam}</div>
+              <div class="text-xs text-gray-400">${s.status ? badge(s.status) : ''}</div>
+            </td>`;
+          modules.forEach(mod => {
+            const mp = getModuleProgress(mod, s.id);
+            const color = mp.pct === 100 ? 'text-green-600' : mp.pct > 0 ? 'text-yellow-600' : 'text-gray-400';
+            html += `<td class="text-center px-3 py-3">
+              <div class="font-semibold ${color}">${mp.pct}%</div>
+              <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1"><div class="h-1.5 rounded-full ${mp.pct===100?'bg-green-500':mp.pct>0?'bg-yellow-400':'bg-gray-200'}" style="width:${mp.pct}%"></div></div>
+              <div class="text-xs text-gray-400 mt-0.5">${mp.done}/${mp.total}</div>
+            </td>`;
+          });
+          html += `<td class="text-center px-5 py-3">
+              <div class="font-bold ${op.pct===100?'text-green-600':'text-wax-600'}">${op.pct}%</div>
+              <div class="w-full bg-gray-200 rounded-full h-2 mt-1"><div class="h-2 rounded-full ${op.pct===100?'bg-green-500':'bg-wax-500'}" style="width:${op.pct}%"></div></div>
+              ${op.pct === 100 ? '<div class="text-xs text-green-600 mt-1 font-medium">🏆</div>' : ''}
+            </td></tr>`;
         });
-        html += `<td class="text-center px-5 py-3">
-            <div class="font-bold ${op.pct===100?'text-green-600':'text-wax-600'}">${op.pct}%</div>
-            <div class="w-full bg-gray-200 rounded-full h-2 mt-1"><div class="h-2 rounded-full ${op.pct===100?'bg-green-500':'bg-wax-500'}" style="width:${op.pct}%"></div></div>
-            ${op.pct === 100 ? '<div class="text-xs text-green-600 mt-1 font-medium">🏆</div>' : ''}
-          </td></tr>`;
+        html += `</tbody></table></div></div>`;
       });
-      html += `</tbody></table></div></div>`;
+
+      // Fallback for legacy format
+      if (!programmas.length && legacyModules.length) {
+        html += `<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto"><table class="w-full text-sm"><thead><tr class="bg-gray-50 border-b border-gray-200">
+          <th class="text-left px-5 py-3 font-semibold text-gray-600">Student</th>
+          ${legacyModules.map(m => `<th class="text-center px-3 py-3 font-semibold text-gray-600 min-w-[120px]">${m.titel.split('—')[0].trim()}</th>`).join('')}
+          <th class="text-center px-5 py-3 font-semibold text-gray-600">${t('overallProgress')}</th>
+        </tr></thead><tbody class="divide-y divide-gray-100">`;
+        studenten.forEach(s => {
+          const op = getOverallProgress(s.id, legacyModules);
+          html += `<tr class="table-row"><td class="px-5 py-3"><div class="font-medium text-gray-900">${s.naam}</div></td>`;
+          legacyModules.forEach(mod => {
+            const mp = getModuleProgress(mod, s.id);
+            html += `<td class="text-center px-3 py-3"><div class="font-semibold">${mp.pct}%</div></td>`;
+          });
+          html += `<td class="text-center px-5 py-3"><div class="font-bold">${op.pct}%</div></td></tr>`;
+        });
+        html += `</tbody></table></div></div>`;
+      }
     }
   }
 
@@ -4784,7 +4911,7 @@ function modalStudent() {
       ${formField('Naam', 'naam')}
       ${formField('Email', 'email', 'email')}
       ${formField('Telefoon', 'telefoon', 'tel')}
-      ${formField('Type', 'type', 'select', '', [{value:'in-person',label:'In-person (€4.000)'},{value:'online',label:'Online (€1.000)'}])}
+      ${formField('Type', 'type', 'select', '', [{value:'workshop',label:'Workshop (€250-500)'},{value:'online',label:'Online Training (€500-1.000)'},{value:'academy',label:'Academy (€3.000-4.000)'}])}
       ${formField('Cohort', 'cohortId', 'select', '', cohortOpts)}
       ${formField('Notities', 'notities', 'textarea')}
       <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">Inschrijven</button>
@@ -4796,7 +4923,8 @@ function modalStudentDetail(id) {
   if (!s) return '<p class="p-6">Niet gevonden</p>';
   const statussen = ['lead','ingeschreven','in-opleiding','gecertificeerd','geplaatst'];
   const cohort = data.cohorts.find(c => c.id === s.cohortId);
-  return modalHeader(s.naam || 'Student', s.type === 'in-person' ? 'In-person' : 'Online') +
+  const typeLabel = {workshop:'Workshop',online:'Online Training',academy:'Academy','in-person':'In-person'}[s.type] || s.type;
+  return modalHeader(s.naam || 'Student', typeLabel) +
     `<div class="p-6 space-y-5">
       <div class="flex gap-2 flex-wrap">
         ${statussen.map(st => `<button onclick="updateStudentStatus('${id}','${st}')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${s.status===st ? 'btn-primary' : 'btn-secondary'}">${st}</button>`).join('')}
@@ -4805,7 +4933,7 @@ function modalStudentDetail(id) {
         <div><span class="text-xs text-gray-400">Email</span><div class="text-sm">${s.email||'-'}</div></div>
         <div><span class="text-xs text-gray-400">Telefoon</span><div class="text-sm">${s.telefoon||'-'}</div></div>
         <div><span class="text-xs text-gray-400">Cohort</span><div class="text-sm">${cohort?.naam||'-'}</div></div>
-        <div><span class="text-xs text-gray-400">Bedrag</span><div class="text-sm">${fe(s.type==='in-person'?4000:1000)}</div></div>
+        <div><span class="text-xs text-gray-400">Bedrag</span><div class="text-sm">${fe(s.type==='academy'||s.type==='in-person'?4000:s.type==='online'?750:350)}</div></div>
       </div>
       <div class="flex gap-2 pt-4 border-t border-gray-100">
         <button onclick="verwijderStudent('${id}')" class="btn-danger px-4 py-2 rounded-lg text-sm">Verwijderen</button>
@@ -4843,12 +4971,12 @@ function modalCohort() {
   return modalHeader('Nieuw Cohort', 'Training groep aanmaken') +
     `<form onsubmit="event.preventDefault(); saveCohort(this)" class="p-6 space-y-4">
       ${formField('Naam', 'naam')}
-      ${formField('Type', 'type', 'select', '', [{value:'in-person',label:'In-person'},{value:'online',label:'Online'}])}
+      ${formField('Type', 'type', 'select', '', [{value:'workshop',label:'Workshop'},{value:'online',label:'Online Training'},{value:'academy',label:'Academy'}])}
       ${formField('Startdatum', 'startdatum', 'date')}
       ${formField('Einddatum', 'einddatum', 'date')}
       ${formField('Locatie', 'locatie')}
-      ${formField('Max Capaciteit', 'maxCapaciteit', 'number', '8')}
-      ${formField('Prijs per Student', 'prijsPerStudent', 'number', '4000')}
+      ${formField('Max Capaciteit', 'maxCapaciteit', 'number', '12')}
+      ${formField('Prijs per Student', 'prijsPerStudent', 'number', '350')}
       <button type="submit" class="btn-primary w-full py-3 rounded-lg font-medium">Aanmaken</button>
     </form>`;
 }

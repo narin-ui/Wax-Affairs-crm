@@ -1,45 +1,200 @@
 {
-  "modules": [
+  "programmas": [
     {
-      "id": "mod-1",
-      "titel": "Wax Basics — Theorie & Hygiëne",
-      "beschrijving": "Leer de basisprincipes van professioneel waxen, huidtypen en hygiëneprotocollen.",
-      "categorie": "basis",
-      "duur": "4 uur",
-      "lessen": [
-        { "id": "les-1", "titel": "Introductie tot professioneel waxen", "type": "video", "duur": "30 min" },
-        { "id": "les-2", "titel": "Huidtypen & contra-indicaties", "type": "tekst", "duur": "20 min" },
-        { "id": "les-3", "titel": "Hygiëne & werkplekinrichting", "type": "video", "duur": "25 min" },
-        { "id": "les-4", "titel": "Productkennis: Não Depilatory Wax", "type": "tekst", "duur": "20 min" },
-        { "id": "les-5", "titel": "Quiz: Basiskennis", "type": "quiz", "duur": "15 min" }
+      "id": "workshops",
+      "titel": "Workshops",
+      "type": "workshop",
+      "beschrijving": "Korte hands-on sessies van 3-4 uur over specifieke wax-technieken. Laagdrempelig, geen ervaring vereist. Ideaal als kennismaking met professioneel waxen.",
+      "prijsRange": "€250 - €500",
+      "icoon": "⚡",
+      "kleur": "blue",
+      "modules": [
+        {
+          "id": "ws-1",
+          "titel": "Brazilian Wax Masterclass",
+          "beschrijving": "Leer de meest gevraagde techniek: de Brazilian wax. Van voorbereiding tot aftercare, inclusief werken met de Nao Premium Wax.",
+          "categorie": "praktijk",
+          "duur": "3 uur",
+          "prijs": 350,
+          "lessen": [
+            { "id": "ws1-1", "titel": "Voorbereiding & huidanalyse", "type": "video", "duur": "20 min" },
+            { "id": "ws1-2", "titel": "Brazilian wax stap-voor-stap", "type": "video", "duur": "45 min" },
+            { "id": "ws1-3", "titel": "Veelgemaakte fouten & tips", "type": "video", "duur": "20 min" },
+            { "id": "ws1-4", "titel": "Hands-on oefening", "type": "tekst", "duur": "60 min" },
+            { "id": "ws1-5", "titel": "Afsluitende quiz", "type": "quiz", "duur": "15 min" }
+          ]
+        },
+        {
+          "id": "ws-2",
+          "titel": "Gezichtswax Technieken",
+          "beschrijving": "Wenkbrauwen shapen, bovenlip en gezichtshaar verwijderen. Precisietechnieken voor het gezicht.",
+          "categorie": "praktijk",
+          "duur": "3 uur",
+          "prijs": 250,
+          "lessen": [
+            { "id": "ws2-1", "titel": "Gezichtshuid & gevoeligheid", "type": "tekst", "duur": "15 min" },
+            { "id": "ws2-2", "titel": "Wenkbrauw shaping techniek", "type": "video", "duur": "30 min" },
+            { "id": "ws2-3", "titel": "Bovenlip & kin waxen", "type": "video", "duur": "25 min" },
+            { "id": "ws2-4", "titel": "Hands-on oefening", "type": "tekst", "duur": "60 min" },
+            { "id": "ws2-5", "titel": "Quiz", "type": "quiz", "duur": "10 min" }
+          ]
+        },
+        {
+          "id": "ws-3",
+          "titel": "Mannenwax Specialisatie",
+          "beschrijving": "Groeiend marktsegment: rug-, borst- en mannelijke intimzone waxen. Specifieke aanpak voor mannenhuid en -haar.",
+          "categorie": "praktijk",
+          "duur": "4 uur",
+          "prijs": 400,
+          "lessen": [
+            { "id": "ws3-1", "titel": "Mannenhuid vs vrouwenhuid", "type": "tekst", "duur": "15 min" },
+            { "id": "ws3-2", "titel": "Borst & rug waxen", "type": "video", "duur": "35 min" },
+            { "id": "ws3-3", "titel": "Mannelijke intimzone (Manzilian)", "type": "video", "duur": "40 min" },
+            { "id": "ws3-4", "titel": "Hands-on oefening", "type": "tekst", "duur": "75 min" },
+            { "id": "ws3-5", "titel": "Quiz", "type": "quiz", "duur": "15 min" }
+          ]
+        },
+        {
+          "id": "ws-4",
+          "titel": "Aftercare & Productkennis Nao",
+          "beschrijving": "Leer de volledige Nao productlijn kennen en hoe je aftercare als upsell inzet. Ideaal voor salonmedewerkers.",
+          "categorie": "basis",
+          "duur": "3 uur",
+          "prijs": 250,
+          "lessen": [
+            { "id": "ws4-1", "titel": "De Nao productlijn: overzicht", "type": "video", "duur": "20 min" },
+            { "id": "ws4-2", "titel": "Pre-depilatory powder & wax gebruik", "type": "video", "duur": "25 min" },
+            { "id": "ws4-3", "titel": "Post-wax oil, spray & scrub", "type": "video", "duur": "25 min" },
+            { "id": "ws4-4", "titel": "Verkooptechnieken & upselling", "type": "tekst", "duur": "30 min" },
+            { "id": "ws4-5", "titel": "Productkennis quiz", "type": "quiz", "duur": "15 min" }
+          ]
+        }
       ]
     },
     {
-      "id": "mod-2",
-      "titel": "Wax Technieken — Praktijk",
-      "beschrijving": "Hands-on technieken voor verschillende lichaamsdelen en wax-methoden.",
-      "categorie": "praktijk",
-      "duur": "6 uur",
-      "lessen": [
-        { "id": "les-6", "titel": "Brazilian Wax techniek", "type": "video", "duur": "45 min" },
-        { "id": "les-7", "titel": "Gezichtswax (wenkbrauwen, bovenlip)", "type": "video", "duur": "30 min" },
-        { "id": "les-8", "titel": "Been- en armwax", "type": "video", "duur": "30 min" },
-        { "id": "les-9", "titel": "Aftercare protocollen", "type": "tekst", "duur": "20 min" },
-        { "id": "les-10", "titel": "Praktijkexamen", "type": "quiz", "duur": "60 min" }
+      "id": "online",
+      "titel": "Online Trainingen",
+      "type": "online",
+      "beschrijving": "Zelfstandig te volgen online modules met video, theorie en quizzen. Flexibel tempo, overal te volgen. Certificaat per module.",
+      "prijsRange": "€500 - €1.000",
+      "icoon": "💻",
+      "kleur": "purple",
+      "modules": [
+        {
+          "id": "on-1",
+          "titel": "Wax Theorie & Hygiëne",
+          "beschrijving": "Basisprincipes van professioneel waxen, huidtypen, contra-indicaties en hygiëneprotocollen.",
+          "categorie": "basis",
+          "duur": "4 uur",
+          "prijs": 500,
+          "lessen": [
+            { "id": "on1-1", "titel": "Introductie tot professioneel waxen", "type": "video", "duur": "30 min" },
+            { "id": "on1-2", "titel": "Huidtypen & contra-indicaties", "type": "tekst", "duur": "20 min" },
+            { "id": "on1-3", "titel": "Hygiëne & werkplekinrichting", "type": "video", "duur": "25 min" },
+            { "id": "on1-4", "titel": "Wax soorten & temperatuur", "type": "tekst", "duur": "20 min" },
+            { "id": "on1-5", "titel": "Quiz: Basiskennis", "type": "quiz", "duur": "15 min" }
+          ]
+        },
+        {
+          "id": "on-2",
+          "titel": "Productkennis Nao Lijn",
+          "beschrijving": "Diepgaande kennis van alle Nao producten: ingrediënten, gebruik, verkoopargumenten en cross-selling.",
+          "categorie": "basis",
+          "duur": "3 uur",
+          "prijs": 500,
+          "lessen": [
+            { "id": "on2-1", "titel": "Nao Premium & Economic Wax", "type": "video", "duur": "25 min" },
+            { "id": "on2-2", "titel": "Pre-Depilatory Powder: ingrediënten & gebruik", "type": "tekst", "duur": "15 min" },
+            { "id": "on2-3", "titel": "Post-Depilatory Oil & Lavender Spray", "type": "video", "duur": "20 min" },
+            { "id": "on2-4", "titel": "Body Scrub & Aftercare Cream", "type": "tekst", "duur": "15 min" },
+            { "id": "on2-5", "titel": "Verkoopstrategie & klantadvies", "type": "video", "duur": "20 min" },
+            { "id": "on2-6", "titel": "Productkennis examen", "type": "quiz", "duur": "20 min" }
+          ]
+        },
+        {
+          "id": "on-3",
+          "titel": "Business & Salon Management",
+          "beschrijving": "Alles over het runnen van een succesvolle waxstudio: prijsstelling, marketing, boekhouding en klantenservice.",
+          "categorie": "business",
+          "duur": "5 uur",
+          "prijs": 750,
+          "lessen": [
+            { "id": "on3-1", "titel": "Prijsstelling & marges berekenen", "type": "video", "duur": "30 min" },
+            { "id": "on3-2", "titel": "Klantenservice & reviews", "type": "tekst", "duur": "25 min" },
+            { "id": "on3-3", "titel": "Boekhouding basics voor salons", "type": "tekst", "duur": "30 min" },
+            { "id": "on3-4", "titel": "Social media marketing", "type": "video", "duur": "35 min" },
+            { "id": "on3-5", "titel": "Final Assessment", "type": "quiz", "duur": "30 min" }
+          ]
+        }
       ]
     },
     {
-      "id": "mod-3",
-      "titel": "Business & Franchise Operations",
-      "beschrijving": "Alles over het runnen van je eigen Wax Affairs studio als franchisee.",
-      "categorie": "business",
-      "duur": "5 uur",
-      "lessen": [
-        { "id": "les-11", "titel": "Het Wax Affairs franchise model", "type": "video", "duur": "30 min" },
-        { "id": "les-12", "titel": "Klantenservice & reviews", "type": "tekst", "duur": "25 min" },
-        { "id": "les-13", "titel": "Boekhouding & prijsstelling", "type": "tekst", "duur": "30 min" },
-        { "id": "les-14", "titel": "Marketing voor je studio", "type": "video", "duur": "35 min" },
-        { "id": "les-15", "titel": "Final Assessment", "type": "quiz", "duur": "45 min" }
+      "id": "academy",
+      "titel": "Academy",
+      "type": "academy",
+      "beschrijving": "Het complete Wax Affairs certificeringsprogramma. Intensieve in-person training over meerdere weken. Vereist ervaring met waxen. Na afronding ben je klaar om als franchise partner te starten.",
+      "prijsRange": "€3.000 - €4.000",
+      "icoon": "🏆",
+      "kleur": "wax",
+      "modules": [
+        {
+          "id": "ac-1",
+          "titel": "Wax Basics — Theorie & Hygiëne",
+          "beschrijving": "Leer de basisprincipes van professioneel waxen, huidtypen en hygiëneprotocollen.",
+          "categorie": "basis",
+          "duur": "4 uur",
+          "lessen": [
+            { "id": "ac1-1", "titel": "Introductie tot professioneel waxen", "type": "video", "duur": "30 min" },
+            { "id": "ac1-2", "titel": "Huidtypen & contra-indicaties", "type": "tekst", "duur": "20 min" },
+            { "id": "ac1-3", "titel": "Hygiëne & werkplekinrichting", "type": "video", "duur": "25 min" },
+            { "id": "ac1-4", "titel": "Productkennis: Nao Depilatory Wax", "type": "tekst", "duur": "20 min" },
+            { "id": "ac1-5", "titel": "Quiz: Basiskennis", "type": "quiz", "duur": "15 min" }
+          ]
+        },
+        {
+          "id": "ac-2",
+          "titel": "Wax Technieken — Praktijk",
+          "beschrijving": "Hands-on technieken voor verschillende lichaamsdelen en wax-methoden.",
+          "categorie": "praktijk",
+          "duur": "6 uur",
+          "lessen": [
+            { "id": "ac2-1", "titel": "Brazilian Wax techniek", "type": "video", "duur": "45 min" },
+            { "id": "ac2-2", "titel": "Gezichtswax (wenkbrauwen, bovenlip)", "type": "video", "duur": "30 min" },
+            { "id": "ac2-3", "titel": "Been- en armwax", "type": "video", "duur": "30 min" },
+            { "id": "ac2-4", "titel": "Mannenwax specialisatie", "type": "video", "duur": "30 min" },
+            { "id": "ac2-5", "titel": "Aftercare protocollen", "type": "tekst", "duur": "20 min" },
+            { "id": "ac2-6", "titel": "Praktijkexamen", "type": "quiz", "duur": "60 min" }
+          ]
+        },
+        {
+          "id": "ac-3",
+          "titel": "Advanced Technieken & Specialisaties",
+          "beschrijving": "Geavanceerde technieken, probleemsituaties en specialisaties voor de ervaren wax professional.",
+          "categorie": "praktijk",
+          "duur": "5 uur",
+          "lessen": [
+            { "id": "ac3-1", "titel": "Gevoelige huid & probleemhuid", "type": "video", "duur": "30 min" },
+            { "id": "ac3-2", "titel": "Speed waxing technieken", "type": "video", "duur": "35 min" },
+            { "id": "ac3-3", "titel": "Troubleshooting: veelvoorkomende problemen", "type": "tekst", "duur": "25 min" },
+            { "id": "ac3-4", "titel": "Klachtafhandeling & nazorg", "type": "tekst", "duur": "20 min" },
+            { "id": "ac3-5", "titel": "Advanced praktijkexamen", "type": "quiz", "duur": "45 min" }
+          ]
+        },
+        {
+          "id": "ac-4",
+          "titel": "Business & Franchise Operations",
+          "beschrijving": "Alles over het runnen van je eigen Wax Affairs studio als franchisee.",
+          "categorie": "business",
+          "duur": "5 uur",
+          "lessen": [
+            { "id": "ac4-1", "titel": "Het Wax Affairs franchise model", "type": "video", "duur": "30 min" },
+            { "id": "ac4-2", "titel": "Studio setup & inrichting", "type": "video", "duur": "25 min" },
+            { "id": "ac4-3", "titel": "Klantenservice & reviews", "type": "tekst", "duur": "25 min" },
+            { "id": "ac4-4", "titel": "Boekhouding & prijsstelling", "type": "tekst", "duur": "30 min" },
+            { "id": "ac4-5", "titel": "Marketing voor je studio", "type": "video", "duur": "35 min" },
+            { "id": "ac4-6", "titel": "Final Assessment", "type": "quiz", "duur": "45 min" }
+          ]
+        }
       ]
     }
   ],

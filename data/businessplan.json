@@ -1,6 +1,8 @@
 {
   "revenueStreams": [
-    { "id": "rs1", "naam": "Training Academy", "type": "academy", "beschrijving": "In-person en online certificeringscursussen voor waxing professionals", "model": "Per student", "prijsInPerson": 4000, "prijsOnline": 1000, "marge": 91 },
+    { "id": "rs1a", "naam": "Workshops", "type": "workshop", "beschrijving": "Korte hands-on sessies (3-4 uur) over specifieke wax-technieken. Laagdrempelig, open inschrijving.", "model": "Per deelnemer", "prijsGemiddeld": 350, "marge": 85 },
+    { "id": "rs1b", "naam": "Online Trainingen", "type": "online", "beschrijving": "Zelfstandig te volgen online modules met video, theorie en quizzen. Certificaat per module.", "model": "Per student", "prijsGemiddeld": 750, "marge": 90 },
+    { "id": "rs1c", "naam": "Academy", "type": "academy", "beschrijving": "Uitgebreid in-person certificeringsprogramma over meerdere weken. Vereist ervaring, franchise-ready.", "model": "Per student", "prijsGemiddeld": 3500, "marge": 91 },
     { "id": "rs2", "naam": "Não Productlijn", "type": "producten", "beschrijving": "Eigen cosmeticalijn: wax (wholesale) + aftercare (wholesale + DTC webshop)", "model": "Wholesale + DTC", "margeWholesale": 43, "margeRetail": 71 },
     { "id": "rs3", "naam": "Friendchise", "type": "franchise", "beschrijving": "Full-brand franchise studio met exclusief territorium, training en begeleiding", "model": "Onboarding fee + royalty", "onboardingFee": 15000, "royaltyPct": 5, "royaltyPctHoog": 6, "royaltyDrempel": 120000 },
     { "id": "rs4", "naam": "DTC Webshop", "type": "dtc", "beschrijving": "Directe consumentenverkoop van Não producten via waxaffairs.de", "model": "E-commerce", "marge": 70 }
