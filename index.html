@@ -522,15 +522,15 @@
 <div id="page-producten" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Productcatalogus</h1>
-      <p class="text-sm text-gray-500 mt-1">Nao by Wax Affairs productlijn</p>
+      <h1 class="text-2xl font-bold text-gray-900" id="producten-titel">Productcatalogus</h1>
+      <p class="text-sm text-gray-500 mt-1" id="producten-sub">Nao by Wax Affairs productlijn</p>
     </div>
-    <button onclick="openModal('product')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuw Product</button>
+    <button onclick="openModal('product')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium" id="producten-nieuw-btn">+ Nieuw Product</button>
   </div>
   <div class="flex gap-2 mb-4">
     <input type="text" id="product-zoek" oninput="renderProducten()" placeholder="Zoek product..." class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-wax-500">
     <select id="product-filter" onchange="renderProducten()" class="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white">
-      <option value="">Alle categorieën</option>
+      <option value="" id="product-filter-alle">Alle categorieën</option>
       <option value="wax">Wax</option>
       <option value="aftercare">Aftercare</option>
       <option value="tools">Tools</option>
@@ -899,8 +899,8 @@ async function renderDashboard() {
     const greetEl = document.getElementById('dashboard-greeting');
     if (greetEl && currentUser) {
       const hour = now.getHours();
-      const greeting = hour < 12 ? 'Goedemorgen' : hour < 18 ? 'Goedemiddag' : 'Goedenavond';
-      greetEl.textContent = `${greeting}, ${currentUser.naam.split(' ')[0]} — ${now.toLocaleDateString('nl-NL',{month:'long',year:'numeric'})}`;
+      const greeting = hour < 12 ? t('goedemorgen') : hour < 18 ? t('goedemiddag') : t('goedenavond');
+      greetEl.textContent = `${greeting}, ${currentUser.naam.split(' ')[0]} — ${now.toLocaleDateString(lang==='de'?'de-DE':'nl-NL',{month:'long',year:'numeric'})}`;
     }
 
     // Calculate totals
@@ -1115,7 +1115,7 @@ function renderMarketingReports() {
   const L = lang === 'de';
 
   // Show loading state
-  el.innerHTML = '<div class="text-center py-12 text-gray-400"><div class="text-4xl mb-3">⏳</div><p>Laden...</p></div>';
+  el.innerHTML = '<div class="text-center py-12 text-gray-400"><div class="text-4xl mb-3">⏳</div><p>' + t('laden') + '</p></div>';
 
   fetch('/api/marketing-reports')
     .then(r => r.ok ? r.json() : [])
@@ -1139,8 +1139,8 @@ function _renderMarketingContent(el, reports, L) {
 
   let html = `<div class="flex items-center justify-between mb-6 page-header">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">${L ? 'Marketing Berichte' : 'Marketing Reports'}</h1>
-      <p class="text-sm text-gray-500 mt-1">${L ? 'Automatisch generiert von deinem Marketing-Team' : 'Automatisch gegenereerd door je marketing team'}</p>
+      <h1 class="text-2xl font-bold text-gray-900">${t('marketingReports')}</h1>
+      <p class="text-sm text-gray-500 mt-1">${t('automatischGegenereerd')}</p>
     </div>
   </div>`;
 
@@ -1181,7 +1181,7 @@ function _renderMarketingContent(el, reports, L) {
       content = '<p class="text-sm text-gray-700 leading-relaxed mb-3">' + content + '</p>';
 
       html += `<div class="mb-4">
-        <button onclick="marketingOpenReport=null; renderMarketingReports()" class="text-sm text-wax-600 hover:text-wax-700 font-medium inline-flex items-center gap-1">← ${L ? 'Zurück' : 'Terug'}</button>
+        <button onclick="marketingOpenReport=null; renderMarketingReports()" class="text-sm text-wax-600 hover:text-wax-700 font-medium inline-flex items-center gap-1">← ${t('terug')}</button>
       </div>
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex items-center justify-between">
@@ -1206,7 +1206,7 @@ function _renderMarketingContent(el, reports, L) {
 
   // Report list
   if (!filtered.length) {
-    html += `<div class="text-center text-gray-400 py-12"><div class="text-4xl mb-3">📣</div><p class="font-medium">${L ? 'Noch keine Berichte' : 'Nog geen rapporten'}</p><p class="text-sm mt-1">${L ? 'Die Marketing-Agenten erstellen automatisch Berichte' : 'De marketing agents genereren automatisch rapporten'}</p></div>`;
+    html += `<div class="text-center text-gray-400 py-12"><div class="text-4xl mb-3">📣</div><p class="font-medium">${t('nogGeenRapporten')}</p><p class="text-sm mt-1">${t('agentsGenereren')}</p></div>`;
   } else {
     html += `<div class="space-y-3">`;
     filtered.forEach(r => {
@@ -1261,8 +1261,8 @@ function renderFriendchisePitch() {
 
   let html = `<div class="flex items-center justify-between mb-6 page-header">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Friendchise Pitch</h1>
-      <p class="text-sm text-gray-500 mt-1">${L ? 'Präsentation für Franchise-Leads — für Calls und Meetings' : 'Presentatie voor franchise leads — gebruik tijdens calls en meetings'}</p>
+      <h1 class="text-2xl font-bold text-gray-900">${t('friendchisePitch')}</h1>
+      <p class="text-sm text-gray-500 mt-1">${t('presentatieVoorLeads')}</p>
     </div>
   </div>`;
 
@@ -2837,7 +2837,7 @@ function renderComms() {
 function renderCoachView(el) {
   const m = getCompanyMetrics();
   const now = new Date();
-  const greeting = now.getHours() < 12 ? (lang==='de'?'Guten Morgen':'Goedemorgen') : now.getHours() < 18 ? (lang==='de'?'Guten Tag':'Goedemiddag') : (lang==='de'?'Guten Abend':'Goedenavond');
+  const greeting = now.getHours() < 12 ? t('goedemorgen') : now.getHours() < 18 ? t('goedemiddag') : t('goedenavond');
   const userName = currentUser?.naam?.split(' ')[0] || '';
   const dayName = now.toLocaleDateString(lang==='de'?'de-DE':'nl-NL', {weekday:'long', day:'numeric', month:'long'});
 
@@ -4221,6 +4221,36 @@ const T = {
     revenueStream:'Inkomstenstroom',naam:'Naam',beschrijving:'Beschrijving',model:'Verdienmodel',marge:'Marge',
     jaar:'Jaar',omzet:'Omzet',kosten:'Kosten',winst:'Winst',locaties:'Locaties',
     vijfJaarsProjectie:'5-Jaars Groeiscenario',
+    // Dashboard
+    goedemorgen:'Goedemorgen',goedemiddag:'Goedemiddag',goedenavond:'Goedenavond',
+    doel:'Doel',vsVorigeMaand:'vs vorige maand',actief:'Actief',inactief:'Inactief',
+    boekingen:'boekingen',studioOmzet:'Studio-omzet',totaalHQ:'TOTAAL HQ Inkomsten',
+    nogGeenStudios:'Nog geen studios',klikStudio:'Klik op een studio voor details',
+    // Klanten
+    klanten:'Klanten',alleKlanten:'Alle klanten',zoekOpNaam:'Zoek op naam, email of telefoon...',
+    naamAZ:'Naam A-Z',laatsteBezoek:'Laatste bezoek',meesteAfspraken:'Meeste afspraken',
+    nieuweKlanten:'Nieuwe klanten',stammklanten:'Vaste klanten',vipKlanten:'VIP klanten',
+    afspraken:'Afspraken',geenKlanten:'Nog geen klanten',nieuweKlant:'+ Nieuwe Klant',
+    csvImport:'CSV Import',vorige:'Vorige',volgende:'Volgende',gevonden:'gevonden',
+    // Studenten
+    workshop:'Workshop',online:'Online',academy:'Academy',onbekend:'Onbekend',
+    // Marketing
+    marketingReports:'Marketing Reports',automatischGegenereerd:'Automatisch gegenereerd door je marketing team',
+    laden:'Laden...',nogGeenRapporten:'Nog geen rapporten',agentsGenereren:'De marketing agents genereren automatisch rapporten',
+    terug:'Terug',
+    // Financieel
+    directieOverzicht:'Directie Overzicht',perStudio:'Per Studio Performance',
+    franchiseInkomsten:'Franchise Inkomsten voor Wax Affairs',royaltiesOntvangen:'Royalties ontvangen',
+    onboardingFees:'Onboarding fees ontvangen',productOrders:'Product orders',academyInkomsten:'Academy inkomsten',
+    totaalInkomsten:'TOTAAL inkomsten',franchiseVoorwaarden:'Franchise Voorwaarden',
+    onboardingFee:'Onboarding fee',royalty:'Royalty',contractduur:'Contractduur',studioInvestering:'Studio investering',
+    minBestelling:'Min. bestelling',vandaag:'Vandaag',dezeWeek:'Deze Week',dezeMaand:'Deze Maand',
+    ditKwartaal:'Dit Kwartaal',ditJaar:'Dit Jaar',alles:'Alles',van:'Van',tot:'Tot',
+    // Producten
+    productcatalogus:'Productcatalogus',naoProductlijn:'Nao by Wax Affairs productlijn',
+    nieuwProduct:'+ Nieuw Product',zoekProduct:'Zoek product...',alleCategorien:'Alle categorieën',
+    // Friendchise Pitch
+    friendchisePitch:'Friendchise Pitch',presentatieVoorLeads:'Presentatie voor franchise leads — gebruik tijdens calls en meetings',
   },
   de: {
     dashboard:'Dashboard',welkom:'Willkommen bei Wax Affairs HQ',franchisees:'Franchisees',pipeline:'Pipeline',studenten:'Studenten',cohorten:'Kohorten',
@@ -4254,6 +4284,36 @@ const T = {
     revenueStream:'Einnahmequelle',naam:'Name',beschrijving:'Beschreibung',model:'Geschäftsmodell',marge:'Marge',
     jaar:'Jahr',omzet:'Umsatz',kosten:'Kosten',winst:'Gewinn',locaties:'Standorte',
     vijfJaarsProjectie:'5-Jahres-Wachstumsszenario',
+    // Dashboard
+    goedemorgen:'Guten Morgen',goedemiddag:'Guten Tag',goedenavond:'Guten Abend',
+    doel:'Ziel',vsVorigeMaand:'vs Vormonat',actief:'Aktiv',inactief:'Inaktiv',
+    boekingen:'Buchungen',studioOmzet:'Studio-Umsatz',totaalHQ:'GESAMT HQ Einnahmen',
+    nogGeenStudios:'Noch keine Studios',klikStudio:'Klicken Sie auf ein Studio für Details',
+    // Klanten
+    klanten:'Kunden',alleKlanten:'Alle Kunden',zoekOpNaam:'Suche nach Name, E-Mail oder Telefon...',
+    naamAZ:'Name A-Z',laatsteBezoek:'Letzter Besuch',meesteAfspraken:'Meiste Termine',
+    nieuweKlanten:'Neue Kunden',stammklanten:'Stammkunden',vipKlanten:'VIP-Kunden',
+    afspraken:'Termine',geenKlanten:'Noch keine Kunden',nieuweKlant:'+ Neue Kundin',
+    csvImport:'CSV Import',vorige:'Zurück',volgende:'Weiter',gevonden:'gefunden',
+    // Studenten
+    workshop:'Workshop',online:'Online',academy:'Academy',onbekend:'Unbekannt',
+    // Marketing
+    marketingReports:'Marketing Berichte',automatischGegenereerd:'Automatisch generiert von deinem Marketing-Team',
+    laden:'Laden...',nogGeenRapporten:'Noch keine Berichte',agentsGenereren:'Die Marketing-Agenten erstellen automatisch Berichte',
+    terug:'Zurück',
+    // Financieel
+    directieOverzicht:'Direktionsübersicht',perStudio:'Pro Studio Performance',
+    franchiseInkomsten:'Franchise-Einnahmen für Wax Affairs',royaltiesOntvangen:'Erhaltene Royalties',
+    onboardingFees:'Erhaltene Onboarding-Gebühren',productOrders:'Produktbestellungen',academyInkomsten:'Academy-Einnahmen',
+    totaalInkomsten:'GESAMT Einnahmen',franchiseVoorwaarden:'Franchise-Bedingungen',
+    onboardingFee:'Onboarding-Gebühr',royalty:'Royalty',contractduur:'Vertragslaufzeit',studioInvestering:'Studio-Investition',
+    minBestelling:'Mindestbestellung',vandaag:'Heute',dezeWeek:'Diese Woche',dezeMaand:'Dieser Monat',
+    ditKwartaal:'Dieses Quartal',ditJaar:'Dieses Jahr',alles:'Alle',van:'Von',tot:'Bis',
+    // Producten
+    productcatalogus:'Produktkatalog',naoProductlijn:'Nao by Wax Affairs Produktlinie',
+    nieuwProduct:'+ Neues Produkt',zoekProduct:'Produkt suchen...',alleCategorien:'Alle Kategorien',
+    // Friendchise Pitch
+    friendchisePitch:'Friendchise Pitch',presentatieVoorLeads:'Präsentation für Franchise-Leads — für Calls und Meetings',
   }
 };
 
@@ -4263,10 +4323,28 @@ function setLang(l) {
   lang = l;
   localStorage.setItem('wax-lang', l);
   updateLangButtons();
+  updateStaticLabels();
   // Re-render active page
   const activePage = document.querySelector('.sidebar-item.active')?.dataset?.page || 'dashboard';
   showPage(activePage);
   toast(l === 'de' ? 'Sprache: Deutsch' : 'Taal: Nederlands');
+}
+
+function updateStaticLabels() {
+  // Update static page titles and labels that are in HTML, not rendered by JS
+  const updates = {
+    'producten-titel': t('productcatalogus'),
+    'producten-sub': t('naoProductlijn'),
+    'producten-nieuw-btn': t('nieuwProduct'),
+    'product-filter-alle': t('alleCategorien'),
+  };
+  Object.entries(updates).forEach(function(entry) {
+    var el = document.getElementById(entry[0]);
+    if (el) el.textContent = entry[1];
+  });
+  // Update placeholders
+  var productZoek = document.getElementById('product-zoek');
+  if (productZoek) productZoek.placeholder = t('zoekProduct');
 }
 
 function updateLangButtons() {
@@ -7334,6 +7412,7 @@ document.addEventListener('keydown', (e) => {
 async function init() {
   await laadAlleData();
   updateLangButtons();
+  updateStaticLabels();
   // Set sidebar user info
   if (currentUser) {
     const av = document.getElementById('sidebar-user-avatar');
