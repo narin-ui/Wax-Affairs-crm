@@ -1109,15 +1109,20 @@ function renderFranchisees() {
 let marketingFilter = '';
 let marketingOpenReport = null;
 
-async function renderMarketingReports() {
+function renderMarketingReports() {
   const el = document.getElementById('marketing-reports-content');
+  if (!el) return;
   const L = lang === 'de';
 
-  let reports = [];
-  try {
-    const res = await fetch('/api/marketing');
-    if (res.ok) reports = await res.json();
-  } catch(e) { console.error('Marketing fetch error:', e); }
+  // Show loading state
+  el.innerHTML = '<div class="text-center py-12 text-gray-400"><div class="text-4xl mb-3">⏳</div><p>Laden...</p></div>';
+
+  fetch('/api/marketing').then(r => r.ok ? r.json() : []).catch(() => []).then(reports => {
+    _renderMarketingContent(el, reports, L);
+  });
+}
+
+function _renderMarketingContent(el, reports, L) {
 
   const catInfo = {
     blog: { icon:'📝', label: L ? 'Blog Posts' : 'Blog Posts', color:'bg-blue-100 text-blue-700' },
@@ -1156,7 +1161,12 @@ async function renderMarketingReports() {
     if (r) {
       const info = catInfo[r.categorie] || { icon:'📄', label:r.categorie, color:'bg-gray-100 text-gray-700' };
       // Simple markdown to HTML
-      let content = r.inhoud
+      let content = r.inhoud;
+      const bt = String.fromCharCode(96); // backtick
+      const codeBlockRe = new RegExp(bt+bt+bt+'[\\s\\S]*?'+bt+bt+bt, 'g');
+      const inlineCodeRe = new RegExp(bt+'(.+?)'+bt, 'g');
+      content = content
+        .replace(codeBlockRe, function(m) { var re1 = new RegExp(bt+bt+bt+'\\w*','g'); var re2 = new RegExp(bt+bt+bt,'g'); return '<pre class="bg-gray-900 text-green-400 rounded-lg p-4 text-xs overflow-x-auto my-3">' + m.replace(re1,'').replace(re2,'') + '</pre>'; })
         .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-gray-900 mt-6 mb-2">$1</h3>')
         .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-gray-900 mt-8 mb-3">$1</h2>')
         .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold text-gray-900 mt-8 mb-3">$1</h1>')
@@ -1164,8 +1174,7 @@ async function renderMarketingReports() {
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
         .replace(/^- (.+)$/gm, '<li class="ml-4 text-sm text-gray-700">$1</li>')
         .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-4 text-sm text-gray-700"><strong>$1.</strong> $2</li>')
-        .replace(/\`\`\`[\s\S]*?\`\`\`/g, m => `<pre class="bg-gray-900 text-green-400 rounded-lg p-4 text-xs overflow-x-auto my-3">${m.replace(/\`\`\`\w*/g,'').replace(/\`\`\`/g,'')}</pre>`)
-        .replace(/\`(.+?)\`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-xs">$1</code>')
+        .replace(inlineCodeRe, '<code class="bg-gray-100 px-1 py-0.5 rounded text-xs">$1</code>')
         .replace(/\n\n/g, '</p><p class="text-sm text-gray-700 leading-relaxed mb-3">')
         .replace(/\n/g, '<br>');
       content = '<p class="text-sm text-gray-700 leading-relaxed mb-3">' + content + '</p>';
