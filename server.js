@@ -964,7 +964,7 @@ app.post('/api/clients/import', (req, res) => {
 });
 
 // ─── API: Marketing Reports ───
-app.get('/api/marketing', (req, res) => {
+app.get('/api/marketing-reports', (req, res) => {
   if (!requireAuth(req, res)) return;
   try {
     const marketingDir = path.join(__dirname, 'marketing');
