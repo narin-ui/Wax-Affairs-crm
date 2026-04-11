@@ -206,12 +206,15 @@
       <span class="icon text-lg">📣</span><span class="text-sm">Marketing</span>
     </a>
 
-    <div class="nav-divider mt-3">Sales</div>
+    <div class="nav-divider mt-3">Sales & Marketing</div>
     <a href="#" onclick="return showPage('friendchise-pitch')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="friendchise-pitch">
       <span class="icon text-lg">🤝</span><span class="text-sm">Friendchise Pitch</span>
     </a>
     <a href="#" onclick="return showPage('pipeline')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="pipeline">
       <span class="icon text-lg">📈</span><span class="text-sm">Pipeline</span>
+    </a>
+    <a href="#" onclick="return showPage('marketing-reports')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="marketing-reports">
+      <span class="icon text-lg">📣</span><span class="text-sm">Marketing Reports</span>
     </a>
 
     <div class="nav-divider mt-3">Strategie</div>
@@ -447,6 +450,11 @@
       <p class="text-sm mt-1">Voeg je eerste franchisee lead toe om te beginnen</p>
     </div>
   </div>
+</div>
+
+<!-- ═══════════════ PAGE: MARKETING REPORTS ═══════════════ -->
+<div id="page-marketing-reports" class="hidden p-6 lg:p-8 fade-in">
+  <div id="marketing-reports-content"></div>
 </div>
 
 <!-- ═══════════════ PAGE: FRIENDCHISE PITCH ═══════════════ -->
@@ -742,7 +750,7 @@
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 // ─── State ───
-const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch'];
+const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch','marketing-reports'];
 let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} }, personeel:{ medewerkers:[], uren:[] }, vastelasten:[] };
 let klantenPage = 1;
 const KLANTEN_PER_PAGE = 25;
@@ -802,6 +810,7 @@ function showPage(p) {
     franchisees: renderFranchisees,
     pipeline: renderPipeline,
     'friendchise-pitch': renderFriendchisePitch,
+    'marketing-reports': renderMarketingReports,
     studenten: renderStudenten,
     cohorten: renderCohorten,
     academy: renderAcademy,
@@ -1098,6 +1107,129 @@ function renderFranchisees() {
     <div>${badge(f.status)}</div>
     <div class="text-xs text-gray-400">${fd(f.aangemaakt)}</div>
   </div>`).join('');
+}
+
+// ─── RENDER: Marketing Reports ───
+let marketingFilter = '';
+let marketingOpenReport = null;
+
+async function renderMarketingReports() {
+  const el = document.getElementById('marketing-reports-content');
+  const L = lang === 'de';
+
+  let reports = [];
+  try { reports = await apiGet('/api/marketing'); } catch(e) {}
+
+  const catInfo = {
+    blog: { icon:'📝', label: L ? 'Blog Posts' : 'Blog Posts', color:'bg-blue-100 text-blue-700' },
+    social: { icon:'📸', label: L ? 'Social Media' : 'Social Media', color:'bg-pink-100 text-pink-700' },
+    seo: { icon:'🔍', label:'SEO', color:'bg-green-100 text-green-700' },
+    ads: { icon:'💰', label:'Google Ads', color:'bg-yellow-100 text-yellow-700' },
+    email: { icon:'✉️', label:'E-mail', color:'bg-purple-100 text-purple-700' },
+    strategie: { icon:'🏆', label: L ? 'Strategie' : 'Strategie', color:'bg-wax-100 text-wax-700' },
+  };
+
+  const filtered = marketingFilter ? reports.filter(r => r.categorie === marketingFilter) : reports;
+  const cats = [...new Set(reports.map(r => r.categorie))];
+
+  let html = `<div class="flex items-center justify-between mb-6 page-header">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">${L ? 'Marketing Berichte' : 'Marketing Reports'}</h1>
+      <p class="text-sm text-gray-500 mt-1">${L ? 'Automatisch generiert von deinem Marketing-Team' : 'Automatisch gegenereerd door je marketing team'}</p>
+    </div>
+  </div>`;
+
+  // KPI cards
+  html += `<div class="grid grid-cols-2 lg:grid-cols-6 gap-3 mb-6">
+    ${Object.entries(catInfo).map(([key, info]) => {
+      const count = reports.filter(r => r.categorie === key).length;
+      return `<div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 cursor-pointer transition-all ${marketingFilter === key ? 'ring-2 ring-wax-500' : 'hover:shadow-md'}" onclick="marketingFilter=marketingFilter==='${key}'?'':'${key}'; renderMarketingReports()">
+        <div class="text-2xl mb-1">${info.icon}</div>
+        <div class="text-lg font-bold text-gray-900">${count}</div>
+        <div class="text-xs text-gray-500">${info.label}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  // Open report detail
+  if (marketingOpenReport) {
+    const r = reports.find(rep => rep.bestand === marketingOpenReport);
+    if (r) {
+      const info = catInfo[r.categorie] || { icon:'📄', label:r.categorie, color:'bg-gray-100 text-gray-700' };
+      // Simple markdown to HTML
+      let content = r.inhoud
+        .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-gray-900 mt-6 mb-2">$1</h3>')
+        .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-gray-900 mt-8 mb-3">$1</h2>')
+        .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold text-gray-900 mt-8 mb-3">$1</h1>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/^- (.+)$/gm, '<li class="ml-4 text-sm text-gray-700">$1</li>')
+        .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-4 text-sm text-gray-700"><strong>$1.</strong> $2</li>')
+        .replace(/\`\`\`[\s\S]*?\`\`\`/g, m => `<pre class="bg-gray-900 text-green-400 rounded-lg p-4 text-xs overflow-x-auto my-3">${m.replace(/\`\`\`\w*/g,'').replace(/\`\`\`/g,'')}</pre>`)
+        .replace(/\`(.+?)\`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-xs">$1</code>')
+        .replace(/\n\n/g, '</p><p class="text-sm text-gray-700 leading-relaxed mb-3">')
+        .replace(/\n/g, '<br>');
+      content = '<p class="text-sm text-gray-700 leading-relaxed mb-3">' + content + '</p>';
+
+      html += `<div class="mb-4">
+        <button onclick="marketingOpenReport=null; renderMarketingReports()" class="text-sm text-wax-600 hover:text-wax-700 font-medium inline-flex items-center gap-1">← ${L ? 'Zurück' : 'Terug'}</button>
+      </div>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">${info.icon}</span>
+            <div>
+              <h2 class="font-bold text-gray-900">${r.bestand.replace('.md','')}</h2>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-xs px-2 py-0.5 rounded-full ${info.color}">${info.label}</span>
+                <span class="text-xs text-gray-400">${new Date(r.datum).toLocaleDateString('nl-NL', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' })}</span>
+                <span class="text-xs text-gray-400">${Math.round(r.grootte/1024)}KB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-5 prose prose-sm max-w-none" style="max-height:70vh;overflow-y:auto">${content}</div>
+      </div>`;
+      el.innerHTML = html;
+      return;
+    }
+  }
+
+  // Report list
+  if (!filtered.length) {
+    html += `<div class="text-center text-gray-400 py-12"><div class="text-4xl mb-3">📣</div><p class="font-medium">${L ? 'Noch keine Berichte' : 'Nog geen rapporten'}</p><p class="text-sm mt-1">${L ? 'Die Marketing-Agenten erstellen automatisch Berichte' : 'De marketing agents genereren automatisch rapporten'}</p></div>`;
+  } else {
+    html += `<div class="space-y-3">`;
+    filtered.forEach(r => {
+      const info = catInfo[r.categorie] || { icon:'📄', label:r.categorie, color:'bg-gray-100 text-gray-700' };
+      const preview = r.inhoud.replace(/^#.+$/gm,'').replace(/\*\*/g,'').replace(/\n/g,' ').trim().substring(0, 150);
+      html += `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card cursor-pointer hover:shadow-md transition-all" onclick="marketingOpenReport='${r.bestand}'; renderMarketingReports()">
+        <div class="flex items-start gap-4">
+          <span class="text-2xl flex-shrink-0">${info.icon}</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="font-bold text-gray-900 text-sm">${r.bestand.replace('.md','')}</h3>
+              <span class="text-xs px-2 py-0.5 rounded-full ${info.color}">${info.label}</span>
+            </div>
+            <p class="text-xs text-gray-500 line-clamp-2">${preview}...</p>
+          </div>
+          <div class="text-right flex-shrink-0">
+            <div class="text-xs text-gray-400">${new Date(r.datum).toLocaleDateString('nl-NL', { day:'numeric', month:'short' })}</div>
+            <div class="text-xs text-gray-400 mt-0.5">${Math.round(r.grootte/1024)}KB</div>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+async function apiGet(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('API error');
+  return res.json();
 }
 
 // ─── RENDER: Friendchise Pitch ───

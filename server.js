@@ -963,6 +963,26 @@ app.post('/api/clients/import', (req, res) => {
   res.json({ imported, skipped, total: list.length });
 });
 
+// ─── API: Marketing Reports ───
+app.get('/api/marketing', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const marketingDir = path.join(__dirname, 'marketing');
+  const categories = ['blog', 'social', 'seo', 'ads', 'email', 'strategie'];
+  const reports = [];
+  categories.forEach(cat => {
+    const catDir = path.join(marketingDir, cat);
+    if (fs.existsSync(catDir)) {
+      const files = fs.readdirSync(catDir).filter(f => f.endsWith('.md')).sort().reverse();
+      files.forEach(file => {
+        const content = fs.readFileSync(path.join(catDir, file), 'utf8');
+        const stat = fs.statSync(path.join(catDir, file));
+        reports.push({ categorie: cat, bestand: file, inhoud: content, datum: stat.mtime.toISOString(), grootte: content.length });
+      });
+    }
+  });
+  res.json(reports);
+});
+
 // ─── API: Personeel (Urenregistratie) ───
 app.get('/api/personeel', (req, res) => {
   if (!requireAuth(req, res)) return;
