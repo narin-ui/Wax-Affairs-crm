@@ -206,6 +206,14 @@
       <span class="icon text-lg">📣</span><span class="text-sm">Marketing</span>
     </a>
 
+    <div class="nav-divider mt-3">Sales</div>
+    <a href="#" onclick="return showPage('friendchise-pitch')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="friendchise-pitch">
+      <span class="icon text-lg">🤝</span><span class="text-sm">Friendchise Pitch</span>
+    </a>
+    <a href="#" onclick="return showPage('pipeline')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="pipeline">
+      <span class="icon text-lg">📈</span><span class="text-sm">Pipeline</span>
+    </a>
+
     <div class="nav-divider mt-3">Strategie</div>
     <a href="#" onclick="return showPage('businessplan')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="businessplan">
       <span class="icon text-lg">📄</span><span class="text-sm">Businessplan</span>
@@ -438,6 +446,11 @@
       <p class="text-sm mt-1">Voeg je eerste franchisee lead toe om te beginnen</p>
     </div>
   </div>
+</div>
+
+<!-- ═══════════════ PAGE: FRIENDCHISE PITCH ═══════════════ -->
+<div id="page-friendchise-pitch" class="hidden p-6 lg:p-8 fade-in">
+  <div id="friendchise-pitch-content"></div>
 </div>
 
 <!-- ═══════════════ PAGE: PIPELINE ═══════════════ -->
@@ -728,7 +741,7 @@
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 // ─── State ───
-const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken'];
+const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch'];
 let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} }, personeel:{ medewerkers:[], uren:[] }, vastelasten:[] };
 let klantenPage = 1;
 const KLANTEN_PER_PAGE = 25;
@@ -787,6 +800,7 @@ function showPage(p) {
     klanten: renderKlanten,
     franchisees: renderFranchisees,
     pipeline: renderPipeline,
+    'friendchise-pitch': renderFriendchisePitch,
     studenten: renderStudenten,
     cohorten: renderCohorten,
     academy: renderAcademy,
@@ -1083,6 +1097,419 @@ function renderFranchisees() {
     <div>${badge(f.status)}</div>
     <div class="text-xs text-gray-400">${fd(f.aangemaakt)}</div>
   </div>`).join('');
+}
+
+// ─── RENDER: Friendchise Pitch ───
+let pitchSection = 'overzicht';
+let pitchChecklist = {};
+
+function renderFriendchisePitch() {
+  const el = document.getElementById('friendchise-pitch-content');
+
+  const sections = [
+    { id:'overzicht', label:'Overzicht', icon:'🏠' },
+    { id:'wie', label:'Who We Are', icon:'👥' },
+    { id:'pakket', label:'What You Get', icon:'🎁' },
+    { id:'cijfers', label:'The Numbers', icon:'💰' },
+    { id:'profiel', label:'Ideaal Profiel', icon:'🎯' },
+    { id:'stappen', label:'The Steps', icon:'🚀' },
+    { id:'checklist', label:'Call Checklist', icon:'✅' },
+  ];
+
+  let html = `<div class="flex items-center justify-between mb-6 page-header">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Friendchise Pitch</h1>
+      <p class="text-sm text-gray-500 mt-1">Presentatie voor franchise leads — gebruik tijdens calls en meetings</p>
+    </div>
+  </div>`;
+
+  // Tab navigation
+  html += `<div class="flex gap-1 mb-6 overflow-x-auto pb-2 border-b border-gray-200">
+    ${sections.map(s => `<button onclick="pitchSection='${s.id}'; renderFriendchisePitch()" class="flex items-center gap-1.5 px-3 py-2 rounded-t-lg text-sm font-medium whitespace-nowrap transition-colors ${pitchSection===s.id ? 'bg-wax-50 text-wax-700 border-b-2 border-wax-500' : 'text-gray-500 hover:text-gray-700'}">${s.icon} ${s.label}</button>`).join('')}
+  </div>`;
+
+  // ══════════ OVERZICHT ══════════
+  if (pitchSection === 'overzicht') {
+    html += `<div class="max-w-4xl">
+      <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-10 text-center mb-8 shadow-xl">
+        <div class="text-5xl font-bold text-white tracking-tight mb-2" style="font-family:Georgia,serif"><span class="text-wax-400">WAX</span> <em class="text-white">AFFAIRS</em></div>
+        <div class="w-12 h-0.5 bg-wax-500 mx-auto my-4"></div>
+        <p class="text-xl text-wax-300 italic">You bring the drive.<br>We bring everything you need.</p>
+        <p class="text-sm text-gray-500 mt-6">FRIENDCHISE — INFORMATION PACK 2026</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${sections.filter(s=>s.id!=='overzicht').map(s => `<div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 card cursor-pointer hover:shadow-md transition-all" onclick="pitchSection='${s.id}'; renderFriendchisePitch()">
+          <div class="text-3xl mb-3">${s.icon}</div>
+          <h3 class="font-bold text-gray-900">${s.label}</h3>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ══════════ WHO WE ARE ══════════
+  if (pitchSection === 'wie') {
+    html += `<div class="max-w-4xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
+        <p class="text-xl italic text-gray-700 leading-relaxed">"Waxing is not just hair removal. It is skincare — and for us, natural skincare."</p>
+      </div>
+
+      <p class="text-gray-700 leading-relaxed">Simone Costa started nearly twenty years ago in a small studio in Germany. What began as a one-woman business grew into one of the most trusted wax studios in the region. Wax Affairs is the next step: making 20 years of expertise available to everyone who wants to open their own wax studio.</p>
+
+      <div class="grid grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
+          <div class="text-3xl font-bold text-wax-600 italic">20<span class="text-lg">jr</span></div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Simone's Experience</div>
+        </div>
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
+          <div class="text-3xl font-bold text-wax-600">100%</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Organic Products</div>
+        </div>
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
+          <div class="text-3xl font-bold text-wax-600">3</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Studios in Germany</div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-wax-500">
+          <h3 class="text-lg font-bold text-gray-900">Simone Costa</h3>
+          <p class="text-sm text-wax-600 font-medium mb-3">CEO · Head Trainer</p>
+          <p class="text-sm text-gray-600 leading-relaxed">20 years as a waxing specialist and studio operator in Germany. Founder of Waxing Brazil. She trains you in the craft — from wax type and technique to skin preparation and aftercare. Not a course. Real expertise.</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-gray-800">
+          <h3 class="text-lg font-bold text-gray-900">Narin Eggink</h3>
+          <p class="text-sm text-gray-600 font-medium mb-3">COO · Managing Director</p>
+          <p class="text-sm text-gray-600 leading-relaxed">12 years coaching international professional footballers and entrepreneurs. Co-founder of an IT company with 10 offices. He coaches you in business — from pricing to marketing to studio profitability.</p>
+        </div>
+      </div>
+
+      <div class="bg-gray-900 rounded-xl p-6 text-center">
+        <p class="text-wax-300 italic">"Whether you are an experienced waxer or an entrepreneur with no waxing background — we guide both."</p>
+        <p class="text-sm text-gray-400 mt-2">Simone teaches the craft. Narin teaches the business. Together they give you everything.</p>
+      </div>
+    </div>`;
+  }
+
+  // ══════════ WHAT YOU GET ══════════
+  if (pitchSection === 'pakket') {
+    html += `<div class="max-w-4xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
+        <p class="text-xl italic text-gray-700">As a Friendchisee you receive more than a licence and a brand name. You receive a fully guided path to running a professional, profitable wax studio.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🎓</span><h3 class="font-bold text-gray-900">Craft Training — Simone</h3></div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>10 days of intensive in-person training</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Wax type per skin type, technique, temperature, timing</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Pre-treatment and aftercare with the Nao product line</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Practical exam and official Wax Affairs certificate</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Ongoing coaching for quality questions</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">📊</span><h3 class="font-bold text-gray-900">Business Coaching — Narin</h3></div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Business plan and financial setup for your studio</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Pricing strategy, client acquisition and retention</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Marketing and social media approach</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Support during opening and first months</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Access to the Wax Affairs network and knowledge base</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🏪</span><h3 class="font-bold text-gray-900">Brand & System</h3></div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Right to use the Wax Affairs brand name</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Full house style, signage and marketing materials</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>SOP manual — working standards for every treatment</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Access to booking system and client platform</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Territorial exclusivity within your region</li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🧴</span><h3 class="font-bold text-gray-900">Products — Nao</h3></div>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Exclusive access to the Nao product line</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>100% organic — no synthetic ingredients</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Wax, oils, creams, hydrosol and powder</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Wholesale delivery direct from HQ</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Retail sales to clients for additional margin</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-gray-900 rounded-xl p-6 text-center">
+        <p class="text-wax-300 italic text-lg">"private care. public confidence."</p>
+        <p class="text-sm text-gray-400 mt-2">This is the promise you make as a Friendchisee to every client.</p>
+      </div>
+    </div>`;
+  }
+
+  // ══════════ THE NUMBERS + ROI CALCULATOR ══════════
+  if (pitchSection === 'cijfers') {
+    html += `<div class="max-w-4xl space-y-6">
+      <h2 class="text-xl font-bold text-gray-900">Your Investment</h2>
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead><tr class="bg-gray-50"><th class="text-left px-5 py-3 font-semibold text-gray-600">Item</th><th class="text-left px-5 py-3 font-semibold text-gray-600">Amount</th><th class="text-left px-5 py-3 font-semibold text-gray-600">What it covers</th></tr></thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr><td class="px-5 py-3 font-medium">Onboarding fee (one-off)</td><td class="px-5 py-3 font-bold text-wax-700">${fe(15000)}</td><td class="px-5 py-3 text-gray-600">Training, territory setup, onboarding, starter kit, first month coaching</td></tr>
+            <tr><td class="px-5 py-3 font-medium">Royalty (monthly)</td><td class="px-5 py-3 font-bold text-wax-700">5% of revenue</td><td class="px-5 py-3 text-gray-600">Increases to 6% once studio exceeds ${fe(120000)} gross revenue/year</td></tr>
+            <tr><td class="px-5 py-3 font-medium">Studio fit-out</td><td class="px-5 py-3 font-bold text-wax-700">${fe(30000)} – ${fe(60000)}</td><td class="px-5 py-3 text-gray-600">Rent, fit-out, equipment — depending on location and size</td></tr>
+            <tr class="bg-wax-50"><td class="px-5 py-3 font-bold">Total start-up investment</td><td class="px-5 py-3 font-bold text-wax-700">${fe(45000)} – ${fe(75000)}</td><td class="px-5 py-3 text-gray-600 font-medium">Including onboarding fee + fit-out + 3 months working capital</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="text-xl font-bold text-gray-900 pt-4">What a Studio Generates</h2>
+      <p class="text-sm text-gray-500">Based on actual operating data from Wax Affairs studios in Germany</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
+          <div class="text-3xl font-bold text-wax-600 italic">${fe(120000).replace(',00','k').replace('€ ','€')}</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Avg. Revenue / Cabin / Year</div>
+        </div>
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
+          <div class="text-3xl font-bold text-gray-800">2</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Staff x 6 hours/day</div>
+        </div>
+        <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
+          <div class="text-3xl font-bold text-wax-600 italic">${fe(40)}</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Average Ticket</div>
+        </div>
+      </div>
+
+      <!-- Interactive ROI Calculator -->
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white">
+        <h3 class="text-lg font-bold text-wax-400 mb-4">ROI Calculator — pas aan voor jouw lead</h3>
+        <div class="grid md:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Cabins</label>
+            <input type="number" id="roi-cabins" value="1" min="1" max="5" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Revenue per cabin/year</label>
+            <input type="number" id="roi-revenue" value="126000" step="1000" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Monthly rent</label>
+            <input type="number" id="roi-rent" value="1200" step="100" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
+          </div>
+        </div>
+        <div id="roi-result" class="bg-gray-800/50 rounded-xl p-5"></div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-5 py-3 bg-gray-50 font-semibold text-sm text-gray-700">P&L Overview (1 cabin, Year 2+)</div>
+        <table class="w-full text-sm">
+          <tbody class="divide-y divide-gray-100">
+            <tr><td class="px-5 py-2.5">Revenue (services + products)</td><td class="px-5 py-2.5 text-right font-medium">± ${fe(126000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Staff costs (2 employees)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(34000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Rent</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(12000)} – ${fe(18000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Product purchases (wax + Nao)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(8000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Royalty (5% of revenue)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(6300)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Local marketing + other</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(7000)}</td></tr>
+            <tr class="bg-green-50"><td class="px-5 py-3 font-bold text-green-800">EBITDA (profit before tax)</td><td class="px-5 py-3 text-right font-bold text-green-700">± ${fe(52700)} <span class="text-xs text-green-600 ml-1">~42% marge</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-gray-400 italic">Indicative figures based on operational data. Actual results depend on location, occupancy and local market.</p>
+    </div>`;
+
+    setTimeout(() => updateROI(), 50);
+  }
+
+  // ══════════ IDEAAL PROFIEL ══════════
+  if (pitchSection === 'profiel') {
+    html += `<div class="max-w-4xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Wie zoeken wij als Friendchisee?</h2>
+        <p class="text-gray-600">Niet iedereen past bij Wax Affairs — en dat is een kwaliteit. We zoeken partners die onze standaard delen.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-green-200">
+          <h3 class="font-bold text-green-800 mb-4 flex items-center gap-2"><span class="text-xl">&#10003;</span> Wat we zoeken</h3>
+          <ul class="space-y-3 text-sm text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Ondernemersmentaliteit</strong> — je wilt bouwen, niet alleen een baan hebben. Je denkt in kansen en neemt verantwoordelijkheid.</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Passie voor kwaliteit</strong> — je gaat geen concessies doen op hygiëne, techniek of klantervaring.</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Bereid om te leren</strong> — ook als je al ervaring hebt, sta je open voor de Wax Affairs methode.</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Lokale betrokkenheid</strong> — je kent je regio, je wilt er je naam mee verbinden en een community opbouwen.</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Financieel startklaar</strong> — je hebt (toegang tot) ${fe(45000)} – ${fe(75000)} startkapitaal.</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Langetermijnvisie</strong> — je wilt een duurzaam bedrijf bouwen, niet snel geld verdienen.</div></li>
+          </ul>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
+          <h3 class="font-bold text-red-800 mb-4 flex items-center gap-2"><span class="text-xl">&#10007;</span> Geen match als...</h3>
+          <ul class="space-y-3 text-sm text-gray-700">
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je alleen een merknaam wilt zonder zelf te investeren in kwaliteit</div></li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je niet bereid bent om de training te volgen en onze standaard over te nemen</div></li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je verwacht dat het "vanzelf gaat" zonder actieve inzet</div></li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je het als bijbaan ziet in plaats van als je hoofdonderneming</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-900 mb-4">Twee typische profielen die goed passen</h3>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-blue-50 rounded-lg p-5">
+            <div class="text-2xl mb-2">💪</div>
+            <h4 class="font-bold text-gray-900 mb-1">De ervaren waxer</h4>
+            <p class="text-sm text-gray-600">Jarenlange ervaring in een salon, wil nu voor zichzelf beginnen. Heeft de techniek, mist het merk en de business support. Simone perfectioneert de techniek, Narin leert ondernemen.</p>
+          </div>
+          <div class="bg-purple-50 rounded-lg p-5">
+            <div class="text-2xl mb-2">🚀</div>
+            <h4 class="font-bold text-gray-900 mb-1">De ondernemer</h4>
+            <p class="text-sm text-gray-600">Ondernemerservaring (niet per se in beauty), zoekt een bewezen concept met begeleiding. Heeft het startkapitaal en de drive. Simone leert het vak, Narin schaalt het bedrijf.</p>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ══════════ THE STEPS ══════════
+  if (pitchSection === 'stappen') {
+    const steps = [
+      { nr:'01', titel:'Introduction meeting', beschrijving:'We get to know each other. You share your ambitions, we share what Wax Affairs is. No obligations — just an honest conversation.', duur:'30 min call' },
+      { nr:'02', titel:'Deep-dive & location assessment', beschrijving:'We discuss the concept in detail, your preferred location and financial feasibility. Narin helps you build a realistic business plan for your studio.', duur:'1-2 weken' },
+      { nr:'03', titel:'Shadow day at Wax Affairs', beschrijving:'You spend a day in one of our studios. You see how we work, experience the standard, and decide whether this is the right match.', duur:'1 dag' },
+      { nr:'04', titel:'Sign the franchise agreement', beschrijving:'Legal confirmation of the partnership. Your territory is exclusively secured. Onboarding fee settled.', duur:'Week 3-4' },
+      { nr:'05', titel:'Training with Simone — 10 days', beschrijving:'Intensive craft training. Upon completion you receive your official Wax Affairs certificate. You are ready to wax at the standard the brand demands.', duur:'10 dagen' },
+      { nr:'06', titel:'Opening of your studio', beschrijving:'Wax Affairs supports the opening: marketing, social media, first clients. Narin remains intensively available for coaching during the first months.', duur:'Maand 3-6' },
+    ];
+    html += `<div class="max-w-4xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">From conversation to opening day</h2>
+        <p class="text-gray-600 italic">The path from first interest to opening day takes on average 3 to 6 months. We guide you every step of the way.</p>
+      </div>
+
+      <div class="space-y-0 relative">
+        <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-wax-200"></div>
+        ${steps.map(s => `<div class="relative flex gap-6 py-4">
+          <div class="relative z-10 w-12 h-12 rounded-full bg-wax-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">${s.nr}</div>
+          <div class="flex-1 bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="font-bold text-gray-900">${s.titel}</h3>
+              <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">${s.duur}</span>
+            </div>
+            <p class="text-sm text-gray-600">${s.beschrijving}</p>
+          </div>
+        </div>`).join('')}
+      </div>
+
+      <div class="bg-gray-900 rounded-xl p-8 text-center">
+        <h3 class="text-2xl font-bold italic text-wax-400 mb-2">Ready to talk?</h3>
+        <p class="text-gray-400">Get in touch — we respond within 24 hours</p>
+        <p class="text-sm text-gray-500 mt-3">info@waxaffairs.de · waxaffairs.de/friendchise</p>
+      </div>
+    </div>`;
+  }
+
+  // ══════════ CALL CHECKLIST ══════════
+  if (pitchSection === 'checklist') {
+    const checkGroups = [
+      { titel: 'Kennismaking & Motivatie', vragen: [
+        'Hoe ben je bij Wax Affairs terechtgekomen?',
+        'Waarom wil je een eigen waxstudio openen?',
+        'Heb je ervaring met waxen of in de beauty branche?',
+        'Heb je eerder een eigen bedrijf gehad?',
+        'Wat trekt je aan in het franchise model vs. zelf beginnen?',
+      ]},
+      { titel: 'Locatie & Markt', vragen: [
+        'In welke stad/regio wil je je studio openen?',
+        'Heb je al een locatie op het oog?',
+        'Hoe ziet de concurrentie eruit in jouw regio?',
+        'Wat is de huurprijs range in jouw doelgebied?',
+        'Is er voldoende loop- of verkeersstroom?',
+      ]},
+      { titel: 'Financieel', vragen: [
+        'Ben je bekend met de totale investering (€45k-75k)?',
+        'Heb je eigen vermogen of heb je financiering nodig?',
+        'Heb je ervaring met financieel beheer/boekhouding?',
+        'Wat is je verwachting qua terugverdientijd?',
+        'Ben je comfortabel met de royalty structuur (5-6%)?',
+      ]},
+      { titel: 'Commitment & Timing', vragen: [
+        'Wanneer zou je willen starten?',
+        'Is dit een fulltime commitment of een bijproject?',
+        'Ben je bereid 10 dagen training te volgen bij Simone?',
+        'Heb je een partner of team, of begin je alleen?',
+        'Hoe zie je jezelf over 3 jaar met deze studio?',
+      ]},
+      { titel: 'Fit Check (intern — niet hardop vragen)', vragen: [
+        'Komt deze persoon professioneel en betrouwbaar over?',
+        'Is er echte passie en drive, of alleen interesse in geld?',
+        'Past de financiële situatie bij de investering?',
+        'Is de locatie/regio kansrijk?',
+        'Zou ik deze persoon willen als ambassadeur van het merk?',
+      ]},
+    ];
+
+    html += `<div class="max-w-4xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-6 border border-wax-200">
+        <h2 class="text-xl font-bold text-gray-900 mb-1">Call Checklist</h2>
+        <p class="text-sm text-gray-600">Gebruik deze checklist tijdens je videocall of meeting met een potentiële franchisee. Vink af wat je hebt besproken.</p>
+      </div>
+
+      ${checkGroups.map((g, gi) => `<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-5 py-3 bg-gray-50 border-b border-gray-100 font-bold text-sm text-gray-900 flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-wax-500 text-white text-xs flex items-center justify-center font-bold">${gi+1}</span>
+          ${g.titel}
+          ${gi===4 ? '<span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded ml-2">Intern</span>' : ''}
+        </div>
+        <div class="divide-y divide-gray-50">
+          ${g.vragen.map((v, vi) => {
+            const key = `g${gi}-v${vi}`;
+            return `<label class="flex items-start gap-3 px-5 py-3 cursor-pointer hover:bg-gray-50 transition-colors">
+              <input type="checkbox" ${pitchChecklist[key]?'checked':''} onchange="pitchChecklist['${key}']=this.checked" class="w-4 h-4 rounded border-gray-300 text-wax-500 mt-0.5 flex-shrink-0">
+              <span class="text-sm ${pitchChecklist[key]?'text-gray-400 line-through':'text-gray-700'}">${v}</span>
+            </label>`;
+          }).join('')}
+        </div>
+      </div>`).join('')}
+
+      <div class="flex gap-3">
+        <button onclick="pitchChecklist={}; renderFriendchisePitch()" class="btn-secondary px-4 py-2 rounded-lg text-sm">Reset Checklist</button>
+      </div>
+    </div>`;
+  }
+
+  el.innerHTML = html;
+}
+
+function updateROI() {
+  const cabins = parseInt(document.getElementById('roi-cabins')?.value) || 1;
+  const revPerCabin = parseInt(document.getElementById('roi-revenue')?.value) || 126000;
+  const monthlyRent = parseInt(document.getElementById('roi-rent')?.value) || 1200;
+
+  const totalRev = cabins * revPerCabin;
+  const staffCost = cabins * 34000;
+  const rent = monthlyRent * 12;
+  const products = cabins * 8000;
+  const royaltyPct = totalRev > 120000 ? 0.06 : 0.05;
+  const royalty = Math.round(totalRev * royaltyPct);
+  const marketing = 7000;
+  const totalCosts = staffCost + rent + products + royalty + marketing;
+  const ebitda = totalRev - totalCosts;
+  const margin = totalRev ? Math.round(ebitda / totalRev * 100) : 0;
+  const investment = 15000 + (cabins * 35000);
+  const payback = ebitda > 0 ? (investment / ebitda * 12).toFixed(0) : '∞';
+
+  const el = document.getElementById('roi-result');
+  if (!el) return;
+  el.innerHTML = `<div class="grid grid-cols-4 gap-4 text-center">
+    <div><div class="text-2xl font-bold text-wax-400">${fe(totalRev)}</div><div class="text-xs text-gray-400 mt-1">Omzet/jaar</div></div>
+    <div><div class="text-2xl font-bold text-green-400">${fe(ebitda)}</div><div class="text-xs text-gray-400 mt-1">EBITDA</div></div>
+    <div><div class="text-2xl font-bold ${margin >= 30 ? 'text-green-400' : 'text-yellow-400'}">${margin}%</div><div class="text-xs text-gray-400 mt-1">Marge</div></div>
+    <div><div class="text-2xl font-bold text-wax-400">${payback} mnd</div><div class="text-xs text-gray-400 mt-1">Terugverdientijd</div></div>
+  </div>`;
 }
 
 // ─── RENDER: Pipeline ───
