@@ -1117,9 +1117,12 @@ function renderMarketingReports() {
   // Show loading state
   el.innerHTML = '<div class="text-center py-12 text-gray-400"><div class="text-4xl mb-3">⏳</div><p>Laden...</p></div>';
 
-  fetch('/api/marketing').then(r => r.ok ? r.json() : []).catch(() => []).then(reports => {
-    _renderMarketingContent(el, reports, L);
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  fetch('/api/marketing', { signal: controller.signal })
+    .then(r => { clearTimeout(timeout); return r.ok ? r.json() : []; })
+    .catch(() => { clearTimeout(timeout); return []; })
+    .then(reports => _renderMarketingContent(el, reports, L));
 }
 
 function _renderMarketingContent(el, reports, L) {

@@ -966,21 +966,32 @@ app.post('/api/clients/import', (req, res) => {
 // ─── API: Marketing Reports ───
 app.get('/api/marketing', (req, res) => {
   if (!requireAuth(req, res)) return;
-  const marketingDir = path.join(__dirname, 'marketing');
-  const categories = ['blog', 'social', 'seo', 'ads', 'email', 'strategie'];
-  const reports = [];
-  categories.forEach(cat => {
-    const catDir = path.join(marketingDir, cat);
-    if (fs.existsSync(catDir)) {
-      const files = fs.readdirSync(catDir).filter(f => f.endsWith('.md')).sort().reverse();
-      files.forEach(file => {
-        const content = fs.readFileSync(path.join(catDir, file), 'utf8');
-        const stat = fs.statSync(path.join(catDir, file));
-        reports.push({ categorie: cat, bestand: file, inhoud: content, datum: stat.mtime.toISOString(), grootte: content.length });
-      });
-    }
-  });
-  res.json(reports);
+  try {
+    const marketingDir = path.join(__dirname, 'marketing');
+    if (!fs.existsSync(marketingDir)) return res.json([]);
+    const categories = ['blog', 'social', 'seo', 'ads', 'email', 'strategie'];
+    const reports = [];
+    categories.forEach(cat => {
+      try {
+        const catDir = path.join(marketingDir, cat);
+        if (fs.existsSync(catDir)) {
+          const files = fs.readdirSync(catDir).filter(f => f.endsWith('.md')).sort().reverse();
+          files.forEach(file => {
+            try {
+              const filePath = path.join(catDir, file);
+              const content = fs.readFileSync(filePath, 'utf8');
+              const stat = fs.statSync(filePath);
+              reports.push({ categorie: cat, bestand: file, inhoud: content, datum: stat.mtime.toISOString(), grootte: content.length });
+            } catch(e) { /* skip file */ }
+          });
+        }
+      } catch(e) { /* skip category */ }
+    });
+    res.json(reports);
+  } catch(e) {
+    console.error('Marketing API error:', e);
+    res.json([]);
+  }
 });
 
 // ─── API: Personeel (Urenregistratie) ───
