@@ -505,6 +505,15 @@
     </div>
     <button onclick="openModal('product')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuw Product</button>
   </div>
+  <div class="flex gap-2 mb-4">
+    <input type="text" id="product-zoek" oninput="renderProducten()" placeholder="Zoek product..." class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-wax-500">
+    <select id="product-filter" onchange="renderProducten()" class="px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white">
+      <option value="">Alle categorieën</option>
+      <option value="wax">Wax</option>
+      <option value="aftercare">Aftercare</option>
+      <option value="tools">Tools</option>
+    </select>
+  </div>
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="product-grid"></div>
   <div id="product-leeg" class="hidden p-12 text-center text-gray-400">
     <div class="text-4xl mb-3">🧴</div>
@@ -1147,17 +1156,31 @@ function renderCohorten() {
 function renderProducten() {
   const el = document.getElementById('product-grid');
   const leeg = document.getElementById('product-leeg');
-  if (!data.products.length) { el.innerHTML = ''; leeg.classList.remove('hidden'); return; }
+  const zoekEl = document.getElementById('product-zoek');
+  const filterEl = document.getElementById('product-filter');
+  const zoek = (zoekEl?.value || '').toLowerCase();
+  const filter = filterEl?.value || '';
+  let prods = data.products.filter(p => {
+    if (filter && p.categorie !== filter) return false;
+    if (zoek && !p.naam.toLowerCase().includes(zoek) && !(p.beschrijving||'').toLowerCase().includes(zoek)) return false;
+    return true;
+  });
+  if (!prods.length) { el.innerHTML = ''; leeg.classList.remove('hidden'); return; }
   leeg.classList.add('hidden');
-  el.innerHTML = data.products.map(p => {
+  el.innerHTML = prods.map(p => {
     const wm = p.wholesalePrijs && p.cogs ? Math.round((1 - p.cogs/p.wholesalePrijs)*100) : 0;
     const rm = p.retailPrijs && p.cogs ? Math.round((1 - p.cogs/p.retailPrijs)*100) : 0;
+    const icon = p.categorie === 'wax' ? '🫠' : '🧴';
     return `<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 card cursor-pointer" onclick="openModal('product-detail','${p.id}')">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-2xl">🧴</span>
-        <span class="text-xs px-2 py-1 rounded-full bg-wax-100 text-wax-700">${p.categorie||'product'}</span>
+        <span class="text-2xl">${icon}</span>
+        <div class="flex items-center gap-2">
+          ${p.inhoud ? `<span class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">${p.inhoud}</span>` : ''}
+          <span class="text-xs px-2 py-1 rounded-full bg-wax-100 text-wax-700">${p.categorie||'product'}</span>
+        </div>
       </div>
       <h3 class="font-bold text-gray-900">${p.naam}</h3>
+      ${p.beschrijving ? `<p class="text-xs text-gray-500 mt-1 line-clamp-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${p.beschrijving}</p>` : ''}
       <div class="grid grid-cols-3 gap-2 mt-3 text-center">
         <div><div class="text-xs text-gray-400">COGS</div><div class="text-sm font-medium">${fe(p.cogs)}</div></div>
         <div><div class="text-xs text-gray-400">Wholesale</div><div class="text-sm font-medium">${fe(p.wholesalePrijs)}</div></div>
@@ -4880,17 +4903,75 @@ function modalProductDetail(id) {
   if (!p) return '<p class="p-6">Niet gevonden</p>';
   const wm = p.wholesalePrijs && p.cogs ? Math.round((1 - p.cogs/p.wholesalePrijs)*100) : 0;
   const rm = p.retailPrijs && p.cogs ? Math.round((1 - p.cogs/p.retailPrijs)*100) : 0;
-  return modalHeader(p.naam, p.categorie) +
-    `<div class="p-6 space-y-4">
-      <div class="grid grid-cols-3 gap-4">
-        <div class="bg-gray-50 rounded-lg p-4 text-center"><div class="text-xs text-gray-500 mb-1">COGS</div><div class="text-lg font-bold">${fe(p.cogs)}</div></div>
-        <div class="bg-gray-50 rounded-lg p-4 text-center"><div class="text-xs text-gray-500 mb-1">Wholesale</div><div class="text-lg font-bold">${fe(p.wholesalePrijs)}</div><div class="text-xs text-green-600 font-medium">${wm}% marge</div></div>
-        <div class="bg-gray-50 rounded-lg p-4 text-center"><div class="text-xs text-gray-500 mb-1">Retail</div><div class="text-lg font-bold">${fe(p.retailPrijs)}</div><div class="text-xs text-green-600 font-medium">${rm}% marge</div></div>
+
+  const ingredientenHtml = (p.ingredienten && p.ingredienten.length)
+    ? p.ingredienten.map(i => `<div class="flex items-start gap-3 py-2 border-b border-gray-50 last:border-0">
+        <div class="flex-1"><div class="text-sm font-medium text-gray-900">${i.inci}</div><div class="text-xs text-gray-500 mt-0.5">${i.rol}</div></div>
+        ${i.percentage != null ? `<span class="text-xs font-mono bg-wax-50 text-wax-700 px-2 py-1 rounded">${i.percentage}%</span>` : ''}
+      </div>`).join('')
+    : '<p class="text-sm text-gray-400 italic">Ingrediënten worden nog bepaald</p>';
+
+  const verkoopHtml = (p.verkoopargumenten && p.verkoopargumenten.length)
+    ? `<ul class="space-y-2">${p.verkoopargumenten.map(v => `<li class="flex items-start gap-2 text-sm"><span class="text-green-500 mt-0.5 flex-shrink-0">&#10003;</span><span class="text-gray-700">${v}</span></li>`).join('')}</ul>`
+    : '';
+
+  return modalHeader(p.naam, `${p.categorie}${p.inhoud ? ' · ' + p.inhoud : ''}`) +
+    `<div class="p-6 space-y-5" style="max-height:70vh;overflow-y:auto">
+      <!-- Prijzen -->
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-gray-50 rounded-lg p-3 text-center"><div class="text-xs text-gray-500 mb-1">COGS</div><div class="text-lg font-bold">${fe(p.cogs)}</div></div>
+        <div class="bg-gray-50 rounded-lg p-3 text-center"><div class="text-xs text-gray-500 mb-1">Wholesale</div><div class="text-lg font-bold">${fe(p.wholesalePrijs)}</div><div class="text-xs text-green-600 font-medium">${wm}% marge</div></div>
+        <div class="bg-gray-50 rounded-lg p-3 text-center"><div class="text-xs text-gray-500 mb-1">Retail</div><div class="text-lg font-bold">${fe(p.retailPrijs)}</div><div class="text-xs text-green-600 font-medium">${rm}% marge</div></div>
       </div>
+
+      <!-- Tabs -->
+      <div class="border-b border-gray-200">
+        <nav class="flex gap-1 -mb-px" id="product-tabs-${id.replace(/[^a-z0-9]/g,'')}">
+          <button onclick="switchProductTab(this,'info')" class="product-tab active px-3 py-2 text-xs font-medium border-b-2 border-wax-500 text-wax-700" data-tab="info">Info</button>
+          <button onclick="switchProductTab(this,'ingredienten')" class="product-tab px-3 py-2 text-xs font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="ingredienten">Ingrediënten</button>
+          <button onclick="switchProductTab(this,'verkoop')" class="product-tab px-3 py-2 text-xs font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="verkoop">Verkoop</button>
+          <button onclick="switchProductTab(this,'productie')" class="product-tab px-3 py-2 text-xs font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="productie">Productie</button>
+        </nav>
+      </div>
+
+      <!-- Tab: Info -->
+      <div class="product-tab-content" data-tab="info">
+        ${p.beschrijving ? `<p class="text-sm text-gray-700 leading-relaxed">${p.beschrijving}</p>` : ''}
+        ${p.gebruik ? `<div class="mt-4"><h4 class="text-xs font-semibold text-gray-500 uppercase mb-2">Gebruik</h4><p class="text-sm text-gray-700 leading-relaxed bg-blue-50 rounded-lg p-3">${p.gebruik}</p></div>` : ''}
+      </div>
+
+      <!-- Tab: Ingrediënten -->
+      <div class="product-tab-content hidden" data-tab="ingredienten">
+        <div class="space-y-0">${ingredientenHtml}</div>
+      </div>
+
+      <!-- Tab: Verkoop -->
+      <div class="product-tab-content hidden" data-tab="verkoop">
+        ${verkoopHtml}
+      </div>
+
+      <!-- Tab: Productie -->
+      <div class="product-tab-content hidden" data-tab="productie">
+        <div class="space-y-3">
+          ${p.verpakking ? `<div><h4 class="text-xs font-semibold text-gray-500 uppercase mb-1">Verpakking</h4><p class="text-sm text-gray-700">${p.verpakking}</p></div>` : ''}
+          ${p.productie ? `<div><h4 class="text-xs font-semibold text-gray-500 uppercase mb-1">Productie</h4><p class="text-sm text-gray-700">${p.productie}</p></div>` : ''}
+          ${p.certificering ? `<div><h4 class="text-xs font-semibold text-gray-500 uppercase mb-1">Certificering</h4><p class="text-sm text-gray-700">${p.certificering}</p></div>` : ''}
+        </div>
+      </div>
+
+      <!-- Footer -->
       <div class="flex gap-2 pt-4 border-t">
         <button onclick="verwijderProduct('${id}')" class="btn-danger px-4 py-2 rounded-lg text-sm">Verwijderen</button>
       </div>
     </div>`;
+}
+
+function switchProductTab(btn, tab) {
+  const container = btn.closest('.p-6');
+  container.querySelectorAll('.product-tab').forEach(t => { t.classList.remove('active','border-wax-500','text-wax-700'); t.classList.add('border-transparent','text-gray-500'); });
+  btn.classList.add('active','border-wax-500','text-wax-700'); btn.classList.remove('border-transparent','text-gray-500');
+  container.querySelectorAll('.product-tab-content').forEach(c => c.classList.add('hidden'));
+  container.querySelectorAll(`.product-tab-content[data-tab="${tab}"]`).forEach(c => c.classList.remove('hidden'));
 }
 
 async function saveProduct(form) {
