@@ -1106,21 +1106,22 @@ let pitchChecklist = {};
 
 function renderFriendchisePitch() {
   const el = document.getElementById('friendchise-pitch-content');
+  const L = lang === 'de';
 
   const sections = [
-    { id:'overzicht', label:'Overzicht', icon:'🏠' },
+    { id:'overzicht', label: L ? 'Übersicht' : 'Overzicht', icon:'🏠' },
     { id:'wie', label:'Who We Are', icon:'👥' },
-    { id:'pakket', label:'What You Get', icon:'🎁' },
-    { id:'cijfers', label:'The Numbers', icon:'💰' },
-    { id:'profiel', label:'Ideaal Profiel', icon:'🎯' },
-    { id:'stappen', label:'The Steps', icon:'🚀' },
+    { id:'pakket', label: L ? 'Was Sie bekommen' : 'What You Get', icon:'🎁' },
+    { id:'cijfers', label: L ? 'Die Zahlen' : 'The Numbers', icon:'💰' },
+    { id:'profiel', label: L ? 'Ideales Profil' : 'Ideaal Profiel', icon:'🎯' },
+    { id:'stappen', label: L ? 'Die Schritte' : 'The Steps', icon:'🚀' },
     { id:'checklist', label:'Call Checklist', icon:'✅' },
   ];
 
   let html = `<div class="flex items-center justify-between mb-6 page-header">
     <div>
       <h1 class="text-2xl font-bold text-gray-900">Friendchise Pitch</h1>
-      <p class="text-sm text-gray-500 mt-1">Presentatie voor franchise leads — gebruik tijdens calls en meetings</p>
+      <p class="text-sm text-gray-500 mt-1">${L ? 'Präsentation für Franchise-Leads — für Calls und Meetings' : 'Presentatie voor franchise leads — gebruik tijdens calls en meetings'}</p>
     </div>
   </div>`;
 
@@ -1329,46 +1330,46 @@ function renderFriendchisePitch() {
   if (pitchSection === 'profiel') {
     html += `<div class="max-w-4xl space-y-6">
       <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
-        <h2 class="text-xl font-bold text-gray-900 mb-2">Wie zoeken wij als Friendchisee?</h2>
-        <p class="text-gray-600">Niet iedereen past bij Wax Affairs — en dat is een kwaliteit. We zoeken partners die onze standaard delen.</p>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L ? 'Wen suchen wir als Friendchisee?' : 'Wie zoeken wij als Friendchisee?'}</h2>
+        <p class="text-gray-600">${L ? 'Nicht jeder passt zu Wax Affairs — und das ist eine Qualität. Wir suchen Partner, die unseren Standard teilen.' : 'Niet iedereen past bij Wax Affairs — en dat is een kwaliteit. We zoeken partners die onze standaard delen.'}</p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-white rounded-xl p-6 shadow-sm border border-green-200">
-          <h3 class="font-bold text-green-800 mb-4 flex items-center gap-2"><span class="text-xl">&#10003;</span> Wat we zoeken</h3>
+          <h3 class="font-bold text-green-800 mb-4 flex items-center gap-2"><span class="text-xl">&#10003;</span> ${L ? 'Was wir suchen' : 'Wat we zoeken'}</h3>
           <ul class="space-y-3 text-sm text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Ondernemersmentaliteit</strong> — je wilt bouwen, niet alleen een baan hebben. Je denkt in kansen en neemt verantwoordelijkheid.</div></li>
-            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Passie voor kwaliteit</strong> — je gaat geen concessies doen op hygiëne, techniek of klantervaring.</div></li>
-            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Bereid om te leren</strong> — ook als je al ervaring hebt, sta je open voor de Wax Affairs methode.</div></li>
-            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Lokale betrokkenheid</strong> — je kent je regio, je wilt er je naam mee verbinden en een community opbouwen.</div></li>
-            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Financieel startklaar</strong> — je hebt (toegang tot) ${fe(45000)} – ${fe(75000)} startkapitaal.</div></li>
-            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>Langetermijnvisie</strong> — je wilt een duurzaam bedrijf bouwen, niet snel geld verdienen.</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>${L ? 'Unternehmergeist' : 'Ondernemersmentaliteit'}</strong> — ${L ? 'Sie wollen aufbauen, nicht nur einen Job haben.' : 'je wilt bouwen, niet alleen een baan hebben. Je denkt in kansen en neemt verantwoordelijkheid.'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>${L ? 'Leidenschaft für Qualität' : 'Passie voor kwaliteit'}</strong> — ${L ? 'keine Kompromisse bei Hygiene, Technik oder Kundenerlebnis.' : 'je gaat geen concessies doen op hygiëne, techniek of klantervaring.'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>${L ? 'Lernbereitschaft' : 'Bereid om te leren'}</strong> — ${L ? 'auch mit Erfahrung offen für die Wax Affairs Methode.' : 'ook als je al ervaring hebt, sta je open voor de Wax Affairs methode.'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>${L ? 'Lokales Engagement' : 'Lokale betrokkenheid'}</strong> — ${L ? 'Sie kennen Ihre Region und wollen eine Community aufbauen.' : 'je kent je regio, je wilt er je naam mee verbinden en een community opbouwen.'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>${L ? 'Finanziell startklar' : 'Financieel startklaar'}</strong> — ${L ? 'Zugang zu' : 'je hebt (toegang tot)'} ${fe(45000)} – ${fe(75000)} ${L ? 'Startkapital.' : 'startkapitaal.'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-green-500 font-bold mt-0.5">&#10003;</span><div><strong>${L ? 'Langfristige Vision' : 'Langetermijnvisie'}</strong> — ${L ? 'ein nachhaltiges Unternehmen aufbauen, nicht schnell Geld verdienen.' : 'je wilt een duurzaam bedrijf bouwen, niet snel geld verdienen.'}</div></li>
           </ul>
         </div>
 
         <div class="bg-white rounded-xl p-6 shadow-sm border border-red-200">
-          <h3 class="font-bold text-red-800 mb-4 flex items-center gap-2"><span class="text-xl">&#10007;</span> Geen match als...</h3>
+          <h3 class="font-bold text-red-800 mb-4 flex items-center gap-2"><span class="text-xl">&#10007;</span> ${L ? 'Kein Match wenn...' : 'Geen match als...'}</h3>
           <ul class="space-y-3 text-sm text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je alleen een merknaam wilt zonder zelf te investeren in kwaliteit</div></li>
-            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je niet bereid bent om de training te volgen en onze standaard over te nemen</div></li>
-            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je verwacht dat het "vanzelf gaat" zonder actieve inzet</div></li>
-            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>Je het als bijbaan ziet in plaats van als je hoofdonderneming</div></li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>${L ? 'Sie nur einen Markennamen wollen, ohne in Qualität zu investieren' : 'Je alleen een merknaam wilt zonder zelf te investeren in kwaliteit'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>${L ? 'Sie nicht bereit sind, die Schulung zu absolvieren und unseren Standard zu übernehmen' : 'Je niet bereid bent om de training te volgen en onze standaard over te nemen'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>${L ? 'Sie erwarten, dass es "von alleine läuft" ohne aktiven Einsatz' : 'Je verwacht dat het "vanzelf gaat" zonder actieve inzet'}</div></li>
+            <li class="flex items-start gap-2"><span class="text-red-500 font-bold mt-0.5">&#10007;</span><div>${L ? 'Sie es als Nebenjob sehen statt als Ihr Hauptunternehmen' : 'Je het als bijbaan ziet in plaats van als je hoofdonderneming'}</div></li>
           </ul>
         </div>
       </div>
 
       <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <h3 class="font-bold text-gray-900 mb-4">Twee typische profielen die goed passen</h3>
+        <h3 class="font-bold text-gray-900 mb-4">${L ? 'Zwei typische Profile, die gut passen' : 'Twee typische profielen die goed passen'}</h3>
         <div class="grid md:grid-cols-2 gap-6">
           <div class="bg-blue-50 rounded-lg p-5">
             <div class="text-2xl mb-2">💪</div>
-            <h4 class="font-bold text-gray-900 mb-1">De ervaren waxer</h4>
-            <p class="text-sm text-gray-600">Jarenlange ervaring in een salon, wil nu voor zichzelf beginnen. Heeft de techniek, mist het merk en de business support. Simone perfectioneert de techniek, Narin leert ondernemen.</p>
+            <h4 class="font-bold text-gray-900 mb-1">${L ? 'Die erfahrene Waxerin' : 'De ervaren waxer'}</h4>
+            <p class="text-sm text-gray-600">${L ? 'Jahrelange Erfahrung im Salon, möchte sich selbstständig machen. Hat die Technik, braucht Marke und Business-Support. Simone perfektioniert die Technik, Narin lehrt das Unternehmertum.' : 'Jarenlange ervaring in een salon, wil nu voor zichzelf beginnen. Heeft de techniek, mist het merk en de business support. Simone perfectioneert de techniek, Narin leert ondernemen.'}</p>
           </div>
           <div class="bg-purple-50 rounded-lg p-5">
             <div class="text-2xl mb-2">🚀</div>
-            <h4 class="font-bold text-gray-900 mb-1">De ondernemer</h4>
-            <p class="text-sm text-gray-600">Ondernemerservaring (niet per se in beauty), zoekt een bewezen concept met begeleiding. Heeft het startkapitaal en de drive. Simone leert het vak, Narin schaalt het bedrijf.</p>
+            <h4 class="font-bold text-gray-900 mb-1">${L ? 'Der/Die Unternehmer*in' : 'De ondernemer'}</h4>
+            <p class="text-sm text-gray-600">${L ? 'Unternehmerische Erfahrung (nicht unbedingt in Beauty), sucht ein bewährtes Konzept mit Begleitung. Hat das Startkapital und den Antrieb. Simone lehrt das Handwerk, Narin skaliert das Geschäft.' : 'Ondernemerservaring (niet per se in beauty), zoekt een bewezen concept met begeleiding. Heeft het startkapitaal en de drive. Simone leert het vak, Narin schaalt het bedrijf.'}</p>
           </div>
         </div>
       </div>
@@ -1415,7 +1416,43 @@ function renderFriendchisePitch() {
 
   // ══════════ CALL CHECKLIST ══════════
   if (pitchSection === 'checklist') {
-    const checkGroups = [
+    const checkGroups = L ? [
+      { titel: 'Kennenlernen & Motivation', vragen: [
+        'Wie sind Sie auf Wax Affairs aufmerksam geworden?',
+        'Warum möchten Sie ein eigenes Waxing-Studio eröffnen?',
+        'Haben Sie Erfahrung mit Waxing oder in der Beauty-Branche?',
+        'Hatten Sie bereits ein eigenes Unternehmen?',
+        'Was reizt Sie am Franchise-Modell im Vergleich zur Selbstständigkeit?',
+      ]},
+      { titel: 'Standort & Markt', vragen: [
+        'In welcher Stadt/Region möchten Sie Ihr Studio eröffnen?',
+        'Haben Sie bereits einen Standort im Blick?',
+        'Wie sieht die Konkurrenzsituation in Ihrer Region aus?',
+        'Was ist die Mietpreisspanne in Ihrem Zielgebiet?',
+        'Gibt es ausreichend Lauf- oder Verkehrsaufkommen?',
+      ]},
+      { titel: 'Finanzen', vragen: [
+        'Kennen Sie die Gesamtinvestition (€45k-75k)?',
+        'Haben Sie Eigenkapital oder benötigen Sie Finanzierung?',
+        'Haben Sie Erfahrung mit Finanzverwaltung/Buchhaltung?',
+        'Was ist Ihre Erwartung bezüglich der Amortisationszeit?',
+        'Sind Sie mit der Royalty-Struktur (5-6%) einverstanden?',
+      ]},
+      { titel: 'Engagement & Timing', vragen: [
+        'Wann möchten Sie starten?',
+        'Ist dies ein Vollzeit-Engagement oder ein Nebenprojekt?',
+        'Sind Sie bereit, 10 Tage Schulung bei Simone zu absolvieren?',
+        'Haben Sie einen Partner/ein Team oder starten Sie allein?',
+        'Wo sehen Sie sich in 3 Jahren mit diesem Studio?',
+      ]},
+      { titel: 'Fit Check (intern — nicht laut fragen)', vragen: [
+        'Wirkt diese Person professionell und vertrauenswürdig?',
+        'Gibt es echte Leidenschaft und Antrieb, oder nur Interesse am Geld?',
+        'Passt die finanzielle Situation zur Investition?',
+        'Ist der Standort/die Region vielversprechend?',
+        'Würde ich diese Person als Markenbotschafter*in wollen?',
+      ]},
+    ] : [
       { titel: 'Kennismaking & Motivatie', vragen: [
         'Hoe ben je bij Wax Affairs terechtgekomen?',
         'Waarom wil je een eigen waxstudio openen?',
@@ -1456,7 +1493,7 @@ function renderFriendchisePitch() {
     html += `<div class="max-w-4xl space-y-6">
       <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-6 border border-wax-200">
         <h2 class="text-xl font-bold text-gray-900 mb-1">Call Checklist</h2>
-        <p class="text-sm text-gray-600">Gebruik deze checklist tijdens je videocall of meeting met een potentiële franchisee. Vink af wat je hebt besproken.</p>
+        <p class="text-sm text-gray-600">${L ? 'Verwenden Sie diese Checkliste während Ihres Videocalls oder Meetings mit einem potenziellen Franchisee. Haken Sie ab, was besprochen wurde.' : 'Gebruik deze checklist tijdens je videocall of meeting met een potentiële franchisee. Vink af wat je hebt besproken.'}</p>
       </div>
 
       ${checkGroups.map((g, gi) => `<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
