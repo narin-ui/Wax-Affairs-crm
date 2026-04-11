@@ -934,6 +934,35 @@ app.delete('/api/clients/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// ─── API: Clients Bulk Import ───
+app.post('/api/clients/import', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const { clients: newClients, source } = req.body;
+  if (!Array.isArray(newClients)) return res.status(400).json({ error: 'clients array required' });
+  const list = laadJSON('clients.json');
+  let imported = 0, skipped = 0;
+  newClients.forEach(c => {
+    // Skip duplicates by email or phone
+    const exists = list.some(e => (c.email && e.email === c.email) || (c.telefoon && e.telefoon === c.telefoon));
+    if (exists) { skipped++; return; }
+    list.push({
+      id: 'client-' + crypto.randomBytes(8).toString('hex'),
+      naam: c.naam || '',
+      email: c.email || '',
+      telefoon: c.telefoon || '',
+      omzet: parseFloat(c.omzet) || 0,
+      laatsteBezoek: c.laatsteBezoek || '',
+      aantalAfspraken: parseInt(c.aantalAfspraken) || 0,
+      notities: c.notities || '',
+      bron: source || 'import',
+      aangemaakt: c.aangemaakt || new Date().toISOString()
+    });
+    imported++;
+  });
+  slaJSON('clients.json', list);
+  res.json({ imported, skipped, total: list.length });
+});
+
 // ─── API: Personeel (Urenregistratie) ───
 app.get('/api/personeel', (req, res) => {
   if (!requireAuth(req, res)) return;
