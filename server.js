@@ -776,6 +776,193 @@ app.post('/api/academy/les/:lesId', (req, res) => {
   res.json({ ok: true, lesId });
 });
 
+
+// Update quiz-vragen (structured data) voor een les
+app.post('/api/academy/quiz/:lesId', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const { lesId } = req.params;
+  const { vragen, slagingsDrempel } = req.body;
+  if (!Array.isArray(vragen)) return res.status(400).json({ error: 'vragen moet een array zijn' });
+  const academy = laadJSON('academy.json');
+  let updated = false;
+  const updateLesIn = (lessen) => {
+    if (!Array.isArray(lessen)) return;
+    for (const les of lessen) {
+      if (les.id === lesId) {
+        les.quizVragen = vragen;
+        if (typeof slagingsDrempel === 'number') les.slagingsDrempel = slagingsDrempel;
+        les.laatstBewerkt = new Date().toISOString();
+        updated = true;
+        return;
+      }
+    }
+  };
+  if (Array.isArray(academy.programmas)) {
+    for (const prog of academy.programmas) {
+      if (Array.isArray(prog.modules)) for (const mod of prog.modules) updateLesIn(mod.lessen);
+    }
+  }
+  if (Array.isArray(academy.modules)) for (const mod of academy.modules) updateLesIn(mod.lessen);
+  if (!updated) return res.status(404).json({ error: 'Les niet gevonden: ' + lesId });
+  slaJSON('academy.json', academy);
+  res.json({ ok: true, lesId });
+});
+
+// Quiz-poging indienen, score berekenen, voortgang bijwerken
+app.post('/api/academy/quiz-poging/:lesId', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const { lesId } = req.params;
+  const { antwoorden } = req.body;
+  const user = getSessionUser(req);
+  const studentId = (user && user.id) || req.body.studentId;
+  if (!studentId) return res.status(400).json({ error: 'Geen studentId' });
+  if (!Array.isArray(antwoorden)) return res.status(400).json({ error: 'antwoorden moet array zijn' });
+
+  const academy = laadJSON('academy.json');
+  let les = null;
+  const zoekLes = (lessen) => {
+    if (!Array.isArray(lessen)) return;
+    for (const l of lessen) if (l.id === lesId) les = l;
+  };
+  if (Array.isArray(academy.programmas)) {
+    for (const prog of academy.programmas) {
+      if (Array.isArray(prog.modules)) for (const mod of prog.modules) zoekLes(mod.lessen);
+    }
+  }
+  if (Array.isArray(academy.modules)) for (const mod of academy.modules) zoekLes(mod.lessen);
+  if (!les) return res.status(404).json({ error: 'Les niet gevonden' });
+  if (!Array.isArray(les.quizVragen) || les.quizVragen.length === 0) return res.status(400).json({ error: 'Geen quiz op deze les' });
+
+  let goed = 0;
+  const details = les.quizVragen.map((v, i) => {
+    const gegeven = antwoorden[i];
+    const correct = gegeven === v.juisteAntwoord;
+    if (correct) goed++;
+    return { vraag: v.vraag, gegeven, juist: v.juisteAntwoord, correct };
+  });
+  const score = Math.round((goed / les.quizVragen.length) * 100);
+  const drempel = typeof les.slagingsDrempel === 'number' ? les.slagingsDrempel : 75;
+  const geslaagd = score >= drempel;
+
+  if (!academy.voortgang) academy.voortgang = {};
+  if (!academy.voortgang[studentId]) academy.voortgang[studentId] = {};
+  const bestaand = academy.voortgang[studentId][lesId] || { pogingen: [] };
+  if (!Array.isArray(bestaand.pogingen)) bestaand.pogingen = [];
+  bestaand.pogingen.push({ datum: new Date().toISOString(), score, geslaagd });
+  bestaand.quizScore = Math.max(bestaand.quizScore || 0, score);
+  bestaand.quizGeslaagd = bestaand.quizGeslaagd || geslaagd;
+  if (geslaagd) bestaand.status = 'afgerond';
+  bestaand.datum = new Date().toISOString();
+  academy.voortgang[studentId][lesId] = bestaand;
+  slaJSON('academy.json', academy);
+
+  res.json({ ok: true, score, geslaagd, drempel, goed, totaal: les.quizVragen.length, details });
+});
+
+// Voortgang ophalen voor huidige user
+app.get('/api/academy/voortgang', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const user = getSessionUser(req);
+  const studentId = (user && user.id) || req.query.studentId;
+  if (!studentId) return res.status(400).json({ error: 'Geen studentId' });
+  const academy = laadJSON('academy.json');
+  const vgang = (academy.voortgang && academy.voortgang[studentId]) || {};
+  res.json({ studentId, voortgang: vgang });
+});
+
+// Certificaat als HTML (printbaar naar PDF via Ctrl/Cmd+P)
+app.get('/api/academy/certificaat/:programmaId', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const { programmaId } = req.params;
+  const user = getSessionUser(req);
+  const studentId = (user && user.id) || req.query.studentId;
+  const studentNaam = (user && (user.naam || user.email)) || req.query.naam || 'Cursist';
+  if (!studentId) return res.status(400).json({ error: 'Geen studentId' });
+
+  const academy = laadJSON('academy.json');
+  const prog = (academy.programmas || []).find(p => p.id === programmaId);
+  if (!prog) return res.status(404).send('Programma niet gevonden');
+
+  const alleLessen = [];
+  for (const mod of (prog.modules || [])) for (const les of (mod.lessen || [])) alleLessen.push(les);
+  const vgang = (academy.voortgang && academy.voortgang[studentId]) || {};
+  const afgerond = alleLessen.filter(l => vgang[l.id] && vgang[l.id].status === 'afgerond');
+  const percentage = Math.round((afgerond.length / alleLessen.length) * 100);
+  const alleKlaar = afgerond.length === alleLessen.length && alleLessen.length > 0;
+
+  if (!alleKlaar) {
+    return res.status(200).send(`<!DOCTYPE html><html><head><title>Certificaat nog niet beschikbaar</title>
+    <style>body{font-family:Georgia,serif;max-width:600px;margin:60px auto;padding:40px;text-align:center;color:#333}
+    h1{color:#b8860b}</style></head><body>
+    <h1>Nog niet beschikbaar</h1>
+    <p>Om het certificaat te ontvangen moet je alle lessen van dit programma afronden.</p>
+    <p><strong>Voortgang: ${afgerond.length} van ${alleLessen.length} lessen (${percentage}%)</strong></p>
+    <p><a href="/">Terug naar Academy</a></p>
+    </body></html>`);
+  }
+
+  const datum = new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+  const code = (studentId + '-' + programmaId + '-' + Date.now().toString(36)).toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,24);
+  const niveaus = { workshops: 'Certified Wax Affairs Workshop Graduate', online: 'Certified Wax Affairs Online Specialist', academy: 'Certified Wax Affairs Master' };
+  const titel = niveaus[programmaId] || 'Certified Wax Affairs Professional';
+
+  res.send(`<!DOCTYPE html><html lang="nl"><head><meta charset="utf-8"><title>Certificaat - ${studentNaam}</title>
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 0; font-family: Georgia, 'Times New Roman', serif; background: #f5f0e8; }
+    .cert { width: 297mm; height: 210mm; padding: 20mm; margin: 0 auto; background: linear-gradient(135deg, #faf7f2 0%, #f5ede0 100%); position: relative; border: 2px solid #b8860b; }
+    .cert::before { content: ''; position: absolute; top: 8mm; left: 8mm; right: 8mm; bottom: 8mm; border: 1px solid #d4a545; pointer-events: none; }
+    .inner { text-align: center; padding-top: 10mm; position: relative; z-index: 1; }
+    .brand { font-size: 16pt; letter-spacing: 8px; color: #8b6914; text-transform: uppercase; margin-bottom: 8mm; }
+    .titel-groot { font-size: 48pt; color: #4a3520; margin: 0; font-weight: normal; font-style: italic; letter-spacing: 2px; }
+    .uitgereikt { font-size: 14pt; color: #6b5738; margin: 15mm 0 5mm 0; letter-spacing: 2px; }
+    .naam { font-size: 42pt; color: #2c1810; font-weight: bold; margin: 3mm 0 8mm 0; border-bottom: 1px solid #b8860b; display: inline-block; padding: 0 30mm 3mm 30mm; min-width: 60%; }
+    .programma { font-size: 18pt; color: #4a3520; margin: 8mm 20mm; font-style: italic; line-height: 1.5; }
+    .titel-prof { font-size: 22pt; color: #8b6914; margin: 8mm 0; font-weight: bold; letter-spacing: 1px; }
+    .footer { position: absolute; bottom: 20mm; left: 20mm; right: 20mm; display: flex; justify-content: space-between; align-items: flex-end; }
+    .sig { text-align: center; font-size: 11pt; color: #4a3520; min-width: 200px; }
+    .sig-line { border-top: 1px solid #4a3520; padding-top: 3mm; font-family: Georgia; }
+    .sig-naam { font-family: 'Brush Script MT', cursive; font-size: 18pt; margin-bottom: 2mm; color: #2c1810; }
+    .datum { font-size: 12pt; color: #4a3520; text-align: center; }
+    .code { font-size: 9pt; color: #8b6914; font-family: Courier, monospace; letter-spacing: 1px; margin-top: 8mm; }
+    .noprint { text-align: center; padding: 20px; background: #fff; }
+    .btn { display: inline-block; padding: 10px 20px; background: #b8860b; color: white; text-decoration: none; border-radius: 4px; margin: 5px; }
+    @media print { .noprint { display: none; } body { background: white; } }
+  </style></head><body>
+  <div class="noprint">
+    <p>Klik op "Print / Opslaan als PDF" om dit certificaat op te slaan.</p>
+    <a href="#" onclick="window.print();return false;" class="btn">Print / Opslaan als PDF</a>
+    <a href="/" class="btn" style="background:#6b5738">Terug</a>
+  </div>
+  <div class="cert">
+    <div class="inner">
+      <div class="brand">Wax Affairs Academy</div>
+      <h1 class="titel-groot">Certificaat van Voltooiing</h1>
+      <div class="uitgereikt">UITGEREIKT AAN</div>
+      <div class="naam">${studentNaam}</div>
+      <div class="programma">voor het met succes afronden van alle ${alleLessen.length} lessen uit het programma</div>
+      <div class="programma" style="font-weight:bold;font-style:normal;color:#2c1810">${prog.naam}</div>
+      <div class="titel-prof">${titel}</div>
+      <div class="footer">
+        <div class="sig">
+          <div class="sig-naam">Narin</div>
+          <div class="sig-line">Narin &mdash; Franchise HQ</div>
+        </div>
+        <div class="datum">
+          Uitgereikt op<br><strong>${datum}</strong>
+          <div class="code">Code: ${code}</div>
+        </div>
+        <div class="sig">
+          <div class="sig-naam">Leon</div>
+          <div class="sig-line">Leon &mdash; Franchise HQ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body></html>`);
+});
+
 // ─── API: Marketing ───
 app.get('/api/marketing', (req, res) => {
   if (!requireAuth(req, res)) return;

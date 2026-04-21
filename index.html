@@ -866,7 +866,7 @@ async function laadAlleData() {
       fetch('/api/personeel').then(r=>r.json()),
       fetch('/api/vastelasten').then(r=>r.json()),
     ]);
-    data = { franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients: clients || [], notes: notes || {}, bp: bp || {}, huddles: huddles || [], users: users || [], marketing: marketing || { campaigns:[], content:[], leads:[] }, academy: academy || { modules:[], voortgang:{} }, personeel: personeel || { medewerkers:[], uren:[] }, vastelasten: vastelasten || [], settings: data.settings };
+    data = { franchisees, students, cohorts, products, orders, suppliers, contacts, tasks, inventory, studios, services, bookings, clients: clients || [], notes: notes || {}, bp: bp || {}, huddles: huddles || [], users: users || [], marketing: marketing || { campaigns:[], content:[], leads:[] }, academy: academy || { modules:[], voortgang:{} }, personeel: personeel || { medewerkers:[], uren:[] }, vastelasten: vastelasten || [], settings: data.settings }; await academyLaadVoortgang();
   } catch(e) { console.error('Data laden mislukt:', e); }
 }
 
@@ -3286,10 +3286,89 @@ let academySelectedProgramma = null;
 let academyView = 'overzicht';
 let academyOpenLes = null;
 let academyEditLes = null; // 'overzicht' | 'modules' | 'progress'
+let academyVoortgang = {};
+let academyQuizState = {};
+let academyQuizEditLes = null;
+
+async function academyLaadVoortgang() {
+  try {
+    const r = await fetch('/api/academy/voortgang', { credentials: 'include' });
+    if (r.ok) { const d = await r.json(); academyVoortgang = d.voortgang || {}; }
+  } catch(e) { console.warn('Voortgang laden mislukt', e); }
+}
+function academyLesIsAfgerond(lesId) {
+  const v = academyVoortgang[lesId];
+  return v && v.status === 'afgerond';
+}
+async function academyMarkeerAfgerond(lesId) {
+  try {
+    const r = await fetch('/api/academy/voortgang', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, credentials: 'include',
+      body: JSON.stringify({ studentId: currentUser.id, lesId, status: 'afgerond' })
+    });
+    if (!r.ok) { alert('Markeren mislukt'); return; }
+    academyVoortgang[lesId] = { status: 'afgerond', datum: new Date().toISOString() };
+    renderAcademy();
+  } catch(e) { alert('Fout: ' + e.message); }
+}
+async function academyResetLes(lesId) {
+  if (!confirm('Weet je zeker dat je voortgang van deze les wilt resetten?')) return;
+  try {
+    await fetch('/api/academy/voortgang', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, credentials: 'include',
+      body: JSON.stringify({ studentId: currentUser.id, lesId, status: 'open' })
+    });
+    delete academyVoortgang[lesId];
+    academyQuizState[lesId] = null;
+    renderAcademy();
+  } catch(e) { alert('Fout: ' + e.message); }
+}
+function academyQuizKiesAntwoord(lesId, vraagIdx, optieIdx) {
+  if (!academyQuizState[lesId]) academyQuizState[lesId] = { antwoorden: [], result: null };
+  academyQuizState[lesId].antwoorden[vraagIdx] = optieIdx;
+  renderAcademy();
+}
+async function academyQuizIndienen(lesId) {
+  const state = academyQuizState[lesId];
+  if (!state) return;
+  try {
+    const r = await fetch('/api/academy/quiz-poging/' + lesId, {
+      method: 'POST', headers: {'Content-Type':'application/json'}, credentials: 'include',
+      body: JSON.stringify({ antwoorden: state.antwoorden })
+    });
+    if (!r.ok) { const err = await r.json().catch(()=>({})); alert('Indienen mislukt: ' + (err.error || r.status)); return; }
+    const result = await r.json();
+    academyQuizState[lesId].result = result;
+    if (result.geslaagd) {
+      academyVoortgang[lesId] = { status: 'afgerond', datum: new Date().toISOString(), quizScore: result.score, quizGeslaagd: true };
+    } else {
+      academyVoortgang[lesId] = Object.assign({}, academyVoortgang[lesId] || {}, { quizScore: result.score, quizGeslaagd: false });
+    }
+    renderAcademy();
+  } catch(e) { alert('Fout: ' + e.message); }
+}
+function academyQuizOpnieuw(lesId) {
+  academyQuizState[lesId] = { antwoorden: [], result: null };
+  renderAcademy();
+}
+function academyBerekenProgProgress(prog) {
+  const alleLessen = [];
+  for (const mod of (prog.modules || [])) for (const les of (mod.lessen || [])) alleLessen.push(les);
+  const afgerond = alleLessen.filter(l => academyLesIsAfgerond(l.id)).length;
+  return { totaal: alleLessen.length, afgerond, percentage: alleLessen.length ? Math.round((afgerond/alleLessen.length)*100) : 0 };
+}
+function academyDownloadCertificaat(programmaId) {
+  window.open('/api/academy/certificaat/' + programmaId, '_blank');
+}
 
 // ─── Academy les-detail & editor helpers ───
 function academyRenderLesDetail(les) {
   const isEditing = academyEditLes === les.id;
+  const isQuizEdit = academyQuizEditLes === les.id;
+  const afgerond = academyLesIsAfgerond(les.id);
+  const heeftQuiz = Array.isArray(les.quizVragen) && les.quizVragen.length > 0;
+  const isAdmin = currentUser && (currentUser.rol === 'admin' || currentUser.rol === 'manager' || currentUser.rol === 'hq');
+
   if (isEditing) {
     return '<div class="bg-gray-50 border-t border-gray-200 px-5 py-4">' +
       '<div class="flex items-center justify-between mb-3">' +
@@ -3311,17 +3390,133 @@ function academyRenderLesDetail(les) {
       '<div class="text-xs text-gray-400 mt-2">Les-ID: ' + les.id + (les.laatstBewerkt ? ' · laatst bewerkt: ' + new Date(les.laatstBewerkt).toLocaleString('nl-NL') : '') + '</div>' +
     '</div>';
   }
+
+  if (isQuizEdit) {
+    const bestaandeVragen = JSON.stringify(les.quizVragen || [], null, 2);
+    const drempel = typeof les.slagingsDrempel === 'number' ? les.slagingsDrempel : 75;
+    return '<div class="bg-amber-50 border-t border-amber-200 px-5 py-4">' +
+      '<div class="flex items-center justify-between mb-3">' +
+        '<div class="text-sm font-semibold text-amber-900">🎯 Quiz-vragen bewerken (JSON)</div>' +
+        '<div class="flex gap-2">' +
+          '<button onclick="academySaveQuiz(\'' + les.id + '\')" class="btn-primary px-3 py-1.5 rounded-lg text-xs">💾 Quiz opslaan</button>' +
+          '<button onclick="academyQuizEditLes=null; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">Annuleren</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="text-xs text-amber-800 mb-2">Format: array met objecten {vraag, opties:[4 strings], juisteAntwoord: index 0-3}.</div>' +
+      '<div class="flex gap-2 items-center mb-2">' +
+        '<label class="text-xs text-gray-700">Slagingsdrempel (%):</label>' +
+        '<input type="number" id="academyQuizDrempel" value="' + drempel + '" min="0" max="100" class="px-2 py-1 border border-gray-300 rounded text-xs w-20" />' +
+      '</div>' +
+      '<textarea id="academyQuizEditor" class="w-full bg-white border border-amber-300 rounded-lg p-3 font-mono text-xs min-h-[300px]">' + bestaandeVragen.replace(/</g, '&lt;') + '</textarea>' +
+    '</div>';
+  }
+
+  if (heeftQuiz) {
+    const state = academyQuizState[les.id] || { antwoorden: [], result: null };
+    const result = state.result;
+    let html = '<div class="bg-indigo-50 border-t border-indigo-200 px-5 py-4">';
+    html += '<div class="flex items-center justify-between mb-3 flex-wrap gap-2">';
+    html += '<div class="text-sm font-semibold text-indigo-900">🎯 Quiz: ' + les.quizVragen.length + ' vragen · drempel ' + (les.slagingsDrempel || 75) + '%</div>';
+    if (isAdmin) {
+      html += '<button onclick="academyQuizEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-2 py-1 rounded text-xs">✏️ Quiz bewerken</button>';
+    }
+    html += '</div>';
+
+    if (result) {
+      const kleur = result.geslaagd ? 'green' : 'red';
+      html += '<div class="bg-' + kleur + '-100 border border-' + kleur + '-300 rounded-lg p-4 mb-3">';
+      html += '<div class="text-lg font-bold text-' + kleur + '-800">' + (result.geslaagd ? '✅ Geslaagd!' : '❌ Niet geslaagd') + '</div>';
+      html += '<div class="text-sm text-' + kleur + '-700 mt-1">Score: ' + result.score + '% (' + result.goed + '/' + result.totaal + ' goed) · Drempel: ' + result.drempel + '%</div>';
+      html += '<button onclick="academyQuizOpnieuw(\'' + les.id + '\')" class="mt-3 btn-secondary px-3 py-1.5 rounded-lg text-xs">🔁 Opnieuw proberen</button>';
+      html += '</div>';
+      les.quizVragen.forEach((v, i) => {
+        const det = result.details[i];
+        const icoon = det.correct ? '✅' : '❌';
+        html += '<div class="bg-white rounded-lg p-3 mb-2 border border-gray-200">';
+        html += '<div class="text-sm font-semibold mb-2">' + icoon + ' Vraag ' + (i + 1) + ': ' + v.vraag + '</div>';
+        v.opties.forEach((opt, oi) => {
+          let cls = 'text-gray-600';
+          if (oi === v.juisteAntwoord) cls = 'text-green-700 font-semibold';
+          else if (oi === det.gegeven && !det.correct) cls = 'text-red-700 line-through';
+          html += '<div class="text-xs ' + cls + ' pl-4 py-0.5">' + String.fromCharCode(65 + oi) + '. ' + opt + '</div>';
+        });
+        html += '</div>';
+      });
+    } else {
+      les.quizVragen.forEach((v, i) => {
+        const gekozen = state.antwoorden[i];
+        html += '<div class="bg-white rounded-lg p-3 mb-2 border border-gray-200">';
+        html += '<div class="text-sm font-semibold mb-2">Vraag ' + (i + 1) + ': ' + v.vraag + '</div>';
+        v.opties.forEach((opt, oi) => {
+          const sel = gekozen === oi;
+          html += '<label class="flex items-center gap-2 text-sm py-1 cursor-pointer hover:bg-gray-50 px-2 rounded" onclick="academyQuizKiesAntwoord(\'' + les.id + '\', ' + i + ', ' + oi + ')">';
+          html += '<input type="radio" name="q_' + les.id + '_' + i + '" ' + (sel ? 'checked' : '') + ' class="text-wax-600" />';
+          html += '<span>' + String.fromCharCode(65 + oi) + '. ' + opt + '</span>';
+          html += '</label>';
+        });
+        html += '</div>';
+      });
+      const alleBeantwoord = les.quizVragen.every((_, i) => typeof state.antwoorden[i] === 'number');
+      html += '<button onclick="academyQuizIndienen(\'' + les.id + '\')" ' + (alleBeantwoord ? '' : 'disabled') + ' class="' + (alleBeantwoord ? 'btn-primary' : 'bg-gray-300 cursor-not-allowed text-white') + ' px-4 py-2 rounded-lg text-sm font-medium">' + (alleBeantwoord ? '📝 Antwoorden indienen' : 'Beantwoord alle vragen') + '</button>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   const hasContent = les.inhoud && les.inhoud.trim();
-  return '<div class="bg-gray-50 border-t border-gray-200 px-5 py-4">' +
-    '<div class="flex items-center justify-between mb-3">' +
-      '<div class="text-sm font-semibold text-gray-700">📄 Lesinhoud</div>' +
-      '<button onclick="academyEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">✏️ ' + (hasContent ? 'Bewerken' : 'Inhoud toevoegen') + '</button>' +
-    '</div>' +
-    (hasContent
-      ? '<div class="prose prose-sm max-w-none bg-white rounded-lg p-4 border border-gray-200">' + les.inhoud + '</div>'
-      : '<div class="text-sm text-gray-400 italic py-4 text-center">Nog geen lesinhoud. Klik op "Inhoud toevoegen" om te beginnen.</div>'
-    ) +
-  '</div>';
+  let html = '<div class="bg-gray-50 border-t border-gray-200 px-5 py-4">';
+  html += '<div class="flex items-center justify-between mb-3 flex-wrap gap-2">';
+  html += '<div class="text-sm font-semibold text-gray-700 flex items-center gap-2">📄 Lesinhoud';
+  if (afgerond) html += '<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">✓ Afgerond</span>';
+  html += '</div>';
+  html += '<div class="flex gap-2 flex-wrap">';
+  if (afgerond) {
+    html += '<button onclick="academyResetLes(\'' + les.id + '\')" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">🔁 Reset voortgang</button>';
+  } else if (hasContent) {
+    html += '<button onclick="academyMarkeerAfgerond(\'' + les.id + '\')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium">✓ Markeer afgerond</button>';
+  }
+  if (isAdmin) {
+    html += '<button onclick="academyEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">✏️ ' + (hasContent ? 'Bewerken' : 'Inhoud toevoegen') + '</button>';
+    html += '<button onclick="academyQuizEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">🎯 Quiz toevoegen</button>';
+  }
+  html += '</div></div>';
+  html += hasContent
+    ? '<div class="prose prose-sm max-w-none bg-white rounded-lg p-4 border border-gray-200">' + les.inhoud + '</div>'
+    : '<div class="text-sm text-gray-400 italic py-4 text-center">Nog geen lesinhoud.</div>';
+  html += '</div>';
+  return html;
+}
+
+async function academySaveQuiz(lesId) {
+  const editor = document.getElementById('academyQuizEditor');
+  const drempelEl = document.getElementById('academyQuizDrempel');
+  if (!editor) return;
+  let vragen;
+  try {
+    vragen = JSON.parse(editor.value);
+    if (!Array.isArray(vragen)) throw new Error('Moet array zijn');
+    for (const v of vragen) {
+      if (!v.vraag || !Array.isArray(v.opties) || typeof v.juisteAntwoord !== 'number') {
+        throw new Error('Elke vraag heeft {vraag, opties:[], juisteAntwoord: number} nodig');
+      }
+    }
+  } catch(e) { alert('Ongeldig JSON: ' + e.message); return; }
+  const slagingsDrempel = drempelEl ? parseInt(drempelEl.value, 10) : 75;
+  try {
+    const r = await fetch('/api/academy/quiz/' + lesId, {
+      method: 'POST', headers: {'Content-Type':'application/json'}, credentials: 'include',
+      body: JSON.stringify({ vragen, slagingsDrempel })
+    });
+    if (!r.ok) { alert('Opslaan mislukt'); return; }
+    const updateLes = (lessen) => {
+      if (!Array.isArray(lessen)) return;
+      for (const l of lessen) if (l.id === lesId) { l.quizVragen = vragen; l.slagingsDrempel = slagingsDrempel; return; }
+    };
+    if (data.academy && data.academy.programmas) for (const prog of data.academy.programmas) for (const mod of prog.modules || []) updateLes(mod.lessen);
+    if (data.academy && data.academy.modules) for (const mod of data.academy.modules) updateLes(mod.lessen);
+    academyQuizEditLes = null;
+    renderAcademy();
+  } catch(e) { alert('Fout: ' + e.message); }
 }
 
 function academyExecCmd(cmd) {
@@ -3470,7 +3665,8 @@ function renderAcademy() {
           <span>·</span>
           <span>${totalLessen} lessen</span>
         </div>
-      </div>`;
+              \${(() => { const p = academyBerekenProgProgress(prog); const pct = p.percentage; const compleet = pct === 100; return \`<div class="mt-3" onclick="event.stopPropagation()"><div class="flex items-center justify-between text-xs mb-1"><span class="text-gray-600 font-medium">Voortgang</span><span class="\${compleet ? 'text-green-700 font-bold' : 'text-gray-600'}">\${p.afgerond}/\${p.totaal} (\${pct}%)</span></div><div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden"><div class="\${compleet ? 'bg-green-500' : 'bg-wax-500'} h-2 transition-all" style="width:\${pct}%"></div></div>\${compleet ? \`<button onclick="event.stopPropagation(); academyDownloadCertificaat('\${prog.id}')" class="mt-2 w-full bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg">ð Certificaat downloaden</button>\` : ''}</div>\`; })()}
+        </div>`;
     });
     html += `</div>`;
 
