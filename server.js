@@ -775,7 +775,7 @@ app.post('/api/academy/voortgang', (req, res) => {
 app.post('/api/academy/les/:lesId', (req, res) => {
   if (!requireAuth(req, res)) return;
   const { lesId } = req.params;
-  const { inhoud, videoUrl } = req.body;
+  const { inhoud, inhoud_de, videoUrl } = req.body;
   const academy = laadJSON('academy.json');
   let updated = false;
   const updateLesIn = (lessen) => {
@@ -783,6 +783,7 @@ app.post('/api/academy/les/:lesId', (req, res) => {
     for (const les of lessen) {
       if (les.id === lesId) {
         if (typeof inhoud === 'string') les.inhoud = inhoud;
+        if (typeof inhoud_de === 'string') les.inhoud_de = inhoud_de;
         if (typeof videoUrl === 'string') les.videoUrl = videoUrl;
         les.laatstBewerkt = new Date().toISOString();
         updated = true;

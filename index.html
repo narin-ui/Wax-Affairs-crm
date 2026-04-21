@@ -3289,6 +3289,7 @@ let academyEditLes = null; // 'overzicht' | 'modules' | 'progress'
 let academyVoortgang = {};
 let academyQuizState = {};
 let academyQuizEditLes = null;
+let academyEditLang = null; // 'nl' of 'de' tijdens bewerken
 
 async function academyLaadVoortgang() {
   try {
@@ -3368,122 +3369,216 @@ function academyRenderLesDetail(les) {
   const afgerond = academyLesIsAfgerond(les.id);
   const heeftQuiz = Array.isArray(les.quizVragen) && les.quizVragen.length > 0;
   const isAdmin = currentUser && (currentUser.rol === 'admin' || currentUser.rol === 'manager' || currentUser.rol === 'hq');
+  const isDE = lang === 'de';
 
+  // Bepaal welke inhoud te tonen op basis van taal
+  const inhoud = isDE ? (les.inhoud_de || les.inhoud || '') : (les.inhoud || '');
+  const hasContent = inhoud && inhoud.trim();
+  const hasDE = les.inhoud_de && les.inhoud_de.trim();
+
+  // Bepaal titel in huidige taal
+  const titel = isDE ? (les.titel_de || les.titel) : les.titel;
+
+  // Leestijd inschatten (180 woorden/min)
+  const wc = hasContent ? inhoud.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length : 0;
+  const leestijd = Math.max(1, Math.round(wc / 180));
+
+  // Labels per taal
+  const L = isDE ? {
+    bewerken: 'Bearbeiten', inhoud_toevoegen: 'Inhalt hinzufügen', opslaan: 'Speichern', annuleren: 'Abbrechen',
+    markeer_afgerond: 'Als abgeschlossen markieren', reset: 'Fortschritt zurücksetzen', afgerond: 'Abgeschlossen',
+    min: 'Min. Lesezeit', nog_geen_inhoud: 'Noch kein Unterrichtsinhalt verfügbar.',
+    quiz_toevoegen: 'Quiz hinzufügen', quiz_bewerken: 'Quiz bearbeiten',
+    geslaagd: 'Bestanden!', niet_geslaagd: 'Nicht bestanden', score: 'Ergebnis', opnieuw: 'Erneut versuchen',
+    vraag: 'Frage', antwoorden_indienen: 'Antworten einreichen', beantwoord_alle: 'Alle Fragen beantworten',
+    drempel: 'Bestehensgrenze', inhoud_tab: 'Inhalt', nl_tab: 'Niederländisch', de_tab: 'Deutsch',
+    bewerk_nl: 'NL bewerken', bewerk_de: 'DE bearbeiten', geen_de: 'Deutsche Übersetzung noch nicht verfügbar.',
+    vertaling_ontbreekt: 'Noch keine deutsche Übersetzung. Niederländische Version wird gezeigt.'
+  } : {
+    bewerken: 'Bewerken', inhoud_toevoegen: 'Inhoud toevoegen', opslaan: 'Opslaan', annuleren: 'Annuleren',
+    markeer_afgerond: 'Markeer als afgerond', reset: 'Reset voortgang', afgerond: 'Afgerond',
+    min: 'min leestijd', nog_geen_inhoud: 'Nog geen lesinhoud beschikbaar.',
+    quiz_toevoegen: 'Quiz toevoegen', quiz_bewerken: 'Quiz bewerken',
+    geslaagd: 'Geslaagd!', niet_geslaagd: 'Niet geslaagd', score: 'Score', opnieuw: 'Opnieuw proberen',
+    vraag: 'Vraag', antwoorden_indienen: 'Antwoorden indienen', beantwoord_alle: 'Beantwoord alle vragen',
+    drempel: 'Drempel', inhoud_tab: 'Inhoud', nl_tab: 'Nederlands', de_tab: 'Duits',
+    bewerk_nl: 'NL bewerken', bewerk_de: 'DE bewerken', geen_de: 'Duitse vertaling nog niet beschikbaar.',
+    vertaling_ontbreekt: 'Nog geen Duitse vertaling. Nederlandse versie wordt getoond.'
+  };
+
+  // === EDITOR-MODUS: inhoud bewerken ===
   if (isEditing) {
-    return '<div class="bg-gray-50 border-t border-gray-200 px-5 py-4">' +
-      '<div class="flex items-center justify-between mb-3">' +
-        '<div class="text-sm font-semibold text-gray-700">Lesinhoud bewerken</div>' +
-        '<div class="flex gap-2">' +
-          '<button onclick="academySaveLes(\'' + les.id + '\')" class="btn-primary px-3 py-1.5 rounded-lg text-xs">💾 Opslaan</button>' +
-          '<button onclick="academyEditLes=null; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">Annuleren</button>' +
-        '</div>' +
-      '</div>' +
-      '<div class="flex gap-2 mb-2 flex-wrap">' +
-        '<button onclick="academyExecCmd(\'bold\')" class="btn-secondary px-2 py-1 rounded text-xs" title="Vet"><b>B</b></button>' +
-        '<button onclick="academyExecCmd(\'italic\')" class="btn-secondary px-2 py-1 rounded text-xs" title="Cursief"><i>I</i></button>' +
-        '<button onclick="academyInsertHtml(\'<h3>Tussenkop</h3>\')" class="btn-secondary px-2 py-1 rounded text-xs">H3</button>' +
-        '<button onclick="academyInsertHtml(\'<h4>Sub-kop</h4>\')" class="btn-secondary px-2 py-1 rounded text-xs">H4</button>' +
-        '<button onclick="academyExecCmd(\'insertUnorderedList\')" class="btn-secondary px-2 py-1 rounded text-xs">• Lijst</button>' +
-        '<button onclick="academyExecCmd(\'insertOrderedList\')" class="btn-secondary px-2 py-1 rounded text-xs">1. Lijst</button>' +
-      '</div>' +
-      '<div id="academyLesEditor" contenteditable="true" class="bg-white border border-gray-300 rounded-lg p-4 min-h-[200px] prose prose-sm max-w-none focus:outline-none focus:ring-2 focus:ring-wax-500" style="line-height:1.6;">' + (les.inhoud || '<p>Begin met typen...</p>') + '</div>' +
-      '<div class="text-xs text-gray-400 mt-2">Les-ID: ' + les.id + (les.laatstBewerkt ? ' · laatst bewerkt: ' + new Date(les.laatstBewerkt).toLocaleString('nl-NL') : '') + '</div>' +
-    '</div>';
+    const editLang = academyEditLes === les.id && academyEditLang ? academyEditLang : 'nl';
+    const editInhoud = editLang === 'de' ? (les.inhoud_de || '') : (les.inhoud || '');
+    return `<div class="bg-white border-t-2 border-wax-300 px-6 py-5">
+      <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+        <div class="flex items-center gap-3">
+          <div class="text-sm font-semibold text-gray-800">${isDE ? 'Unterrichtsinhalt bearbeiten' : 'Lesinhoud bewerken'}</div>
+          <div class="flex gap-1 bg-gray-100 rounded-lg p-1">
+            <button onclick="academyEditLang='nl'; renderAcademy()" class="px-3 py-1 rounded text-xs font-medium ${editLang==='nl' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}">🇳🇱 NL</button>
+            <button onclick="academyEditLang='de'; renderAcademy()" class="px-3 py-1 rounded text-xs font-medium ${editLang==='de' ? 'bg-white shadow text-gray-900' : 'text-gray-500'}">🇩🇪 DE</button>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="academySaveLes('${les.id}')" class="btn-primary px-4 py-2 rounded-lg text-xs font-medium">💾 ${L.opslaan}</button>
+          <button onclick="academyEditLes=null; academyEditLang=null; renderAcademy()" class="btn-secondary px-4 py-2 rounded-lg text-xs">${L.annuleren}</button>
+        </div>
+      </div>
+      <div class="flex gap-1.5 mb-3 flex-wrap">
+        <button onclick="academyExecCmd('bold')" class="btn-secondary px-2.5 py-1.5 rounded text-xs" title="Vet"><b>B</b></button>
+        <button onclick="academyExecCmd('italic')" class="btn-secondary px-2.5 py-1.5 rounded text-xs" title="Cursief"><i>I</i></button>
+        <button onclick="academyInsertHtml('<h3>Tussenkop</h3>')" class="btn-secondary px-2.5 py-1.5 rounded text-xs">H3</button>
+        <button onclick="academyInsertHtml('<h4>Sub-kop</h4>')" class="btn-secondary px-2.5 py-1.5 rounded text-xs">H4</button>
+        <button onclick="academyExecCmd('insertUnorderedList')" class="btn-secondary px-2.5 py-1.5 rounded text-xs">• Lijst</button>
+        <button onclick="academyExecCmd('insertOrderedList')" class="btn-secondary px-2.5 py-1.5 rounded text-xs">1. Lijst</button>
+      </div>
+      <div id="academyLesEditor" contenteditable="true" class="bg-white border-2 border-wax-200 rounded-lg p-5 min-h-[300px] prose prose-sm max-w-none focus:outline-none focus:ring-2 focus:ring-wax-500" style="line-height:1.7;">${editInhoud || '<p>Begin met typen...</p>'}</div>
+      <div class="text-xs text-gray-400 mt-2">Les-ID: ${les.id} · Taal: ${editLang.toUpperCase()}${les.laatstBewerkt ? ' · laatst bewerkt: ' + new Date(les.laatstBewerkt).toLocaleString(isDE ? 'de-DE' : 'nl-NL') : ''}</div>
+    </div>`;
   }
 
+  // === QUIZ-EDITOR ===
   if (isQuizEdit) {
     const bestaandeVragen = JSON.stringify(les.quizVragen || [], null, 2);
     const drempel = typeof les.slagingsDrempel === 'number' ? les.slagingsDrempel : 75;
-    return '<div class="bg-amber-50 border-t border-amber-200 px-5 py-4">' +
-      '<div class="flex items-center justify-between mb-3">' +
-        '<div class="text-sm font-semibold text-amber-900">🎯 Quiz-vragen bewerken (JSON)</div>' +
-        '<div class="flex gap-2">' +
-          '<button onclick="academySaveQuiz(\'' + les.id + '\')" class="btn-primary px-3 py-1.5 rounded-lg text-xs">💾 Quiz opslaan</button>' +
-          '<button onclick="academyQuizEditLes=null; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">Annuleren</button>' +
-        '</div>' +
-      '</div>' +
-      '<div class="text-xs text-amber-800 mb-2">Format: array met objecten {vraag, opties:[4 strings], juisteAntwoord: index 0-3}.</div>' +
-      '<div class="flex gap-2 items-center mb-2">' +
-        '<label class="text-xs text-gray-700">Slagingsdrempel (%):</label>' +
-        '<input type="number" id="academyQuizDrempel" value="' + drempel + '" min="0" max="100" class="px-2 py-1 border border-gray-300 rounded text-xs w-20" />' +
-      '</div>' +
-      '<textarea id="academyQuizEditor" class="w-full bg-white border border-amber-300 rounded-lg p-3 font-mono text-xs min-h-[300px]">' + bestaandeVragen.replace(/</g, '&lt;') + '</textarea>' +
-    '</div>';
+    return `<div class="bg-amber-50 border-t-2 border-amber-300 px-6 py-5">
+      <div class="flex items-center justify-between mb-3">
+        <div class="text-sm font-semibold text-amber-900">🎯 ${L.quiz_bewerken} (JSON)</div>
+        <div class="flex gap-2">
+          <button onclick="academySaveQuiz('${les.id}')" class="btn-primary px-3 py-1.5 rounded-lg text-xs">💾 ${L.opslaan}</button>
+          <button onclick="academyQuizEditLes=null; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">${L.annuleren}</button>
+        </div>
+      </div>
+      <div class="text-xs text-amber-800 mb-2">Format: [{vraag, vraag_de, opties:[4], opties_de:[4], juisteAntwoord: 0-3}]</div>
+      <div class="flex gap-2 items-center mb-2">
+        <label class="text-xs text-gray-700">${L.drempel} (%):</label>
+        <input type="number" id="academyQuizDrempel" value="${drempel}" min="0" max="100" class="px-2 py-1 border border-gray-300 rounded text-xs w-20" />
+      </div>
+      <textarea id="academyQuizEditor" class="w-full bg-white border border-amber-300 rounded-lg p-3 font-mono text-xs min-h-[300px]">${bestaandeVragen.replace(/</g,'&lt;')}</textarea>
+    </div>`;
   }
 
+  // === QUIZ-WEERGAVE ===
   if (heeftQuiz) {
     const state = academyQuizState[les.id] || { antwoorden: [], result: null };
     const result = state.result;
-    let html = '<div class="bg-indigo-50 border-t border-indigo-200 px-5 py-4">';
-    html += '<div class="flex items-center justify-between mb-3 flex-wrap gap-2">';
-    html += '<div class="text-sm font-semibold text-indigo-900">🎯 Quiz: ' + les.quizVragen.length + ' vragen · drempel ' + (les.slagingsDrempel || 75) + '%</div>';
-    if (isAdmin) {
-      html += '<button onclick="academyQuizEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-2 py-1 rounded text-xs">✏️ Quiz bewerken</button>';
-    }
-    html += '</div>';
+    let html = `<div class="bg-gradient-to-br from-indigo-50 to-white border-t-2 border-indigo-300 px-6 py-6">`;
+    html += `<div class="flex items-center justify-between mb-5 flex-wrap gap-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-lg">🎯</div>
+        <div>
+          <div class="text-base font-bold text-indigo-900">${isDE ? 'Wissenstest' : 'Kennistest'}</div>
+          <div class="text-xs text-indigo-700">${les.quizVragen.length} ${isDE ? 'Fragen' : 'vragen'} · ${L.drempel}: ${les.slagingsDrempel || 75}%</div>
+        </div>
+      </div>`;
+    if (isAdmin) html += `<button onclick="academyQuizEditLes='${les.id}'; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded text-xs">✏️ ${L.quiz_bewerken}</button>`;
+    html += `</div>`;
 
     if (result) {
-      const kleur = result.geslaagd ? 'green' : 'red';
-      html += '<div class="bg-' + kleur + '-100 border border-' + kleur + '-300 rounded-lg p-4 mb-3">';
-      html += '<div class="text-lg font-bold text-' + kleur + '-800">' + (result.geslaagd ? '✅ Geslaagd!' : '❌ Niet geslaagd') + '</div>';
-      html += '<div class="text-sm text-' + kleur + '-700 mt-1">Score: ' + result.score + '% (' + result.goed + '/' + result.totaal + ' goed) · Drempel: ' + result.drempel + '%</div>';
-      html += '<button onclick="academyQuizOpnieuw(\'' + les.id + '\')" class="mt-3 btn-secondary px-3 py-1.5 rounded-lg text-xs">🔁 Opnieuw proberen</button>';
-      html += '</div>';
+      const kleur = result.geslaagd ? 'emerald' : 'rose';
+      const ico = result.geslaagd ? '🎉' : '📚';
+      html += `<div class="bg-${kleur}-50 border-2 border-${kleur}-200 rounded-xl p-5 mb-4">
+        <div class="flex items-start gap-4">
+          <div class="text-4xl">${ico}</div>
+          <div class="flex-1">
+            <div class="text-xl font-bold text-${kleur}-900">${result.geslaagd ? L.geslaagd : L.niet_geslaagd}</div>
+            <div class="text-sm text-${kleur}-800 mt-1">${L.score}: <strong>${result.score}%</strong> (${result.goed}/${result.totaal} ${isDE ? 'richtig' : 'goed'}) · ${L.drempel}: ${result.drempel}%</div>
+            <button onclick="academyQuizOpnieuw('${les.id}')" class="mt-3 bg-white hover:bg-gray-50 text-${kleur}-800 border border-${kleur}-300 px-4 py-2 rounded-lg text-sm font-medium">🔁 ${L.opnieuw}</button>
+          </div>
+        </div>
+      </div>`;
       les.quizVragen.forEach((v, i) => {
         const det = result.details[i];
-        const icoon = det.correct ? '✅' : '❌';
-        html += '<div class="bg-white rounded-lg p-3 mb-2 border border-gray-200">';
-        html += '<div class="text-sm font-semibold mb-2">' + icoon + ' Vraag ' + (i + 1) + ': ' + v.vraag + '</div>';
-        v.opties.forEach((opt, oi) => {
-          let cls = 'text-gray-600';
-          if (oi === v.juisteAntwoord) cls = 'text-green-700 font-semibold';
-          else if (oi === det.gegeven && !det.correct) cls = 'text-red-700 line-through';
-          html += '<div class="text-xs ' + cls + ' pl-4 py-0.5">' + String.fromCharCode(65 + oi) + '. ' + opt + '</div>';
+        const vrgTxt = isDE ? (v.vraag_de || v.vraag) : v.vraag;
+        const optsTxt = isDE ? (v.opties_de || v.opties) : v.opties;
+        html += `<div class="bg-white rounded-xl p-5 mb-3 border ${det.correct ? 'border-emerald-200' : 'border-rose-200'} shadow-sm">
+          <div class="flex items-start gap-2 mb-3">
+            <span class="text-lg">${det.correct ? '✅' : '❌'}</span>
+            <div class="text-sm font-semibold text-gray-900">${L.vraag} ${i+1}: ${vrgTxt}</div>
+          </div>`;
+        optsTxt.forEach((opt, oi) => {
+          let cls = 'text-gray-500';
+          let bg = '';
+          if (oi === v.juisteAntwoord) { cls = 'text-emerald-800 font-semibold'; bg = 'bg-emerald-50'; }
+          else if (oi === det.gegeven && !det.correct) { cls = 'text-rose-700 line-through'; bg = 'bg-rose-50'; }
+          html += `<div class="text-sm ${cls} ${bg} rounded px-3 py-1.5 ml-6">${String.fromCharCode(65+oi)}. ${opt}</div>`;
         });
-        html += '</div>';
+        html += `</div>`;
       });
     } else {
       les.quizVragen.forEach((v, i) => {
         const gekozen = state.antwoorden[i];
-        html += '<div class="bg-white rounded-lg p-3 mb-2 border border-gray-200">';
-        html += '<div class="text-sm font-semibold mb-2">Vraag ' + (i + 1) + ': ' + v.vraag + '</div>';
-        v.opties.forEach((opt, oi) => {
+        const vrgTxt = isDE ? (v.vraag_de || v.vraag) : v.vraag;
+        const optsTxt = isDE ? (v.opties_de || v.opties) : v.opties;
+        html += `<div class="bg-white rounded-xl p-5 mb-3 border border-gray-200 shadow-sm">
+          <div class="text-sm font-bold text-gray-900 mb-3">${L.vraag} ${i+1}: ${vrgTxt}</div>`;
+        optsTxt.forEach((opt, oi) => {
           const sel = gekozen === oi;
-          html += '<label class="flex items-center gap-2 text-sm py-1 cursor-pointer hover:bg-gray-50 px-2 rounded" onclick="academyQuizKiesAntwoord(\'' + les.id + '\', ' + i + ', ' + oi + ')">';
-          html += '<input type="radio" name="q_' + les.id + '_' + i + '" ' + (sel ? 'checked' : '') + ' class="text-wax-600" />';
-          html += '<span>' + String.fromCharCode(65 + oi) + '. ' + opt + '</span>';
-          html += '</label>';
+          html += `<label class="flex items-center gap-3 text-sm py-2 px-3 rounded-lg cursor-pointer transition-colors ${sel ? 'bg-indigo-50 border border-indigo-300' : 'hover:bg-gray-50 border border-transparent'}" onclick="academyQuizKiesAntwoord('${les.id}', ${i}, ${oi})">
+            <input type="radio" name="q_${les.id}_${i}" ${sel ? 'checked' : ''} class="text-indigo-600" />
+            <span class="${sel ? 'font-medium text-indigo-900' : 'text-gray-700'}">${String.fromCharCode(65+oi)}. ${opt}</span>
+          </label>`;
         });
-        html += '</div>';
+        html += `</div>`;
       });
-      const alleBeantwoord = les.quizVragen.every((_, i) => typeof state.antwoorden[i] === 'number');
-      html += '<button onclick="academyQuizIndienen(\'' + les.id + '\')" ' + (alleBeantwoord ? '' : 'disabled') + ' class="' + (alleBeantwoord ? 'btn-primary' : 'bg-gray-300 cursor-not-allowed text-white') + ' px-4 py-2 rounded-lg text-sm font-medium">' + (alleBeantwoord ? '📝 Antwoorden indienen' : 'Beantwoord alle vragen') + '</button>';
+      const alleBeantwoord = les.quizVragen.every((_,i) => typeof state.antwoorden[i] === 'number');
+      html += `<button onclick="academyQuizIndienen('${les.id}')" ${alleBeantwoord ? '' : 'disabled'} class="${alleBeantwoord ? 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md' : 'bg-gray-300 cursor-not-allowed text-white'} px-6 py-3 rounded-xl text-sm font-semibold w-full sm:w-auto">${alleBeantwoord ? '📝 ' + L.antwoorden_indienen : L.beantwoord_alle}</button>`;
     }
-    html += '</div>';
+    html += `</div>`;
     return html;
   }
 
-  const hasContent = les.inhoud && les.inhoud.trim();
-  let html = '<div class="bg-gray-50 border-t border-gray-200 px-5 py-4">';
-  html += '<div class="flex items-center justify-between mb-3 flex-wrap gap-2">';
-  html += '<div class="text-sm font-semibold text-gray-700 flex items-center gap-2">📄 Lesinhoud';
-  if (afgerond) html += '<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">✓ Afgerond</span>';
-  html += '</div>';
-  html += '<div class="flex gap-2 flex-wrap">';
-  if (afgerond) {
-    html += '<button onclick="academyResetLes(\'' + les.id + '\')" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">🔁 Reset voortgang</button>';
-  } else if (hasContent) {
-    html += '<button onclick="academyMarkeerAfgerond(\'' + les.id + '\')" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium">✓ Markeer afgerond</button>';
+  // === PROFESSIONELE LES-WEERGAVE ===
+  let html = `<div class="bg-white border-t-2 border-wax-300">`;
+
+  // Header met meta-info
+  html += `<div class="bg-gradient-to-br from-wax-50 via-white to-amber-50/30 px-6 py-5 border-b border-wax-100">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 text-xs text-wax-700 font-medium uppercase tracking-wide mb-1">
+          <span>📘</span>
+          <span>${isDE ? 'Unterrichtsmaterial' : 'Lesmateriaal'}</span>
+          ${afgerond ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold normal-case tracking-normal">✓ ${L.afgerond}</span>` : ''}
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 leading-tight">${titel || 'Les'}</h3>
+        ${hasContent ? `<div class="flex items-center gap-3 mt-2 text-xs text-gray-500">
+          <span class="inline-flex items-center gap-1">⏱ ${leestijd} ${L.min}</span>
+          <span>·</span>
+          <span>${wc} ${isDE ? 'Wörter' : 'woorden'}</span>
+        </div>` : ''}
+      </div>
+      <div class="flex gap-2 flex-wrap shrink-0">
+        ${afgerond
+          ? `<button onclick="academyResetLes('${les.id}')" class="btn-secondary px-3 py-2 rounded-lg text-xs font-medium">🔁 ${L.reset}</button>`
+          : (hasContent ? `<button onclick="academyMarkeerAfgerond('${les.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-sm">✓ ${L.markeer_afgerond}</button>` : '')
+        }
+        ${isAdmin ? `
+          <button onclick="academyEditLes='${les.id}'; academyEditLang='${isDE?'de':'nl'}'; renderAcademy()" class="btn-secondary px-3 py-2 rounded-lg text-xs">✏️ ${hasContent ? L.bewerken : L.inhoud_toevoegen}</button>
+          <button onclick="academyQuizEditLes='${les.id}'; renderAcademy()" class="btn-secondary px-3 py-2 rounded-lg text-xs">🎯 ${L.quiz_toevoegen}</button>
+        ` : ''}
+      </div>
+    </div>
+  </div>`;
+
+  // Body met les-inhoud
+  if (hasContent) {
+    // Toon waarschuwing als Duitse taal actief maar geen DE vertaling
+    const waarschuwing = (isDE && !hasDE) ? `<div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 text-sm text-amber-900 flex items-start gap-2">
+      <span class="text-base shrink-0">⚠️</span>
+      <span>${L.vertaling_ontbreekt}</span>
+    </div>` : '';
+    html += `<div class="px-6 py-6">
+      ${waarschuwing}
+      <article class="academy-article prose prose-lg max-w-none">${inhoud}</article>
+    </div>`;
+  } else {
+    html += `<div class="px-6 py-12 text-center text-gray-400">
+      <div class="text-4xl mb-3">📄</div>
+      <div class="text-sm italic">${L.nog_geen_inhoud}</div>
+    </div>`;
   }
-  if (isAdmin) {
-    html += '<button onclick="academyEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">✏️ ' + (hasContent ? 'Bewerken' : 'Inhoud toevoegen') + '</button>';
-    html += '<button onclick="academyQuizEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">🎯 Quiz toevoegen</button>';
-  }
-  html += '</div></div>';
-  html += hasContent
-    ? '<div class="prose prose-sm max-w-none bg-white rounded-lg p-4 border border-gray-200">' + les.inhoud + '</div>'
-    : '<div class="text-sm text-gray-400 italic py-4 text-center">Nog geen lesinhoud.</div>';
-  html += '</div>';
+
+  html += `</div>`;
   return html;
 }
 
@@ -3531,23 +3626,30 @@ async function academySaveLes(lesId) {
   const editor = document.getElementById('academyLesEditor');
   if (!editor) return;
   const inhoud = editor.innerHTML;
+  const taal = academyEditLang || 'nl';
+  const body = taal === 'de' ? { inhoud_de: inhoud } : { inhoud };
   try {
     const r = await fetch('/api/academy/les/' + lesId, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       credentials: 'include',
-      body: JSON.stringify({ inhoud })
+      body: JSON.stringify(body)
     });
     if (!r.ok) { alert('Opslaan mislukt'); return; }
     const updateLes = (lessen) => {
       if (!Array.isArray(lessen)) return;
-      for (const l of lessen) if (l.id === lesId) { l.inhoud = inhoud; l.laatstBewerkt = new Date().toISOString(); return; }
+      for (const l of lessen) if (l.id === lesId) {
+        if (taal === 'de') l.inhoud_de = inhoud;
+        else l.inhoud = inhoud;
+        l.laatstBewerkt = new Date().toISOString();
+        return;
+      }
     };
     if (data.academy?.programmas) {
       for (const prog of data.academy.programmas) for (const mod of prog.modules || []) updateLes(mod.lessen);
     }
     if (data.academy?.modules) for (const mod of data.academy.modules) updateLes(mod.lessen);
-    academyEditLes = null;
+    academyEditLes = null; academyEditLang = null;
     renderAcademy();
   } catch (e) {
     alert('Fout bij opslaan: ' + e.message);
