@@ -742,6 +742,40 @@ app.post('/api/academy/voortgang', (req, res) => {
   res.json({ ok: true, voortgang: academy.voortgang[studentId] });
 });
 
+// Update content of a single lesson (inhoud, videoUrl)
+app.post('/api/academy/les/:lesId', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const { lesId } = req.params;
+  const { inhoud, videoUrl } = req.body;
+  const academy = laadJSON('academy.json');
+  let updated = false;
+  const updateLesIn = (lessen) => {
+    if (!Array.isArray(lessen)) return;
+    for (const les of lessen) {
+      if (les.id === lesId) {
+        if (typeof inhoud === 'string') les.inhoud = inhoud;
+        if (typeof videoUrl === 'string') les.videoUrl = videoUrl;
+        les.laatstBewerkt = new Date().toISOString();
+        updated = true;
+        return;
+      }
+    }
+  };
+  if (Array.isArray(academy.programmas)) {
+    for (const prog of academy.programmas) {
+      if (Array.isArray(prog.modules)) {
+        for (const mod of prog.modules) updateLesIn(mod.lessen);
+      }
+    }
+  }
+  if (Array.isArray(academy.modules)) {
+    for (const mod of academy.modules) updateLesIn(mod.lessen);
+  }
+  if (!updated) return res.status(404).json({ error: 'Les niet gevonden: ' + lesId });
+  slaJSON('academy.json', academy);
+  res.json({ ok: true, lesId });
+});
+
 // ─── API: Marketing ───
 app.get('/api/marketing', (req, res) => {
   if (!requireAuth(req, res)) return;

@@ -2918,7 +2918,7 @@ function renderCoachView(el) {
                 <div class="text-xs font-bold ${isHuidig ? 'text-wax-700' : 'text-gray-500'}">${p.jaar}</div>
                 <div class="text-sm font-bold ${winst >= 0 ? 'text-green-600' : 'text-orange-500'} mt-0.5">${winst >= 0 ? '+' : ''}€${(winst/1000).toFixed(0)}k</div>
                 <div class="text-[9px] text-gray-400">€${((p.omzet||0)/1000).toFixed(0)}k omzet</div>
-              </div>`;
+              </div>${isOpen ? academyRenderLesDetail(les) : ''}</div>`;
             }).join('')}
           </div>
         </div>
@@ -3283,7 +3283,82 @@ async function reageerHuddle(huddleId) {
 let academyOpenModule = null;
 let academySelectedStudent = null;
 let academySelectedProgramma = null;
-let academyView = 'overzicht'; // 'overzicht' | 'modules' | 'progress'
+let academyView = 'overzicht';
+let academyOpenLes = null;
+let academyEditLes = null; // 'overzicht' | 'modules' | 'progress'
+
+// ─── Academy les-detail & editor helpers ───
+function academyRenderLesDetail(les) {
+  const isEditing = academyEditLes === les.id;
+  if (isEditing) {
+    return '<div class="bg-gray-50 border-t border-gray-200 px-5 py-4">' +
+      '<div class="flex items-center justify-between mb-3">' +
+        '<div class="text-sm font-semibold text-gray-700">Lesinhoud bewerken</div>' +
+        '<div class="flex gap-2">' +
+          '<button onclick="academySaveLes(\'' + les.id + '\')" class="btn-primary px-3 py-1.5 rounded-lg text-xs">💾 Opslaan</button>' +
+          '<button onclick="academyEditLes=null; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">Annuleren</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="flex gap-2 mb-2 flex-wrap">' +
+        '<button onclick="academyExecCmd(\'bold\')" class="btn-secondary px-2 py-1 rounded text-xs" title="Vet"><b>B</b></button>' +
+        '<button onclick="academyExecCmd(\'italic\')" class="btn-secondary px-2 py-1 rounded text-xs" title="Cursief"><i>I</i></button>' +
+        '<button onclick="academyInsertHtml(\'<h3>Tussenkop</h3>\')" class="btn-secondary px-2 py-1 rounded text-xs">H3</button>' +
+        '<button onclick="academyInsertHtml(\'<h4>Sub-kop</h4>\')" class="btn-secondary px-2 py-1 rounded text-xs">H4</button>' +
+        '<button onclick="academyExecCmd(\'insertUnorderedList\')" class="btn-secondary px-2 py-1 rounded text-xs">• Lijst</button>' +
+        '<button onclick="academyExecCmd(\'insertOrderedList\')" class="btn-secondary px-2 py-1 rounded text-xs">1. Lijst</button>' +
+      '</div>' +
+      '<div id="academyLesEditor" contenteditable="true" class="bg-white border border-gray-300 rounded-lg p-4 min-h-[200px] prose prose-sm max-w-none focus:outline-none focus:ring-2 focus:ring-wax-500" style="line-height:1.6;">' + (les.inhoud || '<p>Begin met typen...</p>') + '</div>' +
+      '<div class="text-xs text-gray-400 mt-2">Les-ID: ' + les.id + (les.laatstBewerkt ? ' · laatst bewerkt: ' + new Date(les.laatstBewerkt).toLocaleString('nl-NL') : '') + '</div>' +
+    '</div>';
+  }
+  const hasContent = les.inhoud && les.inhoud.trim();
+  return '<div class="bg-gray-50 border-t border-gray-200 px-5 py-4">' +
+    '<div class="flex items-center justify-between mb-3">' +
+      '<div class="text-sm font-semibold text-gray-700">📄 Lesinhoud</div>' +
+      '<button onclick="academyEditLes=\'' + les.id + '\'; renderAcademy()" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">✏️ ' + (hasContent ? 'Bewerken' : 'Inhoud toevoegen') + '</button>' +
+    '</div>' +
+    (hasContent
+      ? '<div class="prose prose-sm max-w-none bg-white rounded-lg p-4 border border-gray-200">' + les.inhoud + '</div>'
+      : '<div class="text-sm text-gray-400 italic py-4 text-center">Nog geen lesinhoud. Klik op "Inhoud toevoegen" om te beginnen.</div>'
+    ) +
+  '</div>';
+}
+
+function academyExecCmd(cmd) {
+  document.execCommand(cmd, false, null);
+  document.getElementById('academyLesEditor')?.focus();
+}
+function academyInsertHtml(html) {
+  document.execCommand('insertHTML', false, html);
+  document.getElementById('academyLesEditor')?.focus();
+}
+async function academySaveLes(lesId) {
+  const editor = document.getElementById('academyLesEditor');
+  if (!editor) return;
+  const inhoud = editor.innerHTML;
+  try {
+    const r = await fetch('/api/academy/les/' + lesId, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      credentials: 'include',
+      body: JSON.stringify({ inhoud })
+    });
+    if (!r.ok) { alert('Opslaan mislukt'); return; }
+    const updateLes = (lessen) => {
+      if (!Array.isArray(lessen)) return;
+      for (const l of lessen) if (l.id === lesId) { l.inhoud = inhoud; l.laatstBewerkt = new Date().toISOString(); return; }
+    };
+    if (data.academy?.programmas) {
+      for (const prog of data.academy.programmas) for (const mod of prog.modules || []) updateLes(mod.lessen);
+    }
+    if (data.academy?.modules) for (const mod of data.academy.modules) updateLes(mod.lessen);
+    academyEditLes = null;
+    renderAcademy();
+  } catch (e) {
+    alert('Fout bij opslaan: ' + e.message);
+  }
+}
+
 
 function renderAcademy() {
   const el = document.getElementById('academy-content');
@@ -3476,7 +3551,7 @@ function renderAcademy() {
               const status = sp[les.id]?.status || 'not_started';
               const isDone = status === 'completed';
               const isInProgress = status === 'in_progress';
-              return `<div class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">
+              const heeftInhoud = !!(les.inhoud && les.inhoud.trim()); const isOpen = academyOpenLes === les.id; return `<div><div class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors cursor-pointer" onclick="academyOpenLes = academyOpenLes==='${les.id}' ? null : '${les.id}'; renderAcademy()">
                 <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg ${isDone ? 'bg-green-100' : isInProgress ? 'bg-yellow-100' : 'bg-gray-100'}">
                   ${isDone ? '✅' : typeIcon(les.type)}
                 </div>
@@ -3484,7 +3559,7 @@ function renderAcademy() {
                   <div class="font-medium text-gray-900 text-sm">${les.titel}</div>
                   <div class="text-xs text-gray-400 mt-0.5">${typeName(les.type)} · ${les.duur}</div>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2" onclick="event.stopPropagation()">
                   ${isDone
                     ? `<span class="badge badge-klaar">${t('completed')}</span>
                        <button onclick="academyToggleLesson('${les.id}', false)" class="text-xs text-gray-400 hover:text-red-500 transition-colors" title="${t('markUndone')}">✕</button>`
@@ -3495,7 +3570,7 @@ function renderAcademy() {
                          <button onclick="academyToggleLesson('${les.id}', true)" class="btn-secondary px-3 py-1.5 rounded-lg text-xs">${t('markDone')}</button>`
                   }
                 </div>
-              </div>`;
+              </div>${isOpen ? academyRenderLesDetail(les) : ''}</div>`;
             }).join('')}
           </div>
         </div>`;
