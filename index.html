@@ -164,7 +164,7 @@
       <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-wax-400 to-wax-600 flex items-center justify-center text-white text-lg font-bold">W</div>
       <div>
         <div class="font-bold text-white text-sm leading-tight">Wax Affairs</div>
-        <div class="text-xs text-gray-500">Franchise HQ</div>
+        <div class="text-xs text-gray-500" data-t="divFranchiseHQ">Franchise HQ</div>
       </div>
     </div>
   </div>
@@ -268,7 +268,7 @@
 <div id="page-dashboard" class="p-6 lg:p-8 fade-in">
   <div class="flex items-center justify-between mb-6 page-header">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Franchise HQ</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="divFranchiseHQ">Franchise HQ</h1>
       <p class="text-sm text-gray-500 mt-1" id="dashboard-greeting">Totaaloverzicht Wax Affairs</p>
     </div>
     <div class="flex gap-2 dash-actions header-actions">
@@ -282,11 +282,11 @@
   <!-- Studio Performance + Inkomsten Streams -->
   <div class="grid lg:grid-cols-3 gap-6 mb-6">
     <div class="lg:col-span-2 bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">📊 Studio Performance</h3>
+      <h3 class="font-semibold text-gray-900 mb-4" data-t="hStudioPerf">📊 Studio Performance</h3>
       <div id="dashboard-studio-performance"></div>
     </div>
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">💶 HQ Inkomsten</h3>
+      <h3 class="font-semibold text-gray-900 mb-4" data-t="hHQInkomsten">💶 HQ Inkomsten</h3>
       <div id="dashboard-inkomsten"></div>
     </div>
   </div>
@@ -294,11 +294,11 @@
   <!-- Actiepunten + Trend Chart -->
   <div class="grid lg:grid-cols-2 gap-6">
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">🎯 Actiepunten</h3>
+      <h3 class="font-semibold text-gray-900 mb-4" data-t="hActiepunten">🎯 Actiepunten</h3>
       <div id="dashboard-actiepunten"></div>
     </div>
     <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
-      <h3 class="font-semibold text-gray-900 mb-4">📈 Omzet Trend</h3>
+      <h3 class="font-semibold text-gray-900 mb-4" data-t="hOmzetTrend">📈 Omzet Trend</h3>
       <canvas id="dashboard-chart" height="200"></canvas>
     </div>
   </div>
