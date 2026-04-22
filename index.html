@@ -1381,7 +1381,7 @@ function lookupStadt() {
   if (!resultDiv) return;
   const input = (inputEl?.value || '').trim();
   if (!input) {
-    resultDiv.innerHTML = '<div class="text-sm text-gray-500 italic">Bitte geben Sie eine Stadt ein / Voer een stad in.</div>';
+    resultDiv.innerHTML = '<div class="text-sm text-gray-500 italic">Bitte Stadt eingeben / Voer stad in.</div>';
     return;
   }
   const L = (typeof lang !== 'undefined' && lang === 'de');
@@ -1397,48 +1397,80 @@ function lookupStadt() {
   const mietMinM2 = data[0], mietMaxM2 = data[1], kaufkraft = data[2];
   const label = L ? data[4] : data[3];
   const kat = data[5];
+  
+  // Eigen geld van dropdown
+  const eigenGeld = parseInt(document.getElementById('eigenGeldSelect')?.value || '25000', 10);
+  
   const mietMin = Math.round(mietMinM2 * 50);
   const mietMax = Math.round(mietMaxM2 * 50);
   const nkMin = Math.round(mietMin * 0.22);
   const nkMax = Math.round(mietMax * 0.22);
   const omzetRealistisch = Math.round(10500 * kaufkraft);
+  const omzetJaar = omzetRealistisch * 12;
   const nietHuurVaste = 5400;
   const totaalMin = nietHuurVaste + mietMin + nkMin;
   const totaalMax = nietHuurVaste + mietMax + nkMax;
   const ebitda = Math.max(0, omzetRealistisch - totaalMax);
-  const paybackMnd = ebitda > 0 ? Math.ceil(65000 / ebitda) : 99;
+  
+  // Banklening berekeningen
+  const projectsom = 65000;
+  const leningBedrag = Math.max(0, projectsom - eigenGeld);
+  // KfW Gründerkredit ~3.5-4.5% over 7-10 jaar
+  const rente = 0.04;
+  const jaren = 7;
+  // Annuïteit: M = L × r / (1 − (1+r)^−n), met r = monthly rate, n = monthly terms
+  const rMnd = rente / 12;
+  const nMnd = jaren * 12;
+  const maandlast = leningBedrag > 0 ? Math.round(leningBedrag * rMnd / (1 - Math.pow(1 + rMnd, -nMnd))) : 0;
+  const nettoWinst = Math.max(0, ebitda - maandlast);
+  const paybackMnd = nettoWinst > 0 ? Math.ceil(projectsom / (ebitda > 0 ? ebitda : 1)) : 99;
+  
+  // 5-jaars royalty + marketing commitment
+  const royalty5j = Math.round(omzetJaar * 0.05 * 5);
+  const marketing5j = Math.round(omzetJaar * 0.02 * 5);
+  const totCommit5j = 15000 + royalty5j + marketing5j;
+  
   const colorMap = {'A+':'red','A':'orange','B+':'amber','B':'blue','C+':'teal','C':'green','?':'gray'};
   const color = colorMap[kat] || 'gray';
   const matchNote = matchType === 'exact'
-    ? (L ? 'Treffer in unserer Datenbank' : 'Match in onze database')
-    : matchType === 'fuzzy'
-      ? (L ? 'Fuzzy-Treffer (Schreibweise)' : 'Fuzzy-match (schrijfwijze)')
-      : (L ? 'Nicht in Datenbank \u2014 bundesweiter Durchschnitt verwendet' : 'Niet in database \u2014 landelijk gemiddelde gebruikt');
-  const paybackText = paybackMnd < 60
-    ? paybackMnd + (L?' Monate':' maanden')
+    ? (L ? 'Treffer in Datenbank' : 'Match in database')
+    : matchType === 'fuzzy' ? (L ? 'Fuzzy-Treffer' : 'Fuzzy-match')
+    : (L ? 'Nicht in Datenbank \u2014 Durchschnitt verwendet' : 'Niet in database \u2014 gemiddelde gebruikt');
+  const paybackText = paybackMnd < 60 ? paybackMnd + (L?' Monate':' maanden')
     : paybackMnd < 99 ? Math.round(paybackMnd/12*10)/10 + (L?' Jahre':' jaar') : (L?'nicht realistisch':'niet realistisch');
   const paybackColor = ebitda > 2000 ? 'green' : ebitda > 800 ? 'yellow' : 'red';
+  
   resultDiv.innerHTML = [
     '<div class="bg-white rounded-xl border-2 border-'+color+'-300 shadow-sm overflow-hidden">',
     '<div class="bg-'+color+'-50 border-b border-'+color+'-200 px-5 py-3 flex items-center justify-between flex-wrap gap-2">',
-    '<div><div class="font-bold text-gray-900">'+label+'</div><div class="text-xs text-gray-500 mt-0.5">'+matchNote+'</div></div>',
+    '<div><div class="font-bold text-gray-900">'+label+'</div><div class="text-xs text-gray-500 mt-0.5">'+matchNote+' · '+(L?'Eigenmittel':'Eigen geld')+' \u20AC '+eigenGeld.toLocaleString('de-DE')+'</div></div>',
     '<span class="px-3 py-1 bg-white border border-'+color+'-300 rounded-full text-xs font-bold text-'+color+'-800">'+(L?'Kategorie ':'Categorie ')+kat+'</span>',
     '</div>',
-    '<div class="p-5 grid md:grid-cols-2 gap-5">',
-    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Miete (50 m² B-Lage)':'Huur (50 m² B-lage)')+'</div>',
-    '<div class="text-2xl font-bold text-gray-900">€ '+mietMin.toLocaleString('de-DE')+' – '+mietMax.toLocaleString('de-DE')+'<span class="text-sm text-gray-500">/'+(L?'Mon.':'mnd')+'</span></div>',
-    '<div class="text-xs text-gray-500 mt-1">'+(L?'+ NK':'+ NK')+' € '+nkMin.toLocaleString('de-DE')+'–'+nkMax.toLocaleString('de-DE')+' · '+(L?'Basis':'basis')+' € '+mietMinM2+'–'+mietMaxM2+'/m² (IVD 2025/26)</div></div>',
-    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Gesamte Monatskosten':'Totale maandlasten')+'</div>',
-    '<div class="text-2xl font-bold text-gray-900">€ '+totaalMin.toLocaleString('de-DE')+' – '+totaalMax.toLocaleString('de-DE')+'</div>',
-    '<div class="text-xs text-gray-500 mt-1">'+(L?'Inkl. Personal, Produkte, Royalty':'Incl. personeel, producten, royalty')+'</div></div>',
-    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Realistischer Monatsumsatz':'Realistische maandomzet')+'</div>',
-    '<div class="text-2xl font-bold text-gray-900">€ '+omzetRealistisch.toLocaleString('de-DE')+'</div>',
-    '<div class="text-xs text-gray-500 mt-1">'+(L?'Basis':'Basis')+' € 10.500 × '+(L?'Kaufkraft':'koopkracht')+' '+kaufkraft.toFixed(2)+' (GfK 2025)</div></div>',
-    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Payback komplette Investition € 65k':'Payback totale investering € 65k')+'</div>',
-    '<div class="text-2xl font-bold text-'+paybackColor+'-700">'+paybackText+'</div>',
-    '<div class="text-xs text-gray-500 mt-1">'+(L?'Bei realistischer Umsatz- und Max.-Kostenszenario':'Bij realistische omzet en max. kosten-scenario')+'</div></div>',
+    // Block 1: Kosten + Omzet
+    '<div class="p-5 grid md:grid-cols-2 gap-5 border-b border-gray-100">',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Miete (50 m²)':'Huur (50 m²)')+'</div>',
+    '<div class="text-xl font-bold text-gray-900">\u20AC '+mietMin.toLocaleString('de-DE')+' – '+mietMax.toLocaleString('de-DE')+'<span class="text-xs text-gray-500">/'+(L?'Mon.':'mnd')+'</span></div>',
+    '<div class="text-xs text-gray-500 mt-0.5">+ NK \u20AC '+nkMin.toLocaleString('de-DE')+'–'+nkMax.toLocaleString('de-DE')+' · '+mietMinM2+'–'+mietMaxM2+' \u20AC/m² (IVD)</div></div>',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Gesamtkosten / Umsatz':'Totale kosten / omzet')+'</div>',
+    '<div class="text-xl font-bold text-gray-900">\u20AC '+totaalMax.toLocaleString('de-DE')+' / '+omzetRealistisch.toLocaleString('de-DE')+'</div>',
+    '<div class="text-xs text-gray-500 mt-0.5">Kaufkraft × '+kaufkraft.toFixed(2)+' (GfK 2025)</div></div>',
     '</div>',
-    kat === '?' ? '<div class="bg-yellow-50 border-t border-yellow-200 px-5 py-3 text-xs text-yellow-800">⚠️ '+(L?'Diese Stadt ist nicht in unserer Datenbank. Wir verwenden den bundesweiten Durchschnitt. Für Ihren Businessplan holen wir reale lokale Daten.':'Deze stad staat niet in onze database. We gebruiken het landelijk gemiddelde. Voor jouw businessplan halen we echte lokale data.')+'</div>' : '',
+    // Block 2: Financiering details
+    '<div class="p-5 bg-gray-50 grid md:grid-cols-4 gap-4 border-b border-gray-100">',
+    '<div><div class="text-[10px] uppercase tracking-wider text-gray-500">'+(L?'KfW-Kredit':'KfW-lening')+'</div><div class="text-lg font-bold text-gray-900">\u20AC '+leningBedrag.toLocaleString('de-DE')+'</div></div>',
+    '<div><div class="text-[10px] uppercase tracking-wider text-gray-500">'+(L?'Monatsrate':'Maandlast lening')+'</div><div class="text-lg font-bold text-gray-900">\u20AC '+maandlast.toLocaleString('de-DE')+'</div><div class="text-[10px] text-gray-500">4% · 7 '+(L?'J.':'jaar')+'</div></div>',
+    '<div><div class="text-[10px] uppercase tracking-wider text-gray-500">EBITDA/'+(L?'Mon.':'mnd')+'</div><div class="text-lg font-bold text-gray-900">\u20AC '+ebitda.toLocaleString('de-DE')+'</div></div>',
+    '<div><div class="text-[10px] uppercase tracking-wider text-gray-500">'+(L?'Netto nach Kredit':'Netto na lening')+'</div><div class="text-lg font-bold text-'+(nettoWinst > 1500 ? 'green' : nettoWinst > 500 ? 'yellow' : 'red')+'-700">\u20AC '+nettoWinst.toLocaleString('de-DE')+'</div></div>',
+    '</div>',
+    // Block 3: Payback + 5-jaar commitment
+    '<div class="p-5 grid md:grid-cols-2 gap-5">',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Payback (gesamte Investition \u20AC 65k)':'Payback (totale investering \u20AC 65k)')+'</div>',
+    '<div class="text-2xl font-bold text-'+paybackColor+'-700">'+paybackText+'</div></div>',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'5-Jahre Wax Affairs Commitment':'5-jaar Wax Affairs commitment')+'</div>',
+    '<div class="text-2xl font-bold text-gray-900">\u20AC '+totCommit5j.toLocaleString('de-DE')+'</div>',
+    '<div class="text-[10px] text-gray-500 mt-0.5">Onboarding 15k + Royalty '+royalty5j.toLocaleString('de-DE')+' + Mkt '+marketing5j.toLocaleString('de-DE')+'</div></div>',
+    '</div>',
+    kat === '?' ? '<div class="bg-yellow-50 border-t border-yellow-200 px-5 py-3 text-xs text-yellow-800">⚠️ '+(L?'Nicht in Datenbank \u2014 bundesweiter Durchschnitt. F\u00FCr Ihren Businessplan holen wir reale lokale Daten.':'Niet in database \u2014 landelijk gemiddelde. Voor jouw businessplan halen we echte lokale data.')+'</div>' : '',
     '</div>'
   ].join('');
 }
@@ -1756,6 +1788,17 @@ function renderFriendchisePitch() {
           <input type="text" id="stadtInput" placeholder="${L?'z.B. M\u00FCnchen, Berlin, Wiesbaden, Augsburg...':'bv. M\u00FCnchen, Berlin, Wiesbaden, Augsburg...'}" class="flex-1 min-w-[240px] px-4 py-3 border-2 border-wax-200 rounded-lg focus:border-wax-500 focus:outline-none text-base" onkeydown="if(event.key===' + chr(34) + 'Enter' + chr(34) + '){lookupStadt()}">
           <button onclick="lookupStadt()" class="px-6 py-3 bg-wax-600 hover:bg-wax-700 text-white rounded-lg font-semibold transition">${L?'Berechnen':'Berekenen'}</button>
         </div>
+        <div class="flex gap-2 items-center flex-wrap mb-3">
+          <label class="text-xs font-semibold text-gray-600 uppercase tracking-wider">${L?'Ihre Eigenmittel:':'Jouw eigen geld:'}</label>
+          <select id="eigenGeldSelect" onchange="if(document.getElementById('stadtInput').value.trim())lookupStadt()" class="px-3 py-1.5 border-2 border-wax-200 rounded-lg text-sm focus:border-wax-500 focus:outline-none bg-white">
+            <option value="0">€ 0 (100% KfW)</option>
+            <option value="15000">€ 15.000</option>
+            <option value="25000" selected>€ 25.000</option>
+            <option value="40000">€ 40.000</option>
+            <option value="55000">€ 55.000</option>
+            <option value="65000">€ 65.000 (100% ${L?'eigen':'eigen'})</option>
+          </select>
+        </div>
         <div id="stadtResult" class="mt-4"></div>
         <div class="mt-4 flex flex-wrap gap-2 text-xs">
           <span class="text-gray-500">${L?'Schnelltest':'Snelle test'}:</span>
@@ -1880,6 +1923,62 @@ function renderFriendchisePitch() {
       </div>
 
       <!-- 3 scenario's — uitgebreid met jaar-voor-jaar beeld -->
+      <!-- NIEUW: Contract-voorwaarden -->
+      <h2 class="text-xl font-bold text-gray-900 pt-4">📄 ${L?'Vertragsbedingungen \u2014 was Sie unterschreiben':'Contractvoorwaarden \u2014 wat je tekent'}</h2>
+      <p class="text-sm text-gray-500 mb-4">${L?'Ein Franchise-Vertrag ist eine mehrjährige Partnerschaft. Hier sind die Eckpunkte unseres Standardvertrags \u2014 basierend auf deutschem Franchiserecht und Marktüblichkeit.':'Een franchise-contract is een meerjarige samenwerking. Hier zijn de hoofdpunten van ons standaardcontract \u2014 gebaseerd op Duits franchiserecht en marktgebruik.'}</p>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div class="flex items-center gap-2 mb-3"><span class="text-xl">⏳</span><strong class="text-gray-900">${L?'Laufzeit':'Looptijd'}</strong></div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">5 ${L?'Jahre':'jaar'} + 5</div>
+          <p class="text-xs text-gray-600">${L?'Erstvertrag 5 Jahre, danach automatische Verlängerung um 5 Jahre (sofern beide Parteien zustimmen). Marktüblich in DE (Quelle: FranchisePORTAL 2025).':'Eerste contract 5 jaar, daarna automatische verlenging met 5 jaar (mits beide partijen akkoord). Marktgebruikelijk in DE (bron: FranchisePORTAL 2025).'}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div class="flex items-center gap-2 mb-3"><span class="text-xl">🗺️</span><strong class="text-gray-900">${L?'Gebietsschutz':'Territorium-bescherming'}</strong></div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">3 km</div>
+          <p class="text-xs text-gray-600">${L?'Exklusivradius um Ihren Standort. Innerhalb dieses Bereichs eröffnen wir kein zweites Wax-Affairs-Studio.':'Exclusiviteitsradius rond jouw locatie. Binnen dit gebied openen we geen tweede Wax Affairs-studio.'}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div class="flex items-center gap-2 mb-3"><span class="text-xl">📅</span><strong class="text-gray-900">${L?'Kündigungsfrist':'Opzegtermijn'}</strong></div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">6 ${L?'Monate':'maanden'}</div>
+          <p class="text-xs text-gray-600">${L?'Vor Vertragsende schriftlich. Bei außerordentlicher Kündigung (Vertragsverletzung) gelten kürzere Fristen.':'Vóór contracteinde schriftelijk. Bij buitengewone opzegging (contractbreuk) gelden kortere termijnen.'}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div class="flex items-center gap-2 mb-3"><span class="text-xl">💰</span><strong class="text-gray-900">${L?'Kaufpreis bei Austritt':'Koopprijs bij uitstap'}</strong></div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">${L?'Buchwert':'Boekwaarde'}</div>
+          <p class="text-xs text-gray-600">${L?'Bei geregelter Vertragsbeendigung kaufen wir Ihre Anteile/Inventar zum aktuellen Buchwert zurück. Keine erzwungenen Übergaben.':'Bij geregeld contracteinde kopen we jouw aandelen/inventaris terug tegen actuele boekwaarde. Geen gedwongen overnames.'}</p>
+        </div>
+      </div>
+
+      <!-- Cumulatieve royalty over 5 jaar -->
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 md:p-8 text-white">
+        <h3 class="text-lg font-bold text-wax-400 mb-3">${L?'Was kostet mich der Vertrag in Summe?':'Wat kost het contract me in totaal?'}</h3>
+        <p class="text-sm text-gray-300 mb-5">${L?'Transparenz ist uns wichtig. Hier ist die komplette finanzielle Verpflichtung über die 5-Jahres-Laufzeit bei realistischem Umsatz (€ 126.000/Jahr):':'Transparantie vinden we belangrijk. Hier is de complete financiële verplichting over de 5-jaars-looptijd bij realistische omzet (€ 126.000/jaar):'}</p>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">${L?'Onboarding (einmalig)':'Onboarding (eenmalig)'}</div>
+            <div class="text-2xl font-bold">€ 15.000</div>
+            <div class="text-xs text-gray-400 mt-1">${L?'Jahr 0':'Jaar 0'}</div>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">${L?'Royalty 5% \u00D7 5 Jahre':'Royalty 5% \u00D7 5 jaar'}</div>
+            <div class="text-2xl font-bold">€ 31.500</div>
+            <div class="text-xs text-gray-400 mt-1">5 × € 6.300</div>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">${L?'Marketing-Fee 2% \u00D7 5 Jahre':'Marketing-fee 2% \u00D7 5 jaar'}</div>
+            <div class="text-2xl font-bold">€ 12.600</div>
+            <div class="text-xs text-gray-400 mt-1">5 × € 2.520</div>
+          </div>
+        </div>
+        <div class="mt-5 pt-5 border-t border-white/10 flex items-baseline justify-between flex-wrap gap-3">
+          <div>
+            <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">${L?'Gesamtverpflichtung \u00FCber 5 Jahre':'Totale verplichting over 5 jaar'}</div>
+            <div class="text-3xl font-bold text-wax-400">€ 59.100</div>
+          </div>
+          <div class="text-xs text-gray-400 max-w-xs">${L?'Dafür erhalten Sie: Marke, Onboarding, laufende Schulungen, Business-Coaching, Marketing-Infrastruktur, Nao-Produkte zum Großhandelspreis und 5 Jahre Territoriumexklusivität.':'Daarvoor krijg je: merk, onboarding, doorlopende trainingen, business-coaching, marketing-infrastructuur, Nao-producten tegen groothandelsprijs en 5 jaar territoriumexclusiviteit.'}</div>
+        </div>
+      </div>
+
       <h2 class="text-xl font-bold text-gray-900 pt-4">${L?'Drei Szenarien — wann haben Sie Ihr Geld zur\u00FCck?':'Drie scenario\u2019s — wanneer heb je je geld terug?'}</h2>
       <p class="text-sm text-gray-500 mb-5">${L?'Wir rechnen mit drei realistischen Szenarien. Unten sehen Sie pro Szenario, wann Sie Break-even erreichen und wann die komplette Projektsumme (€ 65k) durch EBITDA zurückverdient ist.':'We rekenen met drie realistische scenario\u2019s. Hieronder zie je per scenario wanneer je break-even bereikt en wanneer de complete projectsom (€ 65k) via EBITDA terugverdiend is.'}</p>
 
@@ -1987,7 +2086,7 @@ function renderFriendchisePitch() {
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-              <tr><td rowspan="3" class="px-4 py-2.5 align-top font-medium text-wax-800 bg-wax-50 text-xs uppercase tracking-wider">${L?'Gründung':'Oprichting'}</td><td class="px-4 py-2.5">${L?'Notar GmbH-Gründung (inkl. Beurkundung)':'Notaris GmbH-oprichting (incl. akte)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 600 – 1.200</td></tr>
+              <tr><td rowspan="4" class="px-4 py-2.5 align-top font-medium text-wax-800 bg-wax-50 text-xs uppercase tracking-wider">${L?'Gründung':'Oprichting'}</td><td class="px-4 py-2.5">${L?'Notar GmbH-Gründung (individueller Gesellschaftsvertrag)':'Notaris GmbH-oprichting (individueel vennootschapsovereenkomst)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 600 – 1.200</td></tr><tr><td class="px-4 py-2.5 text-xs text-gray-500 italic">↳ ${L?'Warum nicht Musterprotokoll (€ 300-400)? Das einfachere Musterprotokoll erlaubt keine individuellen Franchise-Klauseln und ist max. 3 Gesellschafter. Für Franchise empfohlen: individueller Vertrag.':'Waarom geen Musterprotokoll (€ 300-400)? Het eenvoudigere Musterprotokoll staat geen individuele franchise-clausules toe en is max. 3 vennoten. Voor franchise aanbevolen: individueel contract.'}</td><td></td></tr>
               <tr><td class="px-4 py-2.5">${L?'Handelsregister-Eintragung + Transparenzregister':'Handelsregister-inschrijving + Transparantieregister'}</td><td class="px-4 py-2.5 text-right font-medium">€ 200 – 350</td></tr>
               <tr><td class="px-4 py-2.5">${L?'Juristische Beratung Mietvertrag':'Juridisch advies huurcontract'}</td><td class="px-4 py-2.5 text-right font-medium">€ 400 – 800</td></tr>
               <tr><td rowspan="5" class="px-4 py-2.5 align-top font-medium text-gray-800 bg-gray-50 text-xs uppercase tracking-wider">${L?'Studio':'Studio'}</td><td class="px-4 py-2.5">${L?'Umbau / Renovation (2-Kabinen-Studio)':'Verbouwing / renovatie (2-cabines studio)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 8.000 – 20.000</td></tr>
