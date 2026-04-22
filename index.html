@@ -1557,20 +1557,118 @@ function renderFriendchisePitch() {
           : 'Alle cijfers hier zijn gebaseerd op werkelijke bedrijfsdata uit onze studio\'s in Duitsland. Geen marketingprognoses — echte resultaten van studio\'s die vandaag draaien.'}</p>
       </div>
 
-      <h2 class="text-xl font-bold text-gray-900">${L?'Ihre Investition':'Jouw investering'}</h2>
+      <!-- NIEUW: het geld — 3 manieren om ernaar te kijken -->
+      <!-- NIEUW: Uitleg van de termen voor leken -->
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+        <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2"><span class="text-xl">📖</span>${L?'Kurz erklärt — die wichtigsten Begriffe':'Kort uitgelegd — de belangrijkste termen'}</h3>
+        <p class="text-sm text-blue-900 mb-4">${L?'Kein Finanzhintergrund? Kein Problem. Hier sind die Zahlen, die Sie kennen sollten, in einfacher Sprache.':'Geen financiële achtergrond? Geen probleem. Hier zijn de cijfers die je moet kennen, in gewone taal.'}</p>
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">${L?'Umsatz':'Omzet'}</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Alles, was Kundinnen bei Ihnen bezahlen. Brutto, bevor Sie etwas davon ausgeben. Beispiel: 250 Behandlungen × € 40 = € 10.000 Monatsumsatz.':'Alles wat klanten bij je betalen. Bruto, voordat je er iets van uitgeeft. Voorbeeld: 250 behandelingen × € 40 = € 10.000 maandomzet.'}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">${L?'Kosten':'Kosten'}</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Alles, was Sie jeden Monat ausgeben: Personal, Miete, Produkte, Royalty usw. Beispiel: € 6.500/Monat für ein Durchschnittsstudio.':'Alles wat je elke maand uitgeeft: personeel, huur, producten, royalty, etc. Voorbeeld: € 6.500/maand voor een gemiddeld studio.'}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">EBITDA / ${L?'Gewinn':'Winst'}</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Umsatz minus Kosten = Ihr Gewinn vor Steuern. Beispiel: € 10.000 Umsatz − € 6.500 Kosten = € 3.500 Gewinn pro Monat.':'Omzet min kosten = jouw winst vóór belastingen. Voorbeeld: € 10.000 omzet − € 6.500 kosten = € 3.500 winst per maand.'}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">${L?'Gewinnmarge':'Winstmarge'}</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Welcher Prozentsatz des Umsatzes als Gewinn übrig bleibt. Beispiel: € 3.500 von € 10.000 = 35% Marge. Für Beauty ist 30-45% gesund.':'Welk percentage van de omzet blijft over als winst. Voorbeeld: € 3.500 van € 10.000 = 35% marge. Voor beauty is 30-45% gezond.'}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">Break-even</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Der Moment, in dem Ihr Studio pro Monat nicht mehr verliert und nicht mehr gewinnt — Sie sind quitt. Bei Wax Affairs meist ab Monat 7-9.':'Het moment dat je studio per maand niet meer verliest en niet meer wint — je bent quitte. Bij Wax Affairs meestal vanaf maand 7-9.'}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">Payback</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Wie lange dauert es, bis Sie Ihre ganze Investition zurückverdient haben. Beispiel: € 27k Eigenmittel ÷ € 1.500 Monatsgewinn ≈ 18 Monate.':'Hoe lang duurt het tot je je hele investering terug hebt verdiend. Voorbeeld: € 27k eigen geld ÷ € 1.500 maandwinst ≈ 18 maanden.'}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">Royalty</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Ihr monatlicher Beitrag an die Marke Wax Affairs (5% vom Umsatz). Das deckt Support, System, Community und Qualitätssicherung.':'Jouw maandelijkse bijdrage aan het merk Wax Affairs (5% van de omzet). Dat dekt support, systeem, community en kwaliteitsborging.'}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 border border-blue-100">
+            <strong class="text-gray-900 block mb-1">ROI (Return on Investment)</strong>
+            <p class="text-gray-700 text-xs leading-relaxed">${L?'Was Ihre Investition pro Jahr bringt, in Prozent. Beispiel: € 27k eingesetzt und € 18k Jahresgewinn = 67% ROI. Das ist viel.':'Wat jouw investering per jaar oplevert, in procenten. Voorbeeld: € 27k ingezet en € 18k jaarwinst = 67% ROI. Dat is veel.'}</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-xl font-bold text-gray-900">${L?'Das Geld — drei Ansichten':'Het geld — drie perspectieven'}</h2>
+      <p class="text-sm text-gray-500 mb-4">${L?'Die Franchise-Welt spricht oft nur über Gesamtinvestition. Das ist verwirrend. Drei Zahlen sind wichtig: die Projektsumme, wie viel Sie selbst brauchen und welche monatlichen Gebühren laufen.':'De franchise-wereld praat vaak alleen over totale investering. Dat is verwarrend. Drie getallen doen ertoe: de totale projectsom, hoeveel je zelf nodig hebt en welke maandlasten doorlopen.'}</p>
+      <div class="grid md:grid-cols-3 gap-4 mb-4">
+        <!-- 1. Totale projectsom -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">1. ${L?'Gesamte Projektsumme':'Totale projectsom'}</div>
+          <div class="text-3xl font-bold text-gray-900 mb-2">${L?'€ 55 – 98k':'€ 55 – 98k'}</div>
+          <p class="text-sm text-gray-600 mb-3">${L?'Alles, was Ihr Studio kostet, um an den Start zu gehen. Siehe komplette Tabelle unten.':'Alles wat jouw studio kost om van start te gaan. Zie complete tabel hieronder.'}</p>
+          <div class="text-xs text-gray-500 italic">${L?'Das ist die Summe auf dem Businessplan.':'Dit is het bedrag op het businessplan.'}</div>
+        </div>
+        <!-- 2. Eigen middelen -->
+        <div class="bg-wax-50 rounded-xl shadow-sm border-2 border-wax-300 p-5">
+          <div class="text-xs uppercase tracking-wider text-wax-700 font-semibold mb-2">2. ${L?'Ihre Eigenmittel':'Jouw eigen geld'} ⭐</div>
+          <div class="text-3xl font-bold text-wax-900 mb-2">${L?'€ 22 – 40k':'€ 22 – 40k'}</div>
+          <p class="text-sm text-gray-700 mb-3">${L?'Was Sie wirklich selbst auf die Bank stellen müssen. Der Rest wird finanziert.':'Wat je écht zelf op de bank moet hebben. De rest wordt gefinancierd.'}</p>
+          <div class="text-xs text-wax-700 italic font-semibold">${L?'Das ist die Zahl, die für Ihre Entscheidung zählt.':'Dit is het getal dat telt voor jouw beslissing.'}</div>
+        </div>
+        <!-- 3. Doorlopende kosten -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">3. ${L?'Laufende Gebühren':'Doorlopende fees'}</div>
+          <div class="text-3xl font-bold text-gray-900 mb-2">7%</div>
+          <p class="text-sm text-gray-600 mb-3">${L?'vom Umsatz pro Monat (5% Royalty + 2% Marketing). Bei € 10k Umsatz = € 700/Mon.':'van de omzet per maand (5% royalty + 2% marketing). Bij € 10k omzet = € 700/mnd.'}</p>
+          <div class="text-xs text-gray-500 italic">${L?'Keine überraschenden Rechnungen — es ist immer prozentual.':'Geen verrassingsrekeningen — altijd procentueel.'}</div>
+        </div>
+      </div>
+
+      <!-- Financierings-voorbeeld concreet -->
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 md:p-8 text-white mb-6">
+        <h3 class="text-lg font-bold text-wax-400 mb-3">${L?'Wie das in der Praxis aussieht — ein Beispiel':'Hoe dat er in de praktijk uitziet — een voorbeeld'}</h3>
+        <p class="text-sm text-gray-300 mb-5">${L?'Franchisenehmerin Lisa (38, Corporate-Switcher) eröffnet ein Studio in einer mittelgroßen Stadt. Hier ist, wie sie es finanziert:':'Friendchisee Lisa (38, corporate switcher) opent een studio in een middelgrote stad. Zo financiert ze het:'}</p>
+        <div class="grid md:grid-cols-4 gap-3 text-sm">
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">${L?'Projektsumme':'Projectsom'}</div>
+            <div class="text-xl font-bold mb-1">€ 65.000</div>
+            <div class="text-xs text-gray-400">${L?'Komplett — alles inklusive':'Compleet — alles inbegrepen'}</div>
+          </div>
+          <div class="bg-wax-500/10 border border-wax-400/40 rounded-lg p-4">
+            <div class="text-xs text-wax-300 uppercase tracking-wider mb-1">${L?'Ihr Eigenanteil':'Haar eigen deel'}</div>
+            <div class="text-xl font-bold mb-1">€ 27.000</div>
+            <div class="text-xs text-gray-400">~40% ${L?'eigen':'eigen'}</div>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">${L?'KfW / Bank':'KfW / bank'}</div>
+            <div class="text-xl font-bold mb-1">€ 38.000</div>
+            <div class="text-xs text-gray-400">~60% ${L?'finanziert':'gefinancierd'}</div>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">${L?'Monatliche Rate':'Maandlasten lening'}</div>
+            <div class="text-xl font-bold mb-1">€ 520</div>
+            <div class="text-xs text-gray-400">${L?'7 Jahre · 4,5% Zins':'7 jaar · 4,5% rente'}</div>
+          </div>
+        </div>
+        <div class="mt-5 pt-5 border-t border-white/10 text-sm text-gray-300">
+          <strong class="text-white">${L?'Übersetzung':'Vertaling'}:</strong> ${L?'Lisa kann ihr Studio mit € 27k Eigenkapital starten. Ihre monatliche Verpflichtung zur Bank ist € 520 — das ist weniger als eine durchschnittliche Miete in Deutschland. Nach 7 Jahren ist ihr Studio schuldenfrei.':'Lisa kan haar studio starten met € 27k eigen geld. Haar maandelijkse verplichting aan de bank is € 520 — minder dan een gemiddelde huur in Nederland. Na 7 jaar is haar studio schuldenvrij.'}
+        </div>
+      </div>
+
+      <!-- Complete lijst: wat het Wax Affairs-systeem kost -->
+      <h2 class="text-xl font-bold text-gray-900">${L?'Was kostet Wax Affairs selbst':'Wat kost Wax Affairs zelf'}</h2>
+      <p class="text-sm text-gray-500 mb-4">${L?'Diese drei Zahlen sind das, was Sie direkt an uns zahlen. Alles andere sind externe Kosten (Miete, Personal etc.) — siehe komplette Tabelle weiter unten.':'Deze drie getallen zijn wat je rechtstreeks aan ons betaalt. Al het andere zijn externe kosten (huur, personeel etc.) — zie complete tabel verderop.'}</p>
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-sm">
           <thead><tr class="bg-gray-50">
-            <th class="text-left px-5 py-3 font-semibold text-gray-600">${L?'Posten':'Onderdeel'}</th>
+            <th class="text-left px-5 py-3 font-semibold text-gray-600">${L?'An Wax Affairs':'Aan Wax Affairs'}</th>
             <th class="text-left px-5 py-3 font-semibold text-gray-600">${L?'Betrag':'Bedrag'}</th>
             <th class="text-left px-5 py-3 font-semibold text-gray-600">${L?'Was es abdeckt':'Wat het dekt'}</th>
           </tr></thead>
           <tbody class="divide-y divide-gray-100">
-            <tr><td class="px-5 py-3 font-medium">${L?'Onboarding-Gebühr (einmalig)':'Onboarding-fee (eenmalig)'}</td><td class="px-5 py-3 font-bold text-wax-700">${fe(15000)}</td><td class="px-5 py-3 text-gray-600">${L?'Schulung, Territorium, Onboarding, Starterpaket, 1. Monat Coaching':'Training, territorium-setup, onboarding, starter-kit, 1e maand coaching'}</td></tr>
-            <tr><td class="px-5 py-3 font-medium">${L?'Royalty (monatlich)':'Royalty (maandelijks)'}</td><td class="px-5 py-3 font-bold text-wax-700">5% ${L?'vom Umsatz':'van omzet'}</td><td class="px-5 py-3 text-gray-600">${L?'Erhöht sich auf 6%, sobald das Studio':'Stijgt naar 6% zodra studio'} ${fe(120000)} ${L?'Jahresumsatz überschreitet':'jaar-omzet overschrijdt'}</td></tr>
-            <tr><td class="px-5 py-3 font-medium">${L?'Marketing-Fee (monatlich)':'Marketing-fee (maandelijks)'}</td><td class="px-5 py-3 font-bold text-wax-700">2% ${L?'vom Umsatz':'van omzet'}</td><td class="px-5 py-3 text-gray-600">${L?'Gemeinsame Kampagnen, nationales SEO, Content-Library':'Gezamenlijke campagnes, landelijk SEO, content-library'}</td></tr>
-            <tr><td class="px-5 py-3 font-medium">${L?'Studio-Einrichtung':'Studio-inrichting'}</td><td class="px-5 py-3 font-bold text-wax-700">${fe(30000)} – ${fe(60000)}</td><td class="px-5 py-3 text-gray-600">${L?'Miete, Einrichtung, Geräte — abhängig von Lage und Größe':'Huur, inrichting, apparatuur — afhankelijk van locatie en grootte'}</td></tr>
-            <tr class="bg-wax-50"><td class="px-5 py-3 font-bold">${L?'Gesamt-Startinvestition':'Totale startinvestering'}</td><td class="px-5 py-3 font-bold text-wax-700">${fe(45000)} – ${fe(75000)}</td><td class="px-5 py-3 text-gray-600 font-medium">${L?'Inkl. Onboarding + Einrichtung + 3 Monate Betriebskapital':'Inclusief onboarding + inrichting + 3 maanden werkkapitaal'}</td></tr>
+            <tr><td class="px-5 py-3 font-medium">${L?'Onboarding-Gebühr (einmalig)':'Onboarding-fee (eenmalig)'}</td><td class="px-5 py-3 font-bold text-wax-700">${fe(15000)}</td><td class="px-5 py-3 text-gray-600">${L?'10 Tage Schulung, Territorium, Starterpaket, 1. Monat Coaching':'10 dagen training, territorium, starter-kit, 1e maand coaching'}</td></tr>
+            <tr><td class="px-5 py-3 font-medium">${L?'Royalty (monatlich)':'Royalty (maandelijks)'}</td><td class="px-5 py-3 font-bold text-wax-700">5% ${L?'vom Umsatz':'van omzet'}</td><td class="px-5 py-3 text-gray-600">${L?'Steigt auf 6% bei > € 120k Jahresumsatz':'Stijgt naar 6% bij > € 120k jaaromzet'}</td></tr>
+            <tr><td class="px-5 py-3 font-medium">${L?'Marketing-Fee (monatlich)':'Marketing-fee (maandelijks)'}</td><td class="px-5 py-3 font-bold text-wax-700">2% ${L?'vom Umsatz':'van omzet'}</td><td class="px-5 py-3 text-gray-600">${L?'Landesweite Kampagnen, SEO, Content-Library':'Landelijke campagnes, SEO, content-library'}</td></tr>
           </tbody>
         </table>
       </div>
@@ -1629,39 +1727,98 @@ function renderFriendchisePitch() {
         </table>
       </div>
 
-      <!-- 3 scenario's -->
-      <h2 class="text-xl font-bold text-gray-900 pt-4">${L?'Drei Szenarien':'Drie scenario\'s'}</h2>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-yellow-200">
-          <div class="text-xs font-bold uppercase tracking-wider text-yellow-700 mb-2">${L?'Konservativ':'Conservatief'}</div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(95000)}</div>
-          <div class="text-xs text-gray-500 mb-3">${L?'Jahresumsatz':'Jaar-omzet'}</div>
-          <div class="text-sm space-y-1">
-            <div class="flex justify-between"><span class="text-gray-600">EBITDA</span><span class="font-medium">~${fe(28000)}</span></div>
-            <div class="flex justify-between"><span class="text-gray-600">${L?'Marge':'Marge'}</span><span class="font-medium">~29%</span></div>
-            <div class="flex justify-between"><span class="text-gray-600">Payback</span><span class="font-medium">~30 ${L?'Mon.':'mnd'}</span></div>
+      <!-- 3 scenario's — uitgebreid met jaar-voor-jaar beeld -->
+      <h2 class="text-xl font-bold text-gray-900 pt-4">${L?'Drei Szenarien — wann haben Sie Ihr Geld zur\u00FCck?':'Drie scenario\u2019s — wanneer heb je je geld terug?'}</h2>
+      <p class="text-sm text-gray-500 mb-5">${L?'Wir rechnen mit drei realistischen Szenarien. Nehmen Sie Lisa aus dem vorherigen Beispiel (€ 27k Eigenmittel). Unten sehen Sie pro Szenario, wann sie Gewinn macht und ihr Eigenkapital zurück hat.':'We rekenen met drie realistische scenario\u2019s. Neem Lisa uit het vorige voorbeeld (€ 27k eigen geld). Hieronder zie je per scenario wanneer ze winst maakt en haar eigen inleg terug heeft.'}</p>
+
+      <div class="space-y-5">
+        <!-- Conservatief -->
+        <div class="bg-white rounded-2xl shadow-sm border-l-4 border-yellow-400 overflow-hidden">
+          <div class="bg-yellow-50 px-6 py-4 border-b border-yellow-100 flex items-start justify-between flex-wrap gap-3">
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-yellow-700 mb-1">${L?'Konservativ \u2014 langsamer Start':'Conservatief \u2014 langzame start'}</div>
+              <div class="text-2xl font-bold text-gray-900">${L?'Jahresumsatz':'Jaar-omzet'} € 95.000</div>
+              <p class="text-xs text-gray-600 mt-1">${L?'Kleinere Stadt, weniger Laufkundschaft, Team braucht l\u00E4nger zum Auslasten':'Kleinere stad, minder aanloop, team heeft langer nodig om vol te zitten'}</p>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-gray-500 uppercase tracking-wider">${L?'Eigenkapital zur\u00FCck':'Eigen geld terug'}</div>
+              <div class="text-3xl font-bold text-yellow-700">30 ${L?'Monate':'maanden'}</div>
+            </div>
+          </div>
+          <div class="p-5">
+            <div class="grid grid-cols-3 gap-4 text-sm mb-4">
+              <div><div class="text-xs text-gray-500 uppercase">EBITDA ${L?'pro Jahr':'per jaar'}</div><div class="font-bold text-gray-900">€ 28.000</div></div>
+              <div><div class="text-xs text-gray-500 uppercase">${L?'Marge':'Marge'}</div><div class="font-bold text-gray-900">29%</div></div>
+              <div><div class="text-xs text-gray-500 uppercase">${L?'Monatsgewinn':'Winst/mnd'}</div><div class="font-bold text-gray-900">€ 2.333</div></div>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 1</span><div class="flex-1 bg-red-100 rounded h-6 relative"><span class="absolute inset-0 flex items-center px-3 text-xs text-red-800">− € 5.000 (${L?'Aufbau':'opbouw'})</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 2</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-300 rounded" style="width:60%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-800">+ € 16.000</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 3</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:80%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 28.000 \u2713 ${L?'Eigenmittel zur\u00FCck':'eigen geld terug'}</span></div></div>
+            </div>
           </div>
         </div>
-        <div class="bg-wax-50 rounded-xl p-5 shadow-sm border-2 border-wax-400">
-          <div class="text-xs font-bold uppercase tracking-wider text-wax-700 mb-2">${L?'Realistisch':'Realistisch'} ⭐</div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(126000)}</div>
-          <div class="text-xs text-gray-500 mb-3">${L?'Jahresumsatz':'Jaar-omzet'}</div>
-          <div class="text-sm space-y-1">
-            <div class="flex justify-between"><span class="text-gray-600">EBITDA</span><span class="font-medium">~${fe(50000)}</span></div>
-            <div class="flex justify-between"><span class="text-gray-600">${L?'Marge':'Marge'}</span><span class="font-medium">~40%</span></div>
-            <div class="flex justify-between"><span class="text-gray-600">Payback</span><span class="font-medium">~18 ${L?'Mon.':'mnd'}</span></div>
+
+        <!-- Realistisch ⭐ -->
+        <div class="bg-white rounded-2xl shadow-sm border-l-4 border-wax-500 overflow-hidden ring-2 ring-wax-200">
+          <div class="bg-wax-50 px-6 py-4 border-b border-wax-200 flex items-start justify-between flex-wrap gap-3">
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-wax-700 mb-1">${L?'Realistisch \u2014 wie die meisten':'Realistisch \u2014 zoals de meesten'} \u2B50</div>
+              <div class="text-2xl font-bold text-gray-900">${L?'Jahresumsatz':'Jaar-omzet'} € 126.000</div>
+              <p class="text-xs text-gray-600 mt-1">${L?'Mittelgro\u00DFe Stadt, solide Vorbereitung, durchschnittliches Team-Tempo':'Middelgrote stad, gedegen voorbereiding, gemiddeld team-tempo'}</p>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-gray-500 uppercase tracking-wider">${L?'Eigenkapital zur\u00FCck':'Eigen geld terug'}</div>
+              <div class="text-3xl font-bold text-wax-700">18 ${L?'Monate':'maanden'}</div>
+            </div>
+          </div>
+          <div class="p-5">
+            <div class="grid grid-cols-3 gap-4 text-sm mb-4">
+              <div><div class="text-xs text-gray-500 uppercase">EBITDA ${L?'pro Jahr':'per jaar'}</div><div class="font-bold text-gray-900">€ 50.000</div></div>
+              <div><div class="text-xs text-gray-500 uppercase">${L?'Marge':'Marge'}</div><div class="font-bold text-gray-900">40%</div></div>
+              <div><div class="text-xs text-gray-500 uppercase">${L?'Monatsgewinn':'Winst/mnd'}</div><div class="font-bold text-gray-900">€ 4.167</div></div>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 1</span><div class="flex-1 bg-yellow-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-yellow-200 rounded" style="width:50%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-yellow-800">+ € 18.000 (${L?'breakeven im Monat 7':'break-even in maand 7'})</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 2</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:75%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 50.000 \u2713 ${L?'Eigenmittel zur\u00FCck':'eigen geld terug'}</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 3</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-500 rounded" style="width:90%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-white font-semibold">+ € 55.000 (${L?'reiner Gewinn':'pure winst'})</span></div></div>
+            </div>
           </div>
         </div>
-        <div class="bg-white rounded-xl p-5 shadow-sm border border-green-200">
-          <div class="text-xs font-bold uppercase tracking-wider text-green-700 mb-2">${L?'Stark':'Sterk'}</div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(160000)}</div>
-          <div class="text-xs text-gray-500 mb-3">${L?'Jahresumsatz':'Jaar-omzet'}</div>
-          <div class="text-sm space-y-1">
-            <div class="flex justify-between"><span class="text-gray-600">EBITDA</span><span class="font-medium">~${fe(75000)}</span></div>
-            <div class="flex justify-between"><span class="text-gray-600">${L?'Marge':'Marge'}</span><span class="font-medium">~47%</span></div>
-            <div class="flex justify-between"><span class="text-gray-600">Payback</span><span class="font-medium">~12 ${L?'Mon.':'mnd'}</span></div>
+
+        <!-- Sterk -->
+        <div class="bg-white rounded-2xl shadow-sm border-l-4 border-green-500 overflow-hidden">
+          <div class="bg-green-50 px-6 py-4 border-b border-green-200 flex items-start justify-between flex-wrap gap-3">
+            <div>
+              <div class="text-xs font-bold uppercase tracking-wider text-green-700 mb-1">${L?'Stark \u2014 A-Lage + starkes Team':'Sterk \u2014 A-locatie + sterk team'}</div>
+              <div class="text-2xl font-bold text-gray-900">${L?'Jahresumsatz':'Jaar-omzet'} € 160.000</div>
+              <p class="text-xs text-gray-600 mt-1">${L?'Gro\u00DFstadt, Top-Standort, erfahrenes Team, schneller Kundenaufbau':'Grote stad, toplocatie, ervaren team, snelle klantopbouw'}</p>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-gray-500 uppercase tracking-wider">${L?'Eigenkapital zur\u00FCck':'Eigen geld terug'}</div>
+              <div class="text-3xl font-bold text-green-700">12 ${L?'Monate':'maanden'}</div>
+            </div>
+          </div>
+          <div class="p-5">
+            <div class="grid grid-cols-3 gap-4 text-sm mb-4">
+              <div><div class="text-xs text-gray-500 uppercase">EBITDA ${L?'pro Jahr':'per jaar'}</div><div class="font-bold text-gray-900">€ 75.000</div></div>
+              <div><div class="text-xs text-gray-500 uppercase">${L?'Marge':'Marge'}</div><div class="font-bold text-gray-900">47%</div></div>
+              <div><div class="text-xs text-gray-500 uppercase">${L?'Monatsgewinn':'Winst/mnd'}</div><div class="font-bold text-gray-900">€ 6.250</div></div>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 1</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:70%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 35.000 \u2713 ${L?'Eigenmittel zur\u00FCck':'eigen geld terug'}</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 2</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-500 rounded" style="width:90%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-white font-semibold">+ € 75.000 (${L?'reiner Gewinn':'pure winst'})</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 3</span><div class="flex-1 bg-green-200 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-600 rounded" style="width:95%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-white font-semibold">+ € 85.000 (${L?'Skalierung m\u00F6glich':'opschalen mogelijk'})</span></div></div>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- Conclusie onder scenarios -->
+      <div class="bg-gradient-to-br from-wax-50 to-white rounded-xl p-6 border border-wax-200 mt-6">
+        <h3 class="font-bold text-gray-900 mb-2">${L?'Was bedeutet das f\u00FCr Ihre Entscheidung?':'Wat betekent dit voor jouw beslissing?'}</h3>
+        <p class="text-sm text-gray-700 leading-relaxed mb-3">${L?'In allen drei Szenarien haben Sie Ihr Eigenkapital innerhalb von 3 Jahren zur\u00FCck. Im realistischen Fall sogar in 18 Monaten \u2014 gleichzeitig laufen Ihre Bankraten weiter, aber aus dem laufenden Gewinn. Danach ist alles Gewinn f\u00FCr Sie.':'In alle drie scenario\u2019s heb je je eigen geld binnen 3 jaar terug. In het realistische geval zelfs in 18 maanden \u2014 tegelijk lopen je bankafbetalingen door, maar uit de doorlopende winst. Daarna is alles winst voor jou.'}</p>
+        <p class="text-xs text-gray-600 italic">${L?'Vergleich: Aktien geben ~7%/Jahr, Immobilien ~4%/Jahr. Ein gut laufendes Wax-Affairs-Studio gibt Ihnen 40\u201360% ROI pro Jahr \u2014 aber Sie m\u00FCssen daf\u00FCr arbeiten.':'Ter vergelijking: aandelen geven ~7%/jaar, vastgoed ~4%/jaar. Een goed draaiend Wax Affairs-studio geeft je 40\u201360% ROI per jaar \u2014 maar je moet er wel voor werken.'}</p>
       </div>
 
       <!-- NIEUW: Transparante totale investering-tabel -->
