@@ -1857,6 +1857,49 @@ function renderFriendchisePitch() {
           : 'Als Friendchisee krijg je meer dan een licentie en een merknaam. Je krijgt een volledig begeleid traject naar het runnen van een professionele, winstgevende wax-studio.'}</p>
       </div>
 
+      <!-- NIEUW: 3 Leerpaden -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Drei Lernwege \u2014 je nach Ihrem Hintergrund':'Drie leerwegen \u2014 afhankelijk van jouw achtergrond'}</h2>
+        <p class="text-sm text-gray-500 mb-5">${L?'Jede Friendchisee startet an einem anderen Punkt. Daher passen wir Training und Coaching an Ihre Ausgangssituation an. Drei typische Pfade:':'Elke Friendchisee begint op een ander punt. Daarom passen we training en coaching aan op jouw startsituatie. Drie typische paden:'}</p>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="bg-white rounded-xl shadow-sm border-2 border-blue-300 overflow-hidden">
+            <div class="bg-blue-50 px-5 py-3 border-b border-blue-100">
+              <div class="flex items-center gap-2"><span class="text-2xl">\uD83C\uDF31</span><strong class="text-blue-900">Starter</strong></div>
+              <p class="text-xs text-blue-700 mt-1">${L?'Keine Waxing-Erfahrung':'Geen waxing-ervaring'}</p>
+            </div>
+            <div class="p-5 text-sm space-y-3">
+              <div><strong class="text-gray-900 block mb-1">${L?'Wer passt hier?':'Wie past hier?'}</strong><p class="text-xs text-gray-600">${L?'Career-Switcher aus Corporate, Unternehmer*in aus anderen Branchen, Leidenschaft ohne Beauty-Hintergrund.':'Career-switchers uit corporate, ondernemers uit andere branches, passie zonder beauty-achtergrond.'}</p></div>
+              <div><strong class="text-gray-900 block mb-1">${L?'Ihr Pfad':'Jouw pad'}</strong><ul class="text-xs text-gray-700 space-y-1"><li>\u2022 +5 ${L?'Tage Basis-Anatomie und Hygiene':'dagen basis-anatomie en hygi\u00EBne'}</li><li>\u2022 10 ${L?'Tage Simone-Training (Pflicht)':'dagen Simone-training (verplicht)'}</li><li>\u2022 +5 ${L?'Tage begleiteter Start im Partnerstudio':'dagen begeleide start in partnerstudio'}</li><li>\u2022 ${L?'W\u00F6chentliches Simone-Coaching Monat 1-3':'Wekelijkse Simone-coaching maand 1-3'}</li></ul></div>
+              <div class="bg-blue-50 rounded-lg p-3"><div class="text-xs text-blue-700"><strong>${L?'Dauer bis Studio-Start':'Duur tot studio-start'}:</strong> 4-5 ${L?'Monate':'maanden'}</div><div class="text-xs text-blue-700 mt-1"><strong>${L?'Zusatzkosten':'Extra kosten'}:</strong> ~\u20AC 2.800</div></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border-2 border-wax-400 overflow-hidden relative">
+            <div class="absolute top-3 right-3 bg-wax-500 text-white text-xs px-2 py-0.5 rounded-full font-semibold">${L?'Standard':'Standaard'}</div>
+            <div class="bg-wax-50 px-5 py-3 border-b border-wax-200">
+              <div class="flex items-center gap-2"><span class="text-2xl">\uD83C\uDF3F</span><strong class="text-wax-900">Medium</strong></div>
+              <p class="text-xs text-wax-700 mt-1">${L?'Einige Beauty-Erfahrung':'Enige beauty-ervaring'}</p>
+            </div>
+            <div class="p-5 text-sm space-y-3">
+              <div><strong class="text-gray-900 block mb-1">${L?'Wer passt hier?':'Wie past hier?'}</strong><p class="text-xs text-gray-600">${L?'Ehemalige Kosmetikerinnen, Nagelstylistinnen, Friseurinnen mit Waxing-Ber\u00FChrungen aber nicht als Hauptfach.':'Ex-schoonheidsspecialisten, nagelstylistes, kappers met waxing-ervaring maar niet als hoofdvak.'}</p></div>
+              <div><strong class="text-gray-900 block mb-1">${L?'Ihr Pfad':'Jouw pad'}</strong><ul class="text-xs text-gray-700 space-y-1"><li>\u2022 10 ${L?'Tage Simone-Training (Pflicht)':'dagen Simone-training (verplicht)'}</li><li>\u2022 +2 ${L?'Tage Vertiefung schwieriger Hauttypen':'dagen verdieping moeilijke huidtypen'}</li><li>\u2022 ${L?'Zweiw\u00F6chentliches Simone-Coaching Monat 1-3':'Tweewekelijkse Simone-coaching maand 1-3'}</li></ul></div>
+              <div class="bg-wax-50 rounded-lg p-3"><div class="text-xs text-wax-700"><strong>${L?'Dauer bis Studio-Start':'Duur tot studio-start'}:</strong> 3-4 ${L?'Monate':'maanden'}</div><div class="text-xs text-wax-700 mt-1"><strong>${L?'Zusatzkosten':'Extra kosten'}:</strong> ~\u20AC 1.200</div></div>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border-2 border-green-300 overflow-hidden">
+            <div class="bg-green-50 px-5 py-3 border-b border-green-100">
+              <div class="flex items-center gap-2"><span class="text-2xl">\uD83C\uDF33</span><strong class="text-green-900">${L?'Erfahren':'Ervaren'}</strong></div>
+              <p class="text-xs text-green-700 mt-1">${L?'Salon-Hintergrund / eigene Erfahrung':'Salon-achtergrond / eigen ervaring'}</p>
+            </div>
+            <div class="p-5 text-sm space-y-3">
+              <div><strong class="text-gray-900 block mb-1">${L?'Wer passt hier?':'Wie past hier?'}</strong><p class="text-xs text-gray-600">${L?'Aktive Waxerinnen mit 4+ Jahren Erfahrung, (ehemalige) Salon-Inhaberinnen, die Marke und Struktur suchen.':'Actieve waxers met 4+ jaar ervaring, (voormalige) eigen salon-houders, die merk en structuur zoeken.'}</p></div>
+              <div><strong class="text-gray-900 block mb-1">${L?'Ihr Pfad':'Jouw pad'}</strong><ul class="text-xs text-gray-700 space-y-1"><li>\u2022 7 ${L?'Tage Simone-Training (verk\u00FCrzt, Wax-Affairs-Methode)':'dagen Simone-training (verkort, Wax Affairs methode)'}</li><li>\u2022 +3 ${L?'Tage Advanced: Nao-Produkte, Gesicht, Kinn':'dagen advanced: Nao-producten, gezicht, kin'}</li><li>\u2022 ${L?'Fokus auf Business-Coaching durch Narin':'Focus op business-coaching door Narin'}</li></ul></div>
+              <div class="bg-green-50 rounded-lg p-3"><div class="text-xs text-green-700"><strong>${L?'Dauer bis Studio-Start':'Duur tot studio-start'}:</strong> 2-3 ${L?'Monate':'maanden'}</div><div class="text-xs text-green-700 mt-1"><strong>${L?'Zusatzkosten':'Extra kosten'}:</strong> ${L?'inklusive':'inclusief'}</div></div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-4 italic">${L?'Welcher Pfad passt zu Ihnen? Nach der Persona-Check machen wir die Einsch\u00E4tzung gemeinsam im Deep-Dive-Gespr\u00E4ch.':'Welk pad past bij jou? Na de Persona-check maken we de inschatting samen in het deep-dive-gesprek.'}</p>
+      </div>
+
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
           <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🎓</span><h3 class="font-bold text-gray-900">${L?'Handwerks-Training — Simone':'Ambacht-training — Simone'}</h3></div>
@@ -1904,6 +1947,43 @@ function renderFriendchisePitch() {
             <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Retail-Verkauf an Kundinnen für zusätzliche Marge':'Retail-verkoop aan klanten voor extra marge'}</li>
             <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Kontinuierliche Verfügbarkeit garantiert':'Doorlopende beschikbaarheid gegarandeerd'}</li>
           </ul>
+        </div>
+      </div>
+
+      <!-- NIEUW: 6 Expertise-gebieden -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Worin begleiten wir Sie? Sechs konkrete Fachgebiete':'Waarin begeleiden we je? Zes concrete expertise-gebieden'}</h2>
+        <p class="text-sm text-gray-500 mb-5">${L?'Coaching ist bei uns kein abstraktes Versprechen. Hier ist, worin Sie konkret begleitet werden \u2014 von wem, wie oft, und was Sie erwarten k\u00F6nnen.':'Coaching is bij ons geen abstracte belofte. Hier is waar je concreet in begeleid wordt \u2014 door wie, hoe vaak, en wat je kunt verwachten.'}</p>
+
+        <div class="space-y-3">
+          ${[
+            {emoji:'\uD83C\uDFA8', titelDe:'Handwerk & Waxing-Technik', titelNl:'Ambacht & waxing-techniek', door:'Simone', freqDe:'W\u00F6chentlich Monat 1-3, dann monatlich', freqNl:'Wekelijks maand 1-3, daarna maandelijks', watDe:'Fortlaufende technische Verbesserung nach der Erstschulung. Video-Feedback auf Ihre eigenen Behandlungen, Besprechung schwieriger F\u00E4lle, j\u00E4hrliche Advanced-Workshops.', watNl:'Doorlopende technische verbetering na de initi\u00EBle training. Video-feedback op je eigen behandelingen, bespreking van moeilijke gevallen, jaarlijkse advanced-workshops.', concreteDe:['Monatlicher Video-Call mit Technik-Feedback','2 Advanced-Workshops pro Jahr in Bad Soden','WhatsApp-Gruppe f\u00FCr akute Technik-Fragen'], concreteNl:['Maandelijkse video-call met techniek-feedback','2 advanced-workshops per jaar in Bad Soden','WhatsApp-groep voor acute techniek-vragen'], color:'wax'},
+            {emoji:'\uD83E\uDDF4', titelDe:'Produktkenntnisse & Nao-Einsatz', titelNl:'Productkennis & Nao-gebruik', door:'Simone + HQ', freqDe:'Nach Bedarf + quartalsweise Update', freqNl:'Op aanvraag + per kwartaal update', watDe:'Sie lernen die Nao-Produktlinie zu beherrschen: welches Produkt wann, Kombinationen, Retail-Verkaufsstrategie.', watNl:'Je leert de Nao-productlijn beheersen: welk product wanneer, combinaties, retail-verkoopstrategie.', concreteDe:['Vollst\u00E4ndige INCI-Kenntnis pro Produkt','Behandlungsprotokolle pro Hauttyp','Retail-Verkaufstraining (Gespr\u00E4chstechniken)'], concreteNl:['Volledige INCI-kennis per product','Behandelprotocollen per huidtype','Retail-verkooptraining (gesprekstechnieken)'], color:'wax'},
+            {emoji:'\uD83D\uDCCA', titelDe:'Businessplan & Finanzen', titelNl:'Businessplan & financi\u00EBn', door:'Narin', freqDe:'W\u00F6chentlich Monat 1-6, danach monatlich', freqNl:'Wekelijks maand 1-6, daarna maandelijks', watDe:'Ihr Studio als Unternehmen gesund f\u00FChren. Cashflow, Margen, Preisgestaltung, Verhandlung mit Bank/Vermieter, Steuern, Einkauf.', watNl:'Je studio als bedrijf gezond runnen. Cashflow, marges, prijsstelling, onderhandeling met bank/verhuurder, belastingen, inkoop.', concreteDe:['Monatlicher Finanz-Check (Umsatz, Kosten, Cashflow)','Quartalsweise Strategie-Review','Verhandlungsunterst\u00FCtzung bei Mietvertr\u00E4gen > \u20AC 2.500'], concreteNl:['Maandelijkse financi\u00EBle check (omzet, kosten, cashflow)','Per kwartaal strategie-review','Onderhandelingsondersteuning bij huurcontracten > \u20AC 2.500'], color:'gray'},
+            {emoji:'\uD83D\uDCE3', titelDe:'Marketing & Branding', titelNl:'Marketing & branding', door:'HQ + Narin', freqDe:'Laufend (gemeinsame Kampagnen)', freqNl:'Doorlopend (gezamenlijke campagnes)', watDe:'Lokales Marketing (Er\u00F6ffnungskampagne, Ongoing), Social Media, Google Business, SEO. Sie nutzen unsere Content-Library von 200+ Templates.', watNl:'Lokale marketing (opening-campagne, ongoing), social media, Google Business, SEO. Je gebruikt onze content-library van 200+ templates.', concreteDe:['Er\u00F6ffnungskampagne (Budget + Planung, geschrieben durch HQ)','Jeden Monat 8-12 Social-Posts bereit zum Anpassen','Google-Ads-Management durch HQ (optional, 15% Geb\u00FChr)'], concreteNl:['Opening-campagne (budget + planning, geschreven door HQ)','Elke maand 8-12 social-posts klaar om aan te passen','Google-Ads-management door HQ (optioneel, 15% fee)'], color:'gray'},
+            {emoji:'\uD83D\uDC65', titelDe:'Team & Personalf\u00FChrung', titelNl:'Team & personeelsleiding', door:'Narin', freqDe:'Pro Phase (Einstellung, Einarbeitung, Feedback)', freqNl:'Per fase (aanname, inwerking, feedback)', watDe:'Ihre erste Mitarbeiterin einstellen, einarbeiten und halten. Vertr\u00E4ge, Gehaltsmodelle (Fix + %), Schichtplanung, schwierige Gespr\u00E4che.', watNl:'Je eerste medewerker aannemen, inwerken en behouden. Contracten, beloningsmodellen (vast + %), dienstplanning, lastige gesprekken.', concreteDe:['Standard-Arbeitsvertrag f\u00FCr Waxerinnen (DE + NL)','Einarbeitungsprotokoll \u2014 erste 30 Tage','Gehaltsmodell mit %-Bonus auf Umsatz'], concreteNl:['Standaard-arbeidscontract voor waxers (NL + DE)','Inwerk-protocol \u2014 eerste 30 dagen','Beloningsmodel met %-bonus op omzet'], color:'gray'},
+            {emoji:'\u2699\uFE0F', titelDe:'Systeme & Operationen', titelNl:'Systemen & operaties', door:'HQ', freqDe:'Onboarding + ad hoc', freqNl:'Onboarding + ad hoc', watDe:'CRM (dieses System), Buchungssystem, Kassensystem, Lagerverwaltung, Hygiene-Protokolle. Alles auf einer Plattform.', watNl:'CRM (dit systeem), boekingssysteem, kassasysteem, voorraadbeheer, hygi\u00EBne-protocollen. Alles op \u00E9\u00E9n platform.', concreteDe:['2-Stunden-Onboarding der Systeme','Hygiene- und Inspektionsprotokoll (DIN-konform)','Automatische Bestandsbestellungen von Nao'], concreteNl:['2-uur onboarding van de systemen','Hygi\u00EBne- en inspectie-protocol (conform DIN/NEN)','Automatische voorraadbestellingen van Nao'], color:'wax'}
+          ].map(g => `
+            <details class="bg-white rounded-xl shadow-sm border border-gray-100 group">
+              <summary class="flex items-center gap-4 p-5 cursor-pointer list-none hover:bg-gray-50 rounded-xl">
+                <span class="text-3xl flex-shrink-0">${g.emoji}</span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <strong class="text-gray-900">${L?g.titelDe:g.titelNl}</strong>
+                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${g.color==='wax'?'bg-wax-100 text-wax-700':'bg-gray-100 text-gray-700'}">${g.door}</span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-0.5">${L?g.freqDe:g.freqNl}</p>
+                </div>
+                <span class="text-wax-500 text-xl transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <div class="px-5 pb-5 pt-0">
+                <p class="text-sm text-gray-700 leading-relaxed mb-3">${L?g.watDe:g.watNl}</p>
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <div class="text-xs font-semibold uppercase tracking-wider text-gray-600 mb-2">${L?'Konkret':'Concreet'}</div>
+                  <ul class="space-y-1">${(L?g.concreteDe:g.concreteNl).map(c => `<li class="flex items-start gap-2 text-sm text-gray-700"><span class="text-green-500 mt-0.5">\u2713</span>${c}</li>`).join('')}</ul>
+                </div>
+              </div>
+            </details>`).join('')}
         </div>
       </div>
 
