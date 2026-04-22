@@ -1705,18 +1705,82 @@ function renderFriendchisePitch() {
       </div>
 
       <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <h3 class="font-bold text-gray-900 mb-4">${L ? 'Zwei typische Profile, die gut passen' : 'Twee typische profielen die goed passen'}</h3>
-        <div class="grid md:grid-cols-2 gap-6">
+        <h3 class="font-bold text-gray-900 mb-4">${L ? 'Drei typische Profile, die gut passen' : 'Drie typische profielen die goed passen'}</h3>
+        <p class="text-sm text-gray-500 mb-5">${L ? 'Identifizieren Sie sich in einem dieser Profile? Dann lohnt sich ein Gespräch. Erkennen Sie sich in keinem? Dann auch — lassen Sie uns reden.' : 'Herken je jezelf in één van deze profielen? Dan is een gesprek de moeite waard. Herken je je in geen? Ook goed — laten we dan alsnog praten.'}</p>
+        <div class="grid md:grid-cols-3 gap-4">
           <div class="bg-blue-50 rounded-lg p-5">
             <div class="text-2xl mb-2">💪</div>
             <h4 class="font-bold text-gray-900 mb-1">${L ? 'Die erfahrene Waxerin' : 'De ervaren waxer'}</h4>
-            <p class="text-sm text-gray-600">${L ? 'Jahrelange Erfahrung im Salon, möchte sich selbstständig machen. Hat die Technik, braucht Marke und Business-Support. Simone perfektioniert die Technik, Narin lehrt das Unternehmertum.' : 'Jarenlange ervaring in een salon, wil nu voor zichzelf beginnen. Heeft de techniek, mist het merk en de business support. Simone perfectioneert de techniek, Narin leert ondernemen.'}</p>
+            <p class="text-sm text-gray-600 mb-3">${L ? 'Jahrelange Erfahrung im Salon, möchte sich selbstständig machen. Hat die Technik, braucht Marke und Business-Support.' : 'Jarenlange ervaring in een salon, wil nu voor zichzelf beginnen. Heeft de techniek, mist het merk en de business-support.'}</p>
+            <div class="text-xs text-gray-500 border-t border-blue-200 pt-3">
+              <strong class="text-blue-800">${L?'Was wir hinzufügen:':'Wat wij toevoegen:'}</strong>
+              <ul class="mt-1 space-y-0.5">
+                <li>• ${L?'Starke Marke + Standortschutz':'Sterk merk + territoriumbescherming'}</li>
+                <li>• ${L?'Business-Coaching durch Narin':'Business-coaching door Narin'}</li>
+                <li>• ${L?'Exklusive Nao-Produkte':'Exclusieve Nao-producten'}</li>
+              </ul>
+            </div>
           </div>
           <div class="bg-purple-50 rounded-lg p-5">
             <div class="text-2xl mb-2">🚀</div>
-            <h4 class="font-bold text-gray-900 mb-1">${L ? 'Der/Die Unternehmer*in' : 'De ondernemer'}</h4>
-            <p class="text-sm text-gray-600">${L ? 'Unternehmerische Erfahrung (nicht unbedingt in Beauty), sucht ein bewährtes Konzept mit Begleitung. Hat das Startkapital und den Antrieb. Simone lehrt das Handwerk, Narin skaliert das Geschäft.' : 'Ondernemerservaring (niet per se in beauty), zoekt een bewezen concept met begeleiding. Heeft het startkapitaal en de drive. Simone leert het vak, Narin schaalt het bedrijf.'}</p>
+            <h4 class="font-bold text-gray-900 mb-1">${L ? 'Die Unternehmerin' : 'De ondernemer'}</h4>
+            <p class="text-sm text-gray-600 mb-3">${L ? 'Unternehmerische Erfahrung (nicht unbedingt in Beauty), sucht ein bewährtes Konzept mit Begleitung. Hat Startkapital und Antrieb.' : 'Ondernemerservaring (niet per se in beauty), zoekt een bewezen concept met begeleiding. Heeft startkapitaal en drive.'}</p>
+            <div class="text-xs text-gray-500 border-t border-purple-200 pt-3">
+              <strong class="text-purple-800">${L?'Was wir hinzufügen:':'Wat wij toevoegen:'}</strong>
+              <ul class="mt-1 space-y-0.5">
+                <li>• ${L?'10 Tage Handwerks-Training':'10 dagen ambacht-training'}</li>
+                <li>• ${L?'Volles Studio-Set-up':'Volledig studio-setup'}</li>
+                <li>• ${L?'Bewährtes operatives Modell':'Bewezen operationeel model'}</li>
+              </ul>
+            </div>
           </div>
+          <div class="bg-green-50 rounded-lg p-5">
+            <div class="text-2xl mb-2">🎯</div>
+            <h4 class="font-bold text-gray-900 mb-1">${L ? 'Die Career-Switcherin' : 'De career-switcher'}</h4>
+            <p class="text-sm text-gray-600 mb-3">${L ? 'Nach Jahren im Corporate (HR, Finance, Consulting) sucht sie etwas Menschliches und Tastbares. Mittleres Alter, mit Leitungserfahrung und Ressourcen.' : 'Na jaren in corporate (HR, finance, consulting) zoekt ze iets menselijks en tastbaars. Midden-carrière, met leidinggevende ervaring en middelen.'}</p>
+            <div class="text-xs text-gray-500 border-t border-green-200 pt-3">
+              <strong class="text-green-800">${L?'Was wir hinzufügen:':'Wat wij toevoegen:'}</strong>
+              <ul class="mt-1 space-y-0.5">
+                <li>• ${L?'Struktur: klarer 3-6-Monats-Plan':'Structuur: heldere 3-6 maanden-plan'}</li>
+                <li>• ${L?'Handwerk + Business in einem Paket':'Ambacht + business in één pakket'}</li>
+                <li>• ${L?'Peer-Netzwerk von Gleichgesinnten':'Peer-netwerk van gelijkgestemden'}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 bg-wax-50 rounded-lg p-4 text-sm text-gray-700">
+          <strong class="text-wax-800">${L?'Tipp:':'Tip:'}</strong> ${L?'Unsicher, welches Profil zu Ihnen passt? Unser ':'Weet je niet welk profiel bij jou past? Onze '}<a href="/fit-check" target="_blank" class="text-wax-600 underline font-medium">${L?'Persona-Check':'Persona-check'}</a> ${L?'gibt Ihnen in 5 Minuten eine persönliche Einschätzung.':'geeft je in 5 minuten een persoonlijke inschatting.'}
+        </div>
+      </div>
+
+      <!-- Harde minimumcriteria -->
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white">
+        <h3 class="text-lg font-bold text-wax-400 mb-2">${L?'Harte Mindestkriterien':'Harde minimumcriteria'}</h3>
+        <p class="text-sm text-gray-400 mb-5">${L?'Dies sind die nicht-verhandelbaren Grenzen. Unter diesen Werten ist ein Gespräch nicht sinnvoll — für Sie nicht, und für uns auch nicht.':'Dit zijn de niet-onderhandelbare drempels. Onder deze waarden is een gesprek niet zinvol — niet voor jou, en niet voor ons.'}</p>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs uppercase tracking-wider text-wax-400 mb-1">💰 ${L?'Kapital':'Kapitaal'}</div>
+            <div class="font-bold text-lg mb-1">${L?'Min. ':'Min. '}${fe(40000)}</div>
+            <p class="text-xs text-gray-400">${L?'Eigenkapital oder bestätigte Finanzierungszusage':'Eigen vermogen of bevestigde financierings-toezegging'}</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs uppercase tracking-wider text-wax-400 mb-1">⏰ ${L?'Einsatz':'Inzet'}</div>
+            <div class="font-bold text-lg mb-1">${L?'Min. 30 Std./Woche':'Min. 30 uur/week'}</div>
+            <p class="text-xs text-gray-400">${L?'Im ersten Jahr. Part-time funktioniert nicht.':'Het eerste jaar. Part-time werkt niet.'}</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs uppercase tracking-wider text-wax-400 mb-1">📅 ${L?'Zeithorizont':'Tijdshorizon'}</div>
+            <div class="font-bold text-lg mb-1">${L?'Max. 12 Monate':'Max. 12 maanden'}</div>
+            <p class="text-xs text-gray-400">${L?'Bis zur Eröffnung. Längere Orientierungsphasen: wir melden uns später wieder.':'Tot opening. Langere oriëntatie-fases: we nemen later weer contact op.'}</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-xs uppercase tracking-wider text-wax-400 mb-1">🎓 ${L?'Schulung':'Training'}</div>
+            <div class="font-bold text-lg mb-1">${L?'10 Tage in DE':'10 dagen in DE'}</div>
+            <p class="text-xs text-gray-400">${L?'Wer nicht trainieren möchte, kann nicht Friendchisee werden.':'Wie de training niet wil volgen, kan geen Friendchisee worden.'}</p>
+          </div>
+        </div>
+        <div class="mt-5 text-center">
+          <p class="text-sm text-gray-400 italic">${L?'Wir sagen lieber jetzt ehrlich Nein als später kompliziert.':'Liever nu eerlijk nee dan later gecompliceerd.'}</p>
         </div>
       </div>
     </div>`;
