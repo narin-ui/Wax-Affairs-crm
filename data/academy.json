@@ -1021,25 +1021,41 @@
               "id": "on3-1",
               "titel": "Prijsstelling & marges berekenen",
               "type": "video",
-              "duur": "30 min"
+              "duur": "30 min",
+              "titel_de": "Preisgestaltung & Margen berechnen",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je berekent kostprijs, brutomarge en break-even per behandeling</li>\n<li>Je past waarde-gebaseerde prijszetting toe in plaats van kosten-plus</li>\n<li>Je herkent de 4 signalen dat je prijzen te laag zijn</li>\n</ul></div>\n\n<h3>Kostprijs per behandeling: alle componenten</h3>\n<p>Verhaal veel salons vertellen zichzelf: \"mijn wax kost &euro;2, tarief &euro;45, dat is &euro;43 winst\". Fout. Werkelijke kostprijs omvat:</p>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Kostenpost</th><th style=\"border:1px solid #d1d5db;padding:8px\">Brazilian (&euro;45)</th><th style=\"border:1px solid #d1d5db;padding:8px\">Benen volledig (&euro;55)</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Wax-product (Nao Premium)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;2,10</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;2,70 (Economic)</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Spatels (5 stuks)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,30</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,50</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Strips + wegwerp-hoes</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,40</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,80</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Handschoenen</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,20</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,20</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Pre-powder + Post-oil (in-cabine gebruik)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,60</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,90</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Directe materiaalkost</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;3,60</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;5,10</strong></td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Behandeltijd &agrave; &euro;35/uur loonkost (incl SV)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;17,50 (30 min)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;23,30 (40 min)</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Overhead (huur, nutsvoorzieningen, marketing)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;7,00</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;9,30</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Volledige kostprijs</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;28,10</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;37,70</strong></td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Nettomarge bij huidig tarief</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;16,90 (37,5%)</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;17,30 (31,5%)</strong></td></tr>\n</table>\n\n<h3>Waarde-gebaseerde prijszetting</h3>\n<p>Traditioneel: \"kostprijs + marge = tarief\" (cost-plus). Beter: <strong>\"klant-waarde bepaalt tarief\"</strong>:</p>\n<ul>\n<li><strong>Premium zones</strong> (Brazilian, gezicht, mannelijke intimzone): klant verwacht expertise, betaalt 20&ndash;30% premium</li>\n<li><strong>Commodity zones</strong> (benen, armen, oksels): klant vergelijkt prijzen, houdt dicht op regionaal gemiddelde</li>\n<li><strong>Eerste-keer-behandeling</strong>: minder gevoelig voor prijs, meer voor vertrouwen &mdash; zet \"nieuwe klant intake\" op normale prijs, niet korting</li>\n</ul>\n\n<h3>Regionale benchmarks 2026</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px\">Behandeling</th><th style=\"border:1px solid #d1d5db;padding:8px\">NL-gemiddeld</th><th style=\"border:1px solid #d1d5db;padding:8px\">DE-gemiddeld</th><th style=\"border:1px solid #d1d5db;padding:8px\">DE-Premium (Wiesbaden, Frankfurt)</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Brazilian</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;40&ndash;50</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;35&ndash;45</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;50&ndash;60</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Bovenlip</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;12&ndash;15</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;10&ndash;14</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;15&ndash;20</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Volledige benen</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;50&ndash;65</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;45&ndash;60</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;60&ndash;75</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Manzilian</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;55&ndash;70</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;50&ndash;65</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;70&ndash;85</td></tr>\n</table>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ 4 signalen dat je prijzen te laag zijn</strong>\n<ol style=\"margin:6px 0 0 0\">\n<li><strong>Volledig geboekte agenda weken vooruit</strong> &mdash; klassiek signaal van onderprijzen. Verhoog 10%, kijk wat gebeurt.</li>\n<li><strong>Klanten worden nooit verrast door de prijs</strong> &mdash; je bent in een race naar beneden.</li>\n<li><strong>Retail-conversie boven 60%</strong> &mdash; klanten vinden je zo goedkoop dat meenemen van product vanzelfsprekend is; verhoog tarief en houd gemiddelde factuur stabiel.</li>\n<li><strong>Nettomarge onder 25%</strong> &mdash; je betaalt je werkzaamheden onder marktwaarde.</li>\n</ol></div>\n\n<h3>Prijsverhogingsprotocol</h3>\n<ol>\n<li>Verhoog jaarlijks minstens 3&ndash;5% (inflatie) &mdash; niet doen is achteruitgaan</li>\n<li>Eerste verhoging: e-mail 6 weken vooruit, neutrale toon, geen verontschuldiging</li>\n<li>Introduceer nieuwe behandeling met 15&ndash;20% hoger tarief &mdash; zet de toon voor opnieuw positioneren</li>\n<li>Premium-pakketten direct 25&ndash;30% hoger dan losse sessies &mdash; anchor-prijs effect</li>\n</ol>\n\n<p><em>In de volgende les: klantenservice-protocol en reviews management.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie berechnen Einstandspreis, Bruttomarge und Break-even pro Behandlung</li>\n<li>Sie wenden wertbasierte Preisgestaltung an statt Cost-Plus</li>\n<li>Sie erkennen die 4 Signale, dass Ihre Preise zu niedrig sind</li>\n</ul></div>\n\n<h3>Einstandspreis pro Behandlung: alle Komponenten</h3>\n<p>Geschichte, die viele Studios sich selbst erzählen: \"mein Wachs kostet &euro;2, Tarif &euro;45, das sind &euro;43 Gewinn\". Falsch. Der tatsächliche Einstandspreis umfasst:</p>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Kostenposten</th><th style=\"border:1px solid #d1d5db;padding:8px\">Brazilian (&euro;45)</th><th style=\"border:1px solid #d1d5db;padding:8px\">Beine komplett (&euro;55)</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Wachsprodukt (Nao Premium)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;2,10</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;2,70 (Economic)</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Spatel (5 Stück)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,30</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,50</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Vliesstreifen + Einwegabdeckung</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,40</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,80</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Handschuhe</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,20</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,20</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Pre-Powder + Post-Oil (Kabinen-Verbrauch)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,60</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;0,90</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Direkter Materialkostenanteil</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;3,60</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;5,10</strong></td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Behandlungszeit &agrave; &euro;35/Std. Lohnkosten (inkl. SV)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;17,50 (30 Min)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;23,30 (40 Min)</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Overhead (Miete, Nebenkosten, Marketing)</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;7,00</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;9,30</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Gesamter Einstandspreis</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;28,10</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;37,70</strong></td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Nettomarge bei aktuellem Tarif</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;16,90 (37,5%)</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>&euro;17,30 (31,5%)</strong></td></tr>\n</table>\n\n<h3>Wertbasierte Preisgestaltung</h3>\n<p>Traditionell: \"Einstandspreis + Marge = Tarif\" (Cost-Plus). Besser: <strong>\"Kundenwert bestimmt den Tarif\"</strong>:</p>\n<ul>\n<li><strong>Premium-Zonen</strong> (Brazilian, Gesicht, männliche Intimzone): Kunde erwartet Expertise, zahlt 20&ndash;30% Aufpreis</li>\n<li><strong>Commodity-Zonen</strong> (Beine, Arme, Achseln): Kunde vergleicht Preise, bleibt nahe am regionalen Durchschnitt</li>\n<li><strong>Erstbehandlung</strong>: weniger preissensibel, mehr auf Vertrauen ausgerichtet &mdash; setzen Sie \"Neukunden-Anamnese\" zum normalen Preis, kein Rabatt</li>\n</ul>\n\n<h3>Regionale Benchmarks 2026</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px\">Behandlung</th><th style=\"border:1px solid #d1d5db;padding:8px\">NL-Durchschnitt</th><th style=\"border:1px solid #d1d5db;padding:8px\">DE-Durchschnitt</th><th style=\"border:1px solid #d1d5db;padding:8px\">DE-Premium (Wiesbaden, Frankfurt)</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Brazilian</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;40&ndash;50</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;35&ndash;45</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;50&ndash;60</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Oberlippe</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;12&ndash;15</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;10&ndash;14</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;15&ndash;20</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Beine komplett</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;50&ndash;65</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;45&ndash;60</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;60&ndash;75</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Manzilian</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;55&ndash;70</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;50&ndash;65</td><td style=\"border:1px solid #d1d5db;padding:8px\">&euro;70&ndash;85</td></tr>\n</table>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ 4 Signale, dass Ihre Preise zu niedrig sind</strong>\n<ol style=\"margin:6px 0 0 0\">\n<li><strong>Volle Agenda wochenlang im Voraus</strong> &mdash; klassisches Signal für Unterpreisung. 10% erhöhen, beobachten.</li>\n<li><strong>Kundinnen sind nie überrascht vom Preis</strong> &mdash; Sie befinden sich in einem Race to the Bottom.</li>\n<li><strong>Retail-Conversion über 60%</strong> &mdash; Kundinnen finden Sie so günstig, dass Produktkauf selbstverständlich ist; erhöhen Sie den Tarif und halten den Durchschnittsumsatz stabil.</li>\n<li><strong>Nettomarge unter 25%</strong> &mdash; Sie bezahlen Ihre Arbeit unter Marktwert.</li>\n</ol></div>\n\n<h3>Preiserhöhungsprotokoll</h3>\n<ol>\n<li>Jährlich mindestens 3&ndash;5% erhöhen (Inflation) &mdash; es nicht zu tun ist Rückgang</li>\n<li>Erste Erhöhung: E-Mail 6 Wochen im Voraus, neutraler Ton, keine Entschuldigung</li>\n<li>Neue Behandlung mit 15&ndash;20% höherem Tarif einführen &mdash; setzt den Ton für Neupositionierung</li>\n<li>Premium-Pakete direkt 25&ndash;30% höher als Einzelsitzungen &mdash; Anchor-Pricing-Effekt</li>\n</ol>\n\n<p><em>In der nächsten Lektion: Kundenservice-Protokoll und Reviews-Management.</em></p>",
+              "laatstBewerkt": "2026-04-22T17:00:00.000Z"
             },
             {
               "id": "on3-2",
               "titel": "Klantenservice & reviews",
               "type": "tekst",
-              "duur": "25 min"
+              "duur": "25 min",
+              "titel_de": "Kundenservice & Bewertungen",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je past de 5-stappen klachtafhandeling consistent toe</li>\n<li>Je stuurt een Google-review strategie aan die 4,7+ sterren oplevert</li>\n<li>Je herkent het verschil tussen een lastige klant en een waardevolle feedback-gever</li>\n</ul></div>\n\n<h3>De 5 stappen klachtafhandeling</h3>\n<ol>\n<li><strong>Luisteren zonder onderbreken</strong> (30&ndash;60 seconden). Geen defensief geluid, geen uitleg. Alleen knikken en oogcontact.</li>\n<li><strong>Samenvatten wat je hoort</strong>. \"Dus u vertelt me dat uw huid 3 dagen rood was en dat u dit niet normaal vond.\" Daarmee voelt klant zich gehoord, en jij bevestigt dat je begrijpt.</li>\n<li><strong>Erkennen zonder schuld-erkennen</strong>. \"Ik begrijp dat dit frustrerend was, en ik neem uw ervaring serieus.\" Niet: \"Sorry, dat was mijn fout\" (juridische valkuil).</li>\n<li><strong>Oplossing voorstellen</strong>. Pas na stap 1&ndash;3. Opties: behandeling herhalen, product cadeau, korting volgende sessie. Laat klant kiezen.</li>\n<li><strong>Opvolgen binnen 48 uur</strong>. Korte e-mail of WhatsApp: \"Hoe voelt uw huid vandaag? Ik wilde even checken.\"</li>\n</ol>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Wat je NIET doet bij een klacht</strong>\n<ul style=\"margin:6px 0 0 0\">\n<li><strong>Meteen verdedigen:</strong> \"Dat komt omdat...\" ondermijnt stap 1. Klant voelt niet gehoord.</li>\n<li><strong>Andere klanten noemen:</strong> \"Niemand heeft ooit hierover geklaagd.\" Invalideert haar ervaring.</li>\n<li><strong>Korting aanbieden voordat klacht helder is:</strong> signaleert dat jij weet dat er iets fout ging.</li>\n<li><strong>Op social media reageren in defense mode:</strong> nooit. Altijd DM&rsquo;en: \"Laten we dit persoonlijk oplossen.\"</li>\n</ul></div>\n\n<h3>Google-reviews strategie: 4,7+ sterren</h3>\n<p>Waarom 4,7 en niet 5,0? Consumenten wantrouwen studio&rsquo;s met perfecte 5,0 review-gemiddelde &mdash; klinkt nep. <strong>4,7&ndash;4,9 is ideaal</strong> &mdash; geloofwaardig en aantrekkelijk.</p>\n<ol>\n<li><strong>Vraag altijd, maar timing is alles:</strong> direct na behandeling wanneer klant tevreden is, niet 3 dagen later per e-mail. \"Als u tevreden bent: mag ik u om een korte Google-review vragen? Hier is de link.\"</li>\n<li><strong>Persoonlijke vraag van behandelaar, niet algemene e-mail:</strong> 5x hogere conversie.</li>\n<li><strong>QR-code aan de kassa</strong>: klant scant, landt direct op jouw Google Reviews pagina. Minder friction.</li>\n<li><strong>Respond op ELKE review</strong>, ook 5-sterren. Persoonlijk, met naam. Google favoriseert actieve businesses in lokale rankings.</li>\n<li><strong>Bij negatieve review:</strong> binnen 24 uur publiek reageren, empathisch, oplossing voorstellen (\"We nemen direct contact met u op om dit goed te maken\"). Laat de oplossing offline plaats vinden.</li>\n</ol>\n\n<h3>Het verschil tussen lastige klant en feedback-gever</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Lastige klant</th><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Feedback-gever</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Eist korting zonder goede reden</td><td style=\"border:1px solid #d1d5db;padding:8px\">Legt uit wat niet goed ging, vraagt om oplossing</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Dreigt met negatieve review v&oacute;&oacute;r je kan reageren</td><td style=\"border:1px solid #d1d5db;padding:8px\">Laat zich helpen, plaatst soms daarna alsnog positieve review</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Patroon van problemen bij elke sessie</td><td style=\"border:1px solid #d1d5db;padding:8px\">Eenmalig issue, daarna tevreden</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Schreeuwt naar personeel</td><td style=\"border:1px solid #d1d5db;padding:8px\">Rustig gesprek, duidelijke communicatie</td></tr>\n</table>\n<p><strong>Met lastige klanten: boek ze niet meer.</strong> Stuur vriendelijke e-mail: \"We hebben besloten dat we qua verwachtingen niet goed match zijn. Hier is een lijst van andere studio&rsquo;s in de buurt.\" Kost je 1 klant, bespaart je 10 uren stress per jaar en behoudt je team-moraal.</p>\n\n<p><em>In de volgende les: boekhouding basics voor salon-eigenaren.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie wenden die 5-Schritte-Beschwerdebehandlung konsequent an</li>\n<li>Sie steuern eine Google-Reviews-Strategie, die 4,7+ Sterne liefert</li>\n<li>Sie unterscheiden zwischen einer schwierigen Kundin und einer wertvollen Feedback-Geberin</li>\n</ul></div>\n\n<h3>Die 5 Schritte der Beschwerdebehandlung</h3>\n<ol>\n<li><strong>Zuhören ohne Unterbrechung</strong> (30&ndash;60 Sekunden). Kein defensiver Ton, keine Erklärung. Nur nicken und Augenkontakt.</li>\n<li><strong>Zusammenfassen, was Sie hören</strong>. \"Sie erzählen mir also, dass Ihre Haut 3 Tage lang rot war und dass Sie das nicht normal fanden.\" Damit fühlt sich die Kundin gehört, und Sie bestätigen, dass Sie verstehen.</li>\n<li><strong>Anerkennen ohne Schuldeingeständnis</strong>. \"Ich verstehe, dass das frustrierend war, und ich nehme Ihre Erfahrung ernst.\" Nicht: \"Entschuldigung, das war mein Fehler\" (juristische Falle).</li>\n<li><strong>Lösung vorschlagen</strong>. Erst nach Schritt 1&ndash;3. Optionen: Behandlung wiederholen, Produkt geschenkt, Rabatt auf die nächste Sitzung. Die Kundin wählen lassen.</li>\n<li><strong>Nachfassen innerhalb von 48 Stunden</strong>. Kurze E-Mail oder WhatsApp: \"Wie fühlt sich Ihre Haut heute? Ich wollte kurz nachfragen.\"</li>\n</ol>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Was Sie bei einer Beschwerde NICHT tun</strong>\n<ul style=\"margin:6px 0 0 0\">\n<li><strong>Sofort verteidigen:</strong> \"Das liegt daran, dass...\" untergräbt Schritt 1. Kundin fühlt sich nicht gehört.</li>\n<li><strong>Andere Kundinnen erwähnen:</strong> \"Niemand hat sich je darüber beschwert.\" Invalidiert ihre Erfahrung.</li>\n<li><strong>Rabatt anbieten, bevor die Beschwerde klar ist:</strong> signalisiert, dass Sie wissen, dass etwas falsch lief.</li>\n<li><strong>Auf Social Media im Defense-Modus reagieren:</strong> nie. Immer DM schreiben: \"Lassen Sie uns das persönlich klären.\"</li>\n</ul></div>\n\n<h3>Google-Reviews-Strategie: 4,7+ Sterne</h3>\n<p>Warum 4,7 und nicht 5,0? Konsumenten misstrauen Studios mit perfektem 5,0-Review-Durchschnitt &mdash; wirkt falsch. <strong>4,7&ndash;4,9 ist ideal</strong> &mdash; glaubwürdig und attraktiv.</p>\n<ol>\n<li><strong>Immer fragen, aber Timing ist alles:</strong> direkt nach der Behandlung, wenn die Kundin zufrieden ist, nicht 3 Tage später per E-Mail. \"Wenn Sie zufrieden sind: Darf ich Sie um eine kurze Google-Bewertung bitten? Hier ist der Link.\"</li>\n<li><strong>Persönliche Frage der Behandlerin, nicht allgemeine E-Mail:</strong> 5x höhere Conversion.</li>\n<li><strong>QR-Code an der Kasse</strong>: Kundin scannt, landet direkt auf Ihrer Google-Reviews-Seite. Weniger Friktion.</li>\n<li><strong>Auf JEDE Bewertung antworten</strong>, auch 5-Sterne. Persönlich, mit Namen. Google bevorzugt aktive Unternehmen in lokalen Rankings.</li>\n<li><strong>Bei negativer Bewertung:</strong> innerhalb von 24 Stunden öffentlich reagieren, empathisch, Lösung vorschlagen (\"Wir melden uns direkt bei Ihnen, um dies wiedergutzumachen\"). Die Lösung offline stattfinden lassen.</li>\n</ol>\n\n<h3>Der Unterschied zwischen schwieriger Kundin und Feedback-Geberin</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Schwierige Kundin</th><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Feedback-Geberin</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Fordert Rabatt ohne guten Grund</td><td style=\"border:1px solid #d1d5db;padding:8px\">Erklärt, was nicht gut war, bittet um Lösung</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Droht mit negativer Bewertung, bevor Sie reagieren können</td><td style=\"border:1px solid #d1d5db;padding:8px\">Lässt sich helfen, hinterlässt danach manchmal doch eine positive Bewertung</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Muster von Problemen bei jeder Sitzung</td><td style=\"border:1px solid #d1d5db;padding:8px\">Einmaliges Problem, danach zufrieden</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Schreit Personal an</td><td style=\"border:1px solid #d1d5db;padding:8px\">Ruhiges Gespräch, klare Kommunikation</td></tr>\n</table>\n<p><strong>Mit schwierigen Kundinnen: nehmen Sie keine weiteren Termine an.</strong> Senden Sie eine freundliche E-Mail: \"Wir haben entschieden, dass wir in puncto Erwartungen nicht gut zusammenpassen. Hier ist eine Liste anderer Studios in der Umgebung.\" Kostet Sie 1 Kundin, spart Ihnen 10 Stunden Stress pro Jahr und erhält die Moral Ihres Teams.</p>\n\n<p><em>In der nächsten Lektion: Buchhaltungsgrundlagen für Studio-Inhaberinnen.</em></p>",
+              "laatstBewerkt": "2026-04-22T17:00:00.000Z"
             },
             {
               "id": "on3-3",
               "titel": "Boekhouding basics voor salons",
               "type": "tekst",
-              "duur": "30 min"
+              "duur": "30 min",
+              "titel_de": "Buchhaltung-Grundlagen für Studios",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je kent de BTW-regels voor waxbehandelingen in NL en DE</li>\n<li>Je houdt een eenvoudige maar complete administratie bij in 30 minuten per week</li>\n<li>Je begrijpt de verschillen tussen eenmanszaak, BV/GmbH en de belasting-implicaties</li>\n</ul></div>\n\n<h3>BTW-regels waxbehandelingen</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Land</th><th style=\"border:1px solid #d1d5db;padding:8px\">BTW op behandeling</th><th style=\"border:1px solid #d1d5db;padding:8px\">BTW op retail-product</th><th style=\"border:1px solid #d1d5db;padding:8px\">Kleineondernemersregeling</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Nederland</td><td style=\"border:1px solid #d1d5db;padding:8px\">21% (hoog tarief)</td><td style=\"border:1px solid #d1d5db;padding:8px\">21%</td><td style=\"border:1px solid #d1d5db;padding:8px\">KOR onder &euro;20.000 omzet/jaar</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Duitsland</td><td style=\"border:1px solid #d1d5db;padding:8px\">19% (Regelsteuersatz)</td><td style=\"border:1px solid #d1d5db;padding:8px\">19%</td><td style=\"border:1px solid #d1d5db;padding:8px\">Kleinunternehmer onder &euro;22.000 omzet/jaar</td></tr>\n</table>\n<p><strong>Belangrijk:</strong> de KOR (NL) en Kleinunternehmerregelung (DE) lijken aantrekkelijk, maar ze voorkomen dat je BTW terugvordert op inkopen. Voor een wax-studio met &euro;15.000+ aan jaarlijkse inkopen is dit vaak ongunstig.</p>\n\n<h3>Wat houd je bij (minimum voor legaal ondernemen)</h3>\n<ol>\n<li><strong>Omzet-administratie:</strong> alle ontvangsten met datum, klantnaam (of -nummer), behandeling, bedrag excl. BTW, BTW-bedrag</li>\n<li><strong>Inkoop-administratie:</strong> alle facturen met leverancier, datum, bedrag excl BTW, BTW-bedrag, factuurnummer</li>\n<li><strong>Vaste-lasten-administratie:</strong> huur, nutsvoorzieningen, verzekeringen, software-licenties (maandelijks gestructureerd)</li>\n<li><strong>Medewerker-administratie</strong> (als je personeel hebt): uren, bruto loon, sociale lasten, netto uitbetaald</li>\n<li><strong>Kasregister-logboek</strong> (Duitsland: verplicht GoBD-conform, Nederland: sinds 2020 aanbevolen)</li>\n</ol>\n\n<h3>Rechtsvorm vergelijking</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Vorm</th><th style=\"border:1px solid #d1d5db;padding:8px\">Aansprakelijkheid</th><th style=\"border:1px solid #d1d5db;padding:8px\">Belasting</th><th style=\"border:1px solid #d1d5db;padding:8px\">Wanneer kiezen</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Eenmanszaak (NL) / Einzelunternehmen (DE)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Persoonlijk volledig</td><td style=\"border:1px solid #d1d5db;padding:8px\">IB-box1 (NL) / Einkommensteuer (DE)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Startende situatie, &lt;&euro;50.000 winst</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">BV (NL)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Beperkt</td><td style=\"border:1px solid #d1d5db;padding:8px\">19% VpB onder &euro;200K, 25,8% boven</td><td style=\"border:1px solid #d1d5db;padding:8px\">&gt;&euro;70.000 winst/jaar, wens beperkte aansprakelijkheid</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">GmbH (DE)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Beperkt</td><td style=\"border:1px solid #d1d5db;padding:8px\">15% K&ouml;rperschaftsteuer + 14% Gewerbesteuer</td><td style=\"border:1px solid #d1d5db;padding:8px\">&gt;&euro;75.000 winst, multi-studio setup</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">UG (Unternehmergesellschaft, DE mini-BV)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Beperkt</td><td style=\"border:1px solid #d1d5db;padding:8px\">Zelfde als GmbH</td><td style=\"border:1px solid #d1d5db;padding:8px\">Startkapitaal &lt;&euro;25K beschikbaar, wil wel beperkte aansprakelijkheid</td></tr>\n</table>\n\n<h3>30-minuten weekroutine</h3>\n<ol>\n<li><strong>Maandag 5 min:</strong> bon-inbox leegmaken, facturen fotograferen en in boekhoud-app uploaden</li>\n<li><strong>Woensdag 10 min:</strong> openstaande klantbetalingen volgen (Moneybird, DATEV, of vergelijkbaar)</li>\n<li><strong>Vrijdag 15 min:</strong> weekomzet controleren, uren personeel verwerken, bankafschrift koppelen</li>\n</ol>\n<p>Elke maand v&oacute;&oacute;r de 15e BTW-aangifte (kwartaal-BTW voor Nederland tot &euro;1,8M omzet, voor Duitsland kwartaal-BTW tot &euro;7.500 per kwartaal).</p>\n\n<div style=\"background:#ecfdf5;border-left:4px solid #059669;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#065f46\">💡 Pro-tip: Investeer in een accountant</strong>\n<p style=\"margin:6px 0 0 0\">Goede accountant kost &euro;150&ndash;300 per maand, bespaart je 5&ndash;10 uur admin per maand + zorgt dat je aftrekposten benut. Bij een uurtarief van &euro;35 (je eigen tijd) is dat een positieve ROI v&oacute;&oacute;r je belastingvoordeel meerekent. Vraag offertes bij 3 accountants voordat je kiest, &eacute;&eacute;n moet gespecialiseerd zijn in beauty/personal-services.</p></div>\n\n<p><em>In de volgende les: social media marketing &mdash; hoe je Instagram inzet voor studio-groei.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie kennen die MwSt.-Regeln für Waxbehandlungen in NL und DE</li>\n<li>Sie führen eine einfache, aber vollständige Buchhaltung in 30 Minuten pro Woche</li>\n<li>Sie verstehen die Unterschiede zwischen Einzelunternehmen, GmbH/BV und die steuerlichen Auswirkungen</li>\n</ul></div>\n\n<h3>MwSt.-Regeln für Waxbehandlungen</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Land</th><th style=\"border:1px solid #d1d5db;padding:8px\">MwSt. auf Behandlung</th><th style=\"border:1px solid #d1d5db;padding:8px\">MwSt. auf Retail-Produkt</th><th style=\"border:1px solid #d1d5db;padding:8px\">Kleinunternehmerregelung</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Niederlande</td><td style=\"border:1px solid #d1d5db;padding:8px\">21% (hoher Satz)</td><td style=\"border:1px solid #d1d5db;padding:8px\">21%</td><td style=\"border:1px solid #d1d5db;padding:8px\">KOR unter &euro;20.000 Umsatz/Jahr</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Deutschland</td><td style=\"border:1px solid #d1d5db;padding:8px\">19% (Regelsteuersatz)</td><td style=\"border:1px solid #d1d5db;padding:8px\">19%</td><td style=\"border:1px solid #d1d5db;padding:8px\">Kleinunternehmer unter &euro;22.000 Umsatz/Jahr</td></tr>\n</table>\n<p><strong>Wichtig:</strong> Die KOR (NL) und die Kleinunternehmerregelung (DE) wirken attraktiv, verhindern aber, dass Sie Vorsteuer auf Einkäufe zurückfordern. Für ein Wax-Studio mit &euro;15.000+ Jahres-Einkäufen ist dies oft ungünstig.</p>\n\n<h3>Was Sie führen (Mindestanforderung für legales Geschäft)</h3>\n<ol>\n<li><strong>Umsatz-Buchhaltung:</strong> alle Einnahmen mit Datum, Kundenname (oder -nummer), Behandlung, Betrag netto, MwSt.-Betrag</li>\n<li><strong>Einkaufs-Buchhaltung:</strong> alle Rechnungen mit Lieferant, Datum, Nettobetrag, MwSt.-Betrag, Rechnungsnummer</li>\n<li><strong>Fixkosten-Buchhaltung:</strong> Miete, Nebenkosten, Versicherungen, Software-Lizenzen (monatlich strukturiert)</li>\n<li><strong>Mitarbeiter-Buchhaltung</strong> (wenn Sie Personal haben): Stunden, Bruttolohn, Sozialabgaben, Netto-Auszahlung</li>\n<li><strong>Kassenbuch-Logbuch</strong> (Deutschland: GoBD-konform verpflichtend, Niederlande: seit 2020 empfohlen)</li>\n</ol>\n\n<h3>Rechtsformvergleich</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Form</th><th style=\"border:1px solid #d1d5db;padding:8px\">Haftung</th><th style=\"border:1px solid #d1d5db;padding:8px\">Besteuerung</th><th style=\"border:1px solid #d1d5db;padding:8px\">Wann wählen</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Einmanszaak (NL) / Einzelunternehmen (DE)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Persönlich voll</td><td style=\"border:1px solid #d1d5db;padding:8px\">IB-Box1 (NL) / Einkommensteuer (DE)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Startphase, &lt;&euro;50.000 Gewinn</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">BV (NL)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Beschränkt</td><td style=\"border:1px solid #d1d5db;padding:8px\">19% VpB unter &euro;200K, 25,8% darüber</td><td style=\"border:1px solid #d1d5db;padding:8px\">&gt;&euro;70.000 Gewinn/Jahr, Wunsch nach beschränkter Haftung</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">GmbH (DE)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Beschränkt</td><td style=\"border:1px solid #d1d5db;padding:8px\">15% Körperschaftsteuer + 14% Gewerbesteuer</td><td style=\"border:1px solid #d1d5db;padding:8px\">&gt;&euro;75.000 Gewinn, Multi-Studio-Setup</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">UG (Unternehmergesellschaft, DE Mini-GmbH)</td><td style=\"border:1px solid #d1d5db;padding:8px\">Beschränkt</td><td style=\"border:1px solid #d1d5db;padding:8px\">Gleich wie GmbH</td><td style=\"border:1px solid #d1d5db;padding:8px\">Startkapital &lt;&euro;25K verfügbar, Wunsch nach beschränkter Haftung</td></tr>\n</table>\n\n<h3>30-Minuten-Wochenroutine</h3>\n<ol>\n<li><strong>Montag 5 Min:</strong> Beleg-Inbox leeren, Rechnungen fotografieren und in Buchhaltungs-App hochladen</li>\n<li><strong>Mittwoch 10 Min:</strong> offene Kundenzahlungen verfolgen (Moneybird, DATEV oder vergleichbar)</li>\n<li><strong>Freitag 15 Min:</strong> Wochenumsatz prüfen, Mitarbeiterstunden verarbeiten, Kontoauszüge verknüpfen</li>\n</ol>\n<p>Jeden Monat vor dem 15. MwSt.-Voranmeldung (quartalsweise bis &euro;1,8 Mio. Umsatz in NL, in DE vierteljährlich bis &euro;7.500 pro Quartal).</p>\n\n<div style=\"background:#ecfdf5;border-left:4px solid #059669;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#065f46\">💡 Profi-Tipp: Investieren Sie in einen Steuerberater</strong>\n<p style=\"margin:6px 0 0 0\">Ein guter Steuerberater kostet &euro;150&ndash;300 pro Monat, spart Ihnen 5&ndash;10 Stunden Verwaltung pro Monat + sorgt dafür, dass Sie Absetzposten nutzen. Bei einem Stundensatz von &euro;35 (Ihre eigene Zeit) ist das ein positiver ROI, bevor Sie den Steuervorteil rechnen. Fragen Sie Angebote bei 3 Steuerberatern an, einer sollte auf Beauty/Personal-Services spezialisiert sein.</p></div>\n\n<p><em>In der nächsten Lektion: Social-Media-Marketing &mdash; wie Sie Instagram für das Wachstum Ihres Studios einsetzen.</em></p>",
+              "laatstBewerkt": "2026-04-22T17:00:00.000Z"
             },
             {
               "id": "on3-4",
               "titel": "Social media marketing",
               "type": "video",
-              "duur": "35 min"
+              "duur": "35 min",
+              "titel_de": "Social-Media-Marketing",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je bouwt een Instagram-strategie die 5&ndash;10 nieuwe boekingen per week oplevert</li>\n<li>Je kent de 4 content-pijlers die werken voor beauty-salons</li>\n<li>Je begrijpt wanneer je betaalde advertenties gebruikt vs. organische content</li>\n</ul></div>\n\n<h3>Waarom Instagram primair, niet Facebook</h3>\n<p>Voor wax-studio&rsquo;s is Instagram het hoofdkanaal:</p>\n<ul>\n<li><strong>Doelgroep:</strong> vrouwen 25&ndash;45 en mannen 28&ndash;40 gebruiken Instagram 3&times; zoveel als Facebook</li>\n<li><strong>Visueel-first platform:</strong> past bij beauty waar \"zien = geloven\"</li>\n<li><strong>Lokale discovery:</strong> geotags laten je opduiken in \"nabije studio&rsquo;s\"</li>\n<li><strong>Reels-algoritme:</strong> nieuw account kan in 30 dagen organisch 2.000+ views halen</li>\n</ul>\n<p>TikTok is secundair &mdash; interessant voor &lt;25-doelgroep, maar conversie naar boekingen is 3&times; lager. Facebook alleen voor boekingen-landingpagina en advertentie-infrastructuur.</p>\n\n<h3>De 4 content-pijlers</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Pijler</th><th style=\"border:1px solid #d1d5db;padding:8px\">Doel</th><th style=\"border:1px solid #d1d5db;padding:8px\">% van content</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Educatief</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Tips, mythes ontkrachten, after-care advies</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">40%</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Behind-the-scenes</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Studio, techniek, productvoorbereiding &mdash; bouwt vertrouwen</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">25%</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Resultaten/transformatie</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Voor/na, klant-reviews, case studies (met toestemming)</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">20%</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Actie / conversie</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Nieuwe behandeling, acties, retail-products</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">15%</td></tr>\n</table>\n\n<h3>Publicatiefrequentie &amp; formats</h3>\n<ul>\n<li><strong>Reels:</strong> 3&ndash;4 per week, hoogste organische bereik. Ideaal voor educatief en behind-the-scenes. Lengte: 15&ndash;30 seconden.</li>\n<li><strong>Stories:</strong> dagelijks 3&ndash;5. Persoonlijker, lager effort, bouwt binding. Gebruik polls en vragen.</li>\n<li><strong>Feed posts:</strong> 2&ndash;3 per week. Carrousels met educatieve content scoren beter dan enkele foto&rsquo;s.</li>\n<li><strong>Lives:</strong> 1 per maand, Q&amp;A of productintroductie. Boost je bereik bij bestaande volgers.</li>\n</ul>\n\n<h3>Wanneer betaalde advertenties?</h3>\n<p>Organische content bouwt brand. Paid ads schalen boekingen.</p>\n<ul>\n<li><strong>Gebruik geen ads eerste 3 maanden:</strong> bouw eerst 500+ followers en 20+ reviews</li>\n<li><strong>Eerste ad-campagne:</strong> \"Boek je eerste behandeling\" met lokale geotarget 5 km rond je studio, dagbudget &euro;5&ndash;10. Doel: 10&ndash;15 nieuwe klanten/maand.</li>\n<li><strong>Retargeting:</strong> mensen die je website bezochten maar niet boekten. Budget &euro;2&ndash;5/dag. Hoogste conversie (15&ndash;25%).</li>\n<li><strong>Seizoensgebonden:</strong> zomer/vakantie 2&times; hoger budget voor Brazilian en benen. Decembertijd voor gezichtsbehandeling en eindejaarsgeschenken.</li>\n</ul>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Wat NIET werkt op Instagram voor wax-studio&rsquo;s</strong>\n<ul style=\"margin:6px 0 0 0\">\n<li>Generieke motivational quotes &mdash; genereert \"likes\" maar geen boekingen</li>\n<li>Producten-in-vitrine foto&rsquo;s zonder context &mdash; feels als advertentie</li>\n<li>Na-foto&rsquo;s zonder persoonlijke klantverhaal &mdash; minder engagement dan voor/na verhaal</li>\n<li>Meer dan 25 hashtags &mdash; Instagram algoritme ziet dit als spam</li>\n<li>Volgen-om-gevolgd-te-worden engagement-groepen &mdash; boekingen nul, risico op shadowban</li>\n</ul></div>\n\n<h3>Specifiek voor Duitse markt</h3>\n<p>Duitse klanten reageren anders op Instagram-content dan Nederlandse:</p>\n<ul>\n<li>Toon moet professioneler: minder emoji&rsquo;s, meer expertise-benadrukken</li>\n<li>Duitse fact-based voor/na: geef exacte tijdsduur, productinfo, resultaatverwachting</li>\n<li>\"Sie\"-aanspreekvorm in captions (niet \"du\"): past bij premium-positionering</li>\n<li>Reviews screenshots in captions werken sterker dan embedded testimonials</li>\n</ul>\n\n<p><em>Volgende (examen): 15 vragen over wax-theorie, hygiëne, producten, business en marketing.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie bauen eine Instagram-Strategie auf, die 5&ndash;10 neue Buchungen pro Woche liefert</li>\n<li>Sie kennen die 4 Content-Säulen, die für Beauty-Studios funktionieren</li>\n<li>Sie verstehen, wann Sie bezahlte Anzeigen einsetzen und wann organische Inhalte</li>\n</ul></div>\n\n<h3>Warum Instagram primär, nicht Facebook</h3>\n<p>Für Wax-Studios ist Instagram der Hauptkanal:</p>\n<ul>\n<li><strong>Zielgruppe:</strong> Frauen 25&ndash;45 und Männer 28&ndash;40 nutzen Instagram 3&times; so häufig wie Facebook</li>\n<li><strong>Visual-First-Plattform:</strong> passt zum Beauty-Bereich, wo \"sehen = glauben\"</li>\n<li><strong>Lokale Discovery:</strong> Geotags lassen Sie in \"Studios in der Nähe\" erscheinen</li>\n<li><strong>Reels-Algorithmus:</strong> ein neuer Account kann in 30 Tagen organisch 2.000+ Views erreichen</li>\n</ul>\n<p>TikTok ist sekundär &mdash; interessant für die Zielgruppe &lt;25, aber die Conversion zu Buchungen ist 3&times; niedriger. Facebook nur für Buchungs-Landingpages und Werbe-Infrastruktur.</p>\n\n<h3>Die 4 Content-Säulen</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Säule</th><th style=\"border:1px solid #d1d5db;padding:8px\">Ziel</th><th style=\"border:1px solid #d1d5db;padding:8px\">% des Contents</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Edukativ</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Tipps, Mythen widerlegen, Aftercare-Beratung</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">40%</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Behind-the-Scenes</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Studio, Technik, Produktvorbereitung &mdash; baut Vertrauen auf</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">25%</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Ergebnisse/Transformation</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Vorher/Nachher, Kundenreviews, Case Studies (mit Zustimmung)</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">20%</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\"><strong>Aktion / Conversion</strong></td><td style=\"border:1px solid #d1d5db;padding:8px\">Neue Behandlung, Aktionen, Retail-Produkte</td><td style=\"border:1px solid #d1d5db;padding:8px;text-align:center\">15%</td></tr>\n</table>\n\n<h3>Veröffentlichungsfrequenz &amp; Formate</h3>\n<ul>\n<li><strong>Reels:</strong> 3&ndash;4 pro Woche, höchste organische Reichweite. Ideal für Edukation und Behind-the-Scenes. Länge: 15&ndash;30 Sekunden.</li>\n<li><strong>Stories:</strong> täglich 3&ndash;5. Persönlicher, geringerer Aufwand, baut Bindung. Polls und Fragen nutzen.</li>\n<li><strong>Feed-Posts:</strong> 2&ndash;3 pro Woche. Carousels mit edukativem Content schneiden besser ab als einzelne Fotos.</li>\n<li><strong>Lives:</strong> 1 pro Monat, Q&amp;A oder Produkteinführung. Steigert Ihre Reichweite bei bestehenden Followern.</li>\n</ul>\n\n<h3>Wann bezahlte Anzeigen?</h3>\n<p>Organischer Content baut die Marke auf. Paid Ads skalieren Buchungen.</p>\n<ul>\n<li><strong>Keine Ads in den ersten 3 Monaten:</strong> bauen Sie zuerst 500+ Follower und 20+ Bewertungen auf</li>\n<li><strong>Erste Ad-Kampagne:</strong> \"Buchen Sie Ihre erste Behandlung\" mit lokalem Geotargeting 5 km rund ums Studio, Tagesbudget &euro;5&ndash;10. Ziel: 10&ndash;15 Neukundinnen/Monat.</li>\n<li><strong>Retargeting:</strong> Personen, die Ihre Website besuchten, aber nicht buchten. Budget &euro;2&ndash;5/Tag. Höchste Conversion (15&ndash;25%).</li>\n<li><strong>Saisonal:</strong> Sommer/Ferienzeit 2&times; höheres Budget für Brazilian und Beine. Dezember für Gesichtsbehandlungen und Jahresendgeschenke.</li>\n</ul>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Was auf Instagram für Wax-Studios NICHT funktioniert</strong>\n<ul style=\"margin:6px 0 0 0\">\n<li>Generische Motivations-Zitate &mdash; generieren \"Likes\", aber keine Buchungen</li>\n<li>Produkt-im-Regal-Fotos ohne Kontext &mdash; wirken wie Werbung</li>\n<li>Nachher-Fotos ohne persönliche Kundengeschichte &mdash; weniger Engagement als Vorher-Nachher-Geschichten</li>\n<li>Mehr als 25 Hashtags &mdash; Instagram-Algorithmus sieht das als Spam</li>\n<li>Follow-for-Follow-Engagement-Gruppen &mdash; null Buchungen, Risiko eines Shadowbans</li>\n</ul></div>\n\n<h3>Speziell für den deutschen Markt</h3>\n<p>Deutsche Kundinnen reagieren anders auf Instagram-Content als niederländische:</p>\n<ul>\n<li>Der Ton muss professioneller sein: weniger Emojis, mehr Expertise-Betonung</li>\n<li>Deutsche fact-based Vorher/Nachher: geben Sie genaue Zeitdauer, Produktinfo, Ergebniserwartung</li>\n<li>\"Sie\"-Anrede in Captions (nicht \"du\"): passt zur Premium-Positionierung</li>\n<li>Review-Screenshots in Captions funktionieren stärker als eingebettete Testimonials</li>\n</ul>\n\n<p><em>Nächste Lektion (Examen): 15 Fragen zu Wachs-Theorie, Hygiene, Produkten, Business und Marketing.</em></p>",
+              "laatstBewerkt": "2026-04-22T17:00:00.000Z"
             },
             {
               "id": "on3-5",
@@ -1055,7 +1071,14 @@
                     "Isotretinoïne-gebruik in de laatste 6 maanden",
                     "Droge huid"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist eine absolute Kontraindikation für eine Waxbehandlung?",
+                  "opties_de": [
+                    "Menstruation",
+                    "Diabetes",
+                    "Isotretinoin-Einnahme in den letzten 6 Monaten",
+                    "Trockene Haut"
+                  ]
                 },
                 {
                   "vraag": "Welk Fitzpatrick-type heeft het hoogste PIH-risico?",
@@ -1065,7 +1088,14 @@
                     "Type III",
                     "Type IV-VI"
                   ],
-                  "juisteAntwoord": 3
+                  "juisteAntwoord": 3,
+                  "vraag_de": "Welcher Fitzpatrick-Typ hat das höchste PIH-Risiko?",
+                  "opties_de": [
+                    "Typ I",
+                    "Typ II",
+                    "Typ III",
+                    "Typ IV–VI"
+                  ]
                 },
                 {
                   "vraag": "Wat betekent OCOC?",
@@ -1075,7 +1105,14 @@
                     "Oil Cup Oil Client",
                     "Over-the-Counter Only Cosmetics"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was bedeutet OCOC?",
+                  "opties_de": [
+                    "Organic Cotton Only Certified",
+                    "One Cup One Client",
+                    "Oil Cup Oil Client",
+                    "Over-the-Counter Only Cosmetics"
+                  ]
                 },
                 {
                   "vraag": "Wat is het critical window voor Post-Oil aanbrengen?",
@@ -1085,7 +1122,14 @@
                     "5-10 minuten",
                     "Maakt niet uit"
                   ],
-                  "juisteAntwoord": 0
+                  "juisteAntwoord": 0,
+                  "vraag_de": "Was ist das Critical Window für die Post-Oil-Applikation?",
+                  "opties_de": [
+                    "5–30 Sekunden nach dem letzten Abzug",
+                    "1–2 Minuten",
+                    "5–10 Minuten",
+                    "Egal"
+                  ]
                 },
                 {
                   "vraag": "Welke waxtype is standaard voor intieme zones?",
@@ -1095,7 +1139,14 @@
                     "Roll-on",
                     "Cold wax"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Welcher Wachstyp ist Standard für Intimzonen?",
+                  "opties_de": [
+                    "Warmwachs",
+                    "Hot Wax",
+                    "Roll-on",
+                    "Cold Wax"
+                  ]
                 },
                 {
                   "vraag": "Hoeveel ingrediënten bevat Nao Pre-Powder?",
@@ -1105,7 +1156,14 @@
                     "7",
                     "13"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Wie viele Inhaltsstoffe enthält Nao Pre-Powder?",
+                  "opties_de": [
+                    "2",
+                    "4",
+                    "7",
+                    "13"
+                  ]
                 },
                 {
                   "vraag": "Welk land levert de basis-pijnhars?",
@@ -1115,7 +1173,14 @@
                     "Italië",
                     "Duitsland"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Welches Land liefert das Basis-Kolophonium?",
+                  "opties_de": [
+                    "Polen",
+                    "Portugal",
+                    "Italien",
+                    "Deutschland"
+                  ]
                 },
                 {
                   "vraag": "Welke Nao-waxvariant is 100% vegan?",
@@ -1125,7 +1190,14 @@
                     "Beide",
                     "Geen"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Welche Nao-Wachsvariante ist 100% vegan?",
+                  "opties_de": [
+                    "Premium",
+                    "Economic",
+                    "Beide",
+                    "Keine"
+                  ]
                 },
                 {
                   "vraag": "Wat is de retailprijs van Nao Body Scrub?",
@@ -1135,7 +1207,14 @@
                     "€14",
                     "€25"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist der Verkaufspreis von Nao Body Scrub?",
+                  "opties_de": [
+                    "€7",
+                    "€12",
+                    "€14",
+                    "€25"
+                  ]
                 },
                 {
                   "vraag": "Wanneer start klant met thuis-scrub na sessie?",
@@ -1145,7 +1224,14 @@
                     "Na 5-7 dagen",
                     "Na 4 weken"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Wann beginnt die Kundin nach einer Sitzung mit dem Heim-Scrub?",
+                  "opties_de": [
+                    "Sofort",
+                    "Nach 24 Stunden",
+                    "Nach 5–7 Tagen",
+                    "Nach 4 Wochen"
+                  ]
                 },
                 {
                   "vraag": "Wat is de eerste stap in klachtafhandeling?",
@@ -1155,7 +1241,14 @@
                     "Klant verwijzen naar manager",
                     "Excuses aanbieden"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was ist der erste Schritt in der Beschwerdebehandlung?",
+                  "opties_de": [
+                    "Lösung vorschlagen",
+                    "Zuhören ohne Unterbrechung",
+                    "Kundin an die Managerin verweisen",
+                    "Entschuldigung anbieten"
+                  ]
                 },
                 {
                   "vraag": "Wat is de minimale doelstelling voor Google-reviews?",
@@ -1165,7 +1258,14 @@
                     "4,7 sterren",
                     "5,0 sterren"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist das Mindestziel für Google-Bewertungen?",
+                  "opties_de": [
+                    "3,5 Sterne",
+                    "4,0 Sterne",
+                    "4,7 Sterne",
+                    "5,0 Sterne"
+                  ]
                 },
                 {
                   "vraag": "Welk platform is primair voor beauty-marketing?",
@@ -1175,7 +1275,14 @@
                     "Instagram",
                     "Twitter"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Welche Plattform ist primär für Beauty-Marketing?",
+                  "opties_de": [
+                    "Facebook",
+                    "LinkedIn",
+                    "Instagram",
+                    "Twitter"
+                  ]
                 },
                 {
                   "vraag": "Wat is het streven voor retail-conversie?",
@@ -1185,7 +1292,14 @@
                     "35-45%",
                     "70%+"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist das Ziel für die Retail-Conversion?",
+                  "opties_de": [
+                    "5–10%",
+                    "15–20%",
+                    "35–45%",
+                    "70%+"
+                  ]
                 },
                 {
                   "vraag": "Wat is het BTW-tarief op waxbehandeling in Duitsland?",
@@ -1195,12 +1309,21 @@
                     "19%",
                     "21%"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Wie hoch ist der MwSt.-Satz auf Waxbehandlungen in Deutschland?",
+                  "opties_de": [
+                    "7%",
+                    "9%",
+                    "19%",
+                    "21%"
+                  ]
                 }
               ],
-              "slagingsDrempel": 75
+              "slagingsDrempel": 75,
+              "titel_de": "Abschlussprüfung"
             }
-          ]
+          ],
+          "titel_de": "Business & Studio-Management"
         }
       ]
     },
