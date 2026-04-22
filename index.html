@@ -725,13 +725,13 @@
   <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900" data-t="hPersoneel">Urenregistratie</h1>
-      <p class="text-sm text-gray-500">Personeel & uren bijhouden</p>
+      <p class="text-sm text-gray-500" data-t="subUren">Personeel & uren bijhouden</p>
     </div>
     <div class="header-actions">
       <div class="flex items-center gap-2">
         <select id="personeel-tab" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderPersoneel()">
-          <option value="uren">Uren</option>
-          <option value="medewerkers">Medewerkers</option>
+          <option value="uren" data-t="optUren">Uren</option>
+          <option value="medewerkers" data-t="optMedewerkers">Medewerkers</option>
         </select>
         <button onclick="openModal('uur-toevoegen')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnUrenToe">+ Uren toevoegen</span></button>
       </div>
