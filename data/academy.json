@@ -1902,33 +1902,224 @@
               "id": "ac3-1",
               "titel": "Gevoelige huid & probleemhuid",
               "type": "video",
-              "duur": "30 min"
+              "duur": "30 min",
+              "titel_de": "Empfindliche Haut & Problemhaut",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je past wax-protocol aan voor klanten met eczeem, rosacea, psoriasis en gevoelige huid</li>\n<li>Je herkent huidaandoeningen die behandeling <em>wel</em> toestaan versus die contra zijn</li>\n<li>Je communiceert huidtype-aanpassingen naar klant zonder zorg te veroorzaken</li>\n</ul></div>\n\n<h3>Eczeem (atopische dermatitis)</h3>\n<ul>\n<li><strong>Actief (rood, jeuk, schilfering):</strong> geen behandeling in die zone. Andere zones wel.</li>\n<li><strong>In remissie (minstens 4 weken geen flare):</strong> behandeling mogelijk met aanpassing:</li>\n<ul>\n<li>Temperatuur 2&ndash;3&deg;C lager (52&ndash;55&deg;C hot wax)</li>\n<li>Patch-test 24 uur vooraf op klein oppervlak</li>\n<li>Dubbele post-oil + Aftercare Cream mee</li>\n<li>Klant topische cortison-creme aanhouden &mdash; nooit laten stoppen in opdracht</li>\n</ul>\n</ul>\n\n<h3>Rosacea</h3>\n<p>Typisch gezicht, wangen, neus, voorhoofd. Waxing op deze zones: extreme voorzichtigheid.</p>\n<ul>\n<li>Nooit rechtstreeks op rosacea-papulaire zones</li>\n<li>Wenkbrauwen/bovenlip (meestal niet rosacea-zones): ja, maar op laagste temperatuur (45&ndash;48&deg;C)</li>\n<li>Koud kompres direct na, niet n&aacute; 2 minuten</li>\n<li>Klant medicatie (metronidazol, ivermectine) checken &mdash; geen topical retinoids dus waxing ok</li>\n</ul>\n\n<h3>Psoriasis</h3>\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Köbner-fenomeen</strong>\n<p style=\"margin:6px 0 0 0\">Psoriasis-patiënten vertonen het Köbner-fenomeen: nieuwe plaque ontstaan op plaatsen van huidtrauma. Waxing is een trauma. Bij actieve psoriasis zelfs bij gezonde huid-zones: <em>niet behandelen</em>. Bij volledige remissie 6 maanden: met dermatoloog overleggen eerst.</p></div>\n\n<h3>PIH-risico (postinflammatoire hyperpigmentatie)</h3>\n<p>Bij Fitzpatrick IV-VI en sommige III klanten risico op donkere plekken na behandeling. Preventie:</p>\n<ul>\n<li>Temperatuur max 55&deg;C</li>\n<li>Minimaliseer aantal herhalingstrekken op dezelfde zone</li>\n<li>Agressief post-care protocol: dubbele Post-Oil, daarna Aftercare Cream dagelijks 7 dagen</li>\n<li>Zon-bescherming SPF 30+ 2 weken na behandeling verplicht</li>\n</ul>\n\n<h3>Ingegroeide haren als chronisch probleem</h3>\n<p>Bij klanten die herhaaldelijk ingroei melden (&gt;30% van sessies):</p>\n<ol>\n<li>Evalueer hun thuisroutine &mdash; gebruiken ze Body Scrub? Post-Oil dagelijks?</li>\n<li>Overweeg <strong>sugar wax</strong> in plaats van hot wax &mdash; trekt meer in haargroeirichting, minder breuk</li>\n<li>Adviseer chemische peeling (glycolzuur 7%) tussen sessies bij specialist &mdash; niet je eigen expertise</li>\n<li>Verwijs naar IPL/laser-studio bij echt chronisch probleem &mdash; eerlijk is beter dan klant behouden</li>\n</ol>\n\n<p><em>Volgende les: speed waxing technieken voor hoge omzet-per-uur.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie passen das Waxing-Protokoll für Kundinnen mit Ekzem, Rosacea, Psoriasis und empfindlicher Haut an</li>\n<li>Sie erkennen Hautleiden, die eine Behandlung erlauben, gegenüber solchen, die kontraindiziert sind</li>\n<li>Sie kommunizieren Hauttyp-Anpassungen an die Kundin, ohne Sorgen auszulösen</li>\n</ul></div>\n\n<h3>Ekzem (atopische Dermatitis)</h3>\n<ul>\n<li><strong>Aktiv (rot, Juckreiz, Schuppung):</strong> keine Behandlung in dieser Zone. Andere Zonen: ja.</li>\n<li><strong>In Remission (mindestens 4 Wochen ohne Schub):</strong> Behandlung möglich mit Anpassung:</li>\n<ul>\n<li>Temperatur 2&ndash;3&deg;C niedriger (52&ndash;55&deg;C Hot Wax)</li>\n<li>Patch-Test 24 Stunden vorher an kleiner Fläche</li>\n<li>Doppeltes Post-Oil + Aftercare Cream mitgeben</li>\n<li>Kundin topische Kortisoncreme weiter anwenden &mdash; nie auf Anweisung absetzen lassen</li>\n</ul>\n</ul>\n\n<h3>Rosacea</h3>\n<p>Typisch Gesicht, Wangen, Nase, Stirn. Waxing in diesen Zonen: extreme Vorsicht.</p>\n<ul>\n<li>Nie direkt auf papulöse Rosacea-Zonen</li>\n<li>Augenbrauen/Oberlippe (meist keine Rosacea-Zonen): ja, aber mit niedrigster Temperatur (45&ndash;48&deg;C)</li>\n<li>Kaltkompresse direkt danach, nicht erst nach 2 Minuten</li>\n<li>Medikation der Kundin (Metronidazol, Ivermectin) prüfen &mdash; keine topischen Retinoide, also Waxing okay</li>\n</ul>\n\n<h3>Psoriasis</h3>\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Köbner-Phänomen</strong>\n<p style=\"margin:6px 0 0 0\">Psoriasis-Patientinnen zeigen das Köbner-Phänomen: neue Plaques entstehen an Orten von Hauttrauma. Waxing ist ein Trauma. Bei aktiver Psoriasis selbst in gesunden Hautzonen: <em>nicht behandeln</em>. Bei vollständiger Remission von 6 Monaten: zuerst mit der Dermatologin abstimmen.</p></div>\n\n<h3>PIH-Risiko (postinflammatorische Hyperpigmentierung)</h3>\n<p>Bei Fitzpatrick IV-VI und einigen Typ-III-Kundinnen besteht das Risiko dunkler Flecken nach der Behandlung. Prävention:</p>\n<ul>\n<li>Temperatur max. 55&deg;C</li>\n<li>Wiederholungsabzüge in derselben Zone minimieren</li>\n<li>Aggressives Post-Care-Protokoll: doppeltes Post-Oil, danach Aftercare Cream täglich 7 Tage</li>\n<li>Sonnenschutz LSF 30+ für 2 Wochen nach der Behandlung verpflichtend</li>\n</ul>\n\n<h3>Eingewachsene Haare als chronisches Problem</h3>\n<p>Bei Kundinnen, die wiederholt Einwachsen melden (&gt;30% der Sitzungen):</p>\n<ol>\n<li>Ihre Heimroutine bewerten &mdash; verwenden sie Body Scrub? Post-Oil täglich?</li>\n<li>Erwägen Sie <strong>Sugar Wax</strong> statt Hot Wax &mdash; zieht stärker in Haarwuchsrichtung, weniger Bruch</li>\n<li>Chemisches Peeling (Glykolsäure 7%) zwischen den Sitzungen bei Spezialistin empfehlen &mdash; nicht Ihre eigene Expertise</li>\n<li>Bei echtem chronischem Problem an IPL/Laser-Studio verweisen &mdash; Ehrlichkeit ist besser, als die Kundin zu halten</li>\n</ol>\n\n<p><em>Nächste Lektion: Speed-Waxing-Techniken für hohen Umsatz pro Stunde.</em></p>",
+              "laatstBewerkt": "2026-04-22T18:15:00.000Z"
             },
             {
               "id": "ac3-2",
               "titel": "Speed waxing technieken",
               "type": "video",
-              "duur": "35 min"
+              "duur": "35 min",
+              "titel_de": "Speed-Waxing-Techniken",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je doet een kwaliteitsvolle Brazilian in 15 minuten in plaats van 30</li>\n<li>Je kent de 5 efficiency-principes van speed waxing</li>\n<li>Je behoudt kwaliteit &eacute;n klanttevredenheid bij 2&times; hogere omzet-per-uur</li>\n</ul></div>\n\n<h3>Waarom speed waxing geen shortcut is</h3>\n<p>Speed waxing = techniek optimaliseren, nooit stappen schrappen. Ervaren waxers doen een Brazilian in 15 minuten en leveren betere kwaliteit dan beginners in 30 minuten. Verschil zit in 5 principes.</p>\n\n<h3>Principe 1: Twee-handenwerken</h3>\n<p>Beginners gebruiken &eacute;&eacute;n hand afwisselend voor applicatie en trek. Ervaren waxers werken parallel:</p>\n<ul>\n<li><strong>Rechterhand:</strong> applicatie volgende zone terwijl</li>\n<li><strong>Linkerhand:</strong> vasthoudt strip van vorige zone</li>\n<li>Trek, druk, nieuwe applicatie, trek &mdash; continue flow</li>\n<li>Bespaart 30&ndash;40% tijd zonder kwaliteit-impact</li>\n</ul>\n\n<h3>Principe 2: Zone-chunking</h3>\n<p>In plaats van 6 aparte zones-applicaties bij Brazilian, chunk je gerelateerde zones:</p>\n<ol>\n<li>Chunk 1: beide bikinilijnen + binnen bovenbenen (klant rug-ligging)</li>\n<li>Chunk 2: venusheuvel + beide labia (klant idem)</li>\n<li>Chunk 3: perineum + anale zone (klant zijligging)</li>\n</ol>\n<p>Ivp 6 herpositioneringen: 3. Bespaart 2&ndash;3 minuten.</p>\n\n<h3>Principe 3: Applicatie-grootte matchen aan zone</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Zone</th><th style=\"border:1px solid #d1d5db;padding:8px\">Optimale applicatie</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Bikinilijn</td><td style=\"border:1px solid #d1d5db;padding:8px\">6&ndash;8 cm lang, 4 cm breed</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Labia majora</td><td style=\"border:1px solid #d1d5db;padding:8px\">3 cm &times; 2 cm</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Onderbeen voor</td><td style=\"border:1px solid #d1d5db;padding:8px\">15&ndash;20 cm lang</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Oksels (per kwadrant)</td><td style=\"border:1px solid #d1d5db;padding:8px\">3 cm &times; 3 cm</td></tr>\n</table>\n\n<h3>Principe 4: Post-oil in flow, niet na afloop</h3>\n<p>Klassieke fout: alle trekken doen, daarna post-oil. Resultaat: critical window van eerste trekken al voorbij.</p>\n<p><strong>Juiste flow:</strong> na elke cluster van 2&ndash;3 trekken &rarr; post-oil direct op die zone &rarr; volgende cluster. Klant voelt continu kalmering, minder pijn-opbouw.</p>\n\n<h3>Principe 5: Eliminate herbewerkingen</h3>\n<p>Als een trek haren achterlaat, herbewerk je die zone. Kost elke herbewerking 20&ndash;40 seconden. Speed waxing = eerste trek moet het zijn:</p>\n<ul>\n<li>Juiste temperatuur (niet te koud &rarr; breuk)</li>\n<li>Juiste tractie (huid strak-strak)</li>\n<li>Juiste hoek (parallel, nooit omhoog)</li>\n<li>Juiste tempo (snel, niet aarzelend)</li>\n</ul>\n<p>Bij consistente techniek: <strong>0&ndash;1 herbewerkingen per Brazilian</strong>, niet 5&ndash;8 zoals bij beginners.</p>\n\n<div style=\"background:#ecfdf5;border-left:4px solid #059669;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#065f46\">💡 Pro-tip: Omzet-per-uur berekening</strong>\n<p style=\"margin:6px 0 0 0\">Brazilian 30 min &agrave; &euro;45 = &euro;90/uur. Brazilian 15 min &agrave; &euro;45 = &euro;180/uur. Bij 6-uurs werkdag: &euro;540 vs &euro;1080. Zonder prijsverhoging. <em>Dat</em> is waarom techniek-training rendement heeft.</p></div>\n\n<p><em>Volgende les: troubleshooting veelvoorkomende problemen.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie führen eine qualitative Brazilian in 15 Minuten statt 30 durch</li>\n<li>Sie kennen die 5 Effizienzprinzipien des Speed-Waxings</li>\n<li>Sie erhalten Qualität und Kundenzufriedenheit bei 2&times; höherem Umsatz pro Stunde</li>\n</ul></div>\n\n<h3>Warum Speed-Waxing kein Shortcut ist</h3>\n<p>Speed-Waxing = Technik optimieren, nie Schritte streichen. Erfahrene Waxerinnen machen eine Brazilian in 15 Minuten und liefern bessere Qualität als Anfängerinnen in 30 Minuten. Der Unterschied liegt in 5 Prinzipien.</p>\n\n<h3>Prinzip 1: Zweihand-Arbeit</h3>\n<p>Anfängerinnen verwenden eine Hand abwechselnd für Applikation und Abzug. Erfahrene Waxerinnen arbeiten parallel:</p>\n<ul>\n<li><strong>Rechte Hand:</strong> Applikation der nächsten Zone, während</li>\n<li><strong>Linke Hand:</strong> den Streifen der vorherigen Zone hält</li>\n<li>Abzug, Drücken, neue Applikation, Abzug &mdash; kontinuierlicher Fluss</li>\n<li>Spart 30&ndash;40% Zeit ohne Qualitätseinbuße</li>\n</ul>\n\n<h3>Prinzip 2: Zone-Chunking</h3>\n<p>Anstatt 6 separate Zonen-Applikationen bei der Brazilian, bündeln Sie verwandte Zonen:</p>\n<ol>\n<li>Chunk 1: beide Bikinizonen + innere Oberschenkel (Kundin auf Rücken)</li>\n<li>Chunk 2: Schamhügel + beide Labia (Kundin ebenfalls)</li>\n<li>Chunk 3: Perineum + Analzone (Kundin in Seitenlage)</li>\n</ol>\n<p>Statt 6 Umpositionierungen: 3. Spart 2&ndash;3 Minuten.</p>\n\n<h3>Prinzip 3: Applikationsgröße an Zone anpassen</h3>\n<table style=\"width:100%;border-collapse:collapse;margin:16px 0\">\n<tr style=\"background:#f3f4f6\"><th style=\"border:1px solid #d1d5db;padding:8px;text-align:left\">Zone</th><th style=\"border:1px solid #d1d5db;padding:8px\">Optimale Applikation</th></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Bikinizone</td><td style=\"border:1px solid #d1d5db;padding:8px\">6&ndash;8 cm lang, 4 cm breit</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Labia Majora</td><td style=\"border:1px solid #d1d5db;padding:8px\">3 cm &times; 2 cm</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Unterschenkel vorne</td><td style=\"border:1px solid #d1d5db;padding:8px\">15&ndash;20 cm lang</td></tr>\n<tr><td style=\"border:1px solid #d1d5db;padding:8px\">Achseln (pro Quadrant)</td><td style=\"border:1px solid #d1d5db;padding:8px\">3 cm &times; 3 cm</td></tr>\n</table>\n\n<h3>Prinzip 4: Post-Oil im Fluss, nicht erst am Ende</h3>\n<p>Klassischer Fehler: alle Abzüge machen, danach Post-Oil. Ergebnis: Critical Window der ersten Abzüge bereits vorbei.</p>\n<p><strong>Korrekter Ablauf:</strong> nach jedem Cluster von 2&ndash;3 Abzügen &rarr; Post-Oil direkt auf diese Zone &rarr; nächster Cluster. Kundin fühlt kontinuierliche Beruhigung, weniger Schmerz-Aufbau.</p>\n\n<h3>Prinzip 5: Nachbearbeitungen eliminieren</h3>\n<p>Wenn ein Abzug Haare zurücklässt, bearbeiten Sie diese Zone nach. Jede Nachbearbeitung kostet 20&ndash;40 Sekunden. Speed-Waxing = der erste Abzug muss sitzen:</p>\n<ul>\n<li>Richtige Temperatur (nicht zu kalt &rarr; Bruch)</li>\n<li>Richtige Traktion (Haut straff)</li>\n<li>Richtiger Winkel (parallel, nie nach oben)</li>\n<li>Richtiges Tempo (schnell, nicht zögerlich)</li>\n</ul>\n<p>Bei konsequenter Technik: <strong>0&ndash;1 Nachbearbeitungen pro Brazilian</strong>, nicht 5&ndash;8 wie bei Anfängerinnen.</p>\n\n<div style=\"background:#ecfdf5;border-left:4px solid #059669;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#065f46\">💡 Profi-Tipp: Umsatz-pro-Stunde-Rechnung</strong>\n<p style=\"margin:6px 0 0 0\">Brazilian 30 Min &agrave; &euro;45 = &euro;90/Std. Brazilian 15 Min &agrave; &euro;45 = &euro;180/Std. Bei 6-Stunden-Arbeitstag: &euro;540 vs &euro;1080. Ohne Preiserhöhung. <em>Das</em> ist der Grund, warum Techniktraining Rendite bringt.</p></div>\n\n<p><em>Nächste Lektion: Troubleshooting häufiger Probleme.</em></p>",
+              "laatstBewerkt": "2026-04-22T18:15:00.000Z"
             },
             {
               "id": "ac3-3",
               "titel": "Troubleshooting: veelvoorkomende problemen",
               "type": "tekst",
-              "duur": "25 min"
+              "duur": "25 min",
+              "titel_de": "Troubleshooting: häufige Probleme",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je diagnostiseert de 6 veelvoorkomende wax-problemen binnen seconden</li>\n<li>Je lost folliculitis, ingegroeide haren en langdurige roodheid professioneel op</li>\n<li>Je herkent wanneer een probleem dermatoloog-verwijzing vereist</li>\n</ul></div>\n\n<h3>Probleem 1: Haar breekt in plaats van uittrekken</h3>\n<p><strong>Oorzaken:</strong></p>\n<ul>\n<li>Wax te koud (&lt; 50&deg;C)</li>\n<li>Applicatie te dun (minder dan 1 mm)</li>\n<li>Haar korter dan 5 mm</li>\n<li>Trek te langzaam</li>\n<li>Trek niet parallel aan huid</li>\n</ul>\n<p><strong>Oplossing:</strong> temperatuur 2&ndash;3&deg;C omhoog, dikkere applicatie, sneller trekken.</p>\n\n<h3>Probleem 2: Wax blijft op huid achter</h3>\n<p><strong>Oorzaken:</strong></p>\n<ul>\n<li>Huid heeft vocht/olie residu (slechte pre-powder)</li>\n<li>Applicatie te dik, uithardt niet volledig</li>\n<li>Wax verouderd of van slechte kwaliteit</li>\n</ul>\n<p><strong>Oplossing:</strong> pre-powder opnieuw, thinner applicatie, check wax-batch.</p>\n\n<h3>Probleem 3: Folliculitis (puistjes 24&ndash;72u post-wax)</h3>\n<p>Rode puistjes, soms met witte kop, binnen 1&ndash;3 dagen. Oorzaak: bacteri&euml;n in open follikels (meestal Staphylococcus aureus).</p>\n<ul>\n<li><strong>Mild (5&ndash;10 puistjes):</strong> adviseer warm kompres 3&times;/dag, tea tree-olie 1% (niet puur), geen knijpen</li>\n<li><strong>Matig (10&ndash;30 puistjes):</strong> als mild + chloorhexidine-oplossing 0,5% 2&times;/dag</li>\n<li><strong>Ernstig (uitgebreid, koorts, rode strepen):</strong> direct huisarts &mdash; mogelijk orale antibiotica nodig</li>\n</ul>\n<p>Preventie volgende sessie: strikter OCOC, klant 48u geen sport.</p>\n\n<h3>Probleem 4: Chronische ingegroeide haren</h3>\n<ol>\n<li>Evalueer thuis-routine: gebruikt klant Body Scrub 2&times;/week? Post-Oil dagelijks?</li>\n<li>Wax-techniek: altijd parallel trekken? Nooit tegen groeirichting?</li>\n<li>Type wax: hot wax heeft minder ingroei dan warm wax</li>\n<li>Klant trichotillomanie? Soms plukt klant zelf ertussen</li>\n<li>Bij geen verbetering na 3 sessies: eerlijk aanraden IPL-behandeling</li>\n</ol>\n\n<h3>Probleem 5: Langdurige roodheid (&gt; 24 uur)</h3>\n<p>Normaal: 2&ndash;6 uur. Bij &gt;24 uur onderliggend probleem:</p>\n<ul>\n<li>Wax-temperatuur te hoog &rarr; verlagen volgende sessie</li>\n<li>Klant onbekende allergie &rarr; patch-test, eventueel switchen naar Economic wax (zonder etherische oli&euml;n)</li>\n<li>Klant recent retinoiden of peeling &rarr; 2&ndash;4 weken afwachten</li>\n<li>Rosacea-onderhuid niet gediagnosticeerd &rarr; overleg dermatoloog</li>\n</ul>\n\n<h3>Probleem 6: Haarbreuk na 1&ndash;2 weken (stubble)</h3>\n<p>Klant ziet haar terug, maar je weet dat je uit de wortel trok. Oorzaken:</p>\n<ul>\n<li>Nieuwe haren uit andere follikels &rarr; anagene fase, normaal, 20&ndash;30%</li>\n<li>Klant perceptie &rarr; leg uit: alle haren groeien niet tegelijk</li>\n<li>Break-offs die je niet zag &rarr; mini-sessie week 2 gratis aanbieden</li>\n</ul>\n\n<p><em>Volgende les: klachtafhandeling en nazorg.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie diagnostizieren die 6 häufigsten Wachs-Probleme innerhalb von Sekunden</li>\n<li>Sie lösen Follikulitis, eingewachsene Haare und langanhaltende Rötung professionell</li>\n<li>Sie erkennen, wann ein Problem eine dermatologische Überweisung erfordert</li>\n</ul></div>\n\n<h3>Problem 1: Haar bricht statt ausgezogen zu werden</h3>\n<p><strong>Ursachen:</strong></p>\n<ul>\n<li>Wachs zu kalt (&lt; 50&deg;C)</li>\n<li>Applikation zu dünn (weniger als 1 mm)</li>\n<li>Haar kürzer als 5 mm</li>\n<li>Abzug zu langsam</li>\n<li>Abzug nicht parallel zur Haut</li>\n</ul>\n<p><strong>Lösung:</strong> Temperatur 2&ndash;3&deg;C erhöhen, dickere Applikation, schneller abziehen.</p>\n\n<h3>Problem 2: Wachs bleibt auf der Haut zurück</h3>\n<p><strong>Ursachen:</strong></p>\n<ul>\n<li>Haut hat Feuchtigkeits-/Öl-Rückstände (schlechtes Pre-Powder)</li>\n<li>Applikation zu dick, härtet nicht vollständig aus</li>\n<li>Wachs überaltert oder minderwertig</li>\n</ul>\n<p><strong>Lösung:</strong> Pre-Powder erneut, dünnere Applikation, Wachs-Charge prüfen.</p>\n\n<h3>Problem 3: Follikulitis (Pusteln 24&ndash;72h post-Wax)</h3>\n<p>Rote Pusteln, manchmal mit weißem Kopf, innerhalb von 1&ndash;3 Tagen. Ursache: Bakterien in offenen Follikeln (meist Staphylococcus aureus).</p>\n<ul>\n<li><strong>Mild (5&ndash;10 Pusteln):</strong> warme Kompresse 3&times;/Tag empfehlen, Teebaumöl 1% (nicht pur), nicht drücken</li>\n<li><strong>Moderat (10&ndash;30 Pusteln):</strong> wie mild + Chlorhexidin-Lösung 0,5% 2&times;/Tag</li>\n<li><strong>Schwer (ausgedehnt, Fieber, rote Streifen):</strong> sofort Hausarzt &mdash; eventuell orale Antibiotika nötig</li>\n</ul>\n<p>Prävention nächste Sitzung: strengeres OCOC, Kundin 48h kein Sport.</p>\n\n<h3>Problem 4: Chronisch eingewachsene Haare</h3>\n<ol>\n<li>Heim-Routine bewerten: nutzt Kundin Body Scrub 2&times;/Woche? Post-Oil täglich?</li>\n<li>Wax-Technik: immer parallel abziehen? Nie gegen Wuchsrichtung?</li>\n<li>Wachstyp: Hot Wax hat weniger Einwachsen als Warm Wax</li>\n<li>Trichotillomanie? Manchmal zupft die Kundin selbst dazwischen</li>\n<li>Bei keiner Besserung nach 3 Sitzungen: ehrlich zu IPL-Behandlung raten</li>\n</ol>\n\n<h3>Problem 5: Langanhaltende Rötung (&gt; 24 Stunden)</h3>\n<p>Normal: 2&ndash;6 Stunden. Bei &gt;24 Stunden zugrundeliegendes Problem:</p>\n<ul>\n<li>Wachstemperatur zu hoch &rarr; nächste Sitzung senken</li>\n<li>Unbekannte Allergie der Kundin &rarr; Patch-Test, ggf. auf Economic Wax wechseln (ohne ätherische Öle)</li>\n<li>Kundin kürzlich Retinoide oder Peeling &rarr; 2&ndash;4 Wochen abwarten</li>\n<li>Nicht diagnostizierte Rosacea-Untertyp &rarr; Rücksprache Dermatologin</li>\n</ul>\n\n<h3>Problem 6: Haarbruch nach 1&ndash;2 Wochen (Stoppeln)</h3>\n<p>Kundin sieht Haare zurück, aber Sie wissen, dass Sie aus der Wurzel gezogen haben. Ursachen:</p>\n<ul>\n<li>Neue Haare aus anderen Follikeln &rarr; Anagenphase, normal, 20&ndash;30%</li>\n<li>Kunden-Wahrnehmung &rarr; erklären: nicht alle Haare wachsen gleichzeitig</li>\n<li>Abbrüche, die Sie nicht sahen &rarr; Mini-Sitzung Woche 2 kostenlos anbieten</li>\n</ul>\n\n<p><em>Nächste Lektion: Beschwerdebehandlung und Nachsorge.</em></p>",
+              "laatstBewerkt": "2026-04-22T18:15:00.000Z"
             },
             {
               "id": "ac3-4",
               "titel": "Klachtafhandeling & nazorg",
               "type": "tekst",
-              "duur": "20 min"
+              "duur": "20 min",
+              "titel_de": "Beschwerdebehandlung & Nachsorge",
+              "inhoud": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Leerdoelen</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Je past de 5-stappen klachtafhandeling toe onder druk zonder defensief te worden</li>\n<li>Je managet Google- en Instagram-reviews proactief</li>\n<li>Je draait potenti&euml;el negatieve ervaringen om in loyaliteit</li>\n</ul></div>\n\n<h3>De 5 stappen klachtafhandeling (onder druk)</h3>\n<ol>\n<li><strong>Luisteren zonder onderbreken</strong> &mdash; 30 seconden pure stilte van jouw kant. Oogcontact, knikken, niets meer. De meeste klachten verminderen 50% in intensiteit binnen deze 30 seconden.</li>\n<li><strong>Samenvatten:</strong> \"Als ik u goed begrijp zegt u dat uw huid 3 dagen rood was en dat u dit niet normaal vond.\" Klant herkent eigen woorden &rarr; voelt zich gehoord.</li>\n<li><strong>Erkennen zonder schuld:</strong> \"Ik begrijp dat dit frustrerend was, en ik neem uw ervaring serieus.\" Nooit: \"Sorry, dat was mijn fout\" &mdash; juridische valkuil en geeft hij/zij ammunitie.</li>\n<li><strong>Oplossing voorstellen (pas na stap 1&ndash;3):</strong> \"Ik stel 3 opties voor: behandeling herhalen op kosten van de studio, product cadeau, of 25% korting volgende sessie. Wat voelt voor u het beste?\" Klant kiest &rarr; voelt controle.</li>\n<li><strong>Opvolgen:</strong> binnen 48 uur persoonlijke bericht. \"Hoe is uw huid nu? Ik denk aan u, laat het me weten.\" Kleine investering, grote impact.</li>\n</ol>\n\n<h3>Reviewmanagement</h3>\n<ul>\n<li><strong>Positieve review (4&ndash;5 sterren):</strong> altijd binnen 24 uur reageren. Persoonlijk, noem klantnaam, noem specifieke details van hun bezoek.</li>\n<li><strong>Neutrale review (3 sterren):</strong> begrijp wat niet perfect was, nodig uit om persoonlijk te bespreken, bied kleine make-good aan.</li>\n<li><strong>Negatieve review (1&ndash;2 sterren):</strong>\n<ol>\n<li>Binnen 12 uur publiek reageren, empathisch, geen verdediging</li>\n<li>Ieder geval: \"Ik zie uw bericht en wil dit persoonlijk oplossen. Mag ik u bellen op nummer dat we hebben?\"</li>\n<li>Oplossing offline</li>\n<li>Optioneel: klant vragen review aan te passen na oplossing</li>\n</ol></li>\n</ul>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Wat NOOIT bij negatieve review</strong>\n<ul style=\"margin:6px 0 0 0\">\n<li>Publieke verdediging (\"Dat klopt niet, u had&hellip;\")</li>\n<li>Andere klanten citeren (\"We hebben nog nooit klachten gekregen\")</li>\n<li>Klant blokkeren of recensie raporteren (tenzij echt smaad)</li>\n<li>Personeel afvallen (\"Mijn medewerker had een slechte dag\")</li>\n<li>Over financi&euml;n heen gaan in reactie</li>\n</ul></div>\n\n<h3>Potentieel negatieve ervaring omdraaien</h3>\n<p>Als klant tijdens behandeling zegt \"dit is niet wat ik verwachtte\":</p>\n<ol>\n<li>Pauzeer de behandeling</li>\n<li>Vraag rustig: \"Vertel me wat u verwachtte en wat u nu ervaart.\"</li>\n<li>Zoek discrepantie: techniek, verwachting, communicatie?</li>\n<li>Als discrepantie oplosbaar is: bied aan aan te passen</li>\n<li>Als niet: \"Als u wilt, stoppen we nu. Ik reken de halve prijs.\" De-escaleert direct, bewaard relatie.</li>\n</ol>\n\n<p><em>Volgende les (examen): 10 vragen over advanced technieken en klantmanagement.</em></p>",
+              "inhoud_de": "<div style=\"background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);border-left:4px solid #d97706;padding:16px 20px;margin-bottom:24px;border-radius:8px\">\n<strong style=\"color:#92400e\">🎯 Lernziele dieser Lektion</strong>\n<ul style=\"margin:8px 0 0 0\">\n<li>Sie wenden die 5-Schritte-Beschwerdebehandlung unter Druck an, ohne defensiv zu werden</li>\n<li>Sie verwalten Google- und Instagram-Bewertungen proaktiv</li>\n<li>Sie wandeln potenziell negative Erfahrungen in Loyalität um</li>\n</ul></div>\n\n<h3>Die 5 Schritte der Beschwerdebehandlung (unter Druck)</h3>\n<ol>\n<li><strong>Zuhören ohne Unterbrechung</strong> &mdash; 30 Sekunden reine Stille von Ihrer Seite. Augenkontakt, Nicken, sonst nichts. Die meisten Beschwerden verlieren 50% ihrer Intensität innerhalb dieser 30 Sekunden.</li>\n<li><strong>Zusammenfassen:</strong> \"Wenn ich Sie richtig verstehe, sagen Sie, dass Ihre Haut 3 Tage lang rot war und Sie das nicht normal fanden.\" Kundin erkennt eigene Worte &rarr; fühlt sich gehört.</li>\n<li><strong>Anerkennen ohne Schuldeingeständnis:</strong> \"Ich verstehe, dass das frustrierend war, und ich nehme Ihre Erfahrung ernst.\" Nie: \"Entschuldigung, das war mein Fehler\" &mdash; juristische Falle und gibt ihr Munition.</li>\n<li><strong>Lösung vorschlagen (erst nach Schritt 1&ndash;3):</strong> \"Ich schlage 3 Optionen vor: Behandlung auf Kosten des Studios wiederholen, Produkt geschenkt, oder 25% Rabatt auf die nächste Sitzung. Was fühlt sich für Sie am besten an?\" Kundin wählt &rarr; fühlt Kontrolle.</li>\n<li><strong>Nachfassen:</strong> innerhalb von 48 Stunden persönliche Nachricht. \"Wie fühlt sich Ihre Haut jetzt an? Ich denke an Sie, bitte lassen Sie es mich wissen.\" Kleine Investition, große Wirkung.</li>\n</ol>\n\n<h3>Review-Management</h3>\n<ul>\n<li><strong>Positive Bewertung (4&ndash;5 Sterne):</strong> immer innerhalb von 24 Stunden antworten. Persönlich, Namen der Kundin nennen, spezifische Details ihres Besuchs erwähnen.</li>\n<li><strong>Neutrale Bewertung (3 Sterne):</strong> verstehen, was nicht perfekt war, zu einem persönlichen Gespräch einladen, kleine Wiedergutmachung anbieten.</li>\n<li><strong>Negative Bewertung (1&ndash;2 Sterne):</strong>\n<ol>\n<li>Innerhalb von 12 Stunden öffentlich antworten, empathisch, keine Verteidigung</li>\n<li>In jedem Fall: \"Ich sehe Ihre Nachricht und möchte dies persönlich klären. Darf ich Sie unter der uns bekannten Nummer anrufen?\"</li>\n<li>Lösung offline</li>\n<li>Optional: Kundin nach Lösung um Anpassung der Bewertung bitten</li>\n</ol></li>\n</ul>\n\n<div style=\"background:#fee2e2;border-left:4px solid #dc2626;padding:16px 20px;margin:24px 0;border-radius:8px\">\n<strong style=\"color:#991b1b\">⚠️ Was bei negativer Bewertung NIE</strong>\n<ul style=\"margin:6px 0 0 0\">\n<li>Öffentliche Verteidigung (\"Das stimmt nicht, Sie hätten&hellip;\")</li>\n<li>Andere Kundinnen zitieren (\"Wir haben noch nie Beschwerden bekommen\")</li>\n<li>Kundin blockieren oder Bewertung melden (außer echte Verleumdung)</li>\n<li>Mitarbeiter bloßstellen (\"Meine Mitarbeiterin hatte einen schlechten Tag\")</li>\n<li>Über Finanzielles in der Antwort sprechen</li>\n</ul></div>\n\n<h3>Potenziell negative Erfahrung umdrehen</h3>\n<p>Wenn die Kundin während der Behandlung sagt \"das ist nicht, was ich erwartet habe\":</p>\n<ol>\n<li>Behandlung pausieren</li>\n<li>Ruhig fragen: \"Erzählen Sie mir, was Sie erwartet haben und was Sie jetzt erleben.\"</li>\n<li>Diskrepanz suchen: Technik, Erwartung, Kommunikation?</li>\n<li>Wenn Diskrepanz lösbar ist: Anpassung anbieten</li>\n<li>Wenn nicht: \"Wenn Sie möchten, brechen wir jetzt ab. Ich berechne den halben Preis.\" De-eskaliert sofort, erhält die Beziehung.</li>\n</ol>\n\n<p><em>Nächste Lektion (Examen): 10 Fragen zu Advanced-Techniken und Kundenmanagement.</em></p>",
+              "laatstBewerkt": "2026-04-22T18:15:00.000Z"
             },
             {
               "id": "ac3-5",
               "titel": "Advanced praktijkexamen",
               "type": "quiz",
-              "duur": "45 min"
+              "duur": "45 min",
+              "titel_de": "Advanced-Praxisprüfung",
+              "quizVragen": [
+                {
+                  "vraag": "Bij actieve eczeem in de behandelzone: wat doe je?",
+                  "opties": [
+                    "Behandel, temperatuur verlagen",
+                    "Geen behandeling in die zone",
+                    "Verwijs naar dermatoloog eerst",
+                    "Behandel met dikke laag post-oil"
+                  ],
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Bei aktivem Ekzem in der Behandlungszone: was tun Sie?",
+                  "opties_de": [
+                    "Behandeln, Temperatur senken",
+                    "Keine Behandlung in dieser Zone",
+                    "Zuerst an Dermatologin verweisen",
+                    "Mit dicker Post-Oil-Schicht behandeln"
+                  ]
+                },
+                {
+                  "vraag": "Wat is het Köbner-fenomeen bij psoriasis?",
+                  "opties": [
+                    "Huidontsteking na UV",
+                    "Nieuwe plaques bij huidtrauma",
+                    "Kleur-afwijking",
+                    "Allergische reactie"
+                  ],
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was ist das Köbner-Phänomen bei Psoriasis?",
+                  "opties_de": [
+                    "Hautentzündung nach UV",
+                    "Neue Plaques bei Hauttrauma",
+                    "Farbabweichung",
+                    "Allergische Reaktion"
+                  ]
+                },
+                {
+                  "vraag": "Wat is de max wax-temperatuur bij Fitzpatrick V-VI?",
+                  "opties": [
+                    "50°C",
+                    "55°C",
+                    "60°C",
+                    "Geen limiet"
+                  ],
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was ist die maximale Wachstemperatur bei Fitzpatrick V–VI?",
+                  "opties_de": [
+                    "50°C",
+                    "55°C",
+                    "60°C",
+                    "Keine Grenze"
+                  ]
+                },
+                {
+                  "vraag": "Hoeveel tijd besparen ervaren waxers op Brazilian vs beginners?",
+                  "opties": [
+                    "5 min",
+                    "10 min",
+                    "15 min (30 vs 15)",
+                    "Geen verschil"
+                  ],
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Wie viel Zeit sparen erfahrene Waxerinnen bei einer Brazilian gegenüber Anfängerinnen?",
+                  "opties_de": [
+                    "5 Min",
+                    "10 Min",
+                    "15 Min (30 vs 15)",
+                    "Kein Unterschied"
+                  ]
+                },
+                {
+                  "vraag": "Wat is principe 4 van speed waxing?",
+                  "opties": [
+                    "Sneller werken",
+                    "Post-oil in flow, niet na afloop",
+                    "Applicatie verdubbelen",
+                    "Minder herpositioneren"
+                  ],
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was ist Prinzip 4 des Speed-Waxings?",
+                  "opties_de": [
+                    "Schneller arbeiten",
+                    "Post-Oil im Fluss, nicht am Ende",
+                    "Applikation verdoppeln",
+                    "Weniger umpositionieren"
+                  ]
+                },
+                {
+                  "vraag": "Wat veroorzaakt folliculitis meestal na wax?",
+                  "opties": [
+                    "Allergie",
+                    "Staphylococcus aureus",
+                    "Hormonen",
+                    "Droge huid"
+                  ],
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was verursacht Follikulitis meist nach Waxing?",
+                  "opties_de": [
+                    "Allergie",
+                    "Staphylococcus aureus",
+                    "Hormone",
+                    "Trockene Haut"
+                  ]
+                },
+                {
+                  "vraag": "Hoe lang is normale roodheid na wax?",
+                  "opties": [
+                    "30 min",
+                    "2-6 uur",
+                    "1-2 dagen",
+                    "1 week"
+                  ],
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Wie lange hält normale Rötung nach Waxing?",
+                  "opties_de": [
+                    "30 Min",
+                    "2–6 Stunden",
+                    "1–2 Tage",
+                    "1 Woche"
+                  ]
+                },
+                {
+                  "vraag": "Wat is STAP 1 in klachtafhandeling?",
+                  "opties": [
+                    "Oplossing voorstellen",
+                    "Excuses aanbieden",
+                    "Luisteren zonder onderbreken",
+                    "Klant kalmeren"
+                  ],
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist SCHRITT 1 der Beschwerdebehandlung?",
+                  "opties_de": [
+                    "Lösung vorschlagen",
+                    "Entschuldigung anbieten",
+                    "Zuhören ohne Unterbrechung",
+                    "Kundin beruhigen"
+                  ]
+                },
+                {
+                  "vraag": "Binnen hoeveel uur reageer je op negatieve Google-review?",
+                  "opties": [
+                    "24 uur",
+                    "12 uur",
+                    "1 week",
+                    "Niet reageren"
+                  ],
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Innerhalb wie vieler Stunden antworten Sie auf eine negative Google-Bewertung?",
+                  "opties_de": [
+                    "24 Stunden",
+                    "12 Stunden",
+                    "1 Woche",
+                    "Nicht antworten"
+                  ]
+                },
+                {
+                  "vraag": "Bij ernstige folliculitis met koorts: wat doe je?",
+                  "opties": [
+                    "Tea tree olie",
+                    "Behandeling staken",
+                    "Direct huisarts",
+                    "Afwachten 1 week"
+                  ],
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Bei schwerer Follikulitis mit Fieber: was tun Sie?",
+                  "opties_de": [
+                    "Teebaumöl",
+                    "Behandlung einstellen",
+                    "Sofort Hausarzt",
+                    "1 Woche abwarten"
+                  ]
+                }
+              ],
+              "laatstBewerkt": "2026-04-22T18:15:00.000Z"
             }
-          ]
+          ],
+          "titel_de": "Advanced-Techniken & Spezialisierungen"
         },
         {
           "id": "ac-4",
