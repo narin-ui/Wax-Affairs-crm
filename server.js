@@ -928,6 +928,52 @@ app.post('/api/academy/quiz-poging/:lesId', (req, res) => {
 });
 
 // Voortgang ophalen voor huidige user
+app.post('/api/academy/bulk-content', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  try {
+    const user = getSessionUser(req);
+    if (!user || !['admin','manager','hq'].includes(user.rol)) {
+      return res.status(403).json({ error: 'Geen rechten (rol vereist: admin/manager/hq)' });
+    }
+    const body = req.body || {};
+    const content = body.content || {};
+    if (typeof content !== 'object' || Array.isArray(content)) {
+      return res.status(400).json({ error: 'content moet een object zijn: {lesId: {titel, titel_de, inhoud, inhoud_de}}' });
+    }
+    const academy = laadJSON('academy.json');
+    if (!academy || !Array.isArray(academy.programmas)) {
+      return res.status(500).json({ error: 'academy.json niet beschikbaar' });
+    }
+    let updated = 0;
+    const niet_gevonden = [];
+    const gezien = new Set();
+    for (const p of academy.programmas) {
+      for (const m of (p.modules || [])) {
+        for (const l of (m.lessen || [])) {
+          if (content[l.id]) {
+            const c = content[l.id];
+            if (typeof c.titel === 'string') l.titel = c.titel;
+            if (typeof c.titel_de === 'string') l.titel_de = c.titel_de;
+            if (typeof c.inhoud === 'string') l.inhoud = c.inhoud;
+            if (typeof c.inhoud_de === 'string') l.inhoud_de = c.inhoud_de;
+            l.laatstBewerkt = new Date().toISOString();
+            updated++;
+            gezien.add(l.id);
+          }
+        }
+      }
+    }
+    for (const k of Object.keys(content)) {
+      if (!gezien.has(k)) niet_gevonden.push(k);
+    }
+    slaJSON('academy.json', academy);
+    res.json({ ok: true, updated, niet_gevonden, totaal_gevraagd: Object.keys(content).length });
+  } catch(e) {
+    console.error('bulk-content fout:', e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.get('/api/academy/voortgang', (req, res) => {
   if (!requireAuth(req, res)) return;
   const user = getSessionUser(req);
