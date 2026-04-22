@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="nl" id="rootHtml">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wax Affairs Friendchise — Persona Check</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: { colors: { wax: {
+  50:'#fdf8f3', 100:'#f9edde', 200:'#f2dab9', 300:'#e9be89',
+  400:'#df9e59', 500:'#d18240', 600:'#b66833', 700:'#95522c',
+  800:'#78432a', 900:'#623825'
+}}}}}
+</script>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+.brand-serif { font-family: Georgia, 'Times New Roman', serif; }
+.fade-in { animation: fadeIn 0.4s ease-out; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.option-card { transition: all 0.2s; cursor: pointer; }
+.option-card:hover { border-color: #d18240; background: #fdf8f3; }
+.option-card.selected { border-color: #d18240; background: #fdf8f3; box-shadow: 0 0 0 2px rgba(209,130,64,0.2); }
+.progress-bar { transition: width 0.4s ease-out; }
+.btn-primary { background: #d18240; color: white; transition: all 0.2s; }
+.btn-primary:hover:not(:disabled) { background: #b66833; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 via-wax-50 to-white min-h-screen">
+
+<div class="bg-gray-900 text-white py-6 px-6">
+  <div class="max-w-3xl mx-auto flex items-center justify-between">
+    <div class="brand-serif text-2xl font-bold tracking-tight">
+      <span class="text-wax-400">WAX</span> <em>AFFAIRS</em>
+    </div>
+    <select id="langSelect" onchange="setLang(this.value)" class="bg-gray-800 text-white text-sm px-3 py-1.5 rounded-lg border border-gray-700">
+      <option value="nl">🇳🇱 Nederlands</option>
+      <option value="de">🇩🇪 Deutsch</option>
+    </select>
+  </div>
+</div>
+
+<div id="mainContainer" class="max-w-3xl mx-auto py-12 px-6"></div>
+
+<div class="max-w-3xl mx-auto px-6 pb-8 text-center text-xs text-gray-400">
+  <p>Wax Affairs · Friendchise · 2026 · your drive. our profession.</p>
+</div>
+
+<script>
+const T = {
+  nl: {
+    intro_badge:'Friendchise Persona Check',
+    intro_title:'Past Wax Affairs bij jou?',
+    intro_sub:'Een eerlijke toets in 5 minuten. 20 vragen, geen marketingtruc. Aan het eind weet je of onze Friendchise bij jouw profiel past — en wij weten hoe we je het beste kunnen begeleiden.',
+    intro_what_badge:'Wat je krijgt:',
+    intro_b1:'Persoonlijke score over hoe goed je past',
+    intro_b2:'Advies welk van 3 profielen het beste bij jou past',
+    intro_b3:'Concrete volgende stappen als er een match is',
+    intro_time:'Duur: circa 5 minuten',
+    intro_start:'Start de check →',
+    progress_q:'Vraag',
+    progress_of:'van',
+    btn_back:'← Terug',
+    btn_next:'Volgende →',
+    btn_submit:'Verstuur mijn check',
+    contact_title:'Laatste stap — jouw contactgegevens',
+    contact_sub:'Zodat we je je resultaat kunnen sturen en (als er een match is) contact kunnen opnemen.',
+    first_name:'Voornaam',
+    last_name:'Achternaam',
+    email:'E-mailadres',
+    phone:'Telefoon (optioneel)',
+    contact_pref:'Hoe kunnen we je het beste bereiken?',
+    contact_email:'E-mail',
+    contact_phone:'Telefoon',
+    contact_whatsapp:'WhatsApp',
+    notes_label:'Heb je al vragen of opmerkingen? (optioneel)',
+    notes_ph:'Bijv. specifieke locatie die je op het oog hebt, of vragen over de training',
+    privacy_label:'Ik ga akkoord dat Wax Affairs mijn gegevens gebruikt om contact op te nemen over de Friendchise-mogelijkheid. Privacy: we delen je gegevens met niemand.',
+    required:'Verplicht',
+    invalid_email:'Geen geldig e-mailadres',
+    sending:'Versturen...',
+    err_submit:'Er ging iets fout. Probeer het opnieuw of mail narin@waxaffairs.de',
+    result_strong_title:'Sterke match! 🎯',
+    result_good_title:'Goede match',
+    result_moderate_title:'Interessant profiel',
+    result_low_title:'Bedankt voor je tijd',
+    result_strong_sub:'Jouw profiel sluit uitzonderlijk goed aan bij wat we zoeken. We nemen binnen 48 uur persoonlijk contact op.',
+    result_good_sub:'Je profiel past goed bij Wax Affairs. We nemen binnen 5 werkdagen contact op voor een intro-gesprek.',
+    result_moderate_sub:'Er zijn interessante punten in jouw profiel. We nemen contact op om een aantal aspecten dieper door te nemen.',
+    result_low_sub:'Op basis van jouw antwoorden denken we dat andere opties waarschijnlijk beter bij jou passen dan een Friendchise. We nemen contact op om dit nader te bespreken.',
+    your_persona:'Jouw sterkste profiel',
+    your_score:'Jouw match-score',
+    next_steps:'Volgende stappen',
+    step_email:'Je ontvangt een bevestiging op',
+    step_contact_strong:'Narin of Simone neemt binnen 48 uur contact op',
+    step_contact_good:'We plannen een intro-gesprek van 30 minuten',
+    step_contact_moderate:'We bellen voor een oriënterend gesprek',
+    step_contact_low:'We bellen om jouw situatie beter te begrijpen',
+    step_meanwhile:'Ondertussen: bekijk onze studios en het financiële plaatje',
+    personas:{
+      waxer:{title:'De ervaren waxer', desc:'Jij hebt het vak in je vingers. Je zoekt een merk, een systeem en een business-coach om je eigen studio succesvol te maken.'},
+      ondernemer:{title:'De ondernemer', desc:'Je bent geen wax-specialist, maar je weet hoe je een bedrijf bouwt. Simone leert je het vak, jij brengt de commerciële scherpte.'},
+      switcher:{title:'De career-switcher', desc:'Na jaren in corporate zoek je iets tastbaars, menselijks en van jezelf. Wax Affairs biedt je een gestructureerde stap naar ondernemerschap met echte impact.'}
+    }
+  },
+  de: {
+    intro_badge:'Friendchise Persona Check',
+    intro_title:'Passt Wax Affairs zu Ihnen?',
+    intro_sub:'Ein ehrlicher Test in 5 Minuten. 20 Fragen, kein Marketing-Trick. Am Ende wissen Sie, ob unser Friendchise-Modell zu Ihrem Profil passt — und wir wissen, wie wir Sie am besten begleiten können.',
+    intro_what_badge:'Was Sie erhalten:',
+    intro_b1:'Persönliche Score, wie gut Sie passen',
+    intro_b2:'Empfehlung, welches der 3 Profile am besten zu Ihnen passt',
+    intro_b3:'Konkrete nächste Schritte bei einem Match',
+    intro_time:'Dauer: ca. 5 Minuten',
+    intro_start:'Check starten →',
+    progress_q:'Frage',
+    progress_of:'von',
+    btn_back:'← Zurück',
+    btn_next:'Weiter →',
+    btn_submit:'Meinen Check abschicken',
+    contact_title:'Letzter Schritt — Ihre Kontaktdaten',
+    contact_sub:'Damit wir Ihnen Ihr Ergebnis zusenden und (bei einem Match) Kontakt aufnehmen können.',
+    first_name:'Vorname',
+    last_name:'Nachname',
+    email:'E-Mail-Adresse',
+    phone:'Telefon (optional)',
+    contact_pref:'Wie erreichen wir Sie am besten?',
+    contact_email:'E-Mail',
+    contact_phone:'Telefon',
+    contact_whatsapp:'WhatsApp',
+    notes_label:'Haben Sie bereits Fragen oder Anmerkungen? (optional)',
+    notes_ph:'Z.B. konkreter Standort, den Sie ins Auge gefasst haben, oder Fragen zur Schulung',
+    privacy_label:'Ich stimme zu, dass Wax Affairs meine Daten verwendet, um mit mir über die Friendchise-Möglichkeit in Kontakt zu treten. Datenschutz: Wir geben Ihre Daten an niemanden weiter.',
+    required:'Pflichtfeld',
+    invalid_email:'Keine gültige E-Mail-Adresse',
+    sending:'Wird versendet...',
+    err_submit:'Etwas ist schiefgelaufen. Bitte erneut versuchen oder narin@waxaffairs.de kontaktieren',
+    result_strong_title:'Starker Match! 🎯',
+    result_good_title:'Guter Match',
+    result_moderate_title:'Interessantes Profil',
+    result_low_title:'Vielen Dank für Ihre Zeit',
+    result_strong_sub:'Ihr Profil passt außergewöhnlich gut zu dem, was wir suchen. Wir melden uns innerhalb von 48 Stunden persönlich.',
+    result_good_sub:'Ihr Profil passt gut zu Wax Affairs. Wir melden uns innerhalb von 5 Werktagen für ein Intro-Gespräch.',
+    result_moderate_sub:'Es gibt interessante Punkte in Ihrem Profil. Wir melden uns, um einige Aspekte vertieft zu besprechen.',
+    result_low_sub:'Auf Basis Ihrer Antworten vermuten wir, dass andere Optionen besser zu Ihnen passen als ein Friendchise. Wir melden uns, um Ihre Situation besser zu verstehen.',
+    your_persona:'Ihr stärkstes Profil',
+    your_score:'Ihr Match-Score',
+    next_steps:'Nächste Schritte',
+    step_email:'Sie erhalten eine Bestätigung an',
+    step_contact_strong:'Narin oder Simone meldet sich innerhalb von 48 Stunden',
+    step_contact_good:'Wir planen ein 30-minütiges Intro-Gespräch',
+    step_contact_moderate:'Wir rufen für ein orientierendes Gespräch an',
+    step_contact_low:'Wir rufen, um Ihre Situation besser zu verstehen',
+    step_meanwhile:'In der Zwischenzeit: Sehen Sie sich unsere Studios und die Zahlen an',
+    personas:{
+      waxer:{title:'Die erfahrene Waxerin', desc:'Sie beherrschen das Handwerk. Sie suchen eine Marke, ein System und einen Business-Coach, um Ihr eigenes Studio erfolgreich zu machen.'},
+      ondernemer:{title:'Die Unternehmerin', desc:'Sie sind keine Wax-Spezialistin, aber Sie wissen, wie man ein Unternehmen aufbaut. Simone lehrt Sie das Handwerk, Sie bringen die kommerzielle Schärfe.'},
+      switcher:{title:'Die Career-Switcherin', desc:'Nach Jahren im Corporate-Umfeld suchen Sie etwas Greifbares, Menschliches und Eigenes. Wax Affairs bietet Ihnen einen strukturierten Schritt in die Selbstständigkeit mit echter Wirkung.'}
+    }
+  }
+};
+
+// 20 vragen met scoring: w=waxer, o=ondernemer, s=switcher, f=fit (-3..+3), redFlag cap's fit-score
+const QUESTIONS = [
+  { id:'q1', section:'over_jou', nl:{q:'Wat is je leeftijd?'}, de:{q:'Was ist Ihr Alter?'},
+    opts:[
+      {nl:'18–29',de:'18–29',w:0,o:0,s:0,f:0},
+      {nl:'30–39',de:'30–39',w:1,o:1,s:1,f:1},
+      {nl:'40–49',de:'40–49',w:0,o:1,s:2,f:1},
+      {nl:'50+',de:'50+',w:0,o:0,s:1,f:0}
+    ]},
+  { id:'q2', section:'over_jou', nl:{q:'In welk land wil je een studio openen?'}, de:{q:'In welchem Land möchten Sie ein Studio eröffnen?'},
+    opts:[
+      {nl:'Nederland',de:'Niederlande',w:0,o:0,s:0,f:2},
+      {nl:'Duitsland',de:'Deutschland',w:0,o:0,s:0,f:3},
+      {nl:'België',de:'Belgien',w:0,o:0,s:0,f:1},
+      {nl:'Ander land',de:'Anderes Land',w:0,o:0,s:0,f:-1}
+    ]},
+  { id:'q3', section:'over_jou', nl:{q:'Wat is je huidige werksituatie?'}, de:{q:'Was ist Ihre aktuelle Berufssituation?'},
+    opts:[
+      {nl:'Loondienst, tevreden',de:'Angestellt, zufrieden',w:0,o:0,s:1,f:0},
+      {nl:'Loondienst, op zoek naar iets anders',de:'Angestellt, auf der Suche nach etwas anderem',w:0,o:1,s:3,f:2},
+      {nl:'ZZP / freelance',de:'Selbstständig / Freelance',w:1,o:2,s:1,f:2},
+      {nl:'Eigen bedrijf',de:'Eigenes Unternehmen',w:0,o:3,s:0,f:2},
+      {nl:'Tussen banen in',de:'Zwischen zwei Jobs',w:0,o:0,s:1,f:1},
+      {nl:'In beauty-salon werkzaam',de:'In einem Beauty-Salon tätig',w:3,o:0,s:0,f:3}
+    ]},
+  { id:'q4', section:'over_jou', nl:{q:'Hoe zie je Wax Affairs voor jezelf?'}, de:{q:'Wie sehen Sie Wax Affairs für sich selbst?'},
+    opts:[
+      {nl:'Full-time hoofdonderneming',de:'Full-time Hauptunternehmen',w:2,o:3,s:3,f:3},
+      {nl:'Full-time maar met beperkte uren (30–35/week)',de:'Full-time, aber mit begrenzten Stunden (30–35/Woche)',w:1,o:1,s:2,f:2},
+      {nl:'Part-time naast ander werk',de:'Teilzeit neben anderer Arbeit',w:0,o:0,s:0,f:-2,redFlag:true},
+      {nl:'Niet zeker, daarom deze check',de:'Nicht sicher, deshalb dieser Check',w:0,o:0,s:1,f:0}
+    ]},
+  { id:'q5', section:'achtergrond', nl:{q:'Wat is je ervaring met waxen?'}, de:{q:'Was ist Ihre Erfahrung mit Waxing?'},
+    opts:[
+      {nl:'Geen ervaring',de:'Keine Erfahrung',w:-2,o:1,s:2,f:1},
+      {nl:'Korte cursus gevolgd',de:'Einen kurzen Kurs besucht',w:0,o:0,s:1,f:1},
+      {nl:'1–3 jaar salonwerk',de:'1–3 Jahre Salonarbeit',w:2,o:0,s:0,f:2},
+      {nl:'4+ jaar salonwerk',de:'4+ Jahre Salonarbeit',w:3,o:0,s:0,f:3},
+      {nl:'Heb eigen salon (gehad)',de:'Habe eigenen Salon (gehabt)',w:3,o:2,s:0,f:3}
+    ]},
+  { id:'q6', section:'achtergrond', nl:{q:'Hoeveel ondernemerservaring heb je?'}, de:{q:'Wie viel unternehmerische Erfahrung haben Sie?'},
+    opts:[
+      {nl:'Geen, dit zou mijn eerste bedrijf zijn',de:'Keine, das wäre mein erstes Unternehmen',w:0,o:-1,s:2,f:0},
+      {nl:'Klein zijbedrijf / freelance',de:'Kleines Nebengewerbe / Freelance',w:1,o:1,s:1,f:1},
+      {nl:'Eigen klein bedrijf runnend',de:'Eigenes kleines Unternehmen aktiv',w:1,o:3,s:1,f:2},
+      {nl:'Meerdere bedrijven opgezet / gerund',de:'Mehrere Unternehmen gegründet / geführt',w:0,o:3,s:0,f:3}
+    ]},
+  { id:'q7', section:'achtergrond', nl:{q:'Heb je leidinggevende ervaring?'}, de:{q:'Haben Sie Führungserfahrung?'},
+    opts:[
+      {nl:'Geen',de:'Keine',w:1,o:-1,s:0,f:0},
+      {nl:'1–3 mensen aangestuurd',de:'1–3 Personen geführt',w:1,o:1,s:1,f:1},
+      {nl:'4–10 mensen aangestuurd',de:'4–10 Personen geführt',w:0,o:2,s:2,f:2},
+      {nl:'10+ of directie-niveau',de:'10+ oder Direktionsebene',w:0,o:2,s:3,f:2}
+    ]},
+  { id:'q8', section:'achtergrond', nl:{q:'Heb je een corporate / zakelijke achtergrond?'}, de:{q:'Haben Sie einen Corporate- / Business-Hintergrund?'},
+    opts:[
+      {nl:'Nee, altijd in beauty/creatieve sector',de:'Nein, immer im Beauty-/Kreativsektor',w:2,o:0,s:-1,f:1},
+      {nl:'Ja, in mid-size bedrijf',de:'Ja, in einem mittelgroßen Unternehmen',w:0,o:2,s:2,f:2},
+      {nl:'Ja, in grote onderneming of consulting',de:'Ja, in einem Großunternehmen oder Consulting',w:0,o:2,s:3,f:2},
+      {nl:'Ja, directie/C-level gehad',de:'Ja, Direktions-/C-Level gehabt',w:0,o:3,s:3,f:2}
+    ]},
+  { id:'q9', section:'motivatie', nl:{q:'Wat is je belangrijkste reden om Wax Affairs franchisee te worden?'}, de:{q:'Was ist Ihr wichtigster Grund, Wax Affairs-Franchisenehmerin zu werden?'},
+    opts:[
+      {nl:'Ik heb het vak in de vingers en wil onder een sterk merk werken',de:'Ich beherrsche das Handwerk und möchte unter einer starken Marke arbeiten',w:3,o:0,s:0,f:3},
+      {nl:'Ik zoek een bewezen business-concept met begeleiding',de:'Ich suche ein bewährtes Geschäftskonzept mit Begleitung',w:0,o:3,s:2,f:3},
+      {nl:'Ik wil na corporate iets menselijks en tastbaars bouwen',de:'Nach Corporate möchte ich etwas Menschliches und Greifbares aufbauen',w:0,o:1,s:3,f:3},
+      {nl:'Financiële onafhankelijkheid op lange termijn',de:'Finanzielle Unabhängigkeit auf lange Sicht',w:1,o:2,s:1,f:2},
+      {nl:'Passie voor beauty en persoonlijk contact',de:'Leidenschaft für Beauty und persönlichen Kontakt',w:2,o:0,s:2,f:2}
+    ]},
+  { id:'q10', section:'motivatie', nl:{q:'Wanneer wil je starten?'}, de:{q:'Wann möchten Sie starten?'},
+    opts:[
+      {nl:'Binnen 6 maanden',de:'Innerhalb von 6 Monaten',w:2,o:2,s:2,f:3},
+      {nl:'6–12 maanden',de:'6–12 Monate',w:2,o:2,s:2,f:3},
+      {nl:'12–24 maanden',de:'12–24 Monate',w:1,o:1,s:1,f:1},
+      {nl:'Nog aan het oriënteren, geen tijdslijn',de:'Noch orientierend, keine Timeline',w:0,o:0,s:0,f:-2,redFlag:true}
+    ]},
+  { id:'q11', section:'motivatie', nl:{q:'Hoeveel uur per week ben je bereid in je eerste jaar te investeren?'}, de:{q:'Wie viele Stunden pro Woche möchten Sie im ersten Jahr investieren?'},
+    opts:[
+      {nl:'Minder dan 30 uur',de:'Weniger als 30 Stunden',w:0,o:0,s:0,f:-2,redFlag:true},
+      {nl:'30–45 uur',de:'30–45 Stunden',w:1,o:1,s:1,f:1},
+      {nl:'45–60 uur',de:'45–60 Stunden',w:2,o:3,s:3,f:3},
+      {nl:'60+ uur, ik ga er vol in',de:'60+ Stunden, voller Einsatz',w:2,o:3,s:2,f:3}
+    ]},
+  { id:'q12', section:'motivatie', nl:{q:'Hoeveel startkapitaal heb je beschikbaar?'}, de:{q:'Wie viel Startkapital haben Sie verfügbar?'},
+    opts:[
+      {nl:'Minder dan € 40.000',de:'Weniger als € 40.000',w:0,o:0,s:0,f:-3,redFlag:true},
+      {nl:'€ 40.000 – 55.000',de:'€ 40.000 – 55.000',w:1,o:1,s:1,f:1},
+      {nl:'€ 55.000 – 75.000',de:'€ 55.000 – 75.000',w:2,o:2,s:2,f:3},
+      {nl:'€ 75.000+',de:'€ 75.000+',w:2,o:3,s:3,f:3},
+      {nl:'Nog aan het regelen (lening / investeerder)',de:'Noch in Planung (Kredit / Investor)',w:1,o:1,s:1,f:1}
+    ]},
+  { id:'q13', section:'motivatie', nl:{q:'Wat is je 5–10 jaar visie?'}, de:{q:'Was ist Ihre 5–10-Jahres-Vision?'},
+    opts:[
+      {nl:'Één sterke studio als mijn levenswerk',de:'Ein starkes Studio als mein Lebenswerk',w:3,o:1,s:2,f:3},
+      {nl:'2–3 studios in mijn regio',de:'2–3 Studios in meiner Region',w:1,o:3,s:2,f:3},
+      {nl:'Regionale of landelijke speler',de:'Regional- oder landesweiter Akteur',w:0,o:3,s:2,f:2},
+      {nl:'Niet zeker, ik zie waar het heen gaat',de:'Unklar, ich schaue, wohin es führt',w:1,o:0,s:1,f:0}
+    ]},
+  { id:'q14', section:'werkstijl', nl:{q:'Waar wil je de meeste tijd besteden?'}, de:{q:'Wo möchten Sie die meiste Zeit verbringen?'},
+    opts:[
+      {nl:'Zelf behandelingen uitvoeren',de:'Selbst Behandlungen durchführen',w:3,o:-1,s:0,f:2},
+      {nl:'Team aansturen en kwaliteit borgen',de:'Team führen und Qualität sichern',w:1,o:3,s:3,f:2},
+      {nl:'Klantrelaties en marketing',de:'Kundenbeziehungen und Marketing',w:0,o:2,s:2,f:2},
+      {nl:'Strategie en groei',de:'Strategie und Wachstum',w:0,o:3,s:3,f:2},
+      {nl:'Mix van alles',de:'Mix aus allem',w:2,o:2,s:2,f:2}
+    ]},
+  { id:'q15', section:'werkstijl', nl:{q:'Wat drijft je het meest?'}, de:{q:'Was treibt Sie am meisten an?'},
+    opts:[
+      {nl:'Financiële zekerheid',de:'Finanzielle Sicherheit',w:0,o:1,s:1,f:1},
+      {nl:'Passie voor het vak',de:'Leidenschaft für das Handwerk',w:3,o:0,s:1,f:3},
+      {nl:'Iets eigens opbouwen',de:'Etwas Eigenes aufbauen',w:1,o:3,s:3,f:3},
+      {nl:'Flexibiliteit en vrijheid',de:'Flexibilität und Freiheit',w:0,o:0,s:1,f:-2,redFlag:true}
+    ]},
+  { id:'q16', section:'werkstijl', nl:{q:'Hoe sta je tegenover risico?'}, de:{q:'Wie stehen Sie zu Risiko?'},
+    opts:[
+      {nl:'Ik ben risicomijdend',de:'Ich bin risikoscheu',w:0,o:0,s:0,f:-2},
+      {nl:"Voorzichtig, alleen goed onderbouwde risico's",de:'Vorsichtig, nur gut begründete Risiken',w:1,o:1,s:2,f:1},
+      {nl:'Gebalanceerd',de:'Ausgewogen',w:2,o:2,s:2,f:2},
+      {nl:'Ondernemersrisico hoort erbij',de:'Unternehmerisches Risiko gehört dazu',w:2,o:3,s:2,f:3}
+    ]},
+  { id:'q17', section:'werkstijl', nl:{q:'Wat doe je bij een zware periode (bv. lage omzet, ziek personeel)?'}, de:{q:'Wie reagieren Sie in schwierigen Zeiten (z.B. niedriger Umsatz, krankes Personal)?'},
+    opts:[
+      {nl:'Direct contact zoeken, vragen wat er nodig is',de:'Sofort Kontakt suchen, fragen was nötig ist',w:2,o:3,s:2,f:3},
+      {nl:'Eerst zelf een plan maken, daarna overleg',de:'Erst selbst einen Plan machen, dann besprechen',w:2,o:2,s:2,f:2},
+      {nl:'Afwachten of het zichzelf oplost',de:'Abwarten, ob es sich von selbst löst',w:0,o:0,s:0,f:-2,redFlag:true},
+      {nl:'Extra uren maken om het op te vangen',de:'Extra Stunden machen, um es aufzufangen',w:3,o:1,s:1,f:2}
+    ]},
+  { id:'q18', section:'praktisch', nl:{q:'Heb je al een locatie in gedachten?'}, de:{q:'Haben Sie bereits einen Standort ins Auge gefasst?'},
+    opts:[
+      {nl:'Ja, concrete locatie',de:'Ja, konkreter Standort',w:2,o:2,s:2,f:3},
+      {nl:'Ja, stad staat vast',de:'Ja, Stadt steht fest',w:1,o:1,s:1,f:2},
+      {nl:'Regio globaal',de:'Region grob',w:1,o:1,s:1,f:1},
+      {nl:'Nog niet',de:'Noch nicht',w:0,o:0,s:0,f:0}
+    ]},
+  { id:'q19', section:'praktisch', nl:{q:'Bereid om 10 dagen intensieve training in Duitsland te volgen?'}, de:{q:'Bereit, 10 Tage intensive Schulung in Deutschland zu absolvieren?'},
+    opts:[
+      {nl:'Ja, absoluut',de:'Ja, absolut',w:2,o:2,s:2,f:3},
+      {nl:'Ja, met enige planning',de:'Ja, mit etwas Planung',w:2,o:2,s:2,f:2},
+      {nl:'Lastig vanwege familie/werk',de:'Schwierig wegen Familie/Arbeit',w:0,o:0,s:0,f:-1},
+      {nl:'Nee',de:'Nein',w:0,o:0,s:0,f:-3,redFlag:true}
+    ]},
+  { id:'q20', section:'praktisch', nl:{q:'Heb je al onderzoek gedaan naar franchises of alternatieven?'}, de:{q:'Haben Sie bereits franchise-Optionen oder Alternativen recherchiert?'},
+    opts:[
+      {nl:'Ja, andere franchisees gesproken',de:'Ja, mit anderen Franchisees gesprochen',w:1,o:2,s:2,f:3},
+      {nl:'Ja, alternatieven onderzocht',de:'Ja, Alternativen recherchiert',w:1,o:2,s:2,f:2},
+      {nl:'Wat gelezen, nog geen gesprekken',de:'Etwas gelesen, noch keine Gespräche',w:1,o:1,s:1,f:1},
+      {nl:'Dit is mijn eerste stap',de:'Das ist mein erster Schritt',w:0,o:0,s:1,f:0}
+    ]}
+];
+
+let lang = 'nl';
+let screen = 'intro';
+let currentQ = 0;
+let answers = {};
+let contact = { firstName:'', lastName:'', email:'', phone:'', preference:'email', notes:'', privacy:false };
+let resultData = null;
+
+if (navigator.language && navigator.language.startsWith('de')) { lang = 'de'; }
+
+// Check URL voor pre-fill (voor "samen invullen" mode via CRM)
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('lang') === 'de') lang = 'de';
+if (urlParams.get('lang') === 'nl') lang = 'nl';
+const isCochat = urlParams.get('mode') === 'cochat';
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('rootHtml').setAttribute('lang', l);
+  render();
+}
+
+function calculateResult() {
+  let scores = { waxer:0, ondernemer:0, switcher:0, fit:0 };
+  let redFlags = 0;
+  let maxFit = 0;
+  QUESTIONS.forEach(q => {
+    const idx = answers[q.id];
+    if (idx === undefined) return;
+    const opt = q.opts[idx];
+    scores.waxer += opt.w;
+    scores.ondernemer += opt.o;
+    scores.switcher += opt.s;
+    scores.fit += opt.f;
+    if (opt.redFlag) redFlags++;
+    maxFit += 3;
+  });
+  let fitPct = Math.round(((scores.fit + maxFit) / (2 * maxFit)) * 100);
+  if (redFlags >= 2) fitPct = Math.min(fitPct, 35);
+  else if (redFlags >= 1) fitPct = Math.min(fitPct, 55);
+  let tier;
+  if (fitPct >= 80) tier = 'strong';
+  else if (fitPct >= 65) tier = 'good';
+  else if (fitPct >= 45) tier = 'moderate';
+  else tier = 'low';
+  const personas = [
+    {id:'waxer', score:scores.waxer},
+    {id:'ondernemer', score:scores.ondernemer},
+    {id:'switcher', score:scores.switcher}
+  ].sort((a,b) => b.score - a.score);
+  return { scores, redFlags, fitPct, tier, bestPersona: personas[0].id, personaRanking: personas };
+}
+
+function render() {
+  const el = document.getElementById('mainContainer');
+  document.getElementById('langSelect').value = lang;
+  const tr = T[lang];
+  if (screen === 'intro') renderIntro(el, tr);
+  else if (screen === 'question') renderQuestion(el, tr);
+  else if (screen === 'contact') renderContact(el, tr);
+  else if (screen === 'sending') renderSending(el, tr);
+  else if (screen === 'result') renderResult(el, tr);
+}
+
+function renderIntro(el, tr) {
+  el.innerHTML = `
+    <div class="fade-in text-center">
+      <div class="inline-block bg-wax-100 text-wax-700 text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full mb-6">${tr.intro_badge}</div>
+      <h1 class="brand-serif text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">${tr.intro_title}</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed mb-10">${tr.intro_sub}</p>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 max-w-xl mx-auto text-left mb-8">
+        <div class="text-sm font-semibold text-wax-700 uppercase tracking-wider mb-3">${tr.intro_what_badge}</div>
+        <ul class="space-y-3 text-gray-700">
+          <li class="flex items-start gap-3"><span class="text-wax-500 text-lg leading-none mt-1">●</span><span>${tr.intro_b1}</span></li>
+          <li class="flex items-start gap-3"><span class="text-wax-500 text-lg leading-none mt-1">●</span><span>${tr.intro_b2}</span></li>
+          <li class="flex items-start gap-3"><span class="text-wax-500 text-lg leading-none mt-1">●</span><span>${tr.intro_b3}</span></li>
+        </ul>
+        <p class="text-sm text-gray-400 mt-5 italic">${tr.intro_time}</p>
+      </div>
+      <button onclick="screen='question'; currentQ=0; render()" class="btn-primary text-lg font-semibold px-8 py-4 rounded-xl shadow-lg">${tr.intro_start}</button>
+    </div>`;
+}
+
+function renderQuestion(el, tr) {
+  const q = QUESTIONS[currentQ];
+  const total = QUESTIONS.length;
+  const progress = ((currentQ + 1) / (total + 1)) * 100;
+  const selectedIdx = answers[q.id];
+  const optsHtml = q.opts.map((opt, i) => `
+    <div class="option-card border-2 border-gray-200 bg-white rounded-xl p-4 ${selectedIdx === i ? 'selected' : ''}" onclick="selectAnswer(${i})">
+      <div class="flex items-center gap-3">
+        <div class="w-5 h-5 rounded-full border-2 ${selectedIdx === i ? 'border-wax-500 bg-wax-500' : 'border-gray-300'} flex-shrink-0 flex items-center justify-center">
+          ${selectedIdx === i ? '<div class="w-2 h-2 rounded-full bg-white"></div>' : ''}
+        </div>
+        <span class="text-gray-800">${opt[lang]}</span>
+      </div>
+    </div>`).join('');
+  el.innerHTML = `
+    <div class="fade-in">
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-2 text-sm">
+          <span class="text-gray-500">${tr.progress_q} ${currentQ + 1} ${tr.progress_of} ${total}</span>
+          <span class="text-wax-600 font-medium">${Math.round(progress)}%</span>
+        </div>
+        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="progress-bar h-full bg-gradient-to-r from-wax-400 to-wax-600" style="width:${progress}%"></div>
+        </div>
+      </div>
+      <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8 leading-tight">${q[lang].q}</h2>
+      <div class="space-y-3 mb-8">${optsHtml}</div>
+      <div class="flex justify-between">
+        <button onclick="goBack()" class="text-gray-600 hover:text-gray-900 font-medium px-4 py-3 ${currentQ === 0 ? 'invisible' : ''}">${tr.btn_back}</button>
+        <button onclick="goNext()" class="btn-primary font-semibold px-6 py-3 rounded-xl" ${selectedIdx === undefined ? 'disabled' : ''}>${tr.btn_next}</button>
+      </div>
+    </div>`;
+}
+
+function selectAnswer(idx) {
+  const q = QUESTIONS[currentQ];
+  answers[q.id] = idx;
+  render();
+}
+function goBack() { if (currentQ > 0) { currentQ--; render(); } else { screen='intro'; render(); } }
+function goNext() { if (currentQ < QUESTIONS.length - 1) { currentQ++; render(); } else { screen='contact'; render(); } }
+
+function renderContact(el, tr) {
+  el.innerHTML = `
+    <div class="fade-in">
+      <div class="mb-8">
+        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div class="progress-bar h-full bg-gradient-to-r from-wax-400 to-wax-600" style="width:100%"></div>
+        </div>
+      </div>
+      <h2 class="brand-serif text-3xl md:text-4xl font-bold text-gray-900 mb-3">${tr.contact_title}</h2>
+      <p class="text-gray-600 mb-8">${tr.contact_sub}</p>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 space-y-5">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">${tr.first_name} <span class="text-red-500">*</span></label>
+            <input type="text" value="${contact.firstName}" oninput="contact.firstName=this.value" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:border-wax-500 focus:ring-2 focus:ring-wax-200 outline-none">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">${tr.last_name} <span class="text-red-500">*</span></label>
+            <input type="text" value="${contact.lastName}" oninput="contact.lastName=this.value" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:border-wax-500 focus:ring-2 focus:ring-wax-200 outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">${tr.email} <span class="text-red-500">*</span></label>
+          <input type="email" value="${contact.email}" oninput="contact.email=this.value" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:border-wax-500 focus:ring-2 focus:ring-wax-200 outline-none">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">${tr.phone}</label>
+          <input type="tel" value="${contact.phone}" oninput="contact.phone=this.value" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:border-wax-500 focus:ring-2 focus:ring-wax-200 outline-none">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">${tr.contact_pref}</label>
+          <div class="grid grid-cols-3 gap-2">
+            ${['email','phone','whatsapp'].map(pref => `
+              <label class="flex items-center justify-center gap-2 px-3 py-2 border rounded-lg cursor-pointer text-sm ${contact.preference===pref?'border-wax-500 bg-wax-50 text-wax-700':'border-gray-300 text-gray-700 hover:border-gray-400'}">
+                <input type="radio" name="pref" value="${pref}" ${contact.preference===pref?'checked':''} onchange="contact.preference='${pref}'; render()" class="hidden">
+                ${tr['contact_'+pref]}
+              </label>`).join('')}
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1.5">${tr.notes_label}</label>
+          <textarea rows="3" oninput="contact.notes=this.value" placeholder="${tr.notes_ph}" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:border-wax-500 focus:ring-2 focus:ring-wax-200 outline-none resize-none">${contact.notes}</textarea>
+        </div>
+        <label class="flex items-start gap-3 cursor-pointer p-3 bg-gray-50 rounded-lg">
+          <input type="checkbox" ${contact.privacy?'checked':''} onchange="contact.privacy=this.checked; render()" class="mt-0.5 w-4 h-4 rounded border-gray-300 text-wax-600">
+          <span class="text-xs text-gray-600 leading-relaxed">${tr.privacy_label}</span>
+        </label>
+        <div id="contactError" class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3"></div>
+      </div>
+      <div class="flex justify-between mt-6">
+        <button onclick="screen='question'; currentQ=QUESTIONS.length-1; render()" class="text-gray-600 hover:text-gray-900 font-medium px-4 py-3">${tr.btn_back}</button>
+        <button onclick="submitForm()" class="btn-primary font-semibold px-6 py-3 rounded-xl">${tr.btn_submit}</button>
+      </div>
+    </div>`;
+}
+
+async function submitForm() {
+  const tr = T[lang];
+  const errEl = document.getElementById('contactError');
+  errEl.classList.add('hidden');
+  if (!contact.firstName.trim() || !contact.lastName.trim()) {
+    errEl.textContent = tr.required + ': ' + tr.first_name + ' / ' + tr.last_name; errEl.classList.remove('hidden'); return;
+  }
+  if (!contact.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email)) {
+    errEl.textContent = tr.invalid_email; errEl.classList.remove('hidden'); return;
+  }
+  if (!contact.privacy) {
+    errEl.textContent = tr.required + ': privacy'; errEl.classList.remove('hidden'); return;
+  }
+  screen = 'sending'; render();
+  const result = calculateResult();
+  const payload = {
+    lang, answers, contact, result,
+    source: isCochat ? 'cochat' : 'public',
+    userAgent: navigator.userAgent,
+    submittedAt: new Date().toISOString()
+  };
+  try {
+    const resp = await fetch('/api/public/persona-fit/submit', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error('submit failed');
+    const data = await resp.json();
+    resultData = { ...result, submissionId: data.id };
+    screen = 'result'; render();
+  } catch (e) {
+    alert(tr.err_submit);
+    screen = 'contact'; render();
+  }
+}
+
+function renderSending(el, tr) {
+  el.innerHTML = `
+    <div class="text-center py-16">
+      <div class="inline-block w-12 h-12 border-4 border-wax-200 border-t-wax-600 rounded-full animate-spin mb-6"></div>
+      <p class="text-lg text-gray-600">${tr.sending}</p>
+    </div>`;
+}
+
+function renderResult(el, tr) {
+  const r = resultData;
+  const persona = tr.personas[r.bestPersona];
+  let title, sub, stepContact;
+  if (r.tier === 'strong') { title = tr.result_strong_title; sub = tr.result_strong_sub; stepContact = tr.step_contact_strong; }
+  else if (r.tier === 'good') { title = tr.result_good_title; sub = tr.result_good_sub; stepContact = tr.step_contact_good; }
+  else if (r.tier === 'moderate') { title = tr.result_moderate_title; sub = tr.result_moderate_sub; stepContact = tr.step_contact_moderate; }
+  else { title = tr.result_low_title; sub = tr.result_low_sub; stepContact = tr.step_contact_low; }
+  const barColor = r.fitPct >= 80 ? 'from-green-400 to-green-600' : r.fitPct >= 65 ? 'from-wax-400 to-wax-600' : r.fitPct >= 45 ? 'from-yellow-400 to-yellow-600' : 'from-gray-400 to-gray-500';
+  el.innerHTML = `
+    <div class="fade-in">
+      <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-10 text-center text-white shadow-xl mb-6">
+        <div class="brand-serif text-3xl md:text-4xl font-bold mb-3">${title}</div>
+        <p class="text-gray-300 max-w-xl mx-auto leading-relaxed">${sub}</p>
+      </div>
+      ${r.tier !== 'low' ? `
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 mb-6">
+        <div class="text-sm font-semibold text-wax-700 uppercase tracking-wider mb-2">${tr.your_persona}</div>
+        <h3 class="brand-serif text-2xl font-bold text-gray-900 mb-2">${persona.title}</h3>
+        <p class="text-gray-600 leading-relaxed">${persona.desc}</p>
+      </div>` : ''}
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 mb-6">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-sm font-semibold text-gray-600 uppercase tracking-wider">${tr.your_score}</div>
+          <div class="text-3xl font-bold text-gray-900">${r.fitPct}<span class="text-lg text-gray-400">/100</span></div>
+        </div>
+        <div class="h-3 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full bg-gradient-to-r ${barColor}" style="width:${r.fitPct}%"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 mb-6">
+        <div class="text-sm font-semibold text-wax-700 uppercase tracking-wider mb-4">${tr.next_steps}</div>
+        <ol class="space-y-3">
+          <li class="flex items-start gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-wax-100 text-wax-700 text-xs font-bold flex items-center justify-center">1</span><span class="text-gray-700">${tr.step_email} <strong>${contact.email}</strong></span></li>
+          <li class="flex items-start gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-wax-100 text-wax-700 text-xs font-bold flex items-center justify-center">2</span><span class="text-gray-700">${stepContact}</span></li>
+          <li class="flex items-start gap-3"><span class="flex-shrink-0 w-6 h-6 rounded-full bg-wax-100 text-wax-700 text-xs font-bold flex items-center justify-center">3</span><span class="text-gray-700">${tr.step_meanwhile}</span></li>
+        </ol>
+      </div>
+    </div>`;
+}
+
+render();
+</script>
+</body>
+</html>

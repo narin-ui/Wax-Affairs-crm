@@ -307,6 +307,70 @@ app.post('/api/public/boeken', (req, res) => {
   res.json(booking);
 });
 
+// ─── Persona-fit Check (Friendchise lead qualification) ───
+app.get('/fit-check', (req, res) => {
+  res.sendFile(path.join(__dirname, 'persona-fit.html'));
+});
+
+app.post('/api/public/persona-fit/submit', async (req, res) => {
+  try {
+    const submissions = laadJSON('persona-fit-submissions.json');
+    const submission = {
+      id: crypto.randomBytes(8).toString('hex'),
+      ...req.body,
+      ipHash: req.headers['x-forwarded-for'] ? crypto.createHash('sha256').update(String(req.headers['x-forwarded-for'])).digest('hex').slice(0, 16) : null,
+      ontvangen: new Date().toISOString(),
+      status: 'nieuw'
+    };
+    submissions.unshift(submission);
+    slaJSON('persona-fit-submissions.json', submissions);
+
+    // Ook direct een lead in franchisees.json aanmaken
+    const franchisees = laadJSON('franchisees.json');
+    const c = submission.contact || {};
+    const r = submission.result || {};
+    const personaLabel = { waxer: 'Ervaren waxer', ondernemer: 'Ondernemer', switcher: 'Career-switcher' };
+    const tierLabel = { strong: '🎯 Sterke match', good: '✅ Goede match', moderate: '🤔 Interessant', low: '⚠️ Lage fit' };
+    const lead = {
+      id: crypto.randomBytes(8).toString('hex'),
+      status: 'lead',
+      bron: 'persona-fit-form',
+      submissionId: submission.id,
+      naam: `${c.firstName || ''} ${c.lastName || ''}`.trim() || 'Anonieme lead',
+      bedrijfsnaam: '',
+      email: c.email || '',
+      telefoon: c.phone || '',
+      locatie: '',
+      notities: `[Persona Fit Check]\nTier: ${tierLabel[r.tier] || r.tier}\nScore: ${r.fitPct}/100\nPersona: ${personaLabel[r.bestPersona] || r.bestPersona}\nTaal: ${submission.lang}\nVoorkeur: ${c.preference || 'email'}\n\nOpmerkingen van lead:\n${c.notes || '(geen)'}`,
+      personaFit: { tier: r.tier, score: r.fitPct, persona: r.bestPersona, redFlags: r.redFlags },
+      onboarding: { locatieGoedgekeurd:false, huurcontract:false, trainingAfgerond:false, inrichtingCompleet:false, proefdag:false, grandOpening:false, systemen:false, eersteVoorraad:false },
+      maandomzet: [],
+      aangemaakt: new Date().toISOString(),
+      gewijzigd: new Date().toISOString()
+    };
+    franchisees.push(lead);
+    slaJSON('franchisees.json', franchisees);
+
+    // Optionele webhook (bijv. Zapier/Make voor e-mailnotificatie)
+    if (process.env.PERSONA_FIT_WEBHOOK_URL) {
+      try {
+        await fetch(process.env.PERSONA_FIT_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ submission, leadId: lead.id })
+        });
+      } catch (whErr) {
+        console.error('Webhook failed (non-fatal):', whErr.message);
+      }
+    }
+
+    res.json({ ok: true, id: submission.id, leadId: lead.id });
+  } catch (e) {
+    console.error('Persona-fit submit error:', e);
+    res.status(500).json({ error: 'submit failed' });
+  }
+});
+
 // ─── Static Files + Auth Protection ───
 app.use((req, res, next) => {
   if (req.path === '/login' || req.path === '/logout') return next();
@@ -418,6 +482,40 @@ app.get('/api/contacts', (req, res) => {
   if (!requireAuth(req, res)) return;
   res.json(laadJSON('contacts.json'));
 });
+
+// ─── Persona-fit Admin (bekijken en beheren submissies) ───
+app.get('/api/persona-fit/submissions', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const submissions = laadJSON('persona-fit-submissions.json');
+  res.json(submissions);
+});
+
+app.get('/api/persona-fit/submissions/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const submissions = laadJSON('persona-fit-submissions.json');
+  const submission = submissions.find(s => s.id === req.params.id);
+  if (!submission) return res.status(404).json({ error: 'not found' });
+  res.json(submission);
+});
+
+app.put('/api/persona-fit/submissions/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const submissions = laadJSON('persona-fit-submissions.json');
+  const idx = submissions.findIndex(s => s.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'not found' });
+  submissions[idx] = { ...submissions[idx], ...req.body, gewijzigd: new Date().toISOString() };
+  slaJSON('persona-fit-submissions.json', submissions);
+  res.json(submissions[idx]);
+});
+
+app.delete('/api/persona-fit/submissions/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const submissions = laadJSON('persona-fit-submissions.json');
+  const filtered = submissions.filter(s => s.id !== req.params.id);
+  slaJSON('persona-fit-submissions.json', filtered);
+  res.json({ ok: true });
+});
+
 
 app.post('/api/contacts', (req, res) => {
   if (!requireAuth(req, res)) return;

@@ -1245,6 +1245,86 @@ async function apiGet(url) {
 let pitchSection = 'overzicht';
 let pitchChecklist = {};
 
+// Persona-check state
+let personaCheckView = 'overview'; // overview | inbox | detail
+let personaSubmissions = [];
+let personaSubmissionDetail = null;
+let personaInboxFilter = 'all';
+
+async function loadPersonaSubmissions() {
+  try {
+    const resp = await fetch('/api/persona-fit/submissions');
+    if (!resp.ok) throw new Error('load failed');
+    personaSubmissions = await resp.json();
+    if (pitchSection === 'personaCheck') renderFriendchisePitch();
+  } catch (e) {
+    toast(lang === 'de' ? 'Fehler beim Laden' : 'Laden mislukt');
+  }
+}
+
+async function openSubmissionDetail(id) {
+  try {
+    const resp = await fetch('/api/persona-fit/submissions/' + id);
+    if (!resp.ok) throw new Error('detail failed');
+    personaSubmissionDetail = await resp.json();
+    personaCheckView = 'detail';
+    renderFriendchisePitch();
+  } catch (e) {
+    toast(lang === 'de' ? 'Fehler' : 'Fout');
+  }
+}
+
+async function deleteSubmission(id) {
+  const msg = lang === 'de' ? 'Diese Einreichung wirklich löschen?' : 'Deze submissie echt verwijderen?';
+  if (!confirm(msg)) return;
+  try {
+    const resp = await fetch('/api/persona-fit/submissions/' + id, { method: 'DELETE' });
+    if (!resp.ok) throw new Error('delete failed');
+    personaSubmissionDetail = null;
+    personaCheckView = 'inbox';
+    await loadPersonaSubmissions();
+  } catch (e) {
+    toast(lang === 'de' ? 'Fehler beim Löschen' : 'Verwijderen mislukt');
+  }
+}
+
+function renderSubmissionAnswers(s, L) {
+  // Herbouw de vragen-definities om antwoorden te tonen. Kopie uit persona-fit.html om bij de CRM intact te houden.
+  const QS = [
+    { id:'q1', nl:'Wat is je leeftijd?', de:'Was ist Ihr Alter?', opts:[['18–29','18–29'],['30–39','30–39'],['40–49','40–49'],['50+','50+']] },
+    { id:'q2', nl:'In welk land wil je een studio openen?', de:'In welchem Land möchten Sie ein Studio eröffnen?', opts:[['Nederland','Niederlande'],['Duitsland','Deutschland'],['België','Belgien'],['Ander land','Anderes Land']] },
+    { id:'q3', nl:'Huidige werksituatie', de:'Aktuelle Berufssituation', opts:[['Loondienst tevreden','Angestellt zufrieden'],['Loondienst op zoek','Angestellt auf Suche'],['ZZP/freelance','Selbstständig'],['Eigen bedrijf','Eigenes Unternehmen'],['Tussen banen','Zwischen Jobs'],['In beauty-salon','In Beauty-Salon']] },
+    { id:'q4', nl:'Wax Affairs voor jezelf', de:'Wax Affairs für sich selbst', opts:[['Full-time','Full-time'],['Full-time 30-35u','Full-time 30-35h'],['Part-time','Teilzeit'],['Niet zeker','Nicht sicher']] },
+    { id:'q5', nl:'Ervaring met waxen', de:'Waxing-Erfahrung', opts:[['Geen','Keine'],['Cursus','Kurs'],['1-3 jaar salon','1-3 Jahre Salon'],['4+ jaar salon','4+ Jahre Salon'],['Eigen salon','Eigener Salon']] },
+    { id:'q6', nl:'Ondernemerservaring', de:'Unternehmer-Erfahrung', opts:[['Geen','Keine'],['Zijbedrijf','Nebengewerbe'],['Eigen klein bedrijf','Eigenes kleines Unt.'],['Meerdere bedrijven','Mehrere Unternehmen']] },
+    { id:'q7', nl:'Leidinggevende ervaring', de:'Führungserfahrung', opts:[['Geen','Keine'],['1-3 mensen','1-3 Personen'],['4-10 mensen','4-10 Personen'],['10+ / directie','10+ / Direktion']] },
+    { id:'q8', nl:'Corporate/zakelijke achtergrond', de:'Corporate/Business-Hintergrund', opts:[['Nee, beauty/creatief','Nein, Beauty/Kreativ'],['Mid-size','Mid-size'],['Groot / consulting','Groß / Consulting'],['Directie/C-level','Direktion/C-Level']] },
+    { id:'q9', nl:'Belangrijkste reden', de:'Wichtigster Grund', opts:[['Vak in vingers, sterk merk','Handwerk, starke Marke'],['Bewezen business + begeleiding','Bewährtes Konzept + Begleitung'],['Na corporate iets menselijks','Nach Corporate etwas Menschliches'],['Financiële onafhankelijkheid','Finanzielle Unabhängigkeit'],['Passie beauty + contact','Passion Beauty + Kontakt']] },
+    { id:'q10', nl:'Wanneer starten', de:'Wann starten', opts:[['<6 mnd','<6 Mon.'],['6-12 mnd','6-12 Mon.'],['12-24 mnd','12-24 Mon.'],['Geen tijdslijn','Keine Timeline']] },
+    { id:'q11', nl:'Uur/week jaar 1', de:'Std./Woche Jahr 1', opts:[['<30 uur','<30 Std'],['30-45 uur','30-45 Std'],['45-60 uur','45-60 Std'],['60+ uur','60+ Std']] },
+    { id:'q12', nl:'Startkapitaal', de:'Startkapital', opts:[['<€40k','<€40k'],['€40-55k','€40-55k'],['€55-75k','€55-75k'],['€75k+','€75k+'],['Nog regelen','Noch in Planung']] },
+    { id:'q13', nl:'5-10 jaar visie', de:'5-10 Jahres-Vision', opts:[['1 sterke studio','1 starkes Studio'],['2-3 studios regio','2-3 Studios Region'],['Regionaal/landelijk','Regional/National'],['Niet zeker','Unklar']] },
+    { id:'q14', nl:'Waar tijd besteden', de:'Wo Zeit verbringen', opts:[['Zelf behandelen','Selbst behandeln'],['Team aansturen','Team führen'],['Klantrelaties + marketing','Kunden + Marketing'],['Strategie en groei','Strategie und Wachstum'],['Mix','Mix']] },
+    { id:'q15', nl:'Drijfveer', de:'Antrieb', opts:[['Financiële zekerheid','Finanzielle Sicherheit'],['Passie voor vak','Passion Handwerk'],['Iets eigens bouwen','Etwas Eigenes aufbauen'],['Flexibiliteit','Flexibilität']] },
+    { id:'q16', nl:'Risico', de:'Risiko', opts:[['Risicomijdend','Risikoscheu'],['Voorzichtig','Vorsichtig'],['Gebalanceerd','Ausgewogen'],['Bereid','Bereit']] },
+    { id:'q17', nl:'Zware periode', de:'Schwierige Phase', opts:[['Direct contact','Sofort Kontakt'],['Zelf plan, dan overleg','Erst Plan, dann besprechen'],['Afwachten','Abwarten'],['Extra uren','Extra Stunden']] },
+    { id:'q18', nl:'Locatie in gedachten', de:'Standort', opts:[['Concrete locatie','Konkreter Standort'],['Stad vast','Stadt fest'],['Regio globaal','Region grob'],['Nog niet','Noch nicht']] },
+    { id:'q19', nl:'10 dagen training DE', de:'10 Tage Schulung DE', opts:[['Ja absoluut','Ja absolut'],['Ja met planning','Ja mit Planung'],['Lastig','Schwierig'],['Nee','Nein']] },
+    { id:'q20', nl:'Onderzoek gedaan', de:'Recherchiert', opts:[['Andere franchisees gesproken','Franchisees gesprochen'],['Alternatieven onderzocht','Alternativen recherchiert'],['Wat gelezen','Etwas gelesen'],['Eerste stap','Erster Schritt']] }
+  ];
+  return QS.map((q, i) => {
+    const ans = s.answers && s.answers[q.id];
+    const answerText = ans !== undefined && q.opts[ans] ? q.opts[ans][L ? 1 : 0] : '—';
+    return `<div class="px-5 py-3 flex items-start gap-3">
+      <span class="flex-shrink-0 text-xs font-bold text-gray-400 mt-0.5 w-6">${i+1}.</span>
+      <div class="flex-1">
+        <div class="text-xs text-gray-500">${L ? q.de : q.nl}</div>
+        <div class="text-sm text-gray-900 font-medium">${answerText}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function renderFriendchisePitch() {
   const el = document.getElementById('friendchise-pitch-content');
   const L = lang === 'de';
@@ -1256,6 +1336,7 @@ function renderFriendchisePitch() {
     { id:'cijfers', label: L ? 'Die Zahlen' : 'The Numbers', icon:'💰' },
     { id:'profiel', label: L ? 'Ideales Profil' : 'Ideaal Profiel', icon:'🎯' },
     { id:'stappen', label: L ? 'Die Schritte' : 'The Steps', icon:'🚀' },
+    { id:'personaCheck', label: L ? 'Persona-Check' : 'Persona-check', icon:'🔍' },
     { id:'checklist', label:'Call Checklist', icon:'✅' },
   ];
 
@@ -1553,6 +1634,182 @@ function renderFriendchisePitch() {
         <p class="text-sm text-gray-500 mt-3">info@waxaffairs.de · waxaffairs.de/friendchise</p>
       </div>
     </div>`;
+  }
+
+  // ══════════ PERSONA-CHECK ══════════
+  if (pitchSection === 'personaCheck') {
+    const publicUrl = window.location.origin + '/fit-check';
+    const cochatUrlNl = publicUrl + '?mode=cochat&lang=nl';
+    const cochatUrlDe = publicUrl + '?mode=cochat&lang=de';
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(publicUrl);
+
+    html += `<div class="max-w-5xl">
+      <!-- View selector: overview / inbox / detail -->
+      <div class="flex gap-2 mb-6">
+        <button onclick="personaCheckView='overview'; renderFriendchisePitch()" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors ${(personaCheckView||'overview')==='overview' ? 'bg-wax-500 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-wax-300'}">📤 ${L?'Teilen':'Delen'}</button>
+        <button onclick="personaCheckView='inbox'; loadPersonaSubmissions(); renderFriendchisePitch()" class="px-4 py-2 rounded-lg text-sm font-medium transition-colors ${personaCheckView==='inbox' ? 'bg-wax-500 text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-wax-300'}">📬 ${L?'Eingang':'Inbox'} <span id="inboxBadge" class="ml-1 text-xs">(${(personaSubmissions||[]).length})</span></button>
+      </div>`;
+
+    if (!personaCheckView || personaCheckView === 'overview') {
+      html += `<div class="grid md:grid-cols-2 gap-6 mb-8">
+        <!-- Publieke link + QR -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xl">🔗</span>
+            <h3 class="font-bold text-gray-900">${L?'Öffentlicher Link':'Publieke link'}</h3>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">${L?'Teilen via Instagram, E-Mail, QR-Code im Studio. Jede Einreichung landet im Eingang und als Lead in der Pipeline.':'Deelbaar via Instagram, e-mail, QR-code in de studio. Elke submissie komt in de inbox en als lead in de pipeline.'}</p>
+          <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-3 flex items-center gap-2">
+            <code class="text-xs text-gray-700 flex-1 truncate">${publicUrl}</code>
+            <button onclick="navigator.clipboard.writeText('${publicUrl}').then(()=>toast('${L?'Link kopiert':'Link gekopieerd'}'))" class="px-3 py-1.5 bg-wax-500 text-white text-xs rounded hover:bg-wax-600">📋 ${L?'Kopieren':'Kopieer'}</button>
+          </div>
+          <a href="${publicUrl}" target="_blank" class="text-sm text-wax-600 hover:underline">${L?'In neuem Tab öffnen →':'Open in nieuw tabblad →'}</a>
+        </div>
+
+        <!-- QR Code -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex flex-col items-center">
+          <div class="flex items-center gap-2 mb-3 self-start">
+            <span class="text-xl">📱</span>
+            <h3 class="font-bold text-gray-900">QR-Code</h3>
+          </div>
+          <img src="${qrUrl}" alt="QR Code" class="w-36 h-36 mb-3" />
+          <p class="text-xs text-gray-500 text-center">${L?'Ausdrucken und in der Kabine aufhängen':'Uitprinten en ophangen in de cabine'}</p>
+        </div>
+      </div>
+
+      <!-- Samen invullen (cochat) -->
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 md:p-8 text-white mb-6">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-2xl">👥</span>
+          <h3 class="font-bold text-xl">${L?'Zusammen ausfüllen':'Samen invullen'}</h3>
+        </div>
+        <p class="text-gray-300 text-sm mb-5 max-w-2xl">${L?'Öffnen Sie das Formular während eines Telefongesprächs und füllen Sie es gemeinsam mit dem Lead aus. Die Antworten werden als normale Einreichung gespeichert — mit Kennzeichnung cochat.':'Open het formulier tijdens een telefoongesprek en vul het samen met de lead in. De antwoorden worden als normale submissie opgeslagen — met markering cochat.'}</p>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <a href="${cochatUrlNl}" target="_blank" class="bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg p-4 transition-colors">
+            <div class="flex items-center gap-2 mb-1"><span>🇳🇱</span><strong>Nederlands</strong></div>
+            <p class="text-xs text-gray-400">${L?'In Niederländisch öffnen':'In het Nederlands openen'}</p>
+          </a>
+          <a href="${cochatUrlDe}" target="_blank" class="bg-white/10 hover:bg-white/20 border border-white/20 rounded-lg p-4 transition-colors">
+            <div class="flex items-center gap-2 mb-1"><span>🇩🇪</span><strong>Deutsch</strong></div>
+            <p class="text-xs text-gray-400">${L?'Auf Deutsch öffnen':'In het Duits openen'}</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hoe werkt het -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <h3 class="font-bold text-gray-900 mb-4">${L?'Wie funktioniert es?':'Hoe werkt het?'}</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex gap-3">
+            <span class="flex-shrink-0 w-7 h-7 bg-wax-100 text-wax-700 rounded-full flex items-center justify-center font-bold text-xs">1</span>
+            <div><strong class="text-gray-900">${L?'Lead füllt aus (5 Min.)':'Lead vult in (5 min)'}</strong><p class="text-gray-600 text-xs">${L?'20 Fragen über Hintergrund, Motivation, Mittel und Arbeitsstil':'20 vragen over achtergrond, motivatie, middelen en werkstijl'}</p></div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex-shrink-0 w-7 h-7 bg-wax-100 text-wax-700 rounded-full flex items-center justify-center font-bold text-xs">2</span>
+            <div><strong class="text-gray-900">${L?'Automatisches Scoring':'Automatische scoring'}</strong><p class="text-gray-600 text-xs">${L?'Fit-Score 0-100 + stärkstes Profil (Waxer / Unternehmer / Career-Switcher)':'Fit-score 0-100 + sterkste profiel (Waxer / Ondernemer / Career-switcher)'}</p></div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex-shrink-0 w-7 h-7 bg-wax-100 text-wax-700 rounded-full flex items-center justify-center font-bold text-xs">3</span>
+            <div><strong class="text-gray-900">${L?'Drei Dinge passieren gleichzeitig':'Drie dingen gebeuren tegelijk'}</strong><p class="text-gray-600 text-xs">${L?'Lead sieht Ergebnis → Lead wird in Pipeline angelegt → (optional) E-Mail-Webhook wird ausgelöst':'Lead ziet resultaat → lead wordt in pipeline aangemaakt → (optioneel) e-mail-webhook wordt getriggerd'}</p></div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex-shrink-0 w-7 h-7 bg-wax-100 text-wax-700 rounded-full flex items-center justify-center font-bold text-xs">4</span>
+            <div><strong class="text-gray-900">${L?'Ihre Nachbereitung':'Jouw opvolging'}</strong><p class="text-gray-600 text-xs">${L?'Eingang prüfen, Details pro Einreichung öffnen, mit passenden Leads Kontakt aufnehmen':'Bekijk de inbox, open details per submissie, neem contact op met passende leads'}</p></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+    }
+
+    if (personaCheckView === 'inbox') {
+      const subs = personaSubmissions || [];
+      const tierFilter = personaInboxFilter || 'all';
+      const filtered = tierFilter === 'all' ? subs : subs.filter(s => s.result && s.result.tier === tierFilter);
+      const tierColors = { strong:'bg-green-100 text-green-700', good:'bg-wax-100 text-wax-700', moderate:'bg-yellow-100 text-yellow-700', low:'bg-gray-100 text-gray-600' };
+      const tierLabels = L ? { strong:'Starker Match', good:'Guter Match', moderate:'Moderat', low:'Geringer Fit' } : { strong:'Sterke match', good:'Goede match', moderate:'Moderaat', low:'Lage fit' };
+      html += `<div>
+        <div class="flex flex-wrap gap-2 mb-4">
+          ${['all','strong','good','moderate','low'].map(f => `<button onclick="personaInboxFilter='${f}'; renderFriendchisePitch()" class="px-3 py-1.5 rounded-lg text-xs font-medium ${tierFilter===f?'bg-gray-900 text-white':'bg-white border border-gray-200 text-gray-700'}">${f==='all'?(L?'Alle':'Alle'):tierLabels[f]}${f==='all'?` (${subs.length})`:` (${subs.filter(s=>s.result&&s.result.tier===f).length})`}</button>`).join('')}
+          <button onclick="loadPersonaSubmissions()" class="ml-auto px-3 py-1.5 rounded-lg text-xs bg-white border border-gray-200 text-gray-700 hover:border-wax-300">🔄 ${L?'Aktualisieren':'Ververs'}</button>
+        </div>
+        ${filtered.length === 0 ? `<div class="bg-white rounded-xl p-12 text-center border border-dashed border-gray-200">
+          <div class="text-4xl mb-3">📭</div>
+          <p class="text-gray-500">${L?'Noch keine Einreichungen':'Nog geen submissies'}</p>
+        </div>` : `<div class="space-y-2">
+          ${filtered.map(s => {
+            const r = s.result || {};
+            const c = s.contact || {};
+            const tier = r.tier || 'moderate';
+            const personaName = { waxer: L?'Erfahrene Waxerin':'Ervaren waxer', ondernemer: L?'Unternehmerin':'Ondernemer', switcher: L?'Career-Switcher':'Career-switcher' };
+            const date = new Date(s.ontvangen || s.submittedAt).toLocaleString(L?'de-DE':'nl-NL', {dateStyle:'short', timeStyle:'short'});
+            return `<div onclick="openSubmissionDetail('${s.id}')" class="bg-white rounded-xl p-4 border border-gray-100 hover:border-wax-300 hover:shadow-md transition-all cursor-pointer flex items-center gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-full ${tierColors[tier]} flex items-center justify-center font-bold">${r.fitPct || '?'}</div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <strong class="text-gray-900">${c.firstName || ''} ${c.lastName || ''}</strong>
+                  <span class="text-xs ${tierColors[tier]} px-2 py-0.5 rounded-full">${tierLabels[tier]}</span>
+                  <span class="text-xs text-gray-500">${personaName[r.bestPersona] || '?'}</span>
+                  ${s.source === 'cochat' ? `<span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">👥 cochat</span>`:''}
+                </div>
+                <div class="text-xs text-gray-500 mt-1">${c.email || '—'} · ${date}</div>
+              </div>
+              <div class="text-gray-400">→</div>
+            </div>`;
+          }).join('')}
+        </div>`}
+      </div>`;
+    }
+
+    if (personaCheckView === 'detail' && personaSubmissionDetail) {
+      const s = personaSubmissionDetail;
+      const r = s.result || {};
+      const c = s.contact || {};
+      const tierLabels = L ? { strong:'Starker Match', good:'Guter Match', moderate:'Moderat', low:'Geringer Fit' } : { strong:'Sterke match', good:'Goede match', moderate:'Moderaat', low:'Lage fit' };
+      const personaName = { waxer: L?'Erfahrene Waxerin':'Ervaren waxer', ondernemer: L?'Unternehmerin':'Ondernemer', switcher: L?'Career-Switcher':'Career-switcher' };
+      const tierColors = { strong:'bg-green-500', good:'bg-wax-500', moderate:'bg-yellow-500', low:'bg-gray-400' };
+      html += `<div>
+        <button onclick="personaCheckView='inbox'; personaSubmissionDetail=null; renderFriendchisePitch()" class="mb-4 text-sm text-gray-600 hover:text-gray-900">← ${L?'Zurück zum Eingang':'Terug naar inbox'}</button>
+        <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 md:p-8 text-white mb-6">
+          <div class="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <div class="text-xs uppercase tracking-wider text-wax-300 mb-1">${L?'Einreichung':'Submissie'} #${s.id.slice(0,8)}</div>
+              <h2 class="text-2xl font-bold mb-1" style="font-family:Georgia,serif">${c.firstName || ''} ${c.lastName || ''}</h2>
+              <div class="text-sm text-gray-300">📧 ${c.email || '—'} · 📞 ${c.phone || '—'}</div>
+              <div class="text-xs text-gray-400 mt-1">${new Date(s.ontvangen || s.submittedAt).toLocaleString(L?'de-DE':'nl-NL')} · ${L?'Sprache':'Taal'}: ${s.lang} · ${L?'Präferenz':'Voorkeur'}: ${c.preference || 'email'}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-5xl font-bold">${r.fitPct || 0}<span class="text-2xl text-gray-400">/100</span></div>
+              <div class="inline-block px-3 py-1 rounded-full text-xs font-bold mt-2 ${tierColors[r.tier] || 'bg-gray-500'}">${tierLabels[r.tier] || r.tier}</div>
+            </div>
+          </div>
+          <div class="mt-5">
+            <div class="text-xs text-wax-300 uppercase tracking-wider mb-2">${L?'Stärkstes Profil':'Sterkste profiel'}</div>
+            <div class="text-lg font-bold">${personaName[r.bestPersona] || r.bestPersona}</div>
+            ${r.personaRanking ? `<div class="text-xs text-gray-400 mt-1">${L?'Scores':'Scores'}: Waxer ${r.personaRanking.find(p=>p.id==='waxer')?.score || 0} · Ondernemer ${r.personaRanking.find(p=>p.id==='ondernemer')?.score || 0} · Switcher ${r.personaRanking.find(p=>p.id==='switcher')?.score || 0}</div>`:''}
+            ${r.redFlags ? `<div class="text-xs text-red-300 mt-2">⚠️ ${r.redFlags} red flag${r.redFlags>1?'s':''}</div>`:''}
+          </div>
+        </div>
+
+        ${c.notes ? `<div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4 mb-6">
+          <div class="text-xs font-semibold uppercase tracking-wider text-yellow-700 mb-1">${L?'Anmerkung des Leads':'Opmerking van lead'}</div>
+          <p class="text-gray-800">${c.notes}</p>
+        </div>`:''}
+
+        <div class="bg-white rounded-xl border border-gray-100 overflow-hidden mb-6">
+          <div class="px-5 py-3 bg-gray-50 border-b border-gray-100 font-semibold text-sm text-gray-700">${L?'Antworten (20 Fragen)':'Antwoorden (20 vragen)'}</div>
+          <div class="divide-y divide-gray-100">
+            ${renderSubmissionAnswers(s, L)}
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          <a href="mailto:${c.email}" class="btn-primary px-4 py-2 rounded-lg text-sm">✉️ ${L?'E-Mail':'Mail'}</a>
+          ${c.phone ? `<a href="tel:${c.phone}" class="bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm hover:border-wax-300">📞 ${L?'Anrufen':'Bellen'}</a>`:''}
+          ${c.phone && c.preference === 'whatsapp' ? `<a href="https://wa.me/${c.phone.replace(/[^0-9]/g,'')}" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm">💬 WhatsApp</a>`:''}
+          <button onclick="deleteSubmission('${s.id}')" class="ml-auto bg-white border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm hover:bg-red-50">🗑️ ${L?'Löschen':'Verwijderen'}</button>
+        </div>
+      </div>`;
+    }
   }
 
   // ══════════ CALL CHECKLIST ══════════
