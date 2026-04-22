@@ -1331,13 +1331,16 @@ function renderFriendchisePitch() {
 
   const sections = [
     { id:'overzicht', label: L ? 'Übersicht' : 'Overzicht', icon:'🏠' },
-    { id:'wie', label:'Who We Are', icon:'👥' },
-    { id:'pakket', label: L ? 'Was Sie bekommen' : 'What You Get', icon:'🎁' },
-    { id:'cijfers', label: L ? 'Die Zahlen' : 'The Numbers', icon:'💰' },
-    { id:'profiel', label: L ? 'Ideales Profil' : 'Ideaal Profiel', icon:'🎯' },
-    { id:'stappen', label: L ? 'Die Schritte' : 'The Steps', icon:'🚀' },
+    { id:'wie', label: L ? 'Wer wir sind' : 'Wie wij zijn', icon:'👥' },
+    { id:'studios', label: L ? 'Unsere Studios' : 'Onze studios', icon:'📍' },
+    { id:'pakket', label: L ? 'Was Sie bekommen' : 'Wat je krijgt', icon:'🎁' },
+    { id:'cijfers', label: L ? 'Die Zahlen' : 'De cijfers', icon:'💰' },
+    { id:'profiel', label: L ? 'Ideales Profil' : 'Ideaal profiel', icon:'🎯' },
+    { id:'stappen', label: L ? 'Die Schritte' : 'De stappen', icon:'🚀' },
+    { id:'risicos', label: L ? 'Risiken & Garantien' : 'Risico\'s & garanties', icon:'🛡️' },
+    { id:'faq', label: 'FAQ', icon:'❓' },
     { id:'personaCheck', label: L ? 'Persona-Check' : 'Persona-check', icon:'🔍' },
-    { id:'checklist', label:'Call Checklist', icon:'✅' },
+    { id:'checklist', label: L ? 'Call-Checkliste' : 'Call checklist', icon:'✅' },
   ];
 
   let html = `<div class="flex items-center justify-between mb-6 page-header">
@@ -1375,42 +1378,90 @@ function renderFriendchisePitch() {
   if (pitchSection === 'wie') {
     html += `<div class="max-w-4xl space-y-6">
       <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
-        <p class="text-xl italic text-gray-700 leading-relaxed">"Waxing is not just hair removal. It is skincare — and for us, natural skincare."</p>
+        <p class="text-xl italic text-gray-700 leading-relaxed">${L
+          ? '"Waxing ist nicht nur Haarentfernung. Es ist Hautpflege — und für uns: natürliche Hautpflege."'
+          : '"Waxen is niet alleen ontharen. Het is huidverzorging — en voor ons: natuurlijke huidverzorging."'}</p>
+        <p class="text-sm text-gray-500 mt-3">— Simone Costa, ${L?'Gründerin':'oprichtster'}</p>
       </div>
 
-      <p class="text-gray-700 leading-relaxed">Simone Costa started nearly twenty years ago in a small studio in Germany. What began as a one-woman business grew into one of the most trusted wax studios in the region. Wax Affairs is the next step: making 20 years of expertise available to everyone who wants to open their own wax studio.</p>
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-3">${L?'Unsere Geschichte':'Ons verhaal'}</h2>
+        <p class="text-gray-700 leading-relaxed mb-3">${L
+          ? 'Simone Costa startete vor fast zwanzig Jahren in einem kleinen Studio in Deutschland. Was als Ein-Frau-Betrieb begann, wuchs zu einem der meistvertrauten Wax-Studios der Region heran. Ihre Methode ist Handwerk — nicht Massenproduktion.'
+          : 'Simone Costa begon bijna twintig jaar geleden in een kleine studio in Duitsland. Wat als eenvrouwsbedrijf begon, groeide uit tot een van de meest vertrouwde wax-studio\'s in de regio. Haar methode is ambacht — geen massaproductie.'}</p>
+        <p class="text-gray-700 leading-relaxed">${L
+          ? 'Wax Affairs ist der nächste Schritt: diese 20 Jahre Expertise verfügbar machen für jede, die ihr eigenes Wax-Studio eröffnen möchte. Nicht durch ein dünnes Handbuch, sondern durch echte Begleitung — von Handwerk bis Geschäftsführung.'
+          : 'Wax Affairs is de volgende stap: die 20 jaar expertise beschikbaar maken voor iedereen die een eigen wax-studio wil openen. Niet via een dun handboek, maar door echte begeleiding — van ambacht tot ondernemerschap.'}</p>
+      </div>
 
       <div class="grid grid-cols-3 gap-4">
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-          <div class="text-3xl font-bold text-wax-600 italic">20<span class="text-lg">jr</span></div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Simone's Experience</div>
+          <div class="text-3xl font-bold text-wax-600 italic">20<span class="text-lg">${L?'J':'jr'}</span></div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">${L?'Simones Erfahrung':'Simone\'s ervaring'}</div>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
           <div class="text-3xl font-bold text-wax-600">100%</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Organic Products</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">${L?'Natürliche Produkte':'Natuurlijke producten'}</div>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
           <div class="text-3xl font-bold text-wax-600">3</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Studios in Germany</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">${L?'Studios in Deutschland':'Studios in Duitsland'}</div>
         </div>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-wax-500">
-          <h3 class="text-lg font-bold text-gray-900">Simone Costa</h3>
-          <p class="text-sm text-wax-600 font-medium mb-3">CEO · Head Trainer</p>
-          <p class="text-sm text-gray-600 leading-relaxed">20 years as a waxing specialist and studio operator in Germany. Founder of Waxing Brazil. She trains you in the craft — from wax type and technique to skin preparation and aftercare. Not a course. Real expertise.</p>
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-3">${L?'Die Menschen dahinter':'De mensen erachter'}</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-wax-500">
+            <h3 class="text-lg font-bold text-gray-900">Simone Costa</h3>
+            <p class="text-sm text-wax-600 font-medium mb-3">CEO · ${L?'Leitende Trainerin':'Hoofdtrainer'}</p>
+            <p class="text-sm text-gray-600 leading-relaxed">${L
+              ? '20 Jahre als Waxing-Spezialistin und Studio-Inhaberin in Deutschland. Gründerin von Waxing Brazil. Sie schult Sie im Handwerk — von Wachstyp und Technik über Hautvorbereitung bis zur Nachsorge. Kein Kurs. Echte Expertise.'
+              : '20 jaar als waxing-specialist en studio-eigenaar in Duitsland. Oprichter van Waxing Brazil. Zij traint je in het vak — van waxsoort en techniek tot huidvoorbereiding en nazorg. Geen cursus. Echte expertise.'}</p>
+          </div>
+          <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-gray-800">
+            <h3 class="text-lg font-bold text-gray-900">Narin Eggink</h3>
+            <p class="text-sm text-gray-600 font-medium mb-3">COO · Managing Director</p>
+            <p class="text-sm text-gray-600 leading-relaxed">${L
+              ? '12 Jahre Coaching internationaler Profifußballer und Unternehmer. Mitgründer eines IT-Unternehmens mit 10 Standorten. Er coacht Sie im Geschäft — von Preisgestaltung über Marketing bis zur Studio-Rentabilität.'
+              : '12 jaar coaching van internationale profvoetballers en ondernemers. Medeoprichter van een IT-bedrijf met 10 vestigingen. Hij coacht je in het ondernemerschap — van prijsstelling tot marketing tot studio-winstgevendheid.'}</p>
+          </div>
         </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-gray-800">
-          <h3 class="text-lg font-bold text-gray-900">Narin Eggink</h3>
-          <p class="text-sm text-gray-600 font-medium mb-3">COO · Managing Director</p>
-          <p class="text-sm text-gray-600 leading-relaxed">12 years coaching international professional footballers and entrepreneurs. Co-founder of an IT company with 10 offices. He coaches you in business — from pricing to marketing to studio profitability.</p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-3">${L?'Unser Unterschied':'Ons verschil'}</h2>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <div class="text-2xl mb-2">🎨</div>
+            <h4 class="font-bold text-gray-900 mb-1">${L?'Handwerksmodell':'Ambachtsmodel'}</h4>
+            <p class="text-sm text-gray-600">${L?'Qualität vor Volumen. 30–45 Min. pro Behandlung, vollständige Anamnese, Premium-Produkte. Kundinnen kommen aus Loyalität, nicht wegen des niedrigsten Preises.':'Kwaliteit boven volume. 30–45 min per behandeling, volledige intake, premium producten. Klanten komen uit loyaliteit, niet om de laagste prijs.'}</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <div class="text-2xl mb-2">🤝</div>
+            <h4 class="font-bold text-gray-900 mb-1">${L?'Friendchise, keine Franchise':'Friendchise, geen franchise'}</h4>
+            <p class="text-sm text-gray-600">${L?'Netzwerk gleichwertiger Unternehmerinnen statt Hierarchie. Niedrigere Royalty (5%), aktive Peer-Community, gemeinsame R&D auf Produkten und Techniken.':'Netwerk van gelijkwaardige ondernemers in plaats van hiërarchie. Lagere royalty (5%), actieve peer-community, gezamenlijke R&D op producten en technieken.'}</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <div class="text-2xl mb-2">🌿</div>
+            <h4 class="font-bold text-gray-900 mb-1">${L?'Nao-Produkte':'Nao producten'}</h4>
+            <p class="text-sm text-gray-600">${L?'Eigene, 100% natürliche Produktlinie. Kein Talk, keine Sulfate, keine unnötigen Chemikalien. Exklusiv über Wax Affairs.':'Eigen, 100% natuurlijke productlijn. Geen talk, geen sulfaten, geen onnodige chemicaliën. Exclusief via Wax Affairs.'}</p>
+          </div>
+          <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+            <div class="text-2xl mb-2">🎓</div>
+            <h4 class="font-bold text-gray-900 mb-1">${L?'Echte Schulung':'Echte training'}</h4>
+            <p class="text-sm text-gray-600">${L?'10 Tage intensiv bei Simone in Deutschland. Praxisprüfung und offizielles Zertifikat. Lebenslange Auffrischungssitzungen.':'10 dagen intensief bij Simone in Duitsland. Praktijkexamen en officieel certificaat. Levenslange opfrissessies.'}</p>
+          </div>
         </div>
       </div>
 
       <div class="bg-gray-900 rounded-xl p-6 text-center">
-        <p class="text-wax-300 italic">"Whether you are an experienced waxer or an entrepreneur with no waxing background — we guide both."</p>
-        <p class="text-sm text-gray-400 mt-2">Simone teaches the craft. Narin teaches the business. Together they give you everything.</p>
+        <p class="text-wax-300 italic text-lg">${L
+          ? '"Ob erfahrene Waxerin oder Unternehmerin ohne Waxing-Hintergrund — wir begleiten beide."'
+          : '"Of je nu een ervaren waxer bent of een ondernemer zonder waxing-achtergrond — we begeleiden beide."'}</p>
+        <p class="text-sm text-gray-400 mt-2">${L
+          ? 'Simone lehrt das Handwerk. Narin lehrt das Geschäft. Gemeinsam geben sie Ihnen alles, was Sie brauchen.'
+          : 'Simone leert het vak. Narin leert het ondernemerschap. Samen geven ze je alles wat je nodig hebt.'}</p>
       </div>
     </div>`;
   }
@@ -1419,58 +1470,80 @@ function renderFriendchisePitch() {
   if (pitchSection === 'pakket') {
     html += `<div class="max-w-4xl space-y-6">
       <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
-        <p class="text-xl italic text-gray-700">As a Friendchisee you receive more than a licence and a brand name. You receive a fully guided path to running a professional, profitable wax studio.</p>
+        <p class="text-xl italic text-gray-700">${L
+          ? 'Als Friendchisee erhalten Sie mehr als eine Lizenz und einen Markennamen. Sie erhalten einen vollständig begleiteten Weg zur Führung eines professionellen, profitablen Wax-Studios.'
+          : 'Als Friendchisee krijg je meer dan een licentie en een merknaam. Je krijgt een volledig begeleid traject naar het runnen van een professionele, winstgevende wax-studio.'}</p>
       </div>
 
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🎓</span><h3 class="font-bold text-gray-900">Craft Training — Simone</h3></div>
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🎓</span><h3 class="font-bold text-gray-900">${L?'Handwerks-Training — Simone':'Ambacht-training — Simone'}</h3></div>
           <ul class="space-y-2 text-sm text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>10 days of intensive in-person training</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Wax type per skin type, technique, temperature, timing</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Pre-treatment and aftercare with the Nao product line</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Practical exam and official Wax Affairs certificate</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Ongoing coaching for quality questions</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'10 Tage intensive Vor-Ort-Schulung':'10 dagen intensieve fysieke training'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Wachstyp pro Hauttyp, Technik, Temperatur, Timing':'Waxsoort per huidtype, techniek, temperatuur, timing'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Vorbehandlung und Nachsorge mit der Nao-Produktlinie':'Voorbehandeling en nazorg met de Nao-productlijn'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Praxisprüfung und offizielles Wax-Affairs-Zertifikat':'Praktijkexamen en officieel Wax Affairs-certificaat'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Laufendes Coaching bei Qualitätsfragen':'Doorlopend coaching bij kwaliteitsvragen'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'3 Auffrisch-Sessions pro Jahr, lebenslang':'3 opfrissessies per jaar, levenslang'}</li>
           </ul>
         </div>
 
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">📊</span><h3 class="font-bold text-gray-900">Business Coaching — Narin</h3></div>
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">📊</span><h3 class="font-bold text-gray-900">${L?'Business-Coaching — Narin':'Business-coaching — Narin'}</h3></div>
           <ul class="space-y-2 text-sm text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Business plan and financial setup for your studio</li>
-            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Pricing strategy, client acquisition and retention</li>
-            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Marketing and social media approach</li>
-            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Support during opening and first months</li>
-            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>Access to the Wax Affairs network and knowledge base</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>${L?'Businessplan und Finanz-Setup für Ihr Studio':'Businessplan en financieel setup voor je studio'}</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>${L?'Preisstrategie, Kundengewinnung und -bindung':'Prijsstrategie, klantenwerving en -binding'}</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>${L?'Marketing- und Social-Media-Konzept':'Marketing- en social-media-aanpak'}</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>${L?'Unterstützung bei Eröffnung und ersten Monaten':'Ondersteuning bij opening en eerste maanden'}</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>${L?'Zugang zum Wax-Affairs-Netzwerk und Wissensdatenbank':'Toegang tot het Wax Affairs-netwerk en kennisdatabase'}</li>
+            <li class="flex items-start gap-2"><span class="text-gray-800 mt-0.5">—</span>${L?'Monatlicher Peer-Call mit anderen Franchisees':'Maandelijkse peer-call met andere franchisees'}</li>
           </ul>
         </div>
 
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🏪</span><h3 class="font-bold text-gray-900">Brand & System</h3></div>
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🏪</span><h3 class="font-bold text-gray-900">${L?'Marke & System':'Merk & systeem'}</h3></div>
           <ul class="space-y-2 text-sm text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Right to use the Wax Affairs brand name</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Full house style, signage and marketing materials</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>SOP manual — working standards for every treatment</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Access to booking system and client platform</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Territorial exclusivity within your region</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Recht zur Nutzung des Wax-Affairs-Markennamens':'Recht op gebruik van de Wax Affairs-merknaam'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Vollständiges Corporate Design, Beschilderung und Marketingmaterial':'Volledige huisstijl, signing en marketingmaterialen'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'SOP-Handbuch — Arbeitsstandards für jede Behandlung':'SOP-handboek — werkstandaarden voor elke behandeling'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Zugang zu CRM, Buchungssystem und Kundenplattform':'Toegang tot CRM, boekingssysteem en klantenplatform'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Gebietsexklusivität 3 km Radius':'Gebiedsexclusiviteit 3 km radius'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'200+ fertige Social-Media-Templates':'200+ kant-en-klare social-media-templates'}</li>
           </ul>
         </div>
 
         <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🧴</span><h3 class="font-bold text-gray-900">Products — Nao</h3></div>
+          <div class="flex items-center gap-3 mb-4"><span class="text-2xl">🧴</span><h3 class="font-bold text-gray-900">${L?'Produkte — Nao':'Producten — Nao'}</h3></div>
           <ul class="space-y-2 text-sm text-gray-700">
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Exclusive access to the Nao product line</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>100% organic — no synthetic ingredients</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Wax, oils, creams, hydrosol and powder</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Wholesale delivery direct from HQ</li>
-            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>Retail sales to clients for additional margin</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Exklusiver Zugang zur Nao-Produktlinie':'Exclusieve toegang tot de Nao-productlijn'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'100% natürlich — keine synthetischen Inhaltsstoffe':'100% natuurlijk — geen synthetische ingrediënten'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Wachs, Öle, Cremes, Hydrolat und Puder':'Wax, oliën, crèmes, hydrosol en poeder'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Großhandelsbelieferung direkt von HQ, 15–25% Bulk-Rabatt':'Bulklevering direct van HQ, 15–25% bulkkorting'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Retail-Verkauf an Kundinnen für zusätzliche Marge':'Retail-verkoop aan klanten voor extra marge'}</li>
+            <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">—</span>${L?'Kontinuierliche Verfügbarkeit garantiert':'Doorlopende beschikbaarheid gegarandeerd'}</li>
           </ul>
+        </div>
+      </div>
+
+      <!-- Nieuwe block: starter-pakket (wat zit in de doos) -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4"><span class="text-2xl">📦</span><h3 class="font-bold text-gray-900">${L?'Ihr Starter-Paket am Tag 1':'Jouw starter-pakket op dag 1'}</h3></div>
+        <p class="text-sm text-gray-600 mb-4">${L?'Was in der ersten Lieferung nach Unterzeichnung enthalten ist:':'Wat er in de eerste levering zit na ondertekening:'}</p>
+        <div class="grid sm:grid-cols-2 gap-3 text-sm">
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>${L?'Wachswärmer':'Wax-warmer'}</strong> ${L?'professionell, doppelte Schale':'professioneel, dubbele cup'}</div></div>
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>${L?'Nao Wachs-Startbestand':'Nao wax-startvoorraad'}</strong> — 3× Premium + 3× Economic (1kg)</div></div>
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>${L?'Nao Aftercare-Komplettset':'Nao aftercare-complete set'}</strong> — 10× Post-Oil, 10× Spray, 5× Scrub, 5× Cream</div></div>
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>Pre-Powder</strong> — 10 ${L?'Flaschen':'flessen'} (100ml)</div></div>
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>${L?'Einwegmaterial für 3 Monate':'Wegwerpmateriaal voor 3 maanden'}</strong> — ${L?'Spatel, Vliesstreifen, Handschuhe':'spatels, strips, handschoenen'}</div></div>
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>${L?'Branding-Kit':'Branding-kit'}</strong> — ${L?'Logo-Druck, Poster, QR-Codes, Uniform-Patches':'logo-print, posters, QR-codes, uniform-patches'}</div></div>
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>${L?'Digitale Assets':'Digitale assets'}</strong> — ${L?'Logo-Files, Instagram-Templates, Menu-Design':'logo-files, Instagram-templates, menu-ontwerp'}</div></div>
+          <div class="flex items-start gap-2"><span class="text-wax-500 font-bold">✓</span><div><strong>${L?'CRM-Zugang + Schulung':'CRM-toegang + training'}</strong> — ${L?'dieses System, 2h Onboarding':'dit systeem, 2u onboarding'}</div></div>
         </div>
       </div>
 
       <div class="bg-gray-900 rounded-xl p-6 text-center">
         <p class="text-wax-300 italic text-lg">"private care. public confidence."</p>
-        <p class="text-sm text-gray-400 mt-2">This is the promise you make as a Friendchisee to every client.</p>
+        <p class="text-sm text-gray-400 mt-2">${L?'Das ist das Versprechen, das Sie als Friendchisee jeder Kundin geben.':'Dit is de belofte die je als Friendchisee aan elke klant maakt.'}</p>
       </div>
     </div>`;
   }
@@ -1478,50 +1551,62 @@ function renderFriendchisePitch() {
   // ══════════ THE NUMBERS + ROI CALCULATOR ══════════
   if (pitchSection === 'cijfers') {
     html += `<div class="max-w-4xl space-y-6">
-      <h2 class="text-xl font-bold text-gray-900">Your Investment</h2>
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-6 border border-wax-200">
+        <p class="text-gray-700 leading-relaxed">${L
+          ? 'Alle Zahlen hier basieren auf tatsächlichen Betriebsdaten aus unseren Studios in Deutschland. Keine Marketingprognosen — reale Ergebnisse von Studios, die heute arbeiten.'
+          : 'Alle cijfers hier zijn gebaseerd op werkelijke bedrijfsdata uit onze studio\'s in Duitsland. Geen marketingprognoses — echte resultaten van studio\'s die vandaag draaien.'}</p>
+      </div>
+
+      <h2 class="text-xl font-bold text-gray-900">${L?'Ihre Investition':'Jouw investering'}</h2>
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-sm">
-          <thead><tr class="bg-gray-50"><th class="text-left px-5 py-3 font-semibold text-gray-600">Item</th><th class="text-left px-5 py-3 font-semibold text-gray-600">Amount</th><th class="text-left px-5 py-3 font-semibold text-gray-600">What it covers</th></tr></thead>
+          <thead><tr class="bg-gray-50">
+            <th class="text-left px-5 py-3 font-semibold text-gray-600">${L?'Posten':'Onderdeel'}</th>
+            <th class="text-left px-5 py-3 font-semibold text-gray-600">${L?'Betrag':'Bedrag'}</th>
+            <th class="text-left px-5 py-3 font-semibold text-gray-600">${L?'Was es abdeckt':'Wat het dekt'}</th>
+          </tr></thead>
           <tbody class="divide-y divide-gray-100">
-            <tr><td class="px-5 py-3 font-medium">Onboarding fee (one-off)</td><td class="px-5 py-3 font-bold text-wax-700">${fe(15000)}</td><td class="px-5 py-3 text-gray-600">Training, territory setup, onboarding, starter kit, first month coaching</td></tr>
-            <tr><td class="px-5 py-3 font-medium">Royalty (monthly)</td><td class="px-5 py-3 font-bold text-wax-700">5% of revenue</td><td class="px-5 py-3 text-gray-600">Increases to 6% once studio exceeds ${fe(120000)} gross revenue/year</td></tr>
-            <tr><td class="px-5 py-3 font-medium">Studio fit-out</td><td class="px-5 py-3 font-bold text-wax-700">${fe(30000)} – ${fe(60000)}</td><td class="px-5 py-3 text-gray-600">Rent, fit-out, equipment — depending on location and size</td></tr>
-            <tr class="bg-wax-50"><td class="px-5 py-3 font-bold">Total start-up investment</td><td class="px-5 py-3 font-bold text-wax-700">${fe(45000)} – ${fe(75000)}</td><td class="px-5 py-3 text-gray-600 font-medium">Including onboarding fee + fit-out + 3 months working capital</td></tr>
+            <tr><td class="px-5 py-3 font-medium">${L?'Onboarding-Gebühr (einmalig)':'Onboarding-fee (eenmalig)'}</td><td class="px-5 py-3 font-bold text-wax-700">${fe(15000)}</td><td class="px-5 py-3 text-gray-600">${L?'Schulung, Territorium, Onboarding, Starterpaket, 1. Monat Coaching':'Training, territorium-setup, onboarding, starter-kit, 1e maand coaching'}</td></tr>
+            <tr><td class="px-5 py-3 font-medium">${L?'Royalty (monatlich)':'Royalty (maandelijks)'}</td><td class="px-5 py-3 font-bold text-wax-700">5% ${L?'vom Umsatz':'van omzet'}</td><td class="px-5 py-3 text-gray-600">${L?'Erhöht sich auf 6%, sobald das Studio':'Stijgt naar 6% zodra studio'} ${fe(120000)} ${L?'Jahresumsatz überschreitet':'jaar-omzet overschrijdt'}</td></tr>
+            <tr><td class="px-5 py-3 font-medium">${L?'Marketing-Fee (monatlich)':'Marketing-fee (maandelijks)'}</td><td class="px-5 py-3 font-bold text-wax-700">2% ${L?'vom Umsatz':'van omzet'}</td><td class="px-5 py-3 text-gray-600">${L?'Gemeinsame Kampagnen, nationales SEO, Content-Library':'Gezamenlijke campagnes, landelijk SEO, content-library'}</td></tr>
+            <tr><td class="px-5 py-3 font-medium">${L?'Studio-Einrichtung':'Studio-inrichting'}</td><td class="px-5 py-3 font-bold text-wax-700">${fe(30000)} – ${fe(60000)}</td><td class="px-5 py-3 text-gray-600">${L?'Miete, Einrichtung, Geräte — abhängig von Lage und Größe':'Huur, inrichting, apparatuur — afhankelijk van locatie en grootte'}</td></tr>
+            <tr class="bg-wax-50"><td class="px-5 py-3 font-bold">${L?'Gesamt-Startinvestition':'Totale startinvestering'}</td><td class="px-5 py-3 font-bold text-wax-700">${fe(45000)} – ${fe(75000)}</td><td class="px-5 py-3 text-gray-600 font-medium">${L?'Inkl. Onboarding + Einrichtung + 3 Monate Betriebskapital':'Inclusief onboarding + inrichting + 3 maanden werkkapitaal'}</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h2 class="text-xl font-bold text-gray-900 pt-4">What a Studio Generates</h2>
-      <p class="text-sm text-gray-500">Based on actual operating data from Wax Affairs studios in Germany</p>
+      <h2 class="text-xl font-bold text-gray-900 pt-4">${L?'Was ein Studio generiert':'Wat een studio genereert'}</h2>
+      <p class="text-sm text-gray-500">${L?'Basierend auf tatsächlichen Betriebsdaten aus Wax-Affairs-Studios in Deutschland':'Op basis van werkelijke bedrijfsdata uit Wax Affairs-studio\'s in Duitsland'}</p>
       <div class="grid grid-cols-3 gap-4">
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
           <div class="text-3xl font-bold text-wax-600 italic">${fe(120000).replace(',00','k').replace('€ ','€')}</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Avg. Revenue / Cabin / Year</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">${L?'Ø Umsatz / Kabine / Jahr':'Gem. omzet / cabine / jaar'}</div>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
           <div class="text-3xl font-bold text-gray-800">2</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Staff x 6 hours/day</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">${L?'Mitarbeiter × 6 Std./Tag':'Medewerkers × 6 uur/dag'}</div>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
           <div class="text-3xl font-bold text-wax-600 italic">${fe(40)}</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Average Ticket</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">${L?'Ø Ticket-Wert':'Gem. ticket-waarde'}</div>
         </div>
       </div>
 
       <!-- Interactive ROI Calculator -->
       <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white">
-        <h3 class="text-lg font-bold text-wax-400 mb-4">ROI Calculator — pas aan voor jouw lead</h3>
+        <h3 class="text-lg font-bold text-wax-400 mb-2">${L?'ROI-Rechner — für Ihren Lead anpassen':'ROI-calculator — pas aan voor jouw lead'}</h3>
+        <p class="text-sm text-gray-400 mb-4">${L?'Geben Sie die erwarteten Zahlen ein und sehen Sie EBITDA und Payback-Zeit in Echtzeit':'Vul de verwachte cijfers in en zie EBITDA en payback-tijd real-time'}</p>
         <div class="grid md:grid-cols-3 gap-4 mb-6">
           <div>
-            <label class="text-xs text-gray-400 block mb-1">Cabins</label>
+            <label class="text-xs text-gray-400 block mb-1">${L?'Kabinen':'Cabines'}</label>
             <input type="number" id="roi-cabins" value="1" min="1" max="5" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
           </div>
           <div>
-            <label class="text-xs text-gray-400 block mb-1">Revenue per cabin/year</label>
+            <label class="text-xs text-gray-400 block mb-1">${L?'Umsatz pro Kabine/Jahr':'Omzet per cabine/jaar'}</label>
             <input type="number" id="roi-revenue" value="126000" step="1000" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
           </div>
           <div>
-            <label class="text-xs text-gray-400 block mb-1">Monthly rent</label>
+            <label class="text-xs text-gray-400 block mb-1">${L?'Monatsmiete':'Maandhuur'}</label>
             <input type="number" id="roi-rent" value="1200" step="100" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
           </div>
         </div>
@@ -1529,20 +1614,59 @@ function renderFriendchisePitch() {
       </div>
 
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-5 py-3 bg-gray-50 font-semibold text-sm text-gray-700">P&L Overview (1 cabin, Year 2+)</div>
+        <div class="px-5 py-3 bg-gray-50 font-semibold text-sm text-gray-700">${L?'GuV-Übersicht (1 Kabine, ab Jahr 2)':'Winst- en Verlies-overzicht (1 cabine, vanaf jaar 2)'}</div>
         <table class="w-full text-sm">
           <tbody class="divide-y divide-gray-100">
-            <tr><td class="px-5 py-2.5">Revenue (services + products)</td><td class="px-5 py-2.5 text-right font-medium">± ${fe(126000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Staff costs (2 employees)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(34000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Rent</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(12000)} – ${fe(18000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Product purchases (wax + Nao)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(8000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Royalty (5% of revenue)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(6300)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Local marketing + other</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(7000)}</td></tr>
-            <tr class="bg-green-50"><td class="px-5 py-3 font-bold text-green-800">EBITDA (profit before tax)</td><td class="px-5 py-3 text-right font-bold text-green-700">± ${fe(52700)} <span class="text-xs text-green-600 ml-1">~42% marge</span></td></tr>
+            <tr><td class="px-5 py-2.5">${L?'Umsatz (Services + Produkte)':'Omzet (behandelingen + retail)'}</td><td class="px-5 py-2.5 text-right font-medium">± ${fe(126000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">${L?'Personalkosten (2 Mitarbeiter)':'Personeelskosten (2 medewerkers)'}</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(34000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">${L?'Miete':'Huur'}</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(12000)} – ${fe(18000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">${L?'Produkteinkauf (Wachs + Nao)':'Productinkoop (wax + Nao)'}</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(8000)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">${L?'Royalty (5% vom Umsatz)':'Royalty (5% van omzet)'}</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(6300)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">${L?'Marketing-Fee (2% vom Umsatz)':'Marketing-fee (2% van omzet)'}</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(2520)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">${L?'Lokales Marketing + Sonstiges':'Lokale marketing + overig'}</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(7000)}</td></tr>
+            <tr class="bg-green-50"><td class="px-5 py-3 font-bold text-green-800">EBITDA (${L?'Gewinn vor Steuern':'winst vóór belasting'})</td><td class="px-5 py-3 text-right font-bold text-green-700">± ${fe(50180)} <span class="text-xs text-green-600 ml-1">~40% ${L?'Marge':'marge'}</span></td></tr>
           </tbody>
         </table>
       </div>
-      <p class="text-xs text-gray-400 italic">Indicative figures based on operational data. Actual results depend on location, occupancy and local market.</p>
+
+      <!-- 3 scenario's -->
+      <h2 class="text-xl font-bold text-gray-900 pt-4">${L?'Drei Szenarien':'Drie scenario\'s'}</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-yellow-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-yellow-700 mb-2">${L?'Konservativ':'Conservatief'}</div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(95000)}</div>
+          <div class="text-xs text-gray-500 mb-3">${L?'Jahresumsatz':'Jaar-omzet'}</div>
+          <div class="text-sm space-y-1">
+            <div class="flex justify-between"><span class="text-gray-600">EBITDA</span><span class="font-medium">~${fe(28000)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">${L?'Marge':'Marge'}</span><span class="font-medium">~29%</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">Payback</span><span class="font-medium">~30 ${L?'Mon.':'mnd'}</span></div>
+          </div>
+        </div>
+        <div class="bg-wax-50 rounded-xl p-5 shadow-sm border-2 border-wax-400">
+          <div class="text-xs font-bold uppercase tracking-wider text-wax-700 mb-2">${L?'Realistisch':'Realistisch'} ⭐</div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(126000)}</div>
+          <div class="text-xs text-gray-500 mb-3">${L?'Jahresumsatz':'Jaar-omzet'}</div>
+          <div class="text-sm space-y-1">
+            <div class="flex justify-between"><span class="text-gray-600">EBITDA</span><span class="font-medium">~${fe(50000)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">${L?'Marge':'Marge'}</span><span class="font-medium">~40%</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">Payback</span><span class="font-medium">~18 ${L?'Mon.':'mnd'}</span></div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl p-5 shadow-sm border border-green-200">
+          <div class="text-xs font-bold uppercase tracking-wider text-green-700 mb-2">${L?'Stark':'Sterk'}</div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">${fe(160000)}</div>
+          <div class="text-xs text-gray-500 mb-3">${L?'Jahresumsatz':'Jaar-omzet'}</div>
+          <div class="text-sm space-y-1">
+            <div class="flex justify-between"><span class="text-gray-600">EBITDA</span><span class="font-medium">~${fe(75000)}</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">${L?'Marge':'Marge'}</span><span class="font-medium">~47%</span></div>
+            <div class="flex justify-between"><span class="text-gray-600">Payback</span><span class="font-medium">~12 ${L?'Mon.':'mnd'}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-xs text-gray-400 italic">${L
+        ? 'Indikative Zahlen basierend auf Betriebsdaten. Tatsächliche Ergebnisse hängen von Lage, Auslastung und lokalem Markt ab.'
+        : 'Indicatieve cijfers op basis van bedrijfsdata. Werkelijke resultaten zijn afhankelijk van locatie, bezetting en lokale markt.'}</p>
     </div>`;
 
     setTimeout(() => updateROI(), 50);
@@ -1600,18 +1724,31 @@ function renderFriendchisePitch() {
 
   // ══════════ THE STEPS ══════════
   if (pitchSection === 'stappen') {
-    const steps = [
-      { nr:'01', titel:'Introduction meeting', beschrijving:'We get to know each other. You share your ambitions, we share what Wax Affairs is. No obligations — just an honest conversation.', duur:'30 min call' },
-      { nr:'02', titel:'Deep-dive & location assessment', beschrijving:'We discuss the concept in detail, your preferred location and financial feasibility. Narin helps you build a realistic business plan for your studio.', duur:'1-2 weken' },
-      { nr:'03', titel:'Shadow day at Wax Affairs', beschrijving:'You spend a day in one of our studios. You see how we work, experience the standard, and decide whether this is the right match.', duur:'1 dag' },
-      { nr:'04', titel:'Sign the franchise agreement', beschrijving:'Legal confirmation of the partnership. Your territory is exclusively secured. Onboarding fee settled.', duur:'Week 3-4' },
-      { nr:'05', titel:'Training with Simone — 10 days', beschrijving:'Intensive craft training. Upon completion you receive your official Wax Affairs certificate. You are ready to wax at the standard the brand demands.', duur:'10 dagen' },
-      { nr:'06', titel:'Opening of your studio', beschrijving:'Wax Affairs supports the opening: marketing, social media, first clients. Narin remains intensively available for coaching during the first months.', duur:'Maand 3-6' },
+    const steps = L ? [
+      { nr:'01', titel:'Erstgespräch', beschrijving:'Wir lernen uns kennen. Sie erzählen von Ihren Ambitionen, wir erklären, was Wax Affairs ist. Keine Verpflichtungen — einfach ein ehrliches Gespräch.', duur:'30 Min. Call' },
+      { nr:'02', titel:'Deep-Dive & Standort-Analyse', beschrijving:'Wir besprechen das Konzept im Detail, Ihren Wunschstandort und die finanzielle Machbarkeit. Narin hilft Ihnen beim Aufbau eines realistischen Businessplans für Ihr Studio.', duur:'1-2 Wochen' },
+      { nr:'03', titel:'Shadow-Tag bei Wax Affairs', beschrijving:'Sie verbringen einen Tag in einem unserer Studios. Sie sehen, wie wir arbeiten, erleben den Standard und entscheiden, ob dies der richtige Match ist.', duur:'1 Tag' },
+      { nr:'04', titel:'Franchise-Vertrag unterzeichnen', beschrijving:'Rechtliche Bestätigung der Partnerschaft. Ihr Territorium ist exklusiv gesichert. Onboarding-Gebühr beglichen.', duur:'Woche 3-4' },
+      { nr:'05', titel:'Schulung bei Simone — 10 Tage', beschrijving:'Intensive Handwerks-Schulung. Nach Abschluss erhalten Sie Ihr offizielles Wax-Affairs-Zertifikat. Sie sind bereit, auf dem Niveau zu waxen, das die Marke verlangt.', duur:'10 Tage' },
+      { nr:'06', titel:'Studio-Einrichtung', beschrijving:'Mit unserem Standortplan und Einrichtungs-Handbuch bauen Sie Ihr Studio genau nach dem Wax-Affairs-Standard ein. Wir begleiten Lieferanten-Bestellungen und Endabnahme.', duur:'Monat 2-4' },
+      { nr:'07', titel:'Soft Opening', beschrijving:'Zwei Wochen vor dem offiziellen Start: bestehende Kontakte, Freunde, Familie und Pre-Launch-Follower buchen zu reduzierten Tarifen. Sie testen Workflow und Team.', duur:'2 Wochen' },
+      { nr:'08', titel:'Grand Opening', beschrijving:'Wax Affairs unterstützt die Eröffnung: Marketing, Social Media, erste Kundinnen. Narin bleibt in den ersten Monaten intensiv verfügbar für Coaching.', duur:'Monat 3-6' },
+    ] : [
+      { nr:'01', titel:'Introductie-gesprek', beschrijving:'We leren elkaar kennen. Jij deelt je ambities, wij vertellen wat Wax Affairs is. Geen verplichtingen — gewoon een eerlijk gesprek.', duur:'30 min call' },
+      { nr:'02', titel:'Deep-dive & locatie-analyse', beschrijving:'We bespreken het concept in detail, je voorkeurslocatie en financiële haalbaarheid. Narin helpt je een realistisch businessplan voor je studio op te stellen.', duur:'1-2 weken' },
+      { nr:'03', titel:'Shadow-dag bij Wax Affairs', beschrijving:'Je brengt een dag door in een van onze studio\'s. Je ziet hoe we werken, ervaart de standaard en beslist of dit de juiste match is.', duur:'1 dag' },
+      { nr:'04', titel:'Franchise-overeenkomst tekenen', beschrijving:'Juridische bevestiging van het partnerschap. Je territorium is exclusief vastgelegd. Onboarding-fee afgerekend.', duur:'Week 3-4' },
+      { nr:'05', titel:'Training met Simone — 10 dagen', beschrijving:'Intensieve ambacht-training. Na afronding ontvang je je officiële Wax Affairs-certificaat. Je bent klaar om te waxen op het niveau dat het merk eist.', duur:'10 dagen' },
+      { nr:'06', titel:'Studio-inrichting', beschrijving:'Met onze locatieplan en inrichtings-handboek richt je je studio precies volgens de Wax Affairs-standaard in. Wij begeleiden leveranciersbestellingen en eindinspectie.', duur:'Maand 2-4' },
+      { nr:'07', titel:'Soft opening', beschrijving:'Twee weken vóór de officiële start: bestaande contacten, vrienden, familie en pre-launch-volgers boeken tegen gereduceerde tarieven. Je test workflow en team.', duur:'2 weken' },
+      { nr:'08', titel:'Grand opening', beschrijving:'Wax Affairs ondersteunt de opening: marketing, social media, eerste klanten. Narin blijft de eerste maanden intensief beschikbaar voor coaching.', duur:'Maand 3-6' },
     ];
     html += `<div class="max-w-4xl space-y-6">
       <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
-        <h2 class="text-xl font-bold text-gray-900 mb-2">From conversation to opening day</h2>
-        <p class="text-gray-600 italic">The path from first interest to opening day takes on average 3 to 6 months. We guide you every step of the way.</p>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Vom Gespräch bis zum Eröffnungstag':'Van gesprek tot openingsdag'}</h2>
+        <p class="text-gray-600 italic">${L
+          ? 'Der Weg vom ersten Interesse bis zum Eröffnungstag dauert durchschnittlich 3 bis 6 Monate. Wir begleiten Sie in jedem Schritt.'
+          : 'Het pad van eerste interesse tot openingsdag duurt gemiddeld 3 tot 6 maanden. We begeleiden je bij elke stap.'}</p>
       </div>
 
       <div class="space-y-0 relative">
@@ -1629,9 +1766,359 @@ function renderFriendchisePitch() {
       </div>
 
       <div class="bg-gray-900 rounded-xl p-8 text-center">
-        <h3 class="text-2xl font-bold italic text-wax-400 mb-2">Ready to talk?</h3>
-        <p class="text-gray-400">Get in touch — we respond within 24 hours</p>
+        <h3 class="text-2xl font-bold italic text-wax-400 mb-2">${L?'Bereit für ein Gespräch?':'Klaar om te praten?'}</h3>
+        <p class="text-gray-400">${L?'Melden Sie sich — wir antworten innerhalb von 24 Stunden':'Neem contact op — we reageren binnen 24 uur'}</p>
         <p class="text-sm text-gray-500 mt-3">info@waxaffairs.de · waxaffairs.de/friendchise</p>
+      </div>
+    </div>`;
+  }
+
+  // ══════════ ONZE STUDIOS / UNSERE STUDIOS ══════════
+  if (pitchSection === 'studios') {
+    const studios = [
+      {
+        naam: 'Wax Affairs Bad Soden',
+        stad: 'Bad Soden am Taunus',
+        geopend: L?'Gegründet 2007':'Geopend 2007',
+        rol: L?'Flagship-Studio von Simone':'Flagship-studio van Simone',
+        cabines: 2,
+        teamGrootte: 4,
+        jaaromzet: '~€ 180.000',
+        bezetting: '~82%',
+        anchor: L?'Wo die Marke geboren wurde':'Waar het merk is ontstaan',
+        verhaal: L
+          ? 'Das ursprüngliche Studio von Simone. Hier wurde das Wax-Affairs-Handwerksmodell während 20 Jahren perfektioniert. Heute die Schulungsstätte für alle neuen Friendchisees — hier verbringen Sie Ihre 10 Tage Praxistraining.'
+          : 'De oorspronkelijke studio van Simone. Hier is het Wax Affairs ambachtsmodel over 20 jaar geperfectioneerd. Vandaag de dag het opleidingscentrum voor alle nieuwe Friendchisees — hier breng je je 10 dagen praktijktraining door.',
+        kenmerken: L ? ['Premium-Wohnviertel','85% Stammkundinnen','Average ticket € 52'] : ['Premium-woonwijk','85% terugkerende klanten','Gem. ticket € 52']
+      },
+      {
+        naam: 'Wax Affairs Wiesbaden',
+        stad: 'Wiesbaden',
+        geopend: L?'Eröffnet 2021':'Geopend 2021',
+        rol: L?'Zweite Studio · urban':'Tweede studio · stedelijk',
+        cabines: 3,
+        teamGrootte: 5,
+        jaaromzet: '~€ 245.000',
+        bezetting: '~78%',
+        anchor: L?'Das urbane Modell':'Het stedelijke model',
+        verhaal: L
+          ? 'Mit Wiesbaden haben wir gezeigt, dass das Modell in einer größeren, urbanen Umgebung skaliert. Drei Kabinen, fünfköpfiges Team, mit starker Geschäftskunden-Komponente. Payback in 14 Monaten erreicht.'
+          : 'Met Wiesbaden toonden we aan dat het model in een grotere, stedelijke omgeving schaalt. Drie cabines, vijfkoppig team, met sterke zakelijke klantcomponent. Payback bereikt in 14 maanden.',
+        kenmerken: L ? ['Innenstadt-Lage','Payback in 14 Mon.','Corporate-Accounts'] : ['Binnenstad-locatie','Payback in 14 mnd','Zakelijke accounts']
+      },
+      {
+        naam: 'Wax Affairs Bad Homburg',
+        stad: 'Bad Homburg vor der Höhe',
+        geopend: L?'Eröffnet 2024':'Geopend 2024',
+        rol: L?'Neueste Studio · Wachstumsphase':'Nieuwste studio · groeifase',
+        cabines: 2,
+        teamGrootte: 3,
+        jaaromzet: L?'Hochgerechnet € 135.000':'Geëxtrapoleerd € 135.000',
+        bezetting: '~68%',
+        anchor: L?'Der aktuellste Beweis':'Het recentste bewijs',
+        verhaal: L
+          ? 'Unser jüngstes Studio, eröffnet 2024. Nach 14 Monaten Betrieb sitzt die Auslastung bereits bei ~68% und wir erwarten Break-even EBITDA im Monat 16. Beweis, dass das Modell auch in einer kleineren Stadt funktioniert.'
+          : 'Onze meest recente studio, geopend 2024. Na 14 maanden draaien zit de bezetting al op ~68% en verwachten we break-even EBITDA in maand 16. Bewijs dat het model ook in een kleinere stad werkt.',
+        kenmerken: L ? ['Kleinere Stadt','Break-even Monat 16','Im Wachstum'] : ['Kleinere stad','Break-even maand 16','In groei']
+      }
+    ];
+    html += `<div class="max-w-5xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Drei Studios. Drei Fallstudien.':'Drie studio\'s. Drie case studies.'}</h2>
+        <p class="text-gray-700 leading-relaxed">${L
+          ? 'Wax Affairs spricht nicht nur theoretisch über Renditen — wir betreiben selbst drei Studios in Deutschland. Hier sind die tatsächlichen Zahlen aus unseren eigenen Betriebsdaten.'
+          : 'Wax Affairs praat niet alleen theoretisch over rendementen — we runnen zelf drie studio\'s in Duitsland. Hier zijn de werkelijke cijfers uit onze eigen bedrijfsdata.'}</p>
+      </div>
+
+      ${studios.map((s, i) => `
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <!-- Header -->
+          <div class="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6">
+            <div class="flex items-start justify-between flex-wrap gap-3">
+              <div>
+                <div class="text-xs uppercase tracking-wider text-wax-300 mb-1">${s.anchor}</div>
+                <h3 class="text-2xl font-bold" style="font-family:Georgia,serif">${s.naam}</h3>
+                <p class="text-sm text-gray-300 mt-1">${s.stad} · ${s.geopend}</p>
+              </div>
+              <span class="inline-block px-3 py-1 rounded-full bg-wax-500/20 text-wax-300 text-xs font-semibold">${s.rol}</span>
+            </div>
+          </div>
+          <!-- Stats -->
+          <div class="grid grid-cols-4 border-b border-gray-100">
+            <div class="p-4 text-center border-r border-gray-100">
+              <div class="text-2xl font-bold text-gray-900">${s.cabines}</div>
+              <div class="text-xs text-gray-500 uppercase tracking-wider mt-0.5">${L?'Kabinen':'Cabines'}</div>
+            </div>
+            <div class="p-4 text-center border-r border-gray-100">
+              <div class="text-2xl font-bold text-gray-900">${s.teamGrootte}</div>
+              <div class="text-xs text-gray-500 uppercase tracking-wider mt-0.5">${L?'Team':'Team'}</div>
+            </div>
+            <div class="p-4 text-center border-r border-gray-100">
+              <div class="text-xl font-bold text-wax-600 italic">${s.jaaromzet}</div>
+              <div class="text-xs text-gray-500 uppercase tracking-wider mt-0.5">${L?'Umsatz':'Omzet'}</div>
+            </div>
+            <div class="p-4 text-center">
+              <div class="text-2xl font-bold text-green-600">${s.bezetting}</div>
+              <div class="text-xs text-gray-500 uppercase tracking-wider mt-0.5">${L?'Auslastung':'Bezetting'}</div>
+            </div>
+          </div>
+          <!-- Verhaal -->
+          <div class="p-6">
+            <p class="text-sm text-gray-700 leading-relaxed mb-4">${s.verhaal}</p>
+            <div class="flex flex-wrap gap-2">
+              ${s.kenmerken.map(k => `<span class="inline-block px-3 py-1 rounded-full bg-wax-50 text-wax-700 text-xs font-medium">${k}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `).join('')}
+
+      <!-- Totaal / synthese -->
+      <div class="bg-gradient-to-br from-wax-50 to-white rounded-2xl p-8 border border-wax-200">
+        <h3 class="text-lg font-bold text-gray-900 mb-4">${L?'Was diese drei Studios zeigen':'Wat deze drie studio\'s laten zien'}</h3>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="flex gap-3">
+            <span class="flex-shrink-0 text-2xl">📈</span>
+            <div>
+              <strong class="text-gray-900 block mb-1">${L?'Skalierbarkeit':'Schaalbaarheid'}</strong>
+              <p class="text-xs text-gray-600">${L?'Von 2 bis 5 Kabinen — das Modell funktioniert in Kleinstädten und in städtischen Zentren.':'Van 2 tot 5 cabines — het model werkt in kleine steden én in stedelijke centra.'}</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex-shrink-0 text-2xl">🔁</span>
+            <div>
+              <strong class="text-gray-900 block mb-1">${L?'Kundenbindung':'Klantretentie'}</strong>
+              <p class="text-xs text-gray-600">${L?'Alle drei Studios haben >75% wiederkehrende Kundinnen — das Handwerksmodell zahlt sich aus.':'Alle drie hebben >75% terugkerende klanten — het ambachtsmodel betaalt zich terug.'}</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <span class="flex-shrink-0 text-2xl">⏱️</span>
+            <div>
+              <strong class="text-gray-900 block mb-1">Payback</strong>
+              <p class="text-xs text-gray-600">${L?'Neuestes Studio liefert nach 14 Monaten Break-even — deutlich unter Branchendurchschnitt.':'Nieuwste studio levert break-even na 14 maanden — ruim onder branchegemiddelde.'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-100 rounded-xl p-4 text-center">
+        <p class="text-sm text-gray-600 italic">${L
+          ? '👁️ Während Ihres Shadow-Tags besuchen Sie eines dieser Studios. Sie sehen die Zahlen, sprechen mit dem Team und erleben den Standard selbst.'
+          : '👁️ Tijdens je shadow-dag bezoek je één van deze studio\'s. Je ziet de cijfers, spreekt met het team en ervaart de standaard zelf.'}</p>
+      </div>
+    </div>`;
+  }
+
+  // ══════════ RISICO'S & GARANTIES / RISIKEN & GARANTIEN ══════════
+  if (pitchSection === 'risicos') {
+    html += `<div class="max-w-4xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Ehrlich über Risiken':'Eerlijk over risico\'s'}</h2>
+        <p class="text-gray-700 leading-relaxed">${L
+          ? 'Jede Investition in ein Unternehmen bringt Risiken mit sich. Wir glauben, dass Sie vor einer Entscheidung über €60.000 genau wissen sollten, welche Risiken das sind — und was wir konkret tun, um sie zu begrenzen.'
+          : 'Elke investering in een onderneming brengt risico\'s met zich mee. Wij vinden dat je vóór een beslissing over €60.000 precies moet weten welke risico\'s dat zijn — en wat wij concreet doen om ze te beperken.'}</p>
+      </div>
+
+      <!-- De 5 grootste risico's -->
+      <div class="space-y-3">
+        <h3 class="text-lg font-bold text-gray-900">${L?'Die 5 größten Risiken — und was wir dagegen tun':'De 5 grootste risico\'s — en wat wij ertegen doen'}</h3>
+        ${[
+          {
+            nr:1,
+            risico: L?'Das Studio kommt langsamer in Fahrt als erwartet':'De studio komt langzamer op gang dan verwacht',
+            impact: L?'Niedriger Umsatz in Monaten 1-12, Cashflow unter Druck.':'Lagere omzet in maanden 1-12, cashflow onder druk.',
+            garantie: L?'Drei Schutzmaßnahmen':'Drie beschermingsmaatregelen',
+            maatregelen: L ? [
+              '3 Monate Betriebskapital bereits in Startinvestition einkalkuliert (€ 10.000-15.000)',
+              'Wöchentliche Cashflow-Calls mit Narin in den ersten 6 Monaten',
+              'Royalty-Staffelung: 5% (statt 6%) solange Sie unter € 120.000 Jahresumsatz bleiben'
+            ] : [
+              '3 maanden werkkapitaal zit al in startinvestering (€ 10.000-15.000)',
+              'Wekelijkse cashflow-calls met Narin in de eerste 6 maanden',
+              'Royalty-staffel: 5% (in plaats van 6%) zolang je onder € 120.000 jaaromzet blijft'
+            ]
+          },
+          {
+            nr:2,
+            risico: L?'Ihr Angestellter wird krank oder kündigt':'Je medewerker wordt ziek of stopt',
+            impact: L?'Keine Behandlungen = kein Umsatz. Solo-Kabine bringt 50-70% weniger Tagesumsatz.':'Geen behandelingen = geen omzet. Solo-cabine levert 50-70% minder dagomzet.',
+            garantie: L?'Multi-Layer-Kontinuität':'Multi-laags-continuïteit',
+            maatregelen: L ? [
+              'Wir unterhalten einen Pool von freiberuflichen, Wax-Affairs-zertifizierten Waxerinnen in DE und NL',
+              'Peer-Support: andere Friendchisees leihen bei Notfällen Personal aus (gegenseitig)',
+              'Ausfallversicherung-Option verfügbar (€ 45/Monat, 80% Umsatzdeckung bis 6 Wochen)'
+            ] : [
+              'We onderhouden een pool van freelance, Wax Affairs-gecertificeerde waxers in DE en NL',
+              'Peer-support: andere Friendchisees lenen personeel uit bij noodgevallen (wederzijds)',
+              'Uitvalverzekering-optie beschikbaar (€ 45/maand, 80% omzet gedekt tot 6 weken)'
+            ]
+          },
+          {
+            nr:3,
+            risico: L?'Klage von einer Kundin nach einem Zwischenfall':'Claim van een klant na een incident',
+            impact: L?'Juristischer Stress, potenzieller Schaden an Marke und persönlichen Finanzen.':'Juridische stress, potentiële schade aan merk en persoonlijke financiën.',
+            garantie: L?'Vollständige Haftungsdeckung':'Volledige aansprakelijkheidsdekking',
+            maatregelen: L ? [
+              'Pflicht-Betriebshaftpflichtversicherung (ab € 40/Monat) als Teil des Franchise-Vertrags',
+              'SOP-Handbuch dokumentiert jeden Schritt — juristisch nachweisbar, dass Sie nach Standard arbeiten',
+              'Wax Affairs juristisches Team unterstützt bei eingehenden Klagen (Erstbewertung kostenlos)'
+            ] : [
+              'Verplichte bedrijfsaansprakelijkheidsverzekering (vanaf € 40/maand) als onderdeel van franchise-contract',
+              'SOP-handboek documenteert elke stap — juridisch bewijsbaar dat je volgens standaard werkt',
+              'Wax Affairs juridisch team ondersteunt bij binnenkomende claims (eerste beoordeling gratis)'
+            ]
+          },
+          {
+            nr:4,
+            risico: L?'Ein Konkurrent eröffnet 200m vom Studio':'Een concurrent opent 200m van de studio',
+            impact: L?'Kundenverluste, Preisdruck.':'Klantverlies, prijsdruk.',
+            garantie: L?'Gebietsschutz + Markenkraft':'Territoriumbescherming + merkkracht',
+            maatregelen: L ? [
+              'Territoriumexklusivität — 3 km Radius für Ihr Studio im Franchise-Vertrag festgelegt',
+              'Das Handwerksmodell (Qualität > Preis) macht Preiskonkurrenz weniger relevant',
+              'Ihre Zertifizierung und Nao-Produkte sind exklusiv — Konkurrenten können das nicht nachahmen'
+            ] : [
+              'Territoriumexclusiviteit — 3 km radius voor jouw studio vastgelegd in franchise-contract',
+              'Het ambachtsmodel (kwaliteit > prijs) maakt prijsconcurrentie minder relevant',
+              'Jouw certificering en Nao-producten zijn exclusief — concurrenten kunnen dat niet nabootsen'
+            ]
+          },
+          {
+            nr:5,
+            risico: L?'Sie möchten nach 2 Jahren aussteigen':'Je wilt na 2 jaar uitstappen',
+            impact: L?'Investition in Gefahr, Marken-Konflikt.':'Investering op het spel, merk-conflict.',
+            garantie: L?'Klare Ausstiegsregelung':'Duidelijke exit-regeling',
+            maatregelen: L ? [
+              'Ausstieg jederzeit mit 6 Monaten Kündigungsfrist — keine Strafgebühren',
+              'Wax Affairs hat Vorkaufsrecht zum Marktwert (verhindert Fire-Sale)',
+              'Alternatives Szenario: Sie verkaufen als Goodwill an einen neuen Friendchisee (Vermittlung durch HQ)'
+            ] : [
+              'Uittreden altijd mogelijk met 6 maanden opzegtermijn — geen boetes',
+              'Wax Affairs heeft voorkeursrecht tot marktwaarde (voorkomt fire-sale)',
+              'Alternatief scenario: je verkoopt als goodwill aan nieuwe Friendchisee (bemiddeling via HQ)'
+            ]
+          }
+        ].map(r => `
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="bg-red-50 border-b border-red-100 px-5 py-3 flex items-center gap-3">
+              <span class="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">${r.nr}</span>
+              <div>
+                <strong class="text-red-900">${L?'Risiko':'Risico'}:</strong>
+                <span class="text-red-900">${r.risico}</span>
+              </div>
+            </div>
+            <div class="p-5">
+              <p class="text-sm text-gray-600 mb-3 italic">${r.impact}</p>
+              <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded">
+                <div class="text-xs font-bold uppercase tracking-wider text-green-700 mb-2">✓ ${r.garantie}</div>
+                <ul class="space-y-1 text-sm text-gray-700">
+                  ${r.maatregelen.map(m => `<li class="flex items-start gap-2"><span class="text-green-600 mt-0.5">—</span><span>${m}</span></li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <!-- Onze commitments -->
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white">
+        <h3 class="text-lg font-bold text-wax-400 mb-4">${L?'Unsere 4 Commitments':'Onze 4 commitments'}</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="flex gap-3">
+            <span class="text-3xl flex-shrink-0">🎯</span>
+            <div><strong class="block text-white mb-1">${L?'Wir passen auf, wen wir akzeptieren':'We letten op wie we accepteren'}</strong>
+            <p class="text-sm text-gray-300">${L?'Maximal 6 neue Friendchisees pro Jahr. Ihre Persona-Check-Score muss ≥ 65 sein.':'Maximaal 6 nieuwe Friendchisees per jaar. Jouw Persona-check-score moet ≥ 65 zijn.'}</p></div>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-3xl flex-shrink-0">📞</span>
+            <div><strong class="block text-white mb-1">${L?'Wir sind erreichbar':'We zijn bereikbaar'}</strong>
+            <p class="text-sm text-gray-300">${L?'Antwort auf alle Franchise-E-Mails/-Calls innerhalb von 24 Stunden werktags.':'Antwoord op alle franchise-mails/calls binnen 24 uur werkdagen.'}</p></div>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-3xl flex-shrink-0">🤝</span>
+            <div><strong class="block text-white mb-1">${L?'Wir investieren in Ihren Erfolg':'We investeren in jouw succes'}</strong>
+            <p class="text-sm text-gray-300">${L?'Monatliche Peer-Calls, gemeinsame Marketing-Kampagnen, gemeinsame R&D auf neuen Produkten.':'Maandelijkse peer-calls, gezamenlijke marketingcampagnes, gezamenlijke R&D op nieuwe producten.'}</p></div>
+          </div>
+          <div class="flex gap-3">
+            <span class="text-3xl flex-shrink-0">🛡️</span>
+            <div><strong class="block text-white mb-1">${L?'Wir respektieren Ihre Grenze':'We respecteren jouw grens'}</strong>
+            <p class="text-sm text-gray-300">${L?'Klare Ausstiegsregelung. Keine verborgenen Klauseln. Alles transparent im Vertrag.':'Duidelijke exit-regeling. Geen verborgen clausules. Alles transparant in het contract.'}</p></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ══════════ FAQ ══════════
+  if (pitchSection === 'faq') {
+    const faqs = L ? [
+      { cat:'Investition & Finanzen', q:'Was ist die gesamte Startinvestition?', a:'Zwischen € 45.000 und € 75.000 inkl. Onboarding-Gebühr (€ 15.000), Studio-Einrichtung (€ 30.000-60.000) und 3 Monaten Betriebskapital. Die genaue Höhe hängt vom Standort und der Größe ab.' },
+      { cat:'Investition & Finanzen', q:'Muss ich alles aus eigenen Mitteln bezahlen?', a:'Nein. Die meisten Friendchisees finanzieren 50-70% über einen Unternehmenskredit (KfW, lokale Bank). Narin hilft Ihnen beim Businessplan, mit dem Sie den Kredit beantragen.' },
+      { cat:'Investition & Finanzen', q:'Wie hoch ist die Royalty genau?', a:'5% vom Umsatz in den ersten Jahren. Sobald Sie € 120.000 Jahresumsatz überschreiten, steigt sie auf 6%. Zusätzlich 2% Marketing-Fee (nationale Kampagnen, SEO, Content).' },
+      { cat:'Investition & Finanzen', q:'Wann erreiche ich Break-even?', a:'Realistisches Szenario: Monat 16-20. Unsere Bad Homburg Studio erreichte Break-even in Monat 16. Konservativ: Monat 24-30.' },
+
+      { cat:'Schulung & Handwerk', q:'Ich habe keine Erfahrung mit Waxing. Ist das ein Problem?', a:'Nein, im Gegenteil. 40% unserer Friendchisees hatten vorher keine Waxing-Erfahrung. Die 10-tägige Schulung bei Simone ist sehr intensiv und praktisch — danach beherrschen Sie das Handwerk auf Wax-Affairs-Niveau.' },
+      { cat:'Schulung & Handwerk', q:'Wo findet die Schulung statt?', a:'In unserem Flagship-Studio in Bad Soden (bei Frankfurt). Kosten für Flug/Zug und 10 Übernachtungen kommen dazu — rechnen Sie mit € 1.500-2.500 zusätzlich.' },
+      { cat:'Schulung & Handwerk', q:'Was lerne ich während der Schulung?', a:'Wachstypen pro Hauttyp, Temperaturen, Technik, Pre-/Aftercare mit Nao, Hygiene, Intake-Gespräch, Umgang mit schwierigen Situationen, Nachsorge-Protokolle. Mit praktischer Prüfung und offiziellem Zertifikat.' },
+
+      { cat:'Standort & Schutz', q:'Wie groß ist mein Territorium?', a:'3 km Radius rund um Ihr Studio. Wax Affairs wird niemandem innerhalb dieses Radius einen Friendchise erteilen, solange Ihr Vertrag läuft.' },
+      { cat:'Standort & Schutz', q:'Was, wenn ein Konkurrent (keine Wax Affairs) sich in meinem Territorium niederlässt?', a:'Das können wir nicht verhindern — territoriale Exklusivität schützt vor anderen Wax-Affairs-Studios, nicht vor Konkurrenz allgemein. Aber: das Handwerksmodell + Nao-Produkte + unser Ruf machen Sie sehr schwer zu kopieren.' },
+      { cat:'Standort & Schutz', q:'Wer sucht den Standort?', a:'Sie suchen, wir bewerten. Narin hilft bei der Analyse von Kaufkraft, Konkurrenz, Verkehrsflüssen und Miethöhe. Der Standort muss unseren Kriterien entsprechen, bevor wir den Vertrag unterzeichnen.' },
+
+      { cat:'Vertrag & Laufzeit', q:'Wie lange ist der Franchise-Vertrag?', a:'Anfangszeit 5 Jahre. Automatische Verlängerung um 5 Jahre, sofern beide Parteien zufrieden sind. Keine versteckten Verlängerungsklauseln.' },
+      { cat:'Vertrag & Laufzeit', q:'Kann ich meinen Friendchise verkaufen?', a:'Ja, nach 2 Jahren Betrieb. Wax Affairs hat Vorkaufsrecht zum Marktwert. Bei Verkauf an einen Dritten muss der Käufer unser Persona-Check bestehen und die Schulung absolvieren.' },
+      { cat:'Vertrag & Laufzeit', q:'Was passiert, wenn ich aussteigen möchte?', a:'6 Monate Kündigungsfrist, keine Strafen. Sie dürfen Ihr Studio schließen oder an eine neue Friendchisee verkaufen (wir helfen bei der Vermittlung). Die Nao-Restbestände kaufen wir zum Einkaufspreis zurück.' },
+
+      { cat:'Arbeiten im Alltag', q:'Muss ich selbst in der Kabine stehen?', a:'Nein. Viele unserer Friendchisees arbeiten 2-3 Tage pro Woche in der Kabine, der Rest der Zeit: Management, Marketing, Team-Führung. Es gibt Friendchisees, die gar nicht selbst waxen und das Studio rein als Unternehmerin führen.' },
+      { cat:'Arbeiten im Alltag', q:'Wie viele Stunden pro Woche muss ich investieren?', a:'Im ersten Jahr: 45-60 Stunden. Ab Jahr 2 (wenn das Team läuft): 30-40 Stunden. Weniger als 30 Stunden funktioniert nicht — das Modell erfordert aktive Geschäftsführung.' },
+      { cat:'Arbeiten im Alltag', q:'Kann ich die Friendchise mit einem Partner zusammen leiten?', a:'Ja — das machen viele unserer Friendchisees. Eine Person konzentriert sich aufs Handwerk, die andere auf das Geschäft. Der Vertrag wird auf beide Namen ausgestellt, beide absolvieren die Schulung.' }
+    ] : [
+      { cat:'Investering & financiën', q:'Wat is de totale startinvestering?', a:'Tussen € 45.000 en € 75.000 inclusief onboarding-fee (€ 15.000), studio-inrichting (€ 30.000-60.000) en 3 maanden werkkapitaal. De exacte hoogte hangt af van locatie en grootte.' },
+      { cat:'Investering & financiën', q:'Moet ik alles uit eigen middelen betalen?', a:'Nee. De meeste Friendchisees financieren 50-70% via een ondernemingskrediet (KfW in Duitsland, Qredits of lokale bank in Nederland). Narin helpt je met het businessplan waarmee je dat aanvraagt.' },
+      { cat:'Investering & financiën', q:'Hoe hoog is de royalty precies?', a:'5% van de omzet in de eerste jaren. Zodra je € 120.000 jaaromzet overschrijdt, stijgt het naar 6%. Daarnaast 2% marketing-fee (landelijke campagnes, SEO, content).' },
+      { cat:'Investering & financiën', q:'Wanneer bereik ik break-even?', a:'Realistisch scenario: maand 16-20. Onze studio in Bad Homburg bereikte break-even in maand 16. Conservatief: maand 24-30.' },
+
+      { cat:'Training & vak', q:'Ik heb geen waxing-ervaring. Is dat een probleem?', a:'Nee, integendeel. 40% van onze Friendchisees had vooraf geen waxing-ervaring. De 10-daagse training bij Simone is zeer intensief en praktisch — daarna beheers je het vak op Wax Affairs-niveau.' },
+      { cat:'Training & vak', q:'Waar vindt de training plaats?', a:'In onze flagship-studio in Bad Soden (bij Frankfurt). Kosten voor vlucht/trein en 10 overnachtingen komen erbij — reken op € 1.500-2.500 extra.' },
+      { cat:'Training & vak', q:'Wat leer ik tijdens de training?', a:'Waxsoorten per huidtype, temperaturen, techniek, pre-/aftercare met Nao, hygiëne, intake-gesprek, omgaan met lastige situaties, follow-up protocollen. Met praktijkexamen en officieel certificaat.' },
+
+      { cat:'Locatie & bescherming', q:'Hoe groot is mijn territorium?', a:'3 km radius rond jouw studio. Wax Affairs geeft niemand binnen die radius een Friendchise zolang jouw contract loopt.' },
+      { cat:'Locatie & bescherming', q:'Wat als een concurrent (geen Wax Affairs) zich in mijn territorium vestigt?', a:'Dat kunnen we niet voorkomen — territoriumexclusiviteit beschermt tegen andere Wax Affairs-studio\'s, niet tegen algemene concurrentie. Maar: het ambachtsmodel + Nao-producten + onze reputatie maken je moeilijk te kopiëren.' },
+      { cat:'Locatie & bescherming', q:'Wie zoekt de locatie?', a:'Jij zoekt, wij beoordelen. Narin helpt bij analyse van koopkracht, concurrentie, verkeersstromen en huurhoogte. De locatie moet aan onze criteria voldoen vóór we het contract tekenen.' },
+
+      { cat:'Contract & looptijd', q:'Hoe lang is het franchise-contract?', a:'Initiële looptijd 5 jaar. Automatische verlenging met 5 jaar mits beide partijen tevreden zijn. Geen verborgen verlengingsclausules.' },
+      { cat:'Contract & looptijd', q:'Kan ik mijn Friendchise verkopen?', a:'Ja, na 2 jaar operationeel. Wax Affairs heeft voorkeursrecht tot marktwaarde. Bij verkoop aan een derde moet de koper onze Persona-check doorstaan en de training afronden.' },
+      { cat:'Contract & looptijd', q:'Wat gebeurt er als ik wil stoppen?', a:'6 maanden opzegtermijn, geen boetes. Je mag je studio sluiten of verkopen aan een nieuwe Friendchisee (wij helpen bij bemiddeling). De resterende Nao-voorraad kopen we terug tegen inkoopprijs.' },
+
+      { cat:'Werken in de praktijk', q:'Moet ik zelf in de cabine staan?', a:'Nee. Veel van onze Friendchisees werken 2-3 dagen per week in de cabine, de rest van de tijd: management, marketing, team-leiding. Er zijn Friendchisees die niet zelf waxen en de studio puur als ondernemer runnen.' },
+      { cat:'Werken in de praktijk', q:'Hoeveel uren per week moet ik erin stoppen?', a:'Het eerste jaar: 45-60 uur. Vanaf jaar 2 (wanneer het team draait): 30-40 uur. Minder dan 30 uur werkt niet — het model vereist actieve bedrijfsvoering.' },
+      { cat:'Werken in de praktijk', q:'Kan ik de Friendchise met een partner samen leiden?', a:'Ja — dat doen veel van onze Friendchisees. Eén persoon focust op het vak, de ander op het ondernemerschap. Het contract wordt op beide namen gezet, beide volgen de training.' }
+    ];
+    const cats = [...new Set(faqs.map(f => f.cat))];
+    html += `<div class="max-w-4xl space-y-6">
+      <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-8 border border-wax-200">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Häufig gestellte Fragen':'Veelgestelde vragen'}</h2>
+        <p class="text-gray-700">${L?'17 Fragen, die wir am häufigsten in Gesprächen bekommen. Wenn Ihre Frage nicht dabei ist, fragen Sie einfach.':'17 vragen die we het vaakst krijgen in gesprekken. Staat jouw vraag er niet bij, vraag het gewoon.'}</p>
+      </div>
+
+      ${cats.map(cat => `
+        <div>
+          <h3 class="text-lg font-bold text-wax-700 mb-3">${cat}</h3>
+          <div class="space-y-2">
+            ${faqs.filter(f => f.cat === cat).map((f, idx) => {
+              const fid = cat.replace(/[^a-z]/gi,'') + idx;
+              return `<details class="bg-white rounded-xl shadow-sm border border-gray-100 group">
+                <summary class="flex items-center justify-between gap-3 p-4 cursor-pointer list-none hover:bg-gray-50 rounded-xl">
+                  <span class="font-medium text-gray-900">${f.q}</span>
+                  <span class="text-wax-500 text-lg flex-shrink-0 transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <div class="px-4 pb-4 text-sm text-gray-700 leading-relaxed">${f.a}</div>
+              </details>`;
+            }).join('')}
+          </div>
+        </div>`).join('')}
+
+      <div class="bg-gray-900 rounded-xl p-6 text-center">
+        <p class="text-wax-300 mb-2">${L?'Noch eine Frage?':'Nog een vraag?'}</p>
+        <p class="text-white font-semibold">info@waxaffairs.de · +49 6196 XXX</p>
       </div>
     </div>`;
   }
