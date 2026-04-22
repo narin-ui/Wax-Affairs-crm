@@ -310,8 +310,21 @@ app.post('/api/public/boeken', (req, res) => {
 // ─── Static Files + Auth Protection ───
 app.use((req, res, next) => {
   if (req.path === '/login' || req.path === '/logout') return next();
+  // Bearer-token authenticatie voor specifieke API-endpoints
+  const authHeader = req.headers.authorization || '';
+  if (authHeader.startsWith('Bearer ') && process.env.ACADEMY_ADMIN_TOKEN) {
+    const token = authHeader.slice(7).trim();
+    if (token === process.env.ACADEMY_ADMIN_TOKEN && req.path.startsWith('/api/academy/bulk-content')) {
+      req._authViaToken = true;
+      return next();
+    }
+  }
   const cookies = parseCookies(req.headers.cookie);
-  if (!isValidSession(cookies.wax_session)) return res.redirect('/login');
+  if (!isValidSession(cookies.wax_session)) {
+    // Voor API-calls: geef JSON 401 ipv redirect, handiger voor curl/fetch
+    if (req.path.startsWith('/api/')) return res.status(401).json({ error: 'Niet ingelogd' });
+    return res.redirect('/login');
+  }
   next();
 });
 
@@ -929,11 +942,14 @@ app.post('/api/academy/quiz-poging/:lesId', (req, res) => {
 
 // Voortgang ophalen voor huidige user
 app.post('/api/academy/bulk-content', (req, res) => {
-  if (!requireAuth(req, res)) return;
   try {
-    const user = getSessionUser(req);
-    if (!user || !['admin','manager','hq'].includes(user.rol)) {
-      return res.status(403).json({ error: 'Geen rechten (rol vereist: admin/manager/hq)' });
+    // Auth via bearer-token (al gevalideerd door middleware) OF via sessie met admin-rol
+    if (!req._authViaToken) {
+      if (!requireAuth(req, res)) return;
+      const user = getSessionUser(req);
+      if (!user || !['admin','manager','hq'].includes(user.rol)) {
+        return res.status(403).json({ error: 'Geen rechten (rol vereist: admin/manager/hq)' });
+      }
     }
     const body = req.body || {};
     const content = body.content || {};
