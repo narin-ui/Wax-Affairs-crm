@@ -1532,7 +1532,7 @@ async function renderAdviesraad() {
       const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'📣', sales:'💰', finance:'📊' };
       sidebar.innerHTML = '<div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Kies specialist</div>' +
         personas.map(p => 
-          '<button onclick="adviesraadSelect(' + chr(39) + p.id + chr(39) + ')" id="persona-' + p.id + '" class="w-full text-left p-3 bg-white hover:bg-wax-50 border-2 border-gray-200 rounded-lg transition">' +
+          '<button onclick="adviesraadSelect(' + String.fromCharCode(39) + p.id + String.fromCharCode(39) + ')" id="persona-' + p.id + '" class="w-full text-left p-3 bg-white hover:bg-wax-50 border-2 border-gray-200 rounded-lg transition">' +
           '<div class="flex items-start gap-2"><span class="text-xl">' + (emojiMap[p.id] || '🎯') + '</span>' +
           '<div class="flex-1 min-w-0"><div class="font-semibold text-gray-900 text-sm">' + p.naam + '</div>' +
           '<div class="text-xs text-gray-500 mt-0.5">' + p.expertise + '</div></div></div></button>'
@@ -1945,7 +1945,7 @@ function renderFriendchisePitch() {
         <div id="stadtResult" class="mt-4"></div>
         <div class="mt-4 flex flex-wrap gap-2 text-xs">
           <span class="text-gray-500">${L?'Schnelltest':'Snelle test'}:</span>
-          ${['München','Berlin','Hamburg','Frankfurt','Wiesbaden','Augsburg','Erfurt','Bad Soden'].map(c=>`<button onclick="document.getElementById(' + chr(39) + 'stadtInput' + chr(39) + ').value=' + chr(39) + '${c}' + chr(39) + ';lookupStadt()" class="px-2.5 py-1 bg-white hover:bg-wax-100 border border-wax-200 rounded-full text-wax-700 transition">${c}</button>`).join('')}
+          ${['München','Berlin','Hamburg','Frankfurt','Wiesbaden','Augsburg','Erfurt','Bad Soden'].map(c=>`<button onclick="document.getElementById(' + String.fromCharCode(39) + 'stadtInput' + String.fromCharCode(39) + ').value=' + String.fromCharCode(39) + '${c}' + String.fromCharCode(39) + ';lookupStadt()" class="px-2.5 py-1 bg-white hover:bg-wax-100 border border-wax-200 rounded-full text-wax-700 transition">${c}</button>`).join('')}
         </div>
       </div>
 
