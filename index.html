@@ -654,7 +654,7 @@
   <div class="page-header flex items-center justify-between mb-6">
     <div>
       <h1 class="text-2xl font-bold text-gray-900" data-t="hTeam">Team</h1>
-      <p class="text-sm text-gray-500 mt-1">Overzicht van alle medewerkers</p>
+      <p class="text-sm text-gray-500 mt-1" data-t="subPersoneel">Overzicht van alle medewerkers</p>
     </div>
     <div class="header-actions">
       <button onclick="openModal('team-medewerker')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnMedewerkerToe">+ Medewerker toevoegen</span></button>
@@ -917,7 +917,7 @@ async function renderDashboard() {
 
     // KPI Cards — HQ perspective
     document.getElementById('dashboard-kpis').innerHTML =
-      statCard('Totale Omzet', fe(thisMonthRev), '💶', `${growthPct >= 0 ? '+' : ''}${growthPct}% vs vorige maand`) +
+      statCard('Totale Omzet', fe(thisMonthRev), '💶', `${growthPct >= 0 ? '+' : ''}${growthPct}% ${lang==='de'?'vs. Vormonat':'vs vorige maand'}`) +
       statCard('Actieve Studios', activeStudios, '💈', `Doel: ${bpTarget2026.locaties || 3} studios in 2026`) +
       statCard('Academy Studenten', studentCount, '🎓', `Doel: ${bpTarget2026.studenten || 40} in 2026`) +
       statCard('Royalties', fe(royalties), '👑', `5% van ${fe(thisMonthRev)} studio-omzet`);
@@ -983,7 +983,7 @@ async function renderDashboard() {
         <span class="text-sm font-bold text-gray-900">TOTAAL HQ Inkomsten</span>
         <span class="text-lg font-bold text-wax-600">${fe(totalHQ)}</span>
       </div>
-      <p class="text-xs text-gray-400 mt-2">Jaaroverzicht ${curYear}</p>
+      <p class="text-xs text-gray-400 mt-2">${lang==='de'?'Jahresübersicht':'Jaaroverzicht'} ${curYear}</p>
     `;
 
     // === ACTIEPUNTEN ===
@@ -1017,9 +1017,9 @@ async function renderDashboard() {
 
     // Growth check
     if (growthPct > 20) {
-      actiepunten.push({icon:'📈', prio:'Positief', color:'green', tekst:`Omzet groeit ${growthPct}% t.o.v. vorige maand. Goed bezig! Houd dit vast.`});
+      actiepunten.push({icon:'📈', prio:'Positief', color:'green', tekst: lang==='de' ? `Umsatz wächst ${growthPct}% ggü. Vormonat. Gut gemacht! Weiter so.` : `Omzet groeit ${growthPct}% t.o.v. vorige maand. Goed bezig! Houd dit vast.`});
     } else if (growthPct < 0) {
-      actiepunten.push({icon:'📉', prio:'Aandacht', color:'yellow', tekst:`Omzet daalde ${Math.abs(growthPct)}% t.o.v. vorige maand. Analyseer wat er veranderd is.`});
+      actiepunten.push({icon:'📉', prio:'Aandacht', color:'yellow', tekst: lang==='de' ? `Umsatz sank ${Math.abs(growthPct)}% ggü. Vormonat. Analysieren, was sich geändert hat.` : `Omzet daalde ${Math.abs(growthPct)}% t.o.v. vorige maand. Analyseer wat er veranderd is.`});
     }
 
     // Academy check
@@ -4064,7 +4064,7 @@ function renderTeam() {
     statCard('Totaal medewerkers', medewerkers.length, '👥') +
     statCard('Actieve medewerkers', actief.length, '✅') +
     statCard('Contracturen/week', totaalContracturen + ' uur', '📋') +
-    statCard('Uren deze maand', totaalUrenMaand.toFixed(1) + ' uur', '🕐');
+    statCard(lang==='de'?'Stunden diesen Monat':'Uren deze maand', totaalUrenMaand.toFixed(1) + (lang==='de'?' Std.':' uur'), '🕐');
 
   // Group by category
   const categories = ['Directie', 'Studio Bad Homburg', 'Studio Bad Soden', 'Studio Wiesbaden'];
@@ -5432,7 +5432,7 @@ function renderStudios() {
 
       <div class="rounded-lg p-3 mb-3" style="background:${tl.bg}">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-xs font-bold uppercase" style="color:${tl.color}">Omzet deze maand</span>
+          <span class="text-xs font-bold uppercase" style="color:${tl.color}">${lang==='de'?'Umsatz diesen Monat':'Omzet deze maand'}</span>
           <span class="text-sm">${tl.emoji}</span>
         </div>
         <div class="text-xl font-bold mb-1" style="color:${tl.color}">${fe(monthRevenue)}</div>
@@ -5502,8 +5502,8 @@ function renderPersoneel() {
   const totaleKosten = brutoloon + vakantiegeld;
 
   document.getElementById('personeel-kpis').innerHTML =
-    statCard('Totale uren deze maand', totaalUren.toFixed(1) + ' uur', '🕐') +
-    statCard('Bruto loon deze maand', fe(brutoloon), '💶') +
+    statCard(lang==='de'?'Gesamtstunden diesen Monat':'Totale uren deze maand', totaalUren.toFixed(1) + (lang==='de'?' Std.':' uur'), '🕐') +
+    statCard(lang==='de'?'Bruttolohn diesen Monat':'Bruto loon deze maand', fe(brutoloon), '💶') +
     statCard('Vakantiegeld (8%)', fe(vakantiegeld), '🏖️') +
     statCard('Totale kosten', fe(totaleKosten), '📊');
 
@@ -5574,7 +5574,7 @@ function renderUrenOverview(uren, medewerkers) {
     <!-- Monthly overview -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
       <div class="px-6 py-4 border-b border-gray-100">
-        <h2 class="font-bold text-gray-900">Maandoverzicht</h2>
+        <h2 class="font-bold text-gray-900">${lang==='de'?'Monatsübersicht':'Maandoverzicht'}</h2>
       </div>
       <div class="table-responsive">
         <table class="w-full text-sm">
@@ -7007,9 +7007,9 @@ function modalStudioDetail(id) {
     // Growth trend
     if (prevMonthRevenue > 0) {
       if (monthRevenue > prevMonthRevenue) {
-        actiepunten.push({ border: '#16a34a', priority: 'Positief', tekst: 'Groei van ' + growthPct + '% t.o.v. vorige maand. Goed bezig!' });
+        actiepunten.push({ border: '#16a34a', priority: 'Positief', tekst: lang==='de' ? ('Wachstum von ' + growthPct + '% ggü. Vormonat. Gut gemacht!') : ('Groei van ' + growthPct + '% t.o.v. vorige maand. Goed bezig!') });
       } else if (monthRevenue < prevMonthRevenue) {
-        actiepunten.push({ border: '#ca8a04', priority: 'Aandacht', tekst: 'Omzet daalde ' + Math.abs(growthPct) + '% t.o.v. vorige maand. Analyseer wat er veranderd is.' });
+        actiepunten.push({ border: '#ca8a04', priority: 'Aandacht', tekst: lang==='de' ? ('Umsatz sank ' + Math.abs(growthPct) + '% ggü. Vormonat. Analysieren, was sich geändert hat.') : ('Omzet daalde ' + Math.abs(growthPct) + '% t.o.v. vorige maand. Analyseer wat er veranderd is.') });
       }
     }
 
