@@ -272,7 +272,7 @@
       <p class="text-sm text-gray-500 mt-1" id="dashboard-greeting">Totaaloverzicht Wax Affairs</p>
     </div>
     <div class="flex gap-2 dash-actions header-actions">
-      <button onclick="openModal('booking')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Afspraak</button>
+      <button onclick="openModal('booking')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnAfspraak">+ Afspraak</span></button>
     </div>
   </div>
 
@@ -326,17 +326,17 @@
 <div id="page-agenda" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Agenda</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hAgenda">Agenda</h1>
       <p class="text-sm text-gray-500 mt-1">Afspraken en boekingen</p>
     </div>
     <div class="agenda-controls header-actions flex gap-2">
       <button onclick="agendaNav(-1)" class="btn-secondary px-3 py-2 rounded-lg text-sm">←</button>
-      <button onclick="agendaNav(0)" class="btn-secondary px-3 py-2 rounded-lg text-sm font-medium" id="agenda-datum-btn">Vandaag</button>
+      <button onclick="agendaNav(0)" class="btn-secondary px-3 py-2 rounded-lg text-sm font-medium" id="agenda-datum-btn"><span data-t="vandaagLabel">Vandaag</span></button>
       <button onclick="agendaNav(1)" class="btn-secondary px-3 py-2 rounded-lg text-sm">→</button>
       <select id="agenda-studio-filter" class="px-3 py-2 border border-gray-200 rounded-lg text-sm" onchange="renderAgenda()">
         <option value="">Alle studios</option>
       </select>
-      <button onclick="openModal('booking')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Afspraak</button>
+      <button onclick="openModal('booking')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweAfspraak">+ Nieuwe Afspraak</span></button>
     </div>
   </div>
 
@@ -351,7 +351,7 @@
 
   <!-- Upcoming bookings list below calendar -->
   <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-    <h3 class="font-semibold text-gray-900 mb-3">Komende Afspraken</h3>
+    <h3 class="font-semibold text-gray-900 mb-3"><span data-t="hKomendeAfspraken">Komende Afspraken</span></h3>
     <div id="agenda-upcoming"></div>
   </div>
 </div>
@@ -360,10 +360,10 @@
 <div id="page-studios" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Studios</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hStudios">Studios</h1>
       <p class="text-sm text-gray-500 mt-1">Wax Affairs locaties</p>
     </div>
-    <button onclick="openModal('studio')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Studio</button>
+    <button onclick="openModal('studio')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweStudio">+ Nieuwe Studio</span></button>
   </div>
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="studio-grid"></div>
   <div id="studio-leeg" class="hidden p-12 text-center text-gray-400">
@@ -375,10 +375,10 @@
 <div id="page-services" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Services</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hServices">Services</h1>
       <p class="text-sm text-gray-500 mt-1">Behandelingen en prijzen</p>
     </div>
-    <button onclick="openModal('service')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Service</button>
+    <button onclick="openModal('service')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweService">+ Nieuwe Service</span></button>
   </div>
   <div id="services-per-categorie"></div>
 </div>
@@ -387,7 +387,7 @@
 <div id="page-klanten" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Klanten</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hKlanten">Klanten</h1>
       <p class="text-sm text-gray-500 mt-1">Alle klanten uit Fresha</p>
     </div>
     <div class="flex gap-2 header-actions">
@@ -425,10 +425,10 @@
 <div id="page-franchisees" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Franchisees</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hFranchisees">Franchisees</h1>
       <p class="text-sm text-gray-500 mt-1">Beheer je franchise netwerk</p>
     </div>
-    <button onclick="openModal('franchisee')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Franchisee</button>
+    <button onclick="openModal('franchisee')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweFranchisee">+ Nieuwe Franchisee</span></button>
   </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="franchise-filters px-5 py-3 border-b border-gray-100 flex items-center gap-3">
@@ -462,10 +462,10 @@
 <div id="page-pipeline" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Pipeline</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hPipeline">Pipeline</h1>
       <p class="text-sm text-gray-500 mt-1">Kanban overzicht van je franchise pipeline</p>
     </div>
-    <button onclick="openModal('franchisee')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Lead</button>
+    <button onclick="openModal('franchisee')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweLead">+ Nieuwe Lead</span></button>
   </div>
   <div class="grid grid-cols-6 gap-3" id="pipeline-board"></div>
 </div>
@@ -474,10 +474,10 @@
 <div id="page-studenten" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Studenten</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hStudenten">Studenten</h1>
       <p class="text-sm text-gray-500 mt-1">Training Academy inschrijvingen</p>
     </div>
-    <button onclick="openModal('student')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Student</button>
+    <button onclick="openModal('student')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweStudent">+ Nieuwe Student</span></button>
   </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3">
@@ -505,10 +505,10 @@
 <div id="page-cohorten" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Cohorten</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hCohorten">Cohorten</h1>
       <p class="text-sm text-gray-500 mt-1">Training Academy groepen</p>
     </div>
-    <button onclick="openModal('cohort')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuw Cohort</button>
+    <button onclick="openModal('cohort')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuwCohort">+ Nieuw Cohort</span></button>
   </div>
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="cohort-grid"></div>
   <div id="cohort-leeg" class="hidden p-12 text-center text-gray-400">
@@ -546,7 +546,7 @@
 <!-- ═══════════════ PAGE: VOORRAAD ═══════════════ -->
 <div id="page-voorraad" class="hidden p-6 lg:p-8 fade-in">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Voorraad</h1>
+    <h1 class="text-2xl font-bold text-gray-900" data-t="hVoorraad">Voorraad</h1>
   </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div id="voorraad-tabel" class="divide-y divide-gray-100"></div>
@@ -560,10 +560,10 @@
 <div id="page-bestellingen" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Bestellingen</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hBestellingen">Bestellingen</h1>
       <p class="text-sm text-gray-500 mt-1">Wholesale & DTC orders</p>
     </div>
-    <button onclick="openModal('bestelling')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Bestelling</button>
+    <button onclick="openModal('bestelling')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweBestelling">+ Nieuwe Bestelling</span></button>
   </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div id="order-tabel" class="divide-y divide-gray-100"></div>
@@ -577,10 +577,10 @@
 <div id="page-leveranciers" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Leveranciers</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hLeveranciers">Leveranciers</h1>
       <p class="text-sm text-gray-500 mt-1">Producenten & suppliers</p>
     </div>
-    <button onclick="openModal('leverancier')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuwe Leverancier</button>
+    <button onclick="openModal('leverancier')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuweLeverancier">+ Nieuwe Leverancier</span></button>
   </div>
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4" id="leverancier-grid"></div>
   <div id="leverancier-leeg" class="hidden p-12 text-center text-gray-400">
@@ -600,10 +600,10 @@
 
   <!-- Main Tabs -->
   <div class="flex gap-1 mb-6 flex-wrap tab-scroll">
-    <button onclick="setFinMainTab('directie')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">📊 Directie Overzicht</button>
-    <button onclick="setFinMainTab('omzet')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">💶 Omzet Details</button>
-    <button onclick="setFinMainTab('kosten')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">🏠 Kosten</button>
-    <button onclick="setFinMainTab('pnl')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors">📈 Winst & Verlies</button>
+    <button onclick="setFinMainTab('directie')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors"><span data-t="btnDirectieOverzicht">📊 Directie Overzicht</span></button>
+    <button onclick="setFinMainTab('omzet')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors"><span data-t="btnOmzetDetails">💶 Omzet Details</span></button>
+    <button onclick="setFinMainTab('kosten')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors"><span data-t="btnKosten">🏠 Kosten</span></button>
+    <button onclick="setFinMainTab('pnl')" class="fin-main-tab px-5 py-2.5 rounded-xl text-sm font-medium transition-colors"><span data-t="btnWinstVerlies">📈 Winst & Verlies</span></button>
   </div>
 
   <!-- Tab Content Container -->
@@ -653,7 +653,7 @@
 <div id="page-team" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Team</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hTeam">Team</h1>
       <p class="text-sm text-gray-500 mt-1">Overzicht van alle medewerkers</p>
     </div>
     <div class="header-actions">
@@ -724,7 +724,7 @@
 <div id="page-personeel" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Urenregistratie</h1>
+      <h1 class="text-2xl font-bold text-gray-900" data-t="hPersoneel">Urenregistratie</h1>
       <p class="text-sm text-gray-500">Personeel & uren bijhouden</p>
     </div>
     <div class="header-actions">
