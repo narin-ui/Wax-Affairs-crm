@@ -1525,7 +1525,7 @@ const adviesraadHistory = {};
 async function renderAdviesraad() {
   const sidebar = document.getElementById('adviesraad-personas');
   if (!sidebar) return;
-  if (sidebar.childNodes.length <= 1) {
+  if (!sidebar.querySelector("button")) {
     try {
       const r = await fetch('/api/adviesraad/personas');
       const personas = await r.json();
