@@ -218,7 +218,14 @@
                     "Meer haren",
                     "Dikker"
                   ],
-                  "juisteAntwoord": 0
+                  "juisteAntwoord": 0,
+                  "vraag_de": "Warum ist Gesichtshaut empfindlicher für PIH als Beinhaut?",
+                  "opties_de": [
+                    "Mehr Durchblutung und höhere Melanozyten-Dichte",
+                    "Weniger Kollagen",
+                    "Mehr Haare",
+                    "Dicker"
+                  ]
                 },
                 {
                   "vraag": "Welke waxtype is standaard voor gezichtswaxing?",
@@ -228,7 +235,14 @@
                     "Roll-on",
                     "Cold wax"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Welcher Wachstyp ist Standard für Gesichtswaxing?",
+                  "opties_de": [
+                    "Warmwachs",
+                    "Hot Wax",
+                    "Roll-on",
+                    "Cold Wax"
+                  ]
                 },
                 {
                   "vraag": "Hoe vaak modelleer je wenkbrauwen naar eindresultaat in de eerste sessie?",
@@ -238,7 +252,14 @@
                     "Elke 6 maanden",
                     "Per klant verschillend"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Wie oft formen Sie die Augenbrauen in der ersten Sitzung zur Endform?",
+                  "opties_de": [
+                    "Eine Sitzung reicht",
+                    "Schrittweise über 2–3 Sitzungen",
+                    "Alle 6 Monate",
+                    "Pro Kundin unterschiedlich"
+                  ]
                 },
                 {
                   "vraag": "Wat doe je bij klant met actieve koortslip op of nabij bovenlip?",
@@ -248,7 +269,14 @@
                     "Alleen kin waxen",
                     "Speciale wax gebruiken"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was tun Sie bei einer Kundin mit aktivem Lippenherpes an oder nahe der Oberlippe?",
+                  "opties_de": [
+                    "Vorsichtig weiterwaxen",
+                    "Nicht behandeln, absolute Kontraindikation",
+                    "Nur das Kinn waxen",
+                    "Speziellen Wachs verwenden"
+                  ]
                 },
                 {
                   "vraag": "Wat is de correcte verwijderingsrichting bij bovenlip-waxen?",
@@ -258,10 +286,18 @@
                     "Richting mondhoek",
                     "Diagonaal naar oor"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist die korrekte Abzugsrichtung beim Oberlippen-Waxing?",
+                  "opties_de": [
+                    "Zur Nase",
+                    "Nach unten",
+                    "Richtung Mundwinkel",
+                    "Diagonal zum Ohr"
+                  ]
                 }
               ],
-              "slagingsDrempel": 75
+              "slagingsDrempel": 75,
+              "titel_de": "Abschlussquiz"
             }
           ],
           "titel_de": "Gesichts-Waxing Techniken"
@@ -328,7 +364,14 @@
                     "20-25%",
                     "40-50%"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Wie viel dicker ist männliche Haut im Durchschnitt im Vergleich zu weiblicher?",
+                  "opties_de": [
+                    "Gleich",
+                    "5–10 %",
+                    "20–25 %",
+                    "40–50 %"
+                  ]
                 },
                 {
                   "vraag": "Wat is de enige juiste waxsoort voor mannelijke intimzone?",
@@ -338,7 +381,14 @@
                     "Hot wax",
                     "Alle drie kunnen"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist der einzige korrekte Wachstyp für die männliche Intimzone?",
+                  "opties_de": [
+                    "Warmwachs",
+                    "Roll-on",
+                    "Hot Wax",
+                    "Alle drei möglich"
+                  ]
                 },
                 {
                   "vraag": "Waarom is extra grondige reiniging kritischer bij mannelijke klanten?",
@@ -348,7 +398,14 @@
                     "Gezondheidsdienst-eis",
                     "Geen verschil"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Warum ist eine gründlichere Reinigung bei männlichen Kunden kritischer?",
+                  "opties_de": [
+                    "Tradition",
+                    "Doppelt so hohe Talgproduktion verhindert Wachshaftung",
+                    "Anforderung des Gesundheitsamts",
+                    "Kein Unterschied"
+                  ]
                 },
                 {
                   "vraag": "Wat is de juiste werkvolgorde bij borsthaar?",
@@ -358,7 +415,14 @@
                     "Willekeurig",
                     "Van onder naar boven"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was ist die richtige Arbeitsreihenfolge bei Brustbehaarung?",
+                  "opties_de": [
+                    "Von außen zum Zentrum",
+                    "Vom Brustbein radial nach außen",
+                    "Zufällig",
+                    "Von unten nach oben"
+                  ]
                 },
                 {
                   "vraag": "Welke aanpak past bij eerste-keer mannelijke klant?",
@@ -368,10 +432,18 @@
                     "Stilte",
                     "Humor om spanning te breken"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Welcher Kommunikationsstil passt zu einem männlichen Erstkunden?",
+                  "opties_de": [
+                    "Übertrieben freundlich",
+                    "Direkte, sachliche Kommunikation mit klaren Ankündigungen",
+                    "Schweigen",
+                    "Humor, um Spannung zu lösen"
+                  ]
                 }
               ],
-              "slagingsDrempel": 75
+              "slagingsDrempel": 75,
+              "titel_de": "Abschlussquiz"
             }
           ],
           "titel_de": "Männer-Waxing Spezialisierung"
@@ -438,7 +510,14 @@
                     "Portugal",
                     "Italië"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Aus welchem Land stammt das Pinienharz, das die Basis des Nao Depilatory Wax bildet?",
+                  "opties_de": [
+                    "Deutschland",
+                    "Polen",
+                    "Portugal",
+                    "Italien"
+                  ]
                 },
                 {
                   "vraag": "Wat is het belangrijkste verschil tussen Nao Premium en Economic wax?",
@@ -448,7 +527,14 @@
                     "Geur",
                     "Kleur"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was ist der wichtigste Unterschied zwischen Nao Premium und Economic Wax?",
+                  "opties_de": [
+                    "Preis",
+                    "Premium enthält Bienenwachs (nicht vegan), Economic ist 100 % vegan",
+                    "Duft",
+                    "Farbe"
+                  ]
                 },
                 {
                   "vraag": "Wat is het critical window voor Nao Post-Depilatory Oil?",
@@ -458,7 +544,14 @@
                     "5 minuten",
                     "Direct na douchen"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Was ist das Critical Window für Nao Post-Depilatory Oil?",
+                  "opties_de": [
+                    "1 Minute",
+                    "5–30 Sekunden nach dem letzten Abzug",
+                    "5 Minuten",
+                    "Direkt nach dem Duschen"
+                  ]
                 },
                 {
                   "vraag": "Waarom bevat Nao Pre-Depilatory Powder geen talk?",
@@ -468,7 +561,14 @@
                     "Gebruikt mineraal dolomiet als natuurlijk alternatief",
                     "Verboden in Nederland"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Warum enthält Nao Pre-Depilatory Powder keinen Talk?",
+                  "opties_de": [
+                    "Geschmack",
+                    "Kostenersparnis",
+                    "Verwendet mineralisches Dolomit als natürliche Alternative",
+                    "In den Niederlanden verboten"
+                  ]
                 },
                 {
                   "vraag": "Wanneer adviseer je Nao Body Scrub voor thuisgebruik?",
@@ -478,7 +578,14 @@
                     "Dagelijks",
                     "Nooit"
                   ],
-                  "juisteAntwoord": 1
+                  "juisteAntwoord": 1,
+                  "vraag_de": "Wann empfehlen Sie Nao Body Scrub für den Heimgebrauch?",
+                  "opties_de": [
+                    "Direkt nach dem Waxing",
+                    "5–7 Tage nach der Waxsitzung, 1–2× pro Woche",
+                    "Täglich",
+                    "Niemals"
+                  ]
                 },
                 {
                   "vraag": "Wat is de retail-conversie-richtlijn voor een goede waxbehandelaar?",
@@ -488,10 +595,18 @@
                     "35-45%",
                     "70%+"
                   ],
-                  "juisteAntwoord": 2
+                  "juisteAntwoord": 2,
+                  "vraag_de": "Was ist die Retail-Conversion-Richtlinie für eine gute Waxbehandlerin?",
+                  "opties_de": [
+                    "5–10 %",
+                    "15–20 %",
+                    "35–45 %",
+                    "70 %+"
+                  ]
                 }
               ],
-              "slagingsDrempel": 75
+              "slagingsDrempel": 75,
+              "titel_de": "Abschlussquiz"
             }
           ],
           "titel_de": "Aftercare & Produktkenntnis Nao"
