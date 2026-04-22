@@ -657,7 +657,7 @@
       <p class="text-sm text-gray-500 mt-1">Overzicht van alle medewerkers</p>
     </div>
     <div class="header-actions">
-      <button onclick="openModal('team-medewerker')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Medewerker toevoegen</button>
+      <button onclick="openModal('team-medewerker')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnMedewerkerToe">+ Medewerker toevoegen</span></button>
     </div>
   </div>
   <div id="team-kpis" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6"></div>
@@ -671,7 +671,7 @@
       <h1 class="text-2xl font-bold text-gray-900">Contacten</h1>
       <p class="text-sm text-gray-500 mt-1">Alle relaties op een plek</p>
     </div>
-    <button onclick="openModal('contact')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Nieuw Contact</button>
+    <button onclick="openModal('contact')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnNieuwContact">+ Nieuw Contact</span></button>
   </div>
   <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-3">
@@ -733,7 +733,7 @@
           <option value="uren">Uren</option>
           <option value="medewerkers">Medewerkers</option>
         </select>
-        <button onclick="openModal('uur-toevoegen')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Uren toevoegen</button>
+        <button onclick="openModal('uur-toevoegen')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium"><span data-t="btnUrenToe">+ Uren toevoegen</span></button>
       </div>
     </div>
   </div>
@@ -4641,7 +4641,7 @@ const T = {
     // Nieuwe X knoppen
     btnNieuweAfspraak:'+ Nieuwe Afspraak',btnNieuweStudio:'+ Nieuwe Studio',btnNieuweService:'+ Nieuwe Service',
     btnNieuweFranchisee:'+ Nieuwe Franchisee',btnNieuweLead:'+ Nieuwe Lead',btnNieuweStudent:'+ Nieuwe Student',
-    btnNieuwCohort:'+ Nieuw Cohort',btnNieuweBestelling:'+ Nieuwe Bestelling',btnNieuweLeverancier:'+ Nieuwe Leverancier',
+    btnNieuwCohort:'+ Nieuw Cohort',btnNieuweBestelling:'+ Nieuwe Bestelling',btnNieuweLeverancier:'+ Nieuwe Leverancier',btnNieuweTaak:'+ Nieuwe Taak',divFranchiseHQ:'Franchise HQ',hHQInkomsten:'💶 HQ Inkomsten',hActiepunten:'🎯 Actiepunten',hOmzetTrend:'📈 Omzet Trend',hStudioPerf:'📊 Studio Performance',btnNieuwContact:'+ Nieuw Contact',btnMedewerkerToe:'+ Medewerker toevoegen',btnUrenToe:'+ Uren toevoegen',
     btnNieuweKlant:'+ Nieuwe Klant',btnNieuwProduct:'+ Nieuw Product',btnAfspraak:'+ Afspraak',
     // Directie overzicht buttons
     btnDirectieOverzicht:'📊 Directie Overzicht',btnOmzetDetails:'💶 Omzet Details',
@@ -4731,7 +4731,7 @@ const T = {
     // Nieuwe X knoppen
     btnNieuweAfspraak:'+ Neuer Termin',btnNieuweStudio:'+ Neues Studio',btnNieuweService:'+ Neue Leistung',
     btnNieuweFranchisee:'+ Neuer Franchisee',btnNieuweLead:'+ Neuer Lead',btnNieuweStudent:'+ Neuer Student',
-    btnNieuwCohort:'+ Neue Kohorte',btnNieuweBestelling:'+ Neue Bestellung',btnNieuweLeverancier:'+ Neuer Lieferant',
+    btnNieuwCohort:'+ Neue Kohorte',btnNieuweBestelling:'+ Neue Bestellung',btnNieuweLeverancier:'+ Neuer Lieferant',btnNieuweTaak:'+ Neue Aufgabe',divFranchiseHQ:'Franchise HQ',hHQInkomsten:'💶 HQ-Einkommen',hActiepunten:'🎯 Aktionspunkte',hOmzetTrend:'📈 Umsatz-Trend',hStudioPerf:'📊 Studio-Performance',btnNieuwContact:'+ Neuer Kontakt',btnMedewerkerToe:'+ Mitarbeiter hinzufügen',btnUrenToe:'+ Stunden hinzufügen',
     btnNieuweKlant:'+ Neue Kundin',btnNieuwProduct:'+ Neues Produkt',btnAfspraak:'+ Termin',
     // Directie
     btnDirectieOverzicht:'📊 Direktionsübersicht',btnOmzetDetails:'💶 Umsatzdetails',
