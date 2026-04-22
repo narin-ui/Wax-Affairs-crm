@@ -1664,6 +1664,130 @@ function renderFriendchisePitch() {
         </div>
       </div>
 
+      <!-- NIEUW: Transparante totale investering-tabel -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Komplette Investition — transparent':'Complete investering — transparant'}</h2>
+        <p class="text-sm text-gray-500 mb-4">${L?'Alle Kostenposten, die bei einer Wax-Affairs-Studio-Eröffnung in Deutschland anfallen. Basis: Marktdaten 2026 und unsere eigene Betriebserfahrung.':'Alle kostenposten die meekomen bij een Wax Affairs-studio-opening in Duitsland. Basis: marktdata 2026 en onze eigen bedrijfservaring.'}</p>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-200">
+                <th class="text-left px-4 py-3 font-semibold text-gray-600">${L?'Kategorie':'Categorie'}</th>
+                <th class="text-left px-4 py-3 font-semibold text-gray-600">${L?'Posten':'Post'}</th>
+                <th class="text-right px-4 py-3 font-semibold text-gray-600">${L?'Einmalig':'Eenmalig'}</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr><td rowspan="3" class="px-4 py-2.5 align-top font-medium text-wax-800 bg-wax-50 text-xs uppercase tracking-wider">${L?'Gründung':'Oprichting'}</td><td class="px-4 py-2.5">${L?'Notar GmbH-Gründung (inkl. Beurkundung)':'Notaris GmbH-oprichting (incl. akte)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 600 – 1.200</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Handelsregister-Eintragung + Transparenzregister':'Handelsregister-inschrijving + Transparantieregister'}</td><td class="px-4 py-2.5 text-right font-medium">€ 200 – 350</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Juristische Beratung Mietvertrag':'Juridisch advies huurcontract'}</td><td class="px-4 py-2.5 text-right font-medium">€ 400 – 800</td></tr>
+              <tr><td rowspan="5" class="px-4 py-2.5 align-top font-medium text-gray-800 bg-gray-50 text-xs uppercase tracking-wider">${L?'Studio':'Studio'}</td><td class="px-4 py-2.5">${L?'Umbau / Renovation (2-Kabinen-Studio)':'Verbouwing / renovatie (2-cabines studio)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 8.000 – 20.000</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Einrichtung (Behandlungsliegen, Möbel, Rezeption)':'Inrichting (behandeltafels, meubels, receptie)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 6.000 – 12.000</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Wax-Warmer + kosmetische Geräte (pro Kabine)':'Wax-warmers + cosmetische apparatuur (per cabine)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 3.000 – 5.000</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Branding / Beschilderung / Gestaltung':'Branding / signing / vormgeving'}</td><td class="px-4 py-2.5 text-right font-medium">€ 2.000 – 4.000</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Mietkaution (3 Monatsmieten)':'Huurborg (3 maanden huur)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 3.000 – 9.000</td></tr>
+              <tr><td rowspan="3" class="px-4 py-2.5 align-top font-medium text-wax-800 bg-wax-50 text-xs uppercase tracking-wider">Wax Affairs</td><td class="px-4 py-2.5">${L?'Onboarding-Gebühr (inkl. Schulung, Starter-Paket)':'Onboarding-fee (incl. training, starter-pakket)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 15.000</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Erste Nao-Produktbestellung (2 Monate Vorrat)':'Eerste Nao-productbestelling (2 maanden voorraad)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 1.500 – 2.500</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Reise / Unterkunft 10 Tage Schulung (nur Starter/Medium)':'Reis/verblijf 10 dagen training (alleen Starter/Medium)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 1.500 – 2.500</td></tr>
+              <tr><td rowspan="4" class="px-4 py-2.5 align-top font-medium text-gray-800 bg-gray-50 text-xs uppercase tracking-wider">${L?'Betrieb Jahr 1':'Operatie jaar 1'}</td><td class="px-4 py-2.5">${L?'Marketing-Eröffnungskampagne (erste 3 Monate)':'Marketing opening-campagne (eerste 3 maanden)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 3.000 – 6.000</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Versicherungen Jahr 1 (Betriebshaftpflicht + Inhalt)':'Verzekeringen jaar 1 (aansprakelijkheid + inventaris)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 400 – 900</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Steuerberater Jahr 1 (Gründung + laufend)':'Steuerberater jaar 1 (oprichting + doorlopend)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 2.500 – 4.000</td></tr>
+              <tr><td class="px-4 py-2.5">${L?'Betriebskapital Monate 1-3 (Miete + Personal + NK)':'Werkkapitaal maand 1-3 (huur + personeel + NK)'}</td><td class="px-4 py-2.5 text-right font-medium">€ 8.000 – 15.000</td></tr>
+              <tr class="bg-wax-50 border-t-2 border-wax-300"><td colspan="2" class="px-4 py-3 font-bold text-wax-900">${L?'Gesamt':'Totaal'}</td><td class="px-4 py-3 text-right font-bold text-wax-900 text-base">€ 55.100 – 98.250</td></tr>
+              <tr class="bg-gray-50"><td colspan="2" class="px-4 py-2 text-xs text-gray-600 italic">${L?'Buffer für Unvorhergesehenes (empfohlen ~10%)':'Buffer voor onvoorzien (aanbevolen ~10%)'}</td><td class="px-4 py-2 text-right text-xs text-gray-600 italic">+ € 5.500 – 9.800</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-gray-500 mt-3">${L?'Bemerkung: die niedrigeren Zahlen gelten für kleinere Städte und einfachere Lagen, die höheren für Premium-Standorte in Großstädten. Ihr realer Betrag landet meist in der Mitte (€ 65–80k).':'Let op: de lagere cijfers gelden voor kleinere steden en eenvoudigere locaties, de hogere voor premium-locaties in grote steden. Jouw werkelijke bedrag zit meestal in het midden (€ 65–80k).'}</p>
+      </div>
+
+      <!-- NIEUW: Maandelijkse vaste lasten -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Monatliche Fixkosten — was ein Studio laufen lässt':'Maandelijkse vaste lasten — wat een studio draaiende houdt'}</h2>
+        <p class="text-sm text-gray-500 mb-4">${L?'Was Sie jeden Monat bezahlen müssen, bevor Sie Gewinn machen. Basierend auf unseren drei bestehenden Studios in Deutschland.':'Wat je elke maand moet betalen voordat je winst maakt. Gebaseerd op onze drie bestaande studio\'s in Duitsland.'}</p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><span class="text-xl">🏢</span>${L?'Standort':'Locatie'}</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Miete (40-60m² Premium-Lage)':'Huur (40-60m² premium locatie)'}</span><strong>€ 1.000 – 2.000</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Nebenkosten (Heizung, Wasser)':'Bijkomende kosten (verwarming, water)'}</span><strong>€ 200 – 400</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Strom':'Stroom'}</span><strong>€ 150 – 300</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">Internet / Telefoon</span><strong>€ 40 – 80</strong></li>
+              <li class="pt-2 border-t border-gray-100 flex justify-between font-semibold text-gray-900"><span>${L?'Subtotal':'Subtotaal'}</span><span>€ 1.390 – 2.780</span></li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><span class="text-xl">💼</span>${L?'Administration':'Administratie'}</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Steuerberater':'Steuerberater'}</span><strong>€ 200 – 350</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Versicherungen (Betriebs-/Inhalt)':'Verzekeringen (aansprakelijkheid/inventaris)'}</span><strong>€ 30 – 75</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Software (CRM, Buchung, Kasse)':'Software (CRM, booking, kassa)'}</span><strong>€ 80 – 150</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Zahlungstransaktionen':'Betaaltransacties'}</span><strong>€ 50 – 150</strong></li>
+              <li class="pt-2 border-t border-gray-100 flex justify-between font-semibold text-gray-900"><span>${L?'Subtotal':'Subtotaal'}</span><span>€ 360 – 725</span></li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><span class="text-xl">👥</span>${L?'Personal & Produkte':'Personeel & producten'}</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Personal (2 MA × 6 Std./Tag)':'Personeel (2 medewerkers × 6 uur/dag)'}</span><strong>€ 2.800 – 3.500</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Produkteinkauf (Wachs + Nao)':'Productinkoop (wax + Nao)'}</span><strong>€ 600 – 900</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Einwegmaterial':'Wegwerpmateriaal'}</span><strong>€ 80 – 150</strong></li>
+              <li class="pt-2 border-t border-gray-100 flex justify-between font-semibold text-gray-900"><span>${L?'Subtotal':'Subtotaal'}</span><span>€ 3.480 – 4.550</span></li>
+            </ul>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+            <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><span class="text-xl">📣</span>${L?'Wax Affairs + Marketing':'Wax Affairs + marketing'}</h3>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Royalty (5% vom Umsatz)':'Royalty (5% van omzet)'}</span><strong>€ 400 – 750</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Marketing-Fee (2% vom Umsatz)':'Marketing-fee (2% van omzet)'}</span><strong>€ 160 – 300</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Lokales Marketing (Google Ads, Social)':'Lokale marketing (Google Ads, social)'}</span><strong>€ 300 – 800</strong></li>
+              <li class="pt-2 border-t border-gray-100 flex justify-between font-semibold text-gray-900"><span>${L?'Subtotal':'Subtotaal'}</span><span>€ 860 – 1.850</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-4 bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-xl p-5">
+          <div class="flex items-baseline justify-between flex-wrap gap-3">
+            <div>
+              <div class="text-xs uppercase tracking-wider text-wax-300 mb-1">${L?'Gesamte Monatskosten (untere Spanne bis obere Spanne)':'Totale maandlasten (ondergrens tot bovengrens)'}</div>
+              <div class="text-3xl font-bold">€ 6.090 <span class="text-lg text-gray-400">–</span> € 9.905</div>
+            </div>
+            <div class="text-xs text-gray-400 max-w-xs">${L?'Um Break-even zu erreichen, brauchen Sie mindestens € 9.500 Monatsumsatz. Das ist bei 240 Behandlungen × € 40 Durchschnittsticket — machbar ab Monat 5-8.':'Om break-even te bereiken heb je minimaal € 9.500 maandomzet nodig. Dat is 240 behandelingen × € 40 gemiddeld ticket — haalbaar vanaf maand 5-8.'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NIEUW: Cashflow-curve eerste 18 maanden -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Cashflow-Verlauf Monat 1-18':'Cashflow-verloop maand 1-18'}</h2>
+        <p class="text-sm text-gray-500 mb-4">${L?'Wann steht Ihr Studio im Minus, wann im Plus? Realistisches Szenario basierend auf unseren Eröffnungen.':'Wanneer staat jouw studio in het rood, wanneer in het groen? Realistisch scenario op basis van onze openingen.'}</p>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div class="space-y-3">
+            ${[
+              {maand: L?'Monat 1-3':'Maand 1-3', fase: L?'Aufbau':'Opbouw', omzet: '€ 3.000 – 6.000', resultaat: '− € 3.500', kleur: 'red', uitleg: L?'Erste Kundinnen, Marketing-Aufwand hoch, Team wird eingearbeitet':'Eerste klanten, marketing-inspanning hoog, team wordt ingewerkt'},
+              {maand: L?'Monat 4-6':'Maand 4-6', fase: L?'Wachstum':'Groei', omzet: '€ 6.000 – 9.000', resultaat: '− € 1.200', kleur: 'orange', uitleg: L?'Stammkundinnen bauen sich auf, Auslastung steigt':'Terugkerende klanten bouwen op, bezetting stijgt'},
+              {maand: L?'Monat 7-9':'Maand 7-9', fase: L?'Break-even':'Break-even', omzet: '€ 9.000 – 11.000', resultaat: '± € 0', kleur: 'yellow', uitleg: L?'Erste profitable Monate, break-even erreicht':'Eerste winstgevende maanden, break-even bereikt'},
+              {maand: L?'Monat 10-12':'Maand 10-12', fase: L?'Profitabel':'Winstgevend', omzet: '€ 10.000 – 12.000', resultaat: '+ € 1.500', kleur: 'green-light', uitleg: L?'Klare Gewinne, Investitionen beginnen sich zurückzuzahlen':'Duidelijke winst, investering begint zich terug te verdienen'},
+              {maand: L?'Monat 13-18':'Maand 13-18', fase: L?'Payback':'Payback', omzet: '€ 10.500 – 13.000', resultaat: '+ € 2.500 – 4.200', kleur: 'green', uitleg: L?'Payback-Phase: kumulierte Investition wird zurückgewonnen':'Payback-fase: cumulatieve investering wordt terugverdiend'}
+            ].map(r => `
+              <div class="flex items-center gap-4 p-3 rounded-lg ${r.kleur==='red'?'bg-red-50 border-l-4 border-red-400':r.kleur==='orange'?'bg-orange-50 border-l-4 border-orange-400':r.kleur==='yellow'?'bg-yellow-50 border-l-4 border-yellow-400':r.kleur==='green-light'?'bg-green-50 border-l-4 border-green-300':'bg-green-100 border-l-4 border-green-500'}">
+                <div class="flex-shrink-0 w-28">
+                  <div class="text-sm font-semibold text-gray-900">${r.maand}</div>
+                  <div class="text-xs text-gray-500">${r.fase}</div>
+                </div>
+                <div class="flex-shrink-0 w-32 text-xs text-gray-600">${r.omzet}<br/><span class="text-gray-400">${L?'Umsatz/Mon.':'Omzet/mnd'}</span></div>
+                <div class="flex-shrink-0 w-28 font-bold ${r.kleur==='red'?'text-red-700':r.kleur==='orange'?'text-orange-700':r.kleur==='yellow'?'text-yellow-700':'text-green-700'}">${r.resultaat}</div>
+                <div class="flex-1 text-xs text-gray-600 hidden md:block">${r.uitleg}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="mt-5 pt-4 border-t border-gray-200 flex items-baseline justify-between flex-wrap gap-2">
+            <div class="text-sm text-gray-600">${L?'Kumulierter Verlust, bevor Break-even erreicht wird':'Cumulatief verlies vóór break-even bereikt wordt'}</div>
+            <div class="text-lg font-bold text-gray-900">± € 14.000 – 18.000</div>
+          </div>
+          <p class="text-xs text-gray-500 mt-2 italic">${L?'Darum rechnen wir 3 Monate Betriebskapital in die Startinvestition ein — damit Sie diese Phase ohne Cashflow-Probleme durchstehen.':'Daarom zit er 3 maanden werkkapitaal in de startinvestering — om deze fase zonder cashflow-problemen door te komen.'}</p>
+        </div>
+      </div>
+
       <p class="text-xs text-gray-400 italic">${L
         ? 'Indikative Zahlen basierend auf Betriebsdaten. Tatsächliche Ergebnisse hängen von Lage, Auslastung und lokalem Markt ab.'
         : 'Indicatieve cijfers op basis van bedrijfsdata. Werkelijke resultaten zijn afhankelijk van locatie, bezetting en lokale markt.'}</p>
