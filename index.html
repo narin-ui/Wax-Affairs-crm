@@ -1704,21 +1704,109 @@ function renderFriendchisePitch() {
       </div>
 
       <div>
-        <h2 class="text-xl font-bold text-gray-900 mb-3">${L?'Die Menschen dahinter':'De mensen erachter'}</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-          <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-wax-500">
-            <h3 class="text-lg font-bold text-gray-900">Simone Costa</h3>
-            <p class="text-sm text-wax-600 font-medium mb-3">CEO · ${L?'Leitende Trainerin':'Hoofdtrainer'}</p>
-            <p class="text-sm text-gray-600 leading-relaxed">${L
-              ? '20 Jahre als Waxing-Spezialistin und Studio-Inhaberin in Deutschland. Gründerin von Waxing Brazil. Sie schult Sie im Handwerk — von Wachstyp und Technik über Hautvorbereitung bis zur Nachsorge. Kein Kurs. Echte Expertise.'
-              : '20 jaar als waxing-specialist en studio-eigenaar in Duitsland. Oprichter van Waxing Brazil. Zij traint je in het vak — van waxsoort en techniek tot huidvoorbereiding en nazorg. Geen cursus. Echte expertise.'}</p>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Die Menschen dahinter':'De mensen erachter'}</h2>
+        <p class="text-sm text-gray-500 mb-5">${L?'Zwei komplement\u00E4re Welten unter einem Dach. Sie arbeiten nicht mit einer Marke \u2014 Sie arbeiten direkt mit den beiden Personen, die sie aufgebaut haben.':'Twee complementaire werelden onder \u00E9\u00E9n dak. Je werkt niet met een merk \u2014 je werkt direct met de twee mensen die het gebouwd hebben.'}</p>
+
+        <!-- Simone Costa uitgebreid -->
+        <div class="bg-white rounded-2xl shadow-sm border-l-4 border-wax-500 p-6 md:p-8 mb-6">
+          <div class="flex items-start gap-5 mb-5 flex-wrap">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-wax-300 to-wax-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0" style="font-family:Georgia,serif">SC</div>
+            <div class="flex-1 min-w-0">
+              <h3 class="text-2xl font-bold text-gray-900" style="font-family:Georgia,serif">Simone Costa</h3>
+              <p class="text-sm text-wax-600 font-semibold uppercase tracking-wider mt-1">CEO \u00B7 ${L?'Leitende Trainerin \u00B7 Gr\u00FCnderin':'Hoofdtrainer \u00B7 Oprichtster'}</p>
+              <p class="text-xs text-gray-500 mt-1">\uD83C\uDDE7\uD83C\uDDF7 ${L?'Brasilianische Wurzeln':'Braziliaanse roots'} \u00B7 \uD83C\uDDE9\uD83C\uDDEA ${L?'Seit 2005 in Deutschland':'Sinds 2005 in Duitsland'}</p>
+            </div>
           </div>
-          <div class="bg-white rounded-xl p-6 shadow-sm border-l-4 border-gray-800">
-            <h3 class="text-lg font-bold text-gray-900">Narin Eggink</h3>
-            <p class="text-sm text-gray-600 font-medium mb-3">COO · Managing Director</p>
-            <p class="text-sm text-gray-600 leading-relaxed">${L
-              ? '12 Jahre Coaching internationaler Profifußballer und Unternehmer. Mitgründer eines IT-Unternehmens mit 10 Standorten. Er coacht Sie im Geschäft — von Preisgestaltung über Marketing bis zur Studio-Rentabilität.'
-              : '12 jaar coaching van internationale profvoetballers en ondernemers. Medeoprichter van een IT-bedrijf met 10 vestigingen. Hij coacht je in het ondernemerschap — van prijsstelling tot marketing tot studio-winstgevendheid.'}</p>
+          <div class="space-y-3 text-sm text-gray-700 leading-relaxed mb-6">
+            <p>${L?'Simone kam 2005 aus Brasilien nach Deutschland mit einer klaren Mission: das hohe Niveau des Waxing-Handwerks, das sie in Rio kennengelernt hatte, hier aufzubauen. 2007 er\u00F6ffnete sie ihr erstes Studio in Bad Soden \u2014 eine Kabine, ein Wachsw\u00E4rmer, ein Prinzip: niemals Kompromisse bei Qualit\u00E4t.':'Simone kwam in 2005 vanuit Brazili\u00EB naar Duitsland met een duidelijke missie: het hoge niveau van waxing-ambacht dat ze in Rio had leren kennen, hier opbouwen. In 2007 opende ze haar eerste studio in Bad Soden \u2014 \u00E9\u00E9n cabine, \u00E9\u00E9n waxwarmer, \u00E9\u00E9n principe: nooit concessies op kwaliteit.'}</p>
+            <p>${L?'Heute ist sie die europ\u00E4ische Referenz f\u00FCr brasilianisches Waxing. Sie hat die Nao-Produktlinie entwickelt, nachdem sie jahrelang vergeblich nach einem wirklich nat\u00FCrlichen Wax-Aftercare-System gesucht hatte. Sie hat tausende Kundinnen behandelt und dutzende Waxerinnen pers\u00F6nlich geschult.':'Vandaag is zij de Europese referentie voor Braziliaans waxen. Ze ontwikkelde de Nao-productlijn nadat ze jarenlang tevergeefs had gezocht naar een \u00E9cht natuurlijk wax-aftercare-systeem. Ze behandelde duizenden klanten en leidde tientallen waxers persoonlijk op.'}</p>
+            <p class="italic text-gray-600">${L?'\u201CIch unterrichte nicht nur Technik. Ich unterrichte, wie man mit den H\u00E4nden eine Beziehung zur Haut einer Frau aufbaut \u2014 und wie man daraus ein Unternehmen macht, auf das sie stolz sein kann.\u201D':'\u201CIk leer niet alleen techniek. Ik leer hoe je met je handen een relatie opbouwt met de huid van een vrouw \u2014 en hoe je daar een bedrijf van maakt waar ze trots op kan zijn.\u201D'}</p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="bg-wax-50 rounded-lg p-4">
+              <h4 class="font-bold text-wax-800 text-sm mb-3 uppercase tracking-wider">${L?'Expertisen':'Expertises'}</h4>
+              <ul class="space-y-2 text-sm text-gray-700">
+                <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">\u25CF</span>${L?'Brasilianisches Waxing (alle K\u00F6rperbereiche)':'Braziliaans waxen (alle lichaamszones)'}</li>
+                <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">\u25CF</span>${L?'Gesichtswax-Spezialistin (M\u00E4nner + Frauen)':'Gezichtswax-specialist (mannen + vrouwen)'}</li>
+                <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">\u25CF</span>${L?'Hauttyp-Diagnostik (Fitzpatrick I-VI)':'Huidtype-diagnostiek (Fitzpatrick I-VI)'}</li>
+                <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">\u25CF</span>${L?'Produktformulierung (Nao-Linie)':'Productformulering (Nao-lijn)'}</li>
+                <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">\u25CF</span>${L?'Aus- und Weiterbildung von Waxerinnen':'Opleiding en bijscholing van waxers'}</li>
+                <li class="flex items-start gap-2"><span class="text-wax-500 mt-0.5">\u25CF</span>${L?'Qualit\u00E4tskontrolle und Salon-Standards':'Kwaliteitsbewaking en salon-standaarden'}</li>
+              </ul>
+            </div>
+            <div class="bg-white border border-wax-200 rounded-lg p-4">
+              <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider">${L?'Was Sie von Simone lernen':'Wat je van Simone leert'}</h4>
+              <ul class="space-y-2 text-sm text-gray-700">
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Jede Waxing-Technik auf Profiniveau ausf\u00FChren':'Elke waxing-techniek op profniveau uitvoeren'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Pro Hauttyp Wachs/Temperatur richtig w\u00E4hlen':'Per huidtype juiste wax/temperatuur kiezen'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Professionelles Intake-Gespr\u00E4ch f\u00FChren':'Professioneel intake-gesprek voeren'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Hautreaktionen und Komplikationen erkennen':'Huidreacties en complicaties herkennen'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Nachsorge-Protokoll nach Wax-Affairs-Standard':'Nazorg-protocol volgens Wax Affairs-standaard'}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Narin Eggink uitgebreid -->
+        <div class="bg-white rounded-2xl shadow-sm border-l-4 border-gray-800 p-6 md:p-8">
+          <div class="flex items-start gap-5 mb-5 flex-wrap">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-gray-600 to-gray-900 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0" style="font-family:Georgia,serif">NE</div>
+            <div class="flex-1 min-w-0">
+              <h3 class="text-2xl font-bold text-gray-900" style="font-family:Georgia,serif">Narin Eggink</h3>
+              <p class="text-sm text-gray-700 font-semibold uppercase tracking-wider mt-1">COO \u00B7 Managing Director \u00B7 ${L?'Business Coach':'Business coach'}</p>
+              <p class="text-xs text-gray-500 mt-1">\uD83C\uDDF3\uD83C\uDDF1 ${L?'Niederl\u00E4ndischer Unternehmer':'Nederlandse ondernemer'} \u00B7 \uD83C\uDF0D ${L?'Internationales Netzwerk':'Internationaal netwerk'}</p>
+            </div>
+          </div>
+          <div class="space-y-3 text-sm text-gray-700 leading-relaxed mb-6">
+            <p>${L?'Narin baut seit 15 Jahren Unternehmen. Als Mitgr\u00FCnder eines Tech-Unternehmens f\u00FChrte er den Aufbau von zehn internationalen B\u00FCros. Parallel coachte er zw\u00F6lf Jahre lang Profifu\u00DFballer (u.a. in Polen, Griechenland, den Niederlanden) in ihrer Karriereplanung und finanziellen Autonomie.':'Narin bouwt al 15 jaar bedrijven. Als medeoprichter van een tech-bedrijf leidde hij de opbouw van tien internationale kantoren. Parallel coachte hij twaalf jaar lang profvoetballers (o.a. in Polen, Griekenland, Nederland) in hun loopbaanplanning en financi\u00EBle autonomie.'}</p>
+            <p>${L?'Seine Frau betreibt Bloom of Life, den gr\u00F6\u00DFten Showroom f\u00FCr Seidenblumen und Kunstpflanzen in den \u00F6stlichen Niederlanden. Er kennt aus eigener Erfahrung, was es bedeutet, ein Einzelhandelsgesch\u00E4ft mit einem kleinen Team zu f\u00FChren: Miete, Personal, Cashflow, Marketing, saisonale Schwankungen. Bei Wax Affairs ist er der Partner, der mit Ihnen Zahlen durchgeht, bevor Sie einen Mietvertrag unterschreiben.':'Zijn vrouw runt Bloom of Life, de grootste showroom voor zijden bloemen en kunstplanten in Oost-Nederland. Hij weet uit ervaring wat het is om een winkelgebaseerd bedrijf met een klein team te runnen: huur, personeel, cashflow, marketing, seizoensgebondenheid. Bij Wax Affairs is hij de partner die met jou de cijfers doorneemt v\u00F3\u00F3r je een huurcontract tekent.'}</p>
+            <p class="italic text-gray-600">${L?'\u201CEine Friendchisee zu scheitern lassen ist nicht nur schlecht f\u00FCr sie pers\u00F6nlich \u2014 es ist schlecht f\u00FCr die Marke, f\u00FCr Simone, f\u00FCr mich. Also coache ich hart, bevor Sie unterschreiben, und bleibe eng dran, nachdem Sie er\u00F6ffnet haben.\u201D':'\u201CEen Friendchisee laten falen is niet alleen erg voor haar persoonlijk \u2014 het is erg voor het merk, voor Simone, voor mij. Dus coach ik hard v\u00F3\u00F3r je tekent, en blijf dicht op de bal nadat je open bent.\u201D'}</p>
+          </div>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider">${L?'Expertisen':'Expertises'}</h4>
+              <ul class="space-y-2 text-sm text-gray-700">
+                <li class="flex items-start gap-2"><span class="text-gray-600 mt-0.5">\u25CF</span>${L?'Businessplanung und Finanzmodellierung':'Businessplanning en financi\u00EBle modellering'}</li>
+                <li class="flex items-start gap-2"><span class="text-gray-600 mt-0.5">\u25CF</span>${L?'Preisstrategie und Margenoptimierung':'Prijsstrategie en margeoptimalisatie'}</li>
+                <li class="flex items-start gap-2"><span class="text-gray-600 mt-0.5">\u25CF</span>${L?'Marketing (organisch + bezahlt)':'Marketing (organisch + paid)'}</li>
+                <li class="flex items-start gap-2"><span class="text-gray-600 mt-0.5">\u25CF</span>${L?'Kundenbindung und CRM-Strategie':'Klantretentie en CRM-strategie'}</li>
+                <li class="flex items-start gap-2"><span class="text-gray-600 mt-0.5">\u25CF</span>${L?'Team-Aufbau und Personalf\u00FChrung':'Teamopbouw en personeelsleiding'}</li>
+                <li class="flex items-start gap-2"><span class="text-gray-600 mt-0.5">\u25CF</span>${L?'Verhandlung mit Banken, Vermietern, Lieferanten':'Onderhandeling met banken, verhuurders, leveranciers'}</li>
+              </ul>
+            </div>
+            <div class="bg-white border border-gray-300 rounded-lg p-4">
+              <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider">${L?'Was Sie von Narin lernen':'Wat je van Narin leert'}</h4>
+              <ul class="space-y-2 text-sm text-gray-700">
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Realistischen Businessplan bauen, der bei Banken durchgeht':'Realistisch businessplan bouwen dat bij banken doorkomt'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Preise setzen, die Ihren Wert reflektieren (nicht Konkurrenz)':'Prijzen zetten die jouw waarde weerspiegelen (niet concurrentie)'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Mit Startbudget von \u20AC 2.000/Monat Marketing machen':'Met startbudget van \u20AC 2.000/maand marketing doen'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Erste Mitarbeiterin einstellen und einarbeiten':'Eerste medewerker aannemen en inwerken'}</li>
+                <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">\u2713</span>${L?'Cashflow managen in den ersten 12 Monaten':'Cashflow managen in de eerste 12 maanden'}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Waarom Simone + Narin samen werken -->
+      <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-8 text-white">
+        <h3 class="text-lg font-bold text-wax-400 mb-4">${L?'Warum Simone + Narin zusammen funktionieren':'Waarom Simone + Narin samen werken'}</h3>
+        <p class="text-sm text-gray-300 leading-relaxed mb-5">${L?'Die meisten Beauty-Franchises werden von einer Person geleitet \u2014 entweder Handwerkerin (dann fehlt es an Gesch\u00E4ftstiefe) oder Unternehmerin (dann bleibt das Handwerk oberfl\u00E4chlich). Wax Affairs hat bewusst beide Welten an der Spitze.':'De meeste beauty-franchises worden gerund door \u00E9\u00E9n persoon \u2014 of ambachtsvrouw (dan ontbreekt businessdiepte) of onderneemster (dan blijft het ambacht oppervlakkig). Wax Affairs heeft bewust beide werelden aan de top.'}</p>
+        <div class="grid md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-2xl mb-2">\uD83C\uDFA8</div>
+            <strong class="block text-white mb-1">${L?'Simone garantiert':'Simone garandeert'}</strong>
+            <p class="text-gray-300 text-xs">${L?'dass Ihre Behandlung auf Profiniveau ist \u2014 in jedem Wax-Affairs-Studio gleich.':'dat jouw behandeling op profniveau is \u2014 in elke Wax Affairs-studio gelijk.'}</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-2xl mb-2">\uD83D\uDCCA</div>
+            <strong class="block text-white mb-1">${L?'Narin garantiert':'Narin garandeert'}</strong>
+            <p class="text-gray-300 text-xs">${L?'dass Ihr Studio als Unternehmen gesund l\u00E4uft und Ihr Einkommen nachhaltig ist.':'dat jouw studio als bedrijf gezond draait en je inkomen duurzaam is.'}</p>
+          </div>
+          <div class="bg-white/5 border border-white/10 rounded-lg p-4">
+            <div class="text-2xl mb-2">\uD83E\uDD1D</div>
+            <strong class="block text-white mb-1">${L?'Beide garantieren':'Beide garanderen'}</strong>
+            <p class="text-gray-300 text-xs">${L?'pers\u00F6nliche Erreichbarkeit. Keine Helpdesk \u2014 Sie rufen direkt sie an.':'persoonlijke bereikbaarheid. Geen helpdesk \u2014 je belt direct met ze.'}</p>
           </div>
         </div>
       </div>
