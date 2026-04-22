@@ -1325,6 +1325,125 @@ function renderSubmissionAnswers(s, L) {
   }).join('');
 }
 
+// STADT-CALCULATOR (IVD Gewerbe-Preisspiegel 2025/26 + GfK Kaufkraft 2025)
+const WAX_STADT_DATA = {
+  'muenchen': [28, 38, 1.36, 'München (A+-stad)', 'München (A+-Stadt)', 'A+'],
+  'münchen': [28, 38, 1.36, 'München (A+-stad)', 'München (A+-Stadt)', 'A+'],
+  'frankfurt': [20, 30, 1.28, 'Frankfurt am Main (A-stad)', 'Frankfurt am Main (A-Stadt)', 'A'],
+  'frankfurt am main': [20, 30, 1.28, 'Frankfurt am Main (A-stad)', 'Frankfurt am Main (A-Stadt)', 'A'],
+  'hamburg': [18, 26, 1.15, 'Hamburg (A-stad)', 'Hamburg (A-Stadt)', 'A'],
+  'stuttgart': [16, 24, 1.20, 'Stuttgart (A-stad)', 'Stuttgart (A-Stadt)', 'A'],
+  'düsseldorf': [16, 24, 1.22, 'Düsseldorf (A-stad)', 'Düsseldorf (A-Stadt)', 'A'],
+  'duesseldorf': [16, 24, 1.22, 'Düsseldorf (A-stad)', 'Düsseldorf (A-Stadt)', 'A'],
+  'berlin': [15, 22, 1.02, 'Berlin (A-stad)', 'Berlin (A-Stadt)', 'A'],
+  'köln': [14, 20, 1.06, 'Köln (A-stad)', 'Köln (A-Stadt)', 'A'],
+  'koeln': [14, 20, 1.06, 'Köln (A-stad)', 'Köln (A-Stadt)', 'A'],
+  'wiesbaden': [13, 19, 1.14, 'Wiesbaden (B+, zeer koopkrachtig)', 'Wiesbaden (B+, sehr kaufkräftig)', 'B+'],
+  'bad homburg': [14, 20, 1.35, 'Bad Homburg (welvarende B+)', 'Bad Homburg (wohlhabende B+)', 'B+'],
+  'bad soden': [13, 19, 1.32, 'Bad Soden (welvarende B+)', 'Bad Soden (wohlhabende B+)', 'B+'],
+  'mainz': [12, 17, 1.07, 'Mainz (B-stad)', 'Mainz (B-Stadt)', 'B'],
+  'bonn': [12, 18, 1.12, 'Bonn (B-stad)', 'Bonn (B-Stadt)', 'B'],
+  'freiburg': [12, 17, 1.04, 'Freiburg (B-stad)', 'Freiburg (B-Stadt)', 'B'],
+  'heidelberg': [13, 19, 1.05, 'Heidelberg (B-stad)', 'Heidelberg (B-Stadt)', 'B'],
+  'nürnberg': [11, 16, 1.01, 'Nürnberg (B-stad)', 'Nürnberg (B-Stadt)', 'B'],
+  'nuernberg': [11, 16, 1.01, 'Nürnberg (B-stad)', 'Nürnberg (B-Stadt)', 'B'],
+  'hannover': [10, 15, 1.01, 'Hannover (B-stad)', 'Hannover (B-Stadt)', 'B'],
+  'bremen': [10, 14, 0.97, 'Bremen (B-stad)', 'Bremen (B-Stadt)', 'B'],
+  'leipzig': [9, 14, 0.93, 'Leipzig (B-stad, groeiend)', 'Leipzig (B-Stadt, wachsend)', 'B'],
+  'dresden': [9, 13, 0.94, 'Dresden (B-stad)', 'Dresden (B-Stadt)', 'B'],
+  'essen': [8, 12, 0.95, 'Essen (C-stad)', 'Essen (C-Stadt)', 'C'],
+  'dortmund': [8, 12, 0.92, 'Dortmund (C-stad)', 'Dortmund (C-Stadt)', 'C'],
+  'duisburg': [7, 11, 0.87, 'Duisburg (C-stad)', 'Duisburg (C-Stadt)', 'C'],
+  'bochum': [8, 12, 0.92, 'Bochum (C-stad)', 'Bochum (C-Stadt)', 'C'],
+  'münster': [10, 15, 1.05, 'Münster (C+, studentenstad)', 'Münster (C+, Studentenstadt)', 'C+'],
+  'muenster': [10, 15, 1.05, 'Münster (C+, studentenstad)', 'Münster (C+, Studentenstadt)', 'C+'],
+  'augsburg': [10, 15, 1.03, 'Augsburg (C-stad)', 'Augsburg (C-Stadt)', 'C'],
+  'karlsruhe': [11, 16, 1.06, 'Karlsruhe (C+)', 'Karlsruhe (C+)', 'C+'],
+  'mannheim': [10, 15, 1.00, 'Mannheim (C-stad)', 'Mannheim (C-Stadt)', 'C'],
+  'aachen': [9, 14, 0.99, 'Aachen (C-stad)', 'Aachen (C-Stadt)', 'C'],
+  'kiel': [9, 13, 0.97, 'Kiel (C-stad)', 'Kiel (C-Stadt)', 'C'],
+  'braunschweig': [8, 13, 1.00, 'Braunschweig (C-stad)', 'Braunschweig (C-Stadt)', 'C'],
+  'wuppertal': [7, 11, 0.92, 'Wuppertal (C-stad)', 'Wuppertal (C-Stadt)', 'C'],
+  'bielefeld': [8, 12, 0.98, 'Bielefeld (C-stad)', 'Bielefeld (C-Stadt)', 'C'],
+  'erfurt': [7, 11, 0.87, 'Erfurt (C-stad)', 'Erfurt (C-Stadt)', 'C'],
+  'magdeburg': [7, 10, 0.87, 'Magdeburg (C-stad)', 'Magdeburg (C-Stadt)', 'C'],
+  'rostock': [8, 12, 0.89, 'Rostock (C-stad)', 'Rostock (C-Stadt)', 'C'],
+  '_unbekannt': [9, 14, 1.00, 'onbekende stad', 'unbekannte Stadt', '?']
+};
+
+function normalizeStadtName(s) {
+  return s.toLowerCase().trim().replace(/ß/g, 'ss').replace(/\s+/g, ' ');
+}
+
+function lookupStadt() {
+  const inputEl = document.getElementById('stadtInput');
+  const resultDiv = document.getElementById('stadtResult');
+  if (!resultDiv) return;
+  const input = (inputEl?.value || '').trim();
+  if (!input) {
+    resultDiv.innerHTML = '<div class="text-sm text-gray-500 italic">Bitte geben Sie eine Stadt ein / Voer een stad in.</div>';
+    return;
+  }
+  const L = (typeof lang !== 'undefined' && lang === 'de');
+  const key = normalizeStadtName(input);
+  let data = WAX_STADT_DATA[key];
+  let matchType = 'exact';
+  if (!data) {
+    const nou = key.replace(/ü/g,'u').replace(/ä/g,'a').replace(/ö/g,'o');
+    data = WAX_STADT_DATA[nou];
+    if (data) matchType = 'fuzzy';
+  }
+  if (!data) { data = WAX_STADT_DATA['_unbekannt']; matchType = 'unknown'; }
+  const mietMinM2 = data[0], mietMaxM2 = data[1], kaufkraft = data[2];
+  const label = L ? data[4] : data[3];
+  const kat = data[5];
+  const mietMin = Math.round(mietMinM2 * 50);
+  const mietMax = Math.round(mietMaxM2 * 50);
+  const nkMin = Math.round(mietMin * 0.22);
+  const nkMax = Math.round(mietMax * 0.22);
+  const omzetRealistisch = Math.round(10500 * kaufkraft);
+  const nietHuurVaste = 5400;
+  const totaalMin = nietHuurVaste + mietMin + nkMin;
+  const totaalMax = nietHuurVaste + mietMax + nkMax;
+  const ebitda = Math.max(0, omzetRealistisch - totaalMax);
+  const paybackMnd = ebitda > 0 ? Math.ceil(27000 / ebitda) : 99;
+  const colorMap = {'A+':'red','A':'orange','B+':'amber','B':'blue','C+':'teal','C':'green','?':'gray'};
+  const color = colorMap[kat] || 'gray';
+  const matchNote = matchType === 'exact'
+    ? (L ? 'Treffer in unserer Datenbank' : 'Match in onze database')
+    : matchType === 'fuzzy'
+      ? (L ? 'Fuzzy-Treffer (Schreibweise)' : 'Fuzzy-match (schrijfwijze)')
+      : (L ? 'Nicht in Datenbank \u2014 bundesweiter Durchschnitt verwendet' : 'Niet in database \u2014 landelijk gemiddelde gebruikt');
+  const paybackText = paybackMnd < 60
+    ? paybackMnd + (L?' Monate':' maanden')
+    : paybackMnd < 99 ? Math.round(paybackMnd/12*10)/10 + (L?' Jahre':' jaar') : (L?'nicht realistisch':'niet realistisch');
+  const paybackColor = ebitda > 2000 ? 'green' : ebitda > 800 ? 'yellow' : 'red';
+  resultDiv.innerHTML = [
+    '<div class="bg-white rounded-xl border-2 border-'+color+'-300 shadow-sm overflow-hidden">',
+    '<div class="bg-'+color+'-50 border-b border-'+color+'-200 px-5 py-3 flex items-center justify-between flex-wrap gap-2">',
+    '<div><div class="font-bold text-gray-900">'+label+'</div><div class="text-xs text-gray-500 mt-0.5">'+matchNote+'</div></div>',
+    '<span class="px-3 py-1 bg-white border border-'+color+'-300 rounded-full text-xs font-bold text-'+color+'-800">'+(L?'Kategorie ':'Categorie ')+kat+'</span>',
+    '</div>',
+    '<div class="p-5 grid md:grid-cols-2 gap-5">',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Miete (50 m² B-Lage)':'Huur (50 m² B-lage)')+'</div>',
+    '<div class="text-2xl font-bold text-gray-900">€ '+mietMin.toLocaleString('de-DE')+' – '+mietMax.toLocaleString('de-DE')+'<span class="text-sm text-gray-500">/'+(L?'Mon.':'mnd')+'</span></div>',
+    '<div class="text-xs text-gray-500 mt-1">'+(L?'+ NK':'+ NK')+' € '+nkMin.toLocaleString('de-DE')+'–'+nkMax.toLocaleString('de-DE')+' · '+(L?'Basis':'basis')+' € '+mietMinM2+'–'+mietMaxM2+'/m² (IVD 2025/26)</div></div>',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Gesamte Monatskosten':'Totale maandlasten')+'</div>',
+    '<div class="text-2xl font-bold text-gray-900">€ '+totaalMin.toLocaleString('de-DE')+' – '+totaalMax.toLocaleString('de-DE')+'</div>',
+    '<div class="text-xs text-gray-500 mt-1">'+(L?'Inkl. Personal, Produkte, Royalty':'Incl. personeel, producten, royalty')+'</div></div>',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Realistischer Monatsumsatz':'Realistische maandomzet')+'</div>',
+    '<div class="text-2xl font-bold text-gray-900">€ '+omzetRealistisch.toLocaleString('de-DE')+'</div>',
+    '<div class="text-xs text-gray-500 mt-1">'+(L?'Basis':'Basis')+' € 10.500 × '+(L?'Kaufkraft':'koopkracht')+' '+kaufkraft.toFixed(2)+' (GfK 2025)</div></div>',
+    '<div><div class="text-xs uppercase tracking-wider text-gray-500 mb-1">'+(L?'Payback Eigenmittel € 25k':'Payback eigen geld € 25k')+'</div>',
+    '<div class="text-2xl font-bold text-'+paybackColor+'-700">'+paybackText+'</div>',
+    '<div class="text-xs text-gray-500 mt-1">'+(L?'Bei realistischer Umsatz- und Max.-Kostenszenario':'Bij realistische omzet en max. kosten-scenario')+'</div></div>',
+    '</div>',
+    kat === '?' ? '<div class="bg-yellow-50 border-t border-yellow-200 px-5 py-3 text-xs text-yellow-800">⚠️ '+(L?'Diese Stadt ist nicht in unserer Datenbank. Wir verwenden den bundesweiten Durchschnitt. Für Ihren Businessplan holen wir reale lokale Daten.':'Deze stad staat niet in onze database. We gebruiken het landelijk gemiddelde. Voor jouw businessplan halen we echte lokale data.')+'</div>' : '',
+    '</div>'
+  ].join('');
+}
+
+
 function renderFriendchisePitch() {
   const el = document.getElementById('friendchise-pitch-content');
   const L = lang === 'de';
@@ -1625,6 +1744,25 @@ function renderFriendchisePitch() {
       </div>
 
       <!-- Financierings-voorbeeld concreet -->
+      <!-- NIEUW: Stadt-Calculator -->
+      <div class="bg-gradient-to-br from-wax-50 to-white border-2 border-wax-300 rounded-2xl p-6 md:p-8 shadow-sm">
+        <div class="flex items-start justify-between flex-wrap gap-3 mb-5">
+          <div>
+            <h2 class="text-xl font-bold text-gray-900 mb-1">🏙️ ${L?'Standort-Check \u2014 was kostet ein Studio in Ihrer Stadt?':'Standort-Check \u2014 wat kost een studio in jouw stad?'}</h2>
+            <p class="text-sm text-gray-600">${L?'Geben Sie eine Stadt ein. Wir berechnen lokale Mietkosten, Kaufkraft und realistischen Umsatz basierend auf IVD-Marktdaten 2025/26.':'Vul een stad in. We berekenen lokale huurkosten, koopkracht en realistische omzet op basis van IVD-marktdata 2025/26.'}</p>
+          </div>
+        </div>
+        <div class="flex gap-2 flex-wrap mb-4">
+          <input type="text" id="stadtInput" placeholder="${L?'z.B. M\u00FCnchen, Berlin, Wiesbaden, Augsburg...':'bv. M\u00FCnchen, Berlin, Wiesbaden, Augsburg...'}" class="flex-1 min-w-[240px] px-4 py-3 border-2 border-wax-200 rounded-lg focus:border-wax-500 focus:outline-none text-base" onkeydown="if(event.key===' + chr(34) + 'Enter' + chr(34) + '){lookupStadt()}">
+          <button onclick="lookupStadt()" class="px-6 py-3 bg-wax-600 hover:bg-wax-700 text-white rounded-lg font-semibold transition">${L?'Berechnen':'Berekenen'}</button>
+        </div>
+        <div id="stadtResult" class="mt-4"></div>
+        <div class="mt-4 flex flex-wrap gap-2 text-xs">
+          <span class="text-gray-500">${L?'Schnelltest':'Snelle test'}:</span>
+          ${['München','Berlin','Hamburg','Frankfurt','Wiesbaden','Augsburg','Erfurt','Bad Soden'].map(c=>`<button onclick="document.getElementById(' + chr(39) + 'stadtInput' + chr(39) + ').value=' + chr(39) + '${c}' + chr(39) + ';lookupStadt()" class="px-2.5 py-1 bg-white hover:bg-wax-100 border border-wax-200 rounded-full text-wax-700 transition">${c}</button>`).join('')}
+        </div>
+      </div>
+
       <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 md:p-8 text-white mb-6">
         <h3 class="text-lg font-bold text-wax-400 mb-3">${L?'Wie das in der Praxis aussieht — ein Beispiel':'Hoe dat er in de praktijk uitziet — een voorbeeld'}</h3>
         <p class="text-sm text-gray-300 mb-5">${L?'Franchisenehmerin Lisa (38, Corporate-Switcher) eröffnet ein Studio in einer mittelgroßen Stadt. Hier ist, wie sie es finanziert:':'Friendchisee Lisa (38, corporate switcher) opent een studio in een middelgrote stad. Zo financiert ze het:'}</p>
@@ -1886,10 +2024,10 @@ function renderFriendchisePitch() {
           <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2"><span class="text-xl">👥</span>${L?'Personal & Produkte':'Personeel & producten'}</h3>
             <ul class="space-y-2 text-sm">
-              <li class="flex justify-between"><span class="text-gray-600">${L?'Personal (2 MA × 6 Std./Tag)':'Personeel (2 medewerkers × 6 uur/dag)'}</span><strong>€ 2.800 – 3.500</strong></li>
+              <li class="flex justify-between"><span class="text-gray-600">${L?'Personal (2 MA × 30 Std./Woche (Durchschnitt))':'Personeel (2 medewerkers × 30 uur/week (gemiddeld))'}</span><strong>€ 3.400 – 4.400</strong></li>
               <li class="flex justify-between"><span class="text-gray-600">${L?'Produkteinkauf (Wachs + Nao)':'Productinkoop (wax + Nao)'}</span><strong>€ 600 – 900</strong></li>
               <li class="flex justify-between"><span class="text-gray-600">${L?'Einwegmaterial':'Wegwerpmateriaal'}</span><strong>€ 80 – 150</strong></li>
-              <li class="pt-2 border-t border-gray-100 flex justify-between font-semibold text-gray-900"><span>${L?'Subtotal':'Subtotaal'}</span><span>€ 3.480 – 4.550</span></li>
+              <li class="pt-2 border-t border-gray-100 flex justify-between font-semibold text-gray-900"><span>${L?'Subtotal':'Subtotaal'}</span><span>€ 4.080 – 5.450</span></li>
             </ul>
           </div>
           <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
@@ -1906,9 +2044,9 @@ function renderFriendchisePitch() {
           <div class="flex items-baseline justify-between flex-wrap gap-3">
             <div>
               <div class="text-xs uppercase tracking-wider text-wax-300 mb-1">${L?'Gesamte Monatskosten (untere Spanne bis obere Spanne)':'Totale maandlasten (ondergrens tot bovengrens)'}</div>
-              <div class="text-3xl font-bold">€ 6.090 <span class="text-lg text-gray-400">–</span> € 9.905</div>
+              <div class="text-3xl font-bold">€ 6.690 <span class="text-lg text-gray-400">–</span> € 10.805</div>
             </div>
-            <div class="text-xs text-gray-400 max-w-xs">${L?'Um Break-even zu erreichen, brauchen Sie mindestens € 9.500 Monatsumsatz. Das ist bei 240 Behandlungen × € 40 Durchschnittsticket — machbar ab Monat 5-8.':'Om break-even te bereiken heb je minimaal € 9.500 maandomzet nodig. Dat is 240 behandelingen × € 40 gemiddeld ticket — haalbaar vanaf maand 5-8.'}</div>
+            <div class="text-xs text-gray-400 max-w-xs">${L?'Um Break-even zu erreichen, brauchen Sie mindestens € 10.500 Monatsumsatz. Das ist bei 240 Behandlungen × € 40 Durchschnittsticket — machbar ab Monat 5-8.':'Om break-even te bereiken heb je minimaal € 10.500 maandomzet nodig. Dat is 240 behandelingen × € 40 gemiddeld ticket — haalbaar vanaf maand 5-8.'}</div>
           </div>
         </div>
       </div>
@@ -1944,6 +2082,57 @@ function renderFriendchisePitch() {
           <p class="text-xs text-gray-500 mt-2 italic">${L?'Darum rechnen wir 3 Monate Betriebskapital in die Startinvestition ein — damit Sie diese Phase ohne Cashflow-Probleme durchstehen.':'Daarom zit er 3 maanden werkkapitaal in de startinvestering — om deze fase zonder cashflow-problemen door te komen.'}</p>
         </div>
       </div>
+
+      <!-- NIEUW: Bronnen + data-validatie -->
+      <details class="bg-gray-50 border border-gray-200 rounded-xl group">
+        <summary class="cursor-pointer list-none px-5 py-4 flex items-center justify-between hover:bg-gray-100 rounded-xl">
+          <div>
+            <h3 class="font-bold text-gray-900">📊 ${L?'Woher stammen diese Zahlen?':'Waar komen deze cijfers vandaan?'}</h3>
+            <p class="text-xs text-gray-500 mt-1">${L?'Transparenz — alle verwendeten Marktquellen und Validierung':'Transparantie — alle gebruikte marktbronnen en validering'}</p>
+          </div>
+          <span class="text-gray-400 text-xl transition-transform group-open:rotate-45">+</span>
+        </summary>
+        <div class="px-5 pb-5 pt-0 text-sm">
+          <p class="text-gray-700 mb-4">${L?'Alle Zahlen in dieser Übersicht sind mit mindestens zwei unabhängigen Quellen validiert. Die Spannen decken konservative bis optimistische Szenarien ab. Im Businessplan-Gespräch gehen wir alle Posten einzeln mit Ihnen durch.':'Alle cijfers in dit overzicht zijn gevalideerd met minimaal twee onafhankelijke bronnen. De ranges dekken conservatieve tot optimistische scenario\u2019s. In het businessplan-gesprek gaan we elke post met jou door.'}</p>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'Gewerbemieten':'Bedrijfshuur'}</strong>
+              <p class="text-xs text-gray-600">IVD Gewerbe-Preisspiegel 2025/26 · Colliers City Survey Q4 2025 · JLL Büromarkt Q1 2026</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'Kaufkraft':'Koopkracht'}</strong>
+              <p class="text-xs text-gray-600">GfK Kaufkraft Deutschland 2025 · Bundesweiter Durchschnitt = 1,00</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'GmbH-Gründungskosten':'GmbH-oprichtingskosten'}</strong>
+              <p class="text-xs text-gray-600">firma.de · Qonto · Notar Voran · rechner.app · notar-drkotz.de (2026)</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'Betriebshaftpflicht':'Bedrijfsaansprakelijkheid'}</strong>
+              <p class="text-xs text-gray-600">Hiscox · Finanzchef24 · betriebshaftpflicht-24.de · Allianz Business (2026)</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'Steuerberater-Kosten':'Boekhouder-kosten'}</strong>
+              <p class="text-xs text-gray-600">bsteuern.com · sevDesk · taxtify · FastBill (2026)</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'Personalkosten Kosmetikerin':'Personeelskosten waxer'}</strong>
+              <p class="text-xs text-gray-600">brutto-netto-gehaltsrechner.de · jobvector.de · jobted.com · MeinGehalt.net (2026)</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'Studio-Einrichtung':'Studio-inrichting'}</strong>
+              <p class="text-xs text-gray-600">Qonto · Finom · Accountable · Finanzchef24 (Kosmetikstudio eröffnen 2026)</p>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-200">
+              <strong class="text-gray-900 text-xs uppercase tracking-wider block mb-1">${L?'Operative Betriebsdaten':'Operationele bedrijfsdata'}</strong>
+              <p class="text-xs text-gray-600">${L?'Eigene Zahlen aus 3 Wax-Affairs-Studios in Deutschland (Bad Soden, Wiesbaden, Bad Homburg), Jahre 2023-2025':'Eigen data uit 3 Wax Affairs-studio\u2019s in Duitsland (Bad Soden, Wiesbaden, Bad Homburg), jaren 2023-2025'}</p>
+            </div>
+          </div>
+          <div class="mt-4 bg-wax-50 border border-wax-200 rounded-lg p-3 text-xs text-wax-900">
+            <strong>${L?'Wichtig':'Belangrijk'}:</strong> ${L?'Die Spannen in dieser Übersicht sind realistische Marktbandbreiten \u2014 keine Garantien. Ihr konkreter Businessplan wird mit Ihnen persönlich erstellt und enthält Ihre tatsächliche Lage, Ihre Konditionen und Ihre Kostenstruktur.':'De ranges in dit overzicht zijn realistische marktbandbreedtes \u2014 geen garanties. Jouw concrete businessplan wordt persoonlijk met jou gemaakt en bevat jouw werkelijke locatie, voorwaarden en kostenstructuur.'}
+          </div>
+        </div>
+      </details>
 
       <p class="text-xs text-gray-400 italic">${L
         ? 'Indikative Zahlen basierend auf Betriebsdaten. Tatsächliche Ergebnisse hängen von Lage, Auslastung und lokalem Markt ab.'
@@ -2040,9 +2229,9 @@ function renderFriendchisePitch() {
         <p class="text-sm text-gray-400 mb-5">${L?'Dies sind die nicht-verhandelbaren Grenzen. Unter diesen Werten ist ein Gespräch nicht sinnvoll — für Sie nicht, und für uns auch nicht.':'Dit zijn de niet-onderhandelbare drempels. Onder deze waarden is een gesprek niet zinvol — niet voor jou, en niet voor ons.'}</p>
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="bg-white/5 border border-white/10 rounded-lg p-4">
-            <div class="text-xs uppercase tracking-wider text-wax-400 mb-1">💰 ${L?'Kapital':'Kapitaal'}</div>
-            <div class="font-bold text-lg mb-1">${L?'Min. ':'Min. '}${fe(40000)}</div>
-            <p class="text-xs text-gray-400">${L?'Eigenkapital oder bestätigte Finanzierungszusage':'Eigen vermogen of bevestigde financierings-toezegging'}</p>
+            <div class="text-xs uppercase tracking-wider text-wax-400 mb-1">💰 ${L?'Eigenmittel':'Eigen middelen'}</div>
+            <div class="font-bold text-lg mb-1">${L?'Min. ':'Min. '}${fe(25000)}</div>
+            <p class="text-xs text-gray-400">${L?'Plus bestätigte Bankfinanzierung für den Rest (ca. € 35-60k)':'Plus bevestigde bankfinanciering voor de rest (ca. € 35-60k)'}</p>
           </div>
           <div class="bg-white/5 border border-white/10 rounded-lg p-4">
             <div class="text-xs uppercase tracking-wider text-wax-400 mb-1">⏰ ${L?'Einsatz':'Inzet'}</div>
