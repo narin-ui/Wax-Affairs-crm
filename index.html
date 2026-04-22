@@ -209,6 +209,9 @@
     <a href="#" onclick="return showPage('friendchise-pitch')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="friendchise-pitch">
       <span class="icon text-lg">🤝</span><span class="text-sm" data-t="navFriendchise">Friendchise Pitch</span>
     </a>
+    <a href="#" onclick="return showPage('adviesraad')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="adviesraad">
+      <span class="icon text-lg">🎯</span><span class="text-sm">Adviesraad</span>
+    </a>
     <a href="#" onclick="return showPage('pipeline')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="pipeline">
       <span class="icon text-lg">📈</span><span class="text-sm" data-t="navPipeline">Pipeline</span>
     </a>
@@ -456,6 +459,44 @@
 <!-- ═══════════════ PAGE: FRIENDCHISE PITCH ═══════════════ -->
 <div id="page-friendchise-pitch" class="hidden p-6 lg:p-8 fade-in">
   <div id="friendchise-pitch-content"></div>
+
+<!-- Page: Adviesraad (AI-specialisten) -->
+<div id="page-adviesraad" class="hidden p-6 lg:p-8 fade-in">
+  <div class="max-w-6xl mx-auto">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 mb-1" style="font-family:Georgia,serif">🎯 Adviesraad</h1>
+      <p class="text-sm text-gray-500">Zes AI-specialisten die meedenken over Wax Affairs \u2014 bedrijfsvoering, belasting, legal, HR, marketing, sales & finance.</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-900">
+      <strong>⚠️ Let op:</strong> dit zijn AI-gegenereerde antwoorden, geen bindend advies. Voor concrete juridische, fiscale of financiële beslissingen altijd een echte specialist raadplegen. Gebruik dit als sparring-partner, niet als vervanging.
+    </div>
+
+    <div class="grid lg:grid-cols-[260px_1fr] gap-6">
+      <!-- Sidebar met persona-selectie -->
+      <div class="space-y-2" id="adviesraad-personas">
+        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Kies specialist</div>
+        <!-- Personas ingevuld via JS -->
+      </div>
+
+      <!-- Chat area -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col" style="min-height:600px">
+        <div id="adviesraad-chat-header" class="px-5 py-4 border-b border-gray-100">
+          <div class="text-sm text-gray-400">Selecteer links een specialist om te beginnen.</div>
+        </div>
+        <div id="adviesraad-chat" class="flex-1 overflow-y-auto p-5 space-y-3 bg-gray-50" style="max-height:520px"></div>
+        <div class="p-4 border-t border-gray-100 bg-white">
+          <div class="flex gap-2">
+            <textarea id="adviesraad-input" rows="2" placeholder="Typ je vraag..." class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-wax-500 focus:outline-none resize-none" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();adviesraadSend()}"></textarea>
+            <button onclick="adviesraadSend()" id="adviesraad-send" class="px-5 py-2 bg-wax-600 hover:bg-wax-700 text-white rounded-lg font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed">Verstuur</button>
+          </div>
+          <div class="text-xs text-gray-400 mt-2">Shift+Enter voor nieuwe regel. Max ~10 berichten geheugen per gesprek.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <!-- ═══════════════ PAGE: PIPELINE ═══════════════ -->
@@ -746,7 +787,7 @@
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 // ─── State ───
-const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch','marketing-reports'];
+const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch','marketing-reports','adviesraad'];
 let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} }, personeel:{ medewerkers:[], uren:[] }, vastelasten:[] };
 let klantenPage = 1;
 const KLANTEN_PER_PAGE = 25;
@@ -806,6 +847,7 @@ function showPage(p) {
     franchisees: renderFranchisees,
     pipeline: renderPipeline,
     'friendchise-pitch': renderFriendchisePitch,
+    'adviesraad': renderAdviesraad,
     'marketing-reports': renderMarketingReports,
     studenten: renderStudenten,
     cohorten: renderCohorten,
@@ -1473,6 +1515,107 @@ function lookupStadt() {
     kat === '?' ? '<div class="bg-yellow-50 border-t border-yellow-200 px-5 py-3 text-xs text-yellow-800">⚠️ '+(L?'Nicht in Datenbank \u2014 bundesweiter Durchschnitt. F\u00FCr Ihren Businessplan holen wir reale lokale Daten.':'Niet in database \u2014 landelijk gemiddelde. Voor jouw businessplan halen we echte lokale data.')+'</div>' : '',
     '</div>'
   ].join('');
+}
+
+
+// ═══════════ ADVIESRAAD ═══════════
+let adviesraadCurrent = null;
+const adviesraadHistory = {};
+
+async function renderAdviesraad() {
+  const sidebar = document.getElementById('adviesraad-personas');
+  if (!sidebar) return;
+  if (sidebar.childNodes.length <= 1) {
+    try {
+      const r = await fetch('/api/adviesraad/personas');
+      const personas = await r.json();
+      const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'📣', sales:'💰', finance:'📊' };
+      sidebar.innerHTML = '<div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Kies specialist</div>' +
+        personas.map(p => 
+          '<button onclick="adviesraadSelect(' + chr(39) + p.id + chr(39) + ')" id="persona-' + p.id + '" class="w-full text-left p-3 bg-white hover:bg-wax-50 border-2 border-gray-200 rounded-lg transition">' +
+          '<div class="flex items-start gap-2"><span class="text-xl">' + (emojiMap[p.id] || '🎯') + '</span>' +
+          '<div class="flex-1 min-w-0"><div class="font-semibold text-gray-900 text-sm">' + p.naam + '</div>' +
+          '<div class="text-xs text-gray-500 mt-0.5">' + p.expertise + '</div></div></div></button>'
+        ).join('');
+    } catch (e) {
+      sidebar.innerHTML = '<div class="text-sm text-red-600">Fout bij laden adviseurs. Check of ANTHROPIC_API_KEY is ingesteld.</div>';
+    }
+  }
+}
+
+function adviesraadSelect(id) {
+  adviesraadCurrent = id;
+  document.querySelectorAll('[id^="persona-"]').forEach(el => el.classList.remove('border-wax-500','bg-wax-50'));
+  const sel = document.getElementById('persona-' + id);
+  if (sel) sel.classList.add('border-wax-500','bg-wax-50');
+  const header = document.getElementById('adviesraad-chat-header');
+  const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'📣', sales:'💰', finance:'📊' };
+  header.innerHTML = '<div class="flex items-center gap-2"><span class="text-xl">' + (emojiMap[id]||'🎯') + '</span>' +
+    '<strong class="text-gray-900">Gesprek met ' + (sel?.querySelector('.font-semibold')?.textContent || id) + '</strong></div>';
+  const chat = document.getElementById('adviesraad-chat');
+  const hist = adviesraadHistory[id] || [];
+  if (hist.length === 0) {
+    chat.innerHTML = '<div class="text-center text-sm text-gray-400 py-8">Stel je eerste vraag. ' + (sel?.querySelector('.font-semibold')?.textContent || id) + ' denkt met je mee.</div>';
+  } else {
+    chat.innerHTML = hist.map(m =>
+      m.role === 'user' 
+        ? '<div class="flex justify-end"><div class="bg-wax-600 text-white rounded-2xl rounded-br-sm px-4 py-2 max-w-[80%] text-sm">' + escapeHtml(m.content) + '</div></div>'
+        : '<div class="flex justify-start"><div class="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-2 max-w-[80%] text-sm whitespace-pre-wrap">' + escapeHtml(m.content) + '</div></div>'
+    ).join('');
+    chat.scrollTop = chat.scrollHeight;
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function adviesraadSend() {
+  if (!adviesraadCurrent) { alert('Selecteer eerst een specialist links.'); return; }
+  const input = document.getElementById('adviesraad-input');
+  const msg = (input.value || '').trim();
+  if (!msg) return;
+  input.value = '';
+  const btn = document.getElementById('adviesraad-send');
+  btn.disabled = true;
+  btn.textContent = 'Denkt na...';
+  
+  if (!adviesraadHistory[adviesraadCurrent]) adviesraadHistory[adviesraadCurrent] = [];
+  adviesraadHistory[adviesraadCurrent].push({ role: 'user', content: msg });
+  
+  const chat = document.getElementById('adviesraad-chat');
+  if (adviesraadHistory[adviesraadCurrent].length === 1) chat.innerHTML = '';
+  chat.innerHTML += '<div class="flex justify-end"><div class="bg-wax-600 text-white rounded-2xl rounded-br-sm px-4 py-2 max-w-[80%] text-sm">' + escapeHtml(msg) + '</div></div>';
+  chat.innerHTML += '<div id="adviesraad-thinking" class="flex justify-start"><div class="bg-white border border-gray-200 rounded-2xl px-4 py-2 text-sm text-gray-400 italic">Denkt na...</div></div>';
+  chat.scrollTop = chat.scrollHeight;
+  
+  try {
+    const r = await fetch('/api/adviesraad/chat', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        persona: adviesraadCurrent,
+        message: msg,
+        history: adviesraadHistory[adviesraadCurrent].slice(0, -1)
+      })
+    });
+    const data = await r.json();
+    document.getElementById('adviesraad-thinking')?.remove();
+    if (!r.ok) {
+      const err = data.error || 'Fout';
+      chat.innerHTML += '<div class="flex justify-start"><div class="bg-red-50 border border-red-200 rounded-2xl px-4 py-2 text-sm text-red-800">⚠️ ' + escapeHtml(err) + (data.detail ? ' — ' + escapeHtml(data.detail) : '') + '</div></div>';
+    } else {
+      adviesraadHistory[adviesraadCurrent].push({ role: 'assistant', content: data.response });
+      chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-2 max-w-[80%] text-sm whitespace-pre-wrap">' + escapeHtml(data.response) + '</div></div>';
+    }
+    chat.scrollTop = chat.scrollHeight;
+  } catch (e) {
+    document.getElementById('adviesraad-thinking')?.remove();
+    chat.innerHTML += '<div class="flex justify-start"><div class="bg-red-50 border border-red-200 rounded-2xl px-4 py-2 text-sm text-red-800">⚠️ Netwerkfout: ' + escapeHtml(String(e)) + '</div></div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Verstuur';
+  }
 }
 
 

@@ -1597,6 +1597,92 @@ app.delete('/api/vastelasten/:id', (req, res) => {
 });
 
 // ─── Start ───
+
+// ─── Adviesraad — AI-specialisten klankbord ───
+const ADVIESRAAD_PERSONAS = {
+  steuer: {
+    naam: 'Paul — Steuerberater',
+    expertise: 'Steuern, GmbH, USt, Lohnsteuer, Buchhaltung',
+    systemPrompt: 'Du bist Paul, erfahrener deutscher Steuerberater (20+ Jahre). Du beratst einen Wax Affairs Friendchise-Partner zu GmbH-Besteuerung, Gewerbesteuer, USt, Lohnsteuer, Einkommensteuer, Betriebsausgaben, Abschreibungen, Kleinunternehmerregelung.\nSTIL: Präzise, knapp, praktisch. Konkrete Paragrafen (EStG, UStG, KStG, GewStG). Beispiele mit Zahlen.\nGRENZEN: Keine bindende Beratung. Bei konkreten Berechnungen verweise auf: "für die konkrete Berechnung deinen Steuerberater einschalten". Du bist Sparring-Partner.\nKONTEXT: GmbH Waxing-Studio ~€120k Jahresumsatz, 2 Angestellte.'
+  },
+  legal: {
+    naam: 'Anna — Fachanwältin Franchiserecht',
+    expertise: 'Franchiserecht, Mietvertrag, Arbeitsrecht, Markenrecht',
+    systemPrompt: 'Du bist Anna, Fachanwältin für Franchiserecht in Deutschland (15+ Jahre). Du berätst einen Wax Affairs Friendchise-Partner.\nEXPERTISE: Franchisevertrag-Klauseln, Gewerbemiete, Arbeitsverträge, Kündigungen, Markenschutz, AGB, DSGVO, Wettbewerbsverbot.\nSTIL: Klar, sachlich, mit Paragrafen (BGB, HGB, MarkenG, KSchG). Risiken aufzeigen.\nGRENZEN: Keine Rechtsberatung. Bei Vertragsprüfungen: "dafür Fachanwalt einschalten". Sparring-Partner.\nKONTEXT: Wax Affairs 5+5 Jahre, 3km Gebietsschutz, 5% Royalty + 2% Marketing.'
+  },
+  hr: {
+    naam: 'Maya — HR-Beraterin Beauty',
+    expertise: 'Personal, Arbeitsverträge, Lohn, Recruiting, Teamaufbau',
+    systemPrompt: 'Du bist Maya, HR-Beraterin für kleine Beauty-Betriebe in Deutschland (12 Jahre).\nEXPERTISE: Personalführung 1-5 Personen, Arbeitsverträge (Voll/Teilzeit/Minijob), Mindestlohn, Lohnmodelle (Fix+%), Recruiting Kosmetikerinnen, Einarbeitung, Urlaub, Konflikte, Kündigungen.\nSTIL: Warmherzig aber direkt. Konkrete Vorlagen und Checklisten.\nGRENZEN: Keine Rechtsberatung (→ Anna). Keine Lohnabrechnung (→ Paul). Fokus auf Zwischenmenschliches und Operationelles.\nKONTEXT: Wax Affairs 1-3 Waxerinnen, ~€2.030 Bruttomedian, oft Teilzeit.'
+  },
+  marketing: {
+    naam: 'Tom — Marketing-Stratege Beauty',
+    expertise: 'Social Media, Local SEO, Google Ads, Content, Branding',
+    systemPrompt: 'Du bist Tom, Marketing-Stratege für lokale Beauty-Dienstleister (10 Jahre, 40+ Studios begleitet).\nEXPERTISE: Instagram/TikTok (Beauty-Content, Reels, UGC), Google Business Profile, Local SEO, Google Ads €500-2000, Meta Ads, Influencer-Microkampagnen, Review-Management.\nSTIL: Direkt, actionable, Beispiele aus Beauty. Benchmarks nennen (CPC, CTR, Conversion).\nGRENZEN: Kein Steuer/Recht/HR.\nKONTEXT: Wax Affairs lokal, Zielgruppe Frauen 25-45, Budget €500-1500/Mon, Nao als Retail-Upsell.'
+  },
+  sales: {
+    naam: 'Lisa — Sales & Retention-Coach',
+    expertise: 'Pricing, Paketen, Upselling, Retention, Kundengespräch',
+    systemPrompt: 'Du bist Lisa, Sales- und Retention-Coach für Beauty-Studios (13 Jahre, ehem. Salon-Inhaberin).\nEXPERTISE: Preisgestaltung/Psychologie, Paket-Angebote (3er/10er, Memberships), Upselling Nao-Produkte, Retention, Stornorichtlinien, Intake-Gespräch, Beschwerden, Empfehlungsmarketing.\nSTIL: Energetisch, konkrete Wording-Beispiele. Zahlen: LTV, Wiederkehrquote, Ticket.\nGRENZEN: Kein Recht (→ Anna). Keine Ads (→ Tom). Fokus Empfang + Preise.\nKONTEXT: Wax Affairs, Ziel 70%+ Wiederkehr, Ticket €40-55, Nao-Upsell +€10-20.'
+  },
+  finance: {
+    naam: 'Klaus — Corporate-Finance-Berater',
+    expertise: 'Cashflow, Finanzierung, KfW, Bankgespräch, Forecasts',
+    systemPrompt: 'Du bist Klaus, Corporate-Finance-Berater für Gründer/kleine GmbHs (18 Jahre, 200+ KfW-Anträge).\nEXPERTISE: Cashflow 13-Week-Forecast, Finanzierungsstruktur (Eigen/KfW/Hausbank/Leasing), KfW-Antrag (StartGeld/Gründerkredit/ERP), Bankgespräch, Businessplan, Rentabilität, Break-Even, Investitionsrechnung.\nSTIL: Konservativ, zahlen-gestützt, fragt nach Annahmen. 3 Szenarien (kons/real/opt).\nGRENZEN: Kein Steuer/Recht (→ Paul/Anna).\nKONTEXT: Wax Affairs €55-98k, KfW-Gründerkredit bis 100%, 4% Zins, 7-10 Jahre.'
+  }
+};
+
+app.post('/api/adviesraad/chat', async (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const { persona, message, history } = req.body || {};
+  if (!persona || !message) return res.status(400).json({ error: 'persona and message required' });
+  const p = ADVIESRAAD_PERSONAS[persona];
+  if (!p) return res.status(400).json({ error: 'unknown persona' });
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured in Railway env' });
+  const msgs = [];
+  if (Array.isArray(history)) {
+    for (const h of history.slice(-10)) {
+      if (h && h.role && h.content) msgs.push({ role: h.role, content: h.content });
+    }
+  }
+  msgs.push({ role: 'user', content: message });
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-5',
+        max_tokens: 1500,
+        system: p.systemPrompt,
+        messages: msgs
+      })
+    });
+    if (!r.ok) {
+      const errTxt = await r.text();
+      console.error('Anthropic API error:', r.status, errTxt.slice(0, 300));
+      return res.status(502).json({ error: 'Anthropic API error', status: r.status, detail: errTxt.slice(0, 200) });
+    }
+    const data = await r.json();
+    const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
+    res.json({ response: text, persona: p.naam });
+  } catch (e) {
+    console.error('Adviesraad error:', e);
+    res.status(500).json({ error: String(e) });
+  }
+});
+
+app.get('/api/adviesraad/personas', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const list = Object.entries(ADVIESRAAD_PERSONAS).map(([id, p]) => ({ id, naam: p.naam, expertise: p.expertise }));
+  res.json(list);
+});
+
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n  Wax Affairs CRM draait op http://localhost:${PORT}\n`);
 });
