@@ -212,6 +212,9 @@
     <a href="#" onclick="return showPage('adviesraad')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="adviesraad">
       <span class="icon text-lg">🎯</span><span class="text-sm">Adviesraad</span>
     </a>
+    <a href="#" onclick="return showPage('btw')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="btw">
+      <span class="icon text-lg">💶</span><span class="text-sm">BTW & Deadlines</span>
+    </a>
     <a href="#" onclick="return showPage('pipeline')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="pipeline">
       <span class="icon text-lg">📈</span><span class="text-sm" data-t="navPipeline">Pipeline</span>
     </a>
@@ -497,6 +500,17 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- ═══════════════ PAGE: BTW & DEADLINES ═══════════════ -->
+<div id="page-btw" class="hidden p-6 lg:p-8 fade-in">
+  <div class="page-header flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-1" style="font-family:Georgia,serif">💶 BTW & Deadlines</h1>
+      <p class="text-sm text-gray-500">Welke BTW je betaalt, waar aangeven, wanneer — automatisch bijgehouden.</p>
+    </div>
+  </div>
+  <div id="btw-content"></div>
 </div>
 
 <!-- ═══════════════ PAGE: PIPELINE ═══════════════ -->
@@ -787,7 +801,7 @@
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 // ─── State ───
-const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch','marketing-reports','adviesraad'];
+const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch','marketing-reports','adviesraad','btw'];
 let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} }, personeel:{ medewerkers:[], uren:[] }, vastelasten:[] };
 let klantenPage = 1;
 const KLANTEN_PER_PAGE = 25;
@@ -907,6 +921,7 @@ function showPage(p) {
     pipeline: renderPipeline,
     'friendchise-pitch': renderFriendchisePitch,
     'adviesraad': renderAdviesraad,
+    'btw': renderBtw,
     'marketing-reports': renderMarketingReports,
     studenten: renderStudenten,
     cohorten: renderCohorten,
@@ -1668,7 +1683,7 @@ async function renderAdviesraad() {
     try {
       const r = await fetch('/api/adviesraad/personas');
       const personas = await r.json();
-      const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'📣', sales:'💰', finance:'📊' };
+      const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'🔍', sea:'🎯', social:'📱', sales:'💰', finance:'📊' };
       sidebar.innerHTML = '<div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Kies specialist</div>' +
         personas.map(p => 
           '<button onclick="adviesraadSelect(' + String.fromCharCode(39) + p.id + String.fromCharCode(39) + ')" id="persona-' + p.id + '" class="w-full text-left p-3 bg-white hover:bg-wax-50 border-2 border-gray-200 rounded-lg transition">' +
@@ -1688,7 +1703,7 @@ function adviesraadSelect(id) {
   const sel = document.getElementById('persona-' + id);
   if (sel) sel.classList.add('border-wax-500','bg-wax-50');
   const header = document.getElementById('adviesraad-chat-header');
-  const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'📣', sales:'💰', finance:'📊' };
+  const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'🔍', sea:'🎯', social:'📱', sales:'💰', finance:'📊' };
   header.innerHTML = '<div class="flex items-center gap-2"><span class="text-xl">' + (emojiMap[id]||'🎯') + '</span>' +
     '<strong class="text-gray-900">Gesprek met ' + (sel?.querySelector('.font-semibold')?.textContent || id) + '</strong></div>';
   const chat = document.getElementById('adviesraad-chat');
@@ -1755,6 +1770,310 @@ async function adviesraadSend() {
     btn.disabled = false;
     btn.textContent = 'Verstuur';
   }
+}
+
+
+// ═══════════ BTW & DEADLINES ═══════════
+let btwFase = 1; // 1 = nu (alleen DE), 2 = NL BV + DE GmbH
+
+function renderBtw() {
+  const el = document.getElementById('btw-content');
+  if (!el) return;
+
+  // ── Omzet-aggregaten uit bookings ──
+  const nu = new Date();
+  const jaar = nu.getFullYear();
+  const maand = nu.getMonth();
+  const vorigeMaand = maand === 0 ? 11 : maand - 1;
+  const jaarVorigeMaand = maand === 0 ? jaar - 1 : jaar;
+  const bookings = (data.bookings || []).filter(b => ['bevestigd','voltooid'].includes(b.status));
+  const omzetInPeriode = (bookings, startD, eindD) => bookings
+    .filter(b => { const d = new Date(b.datum); return d >= startD && d <= eindD; })
+    .reduce((s,b) => s + (bookingPrijs ? bookingPrijs(b) : (b.prijs || 0)), 0);
+
+  const startJaar = new Date(jaar, 0, 1);
+  const eindJaar = new Date(jaar, 11, 31, 23, 59, 59);
+  const startVorigJaar = new Date(jaar-1, 0, 1);
+  const eindVorigJaar = new Date(jaar-1, 11, 31, 23, 59, 59);
+  const startHuidigeMnd = new Date(jaar, maand, 1);
+  const eindHuidigeMnd = new Date(jaar, maand+1, 0, 23, 59, 59);
+  const startVorigeMnd = new Date(jaarVorigeMaand, vorigeMaand, 1);
+  const eindVorigeMnd = new Date(jaarVorigeMaand, vorigeMaand+1, 0, 23, 59, 59);
+
+  const omzetDitJaar = omzetInPeriode(bookings, startJaar, eindJaar);
+  const omzetVorigJaar = omzetInPeriode(bookings, startVorigJaar, eindVorigJaar);
+  const omzetVorigeMnd = omzetInPeriode(bookings, startVorigeMnd, eindVorigeMnd);
+
+  // Incl. vs excl. BTW (aanname: prijzen in bookings zijn INCL 19% USt)
+  const ustDE = 0.19;
+  const ustPct = 19;
+  const netto = (bruto) => bruto / (1 + ustDE);
+  const ustVerschuldigd = (bruto) => bruto - netto(bruto); // = bruto × 19/119
+
+  const ustVorigeMnd = ustVerschuldigd(omzetVorigeMnd);
+  const ustDitJaar = ustVerschuldigd(omzetDitJaar);
+
+  // Kleinunternehmer (§19 UStG): vorig jaar <€22k én dit jaar verwacht <€50k
+  const kleinunternehmerMogelijk = omzetVorigJaar < 22000 && omzetDitJaar < 50000;
+  const kleinAfstandTotGrens = 22000 - omzetVorigJaar;
+
+  // Aangifte-frequentie op basis van USt vorig jaar
+  // Maandelijks als >€7.500, kwartaal €1.001-7.500, jaarlijks <€1.000
+  const ustVorigJaar = ustVerschuldigd(omzetVorigJaar);
+  let aangifteFrequentie = 'Jaarlijks';
+  if (ustVorigJaar > 7500) aangifteFrequentie = 'Maandelijks';
+  else if (ustVorigJaar > 1000) aangifteFrequentie = 'Kwartaal';
+  // Eerste 2 jaar na oprichting: altijd maandelijks (startup rule)
+  const opgerichtDit = true; // aanname voor fase 1
+  if (opgerichtDit && ustVorigJaar === 0) aangifteFrequentie = 'Maandelijks';
+
+  // ── Deadlines berekenen ──
+  // DE USt-Voranmeldung: 10e van de maand na aangifteperiode
+  // Betalen: binnen 10 dagen na deadline (samenvallend met aangifte)
+  const deadlines = [];
+  const vandaag = new Date(jaar, maand, nu.getDate());
+  for (let i = 0; i < 12 && deadlines.length < 6; i++) {
+    const targetMaand = maand + i;
+    const y = jaar + Math.floor(targetMaand / 12);
+    const m = targetMaand % 12;
+    if (aangifteFrequentie === 'Maandelijks') {
+      const aangifteP = m === 0 ? 11 : m - 1;
+      const aangiftePJaar = m === 0 ? y - 1 : y;
+      const deadline = new Date(y, m, 10);
+      if (deadline >= vandaag) {
+        deadlines.push({
+          land: 'DE', type: 'USt-Voranmeldung',
+          periode: `${['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'][aangifteP]} ${aangiftePJaar}`,
+          datum: deadline, portal: 'ELSTER (elster.de)'
+        });
+      }
+    } else if (aangifteFrequentie === 'Kwartaal' && m % 3 === 0) {
+      const qEind = m === 0 ? 4 : m - 1;  // Q4 → jan deadline
+      const q = Math.floor(qEind / 3) + 1;
+      const qJaar = m === 0 ? y - 1 : y;
+      const deadline = new Date(y, m, 10);
+      if (deadline >= vandaag) {
+        deadlines.push({
+          land: 'DE', type: 'USt-Voranmeldung (Kwartaal)',
+          periode: `Q${q} ${qJaar}`, datum: deadline, portal: 'ELSTER (elster.de)'
+        });
+      }
+    }
+  }
+  // Jaaraangifte USt: 31 juli volgend jaar (of eerder)
+  deadlines.push({ land:'DE', type:'USt-Jahreserklärung', periode: `${jaar-1} (jaaraangifte)`, datum: new Date(jaar, 6, 31), portal: 'ELSTER (elster.de)', optioneel: true });
+  deadlines.sort((a,b) => a.datum - b.datum);
+
+  const fd2 = (d) => d.toLocaleDateString('nl-NL', { day:'numeric', month:'long', year:'numeric' });
+  const dagenTot = (d) => {
+    const diff = Math.ceil((d - vandaag) / (1000*60*60*24));
+    if (diff < 0) return 'achterstand';
+    if (diff === 0) return 'vandaag';
+    if (diff === 1) return 'morgen';
+    return `over ${diff} dagen`;
+  };
+  const urgency = (d) => {
+    const diff = Math.ceil((d - vandaag) / (1000*60*60*24));
+    if (diff <= 3) return 'bg-red-50 border-red-200 text-red-800';
+    if (diff <= 10) return 'bg-yellow-50 border-yellow-200 text-yellow-800';
+    return 'bg-white border-gray-200 text-gray-700';
+  };
+
+  el.innerHTML = `
+  <!-- Fase-schakelaar -->
+  <div class="flex items-center gap-3 mb-6 p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
+    <span class="text-sm font-medium text-gray-700">Juridische fase:</span>
+    <div class="flex gap-1">
+      <button onclick="btwFase=1; renderBtw()" class="px-4 py-2 rounded-lg text-sm font-medium transition ${btwFase===1?'bg-wax-600 text-white':'bg-gray-100 text-gray-700 hover:bg-gray-200'}">Fase 1 — Nu (DE)</button>
+      <button onclick="btwFase=2; renderBtw()" class="px-4 py-2 rounded-lg text-sm font-medium transition ${btwFase===2?'bg-wax-600 text-white':'bg-gray-100 text-gray-700 hover:bg-gray-200'}">Fase 2 — NL BV + DE GmbH</button>
+    </div>
+    <span class="ml-auto text-xs text-gray-400 italic">${btwFase===1?'Jouw huidige situatie':'Vanaf mid 2027 na oprichting BV'}</span>
+  </div>
+
+  ${btwFase === 1 ? `
+    <!-- FASE 1: DE -->
+    <div class="grid lg:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+        <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Omzet dit jaar</div>
+        <div class="text-3xl font-bold text-gray-900">${fe(omzetDitJaar)}</div>
+        <div class="text-xs text-gray-500 mt-1">netto: ${fe(netto(omzetDitJaar))} · USt: ${fe(ustDitJaar)}</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+        <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">USt vorige maand</div>
+        <div class="text-3xl font-bold text-wax-700">${fe(ustVorigeMnd)}</div>
+        <div class="text-xs text-gray-500 mt-1">${['Jan','Feb','Mrt','Apr','Mei','Jun','Jul','Aug','Sep','Okt','Nov','Dec'][vorigeMaand]} ${jaarVorigeMaand} · omzet ${fe(omzetVorigeMnd)}</div>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+        <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">Aangifte-frequentie</div>
+        <div class="text-2xl font-bold text-gray-900">${aangifteFrequentie}</div>
+        <div class="text-xs text-gray-500 mt-1">Gebaseerd op USt vorig jaar (${fe(ustVorigJaar)})</div>
+      </div>
+    </div>
+
+    <!-- DE USt uitleg -->
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
+      <div class="flex items-start gap-3 mb-4">
+        <span class="text-3xl flex-shrink-0">🇩🇪</span>
+        <div>
+          <h3 class="font-bold text-gray-900 text-lg">DE Umsatzsteuer (${ustPct}%)</h3>
+          <p class="text-xs text-gray-500">Regulier tarief op alle wax-behandelingen, NAO-verkopen en Academy-cursussen in DE.</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 text-sm">
+        <div class="space-y-2">
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <div class="text-xs font-semibold text-gray-700 mb-1">Wat betaal je?</div>
+            <div class="text-gray-600">19% USt op brutoprijs — klant betaalt 119, jij draagt 19 af aan Finanzamt.</div>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <div class="text-xs font-semibold text-gray-700 mb-1">Waar aangeven?</div>
+            <div class="text-gray-600"><strong>ELSTER</strong> (elster.de) — Umsatzsteuer-Voranmeldung elektronisch indienen.</div>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <div class="text-xs font-semibold text-gray-700 mb-1">Wanneer?</div>
+            <div class="text-gray-600">${aangifteFrequentie === 'Maandelijks' ? 'Elke 10e van de maand — aangifte over de vorige maand.' : aangifteFrequentie === 'Kwartaal' ? 'Elke 10e van de maand na kwartaaleinde (10 apr / jul / okt / jan).' : 'Eenmaal per jaar.'} Betalen samen met aangifte.</div>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <div class="text-xs font-semibold text-gray-700 mb-1">Voorbelasting (Vorsteuer)</div>
+            <div class="text-gray-600">Aftrekbaar: USt op inkoop-facturen (huur*, producten, apparatuur). Te verrekenen met af te dragen USt. <em>* Huur vaak geen USt.</em></div>
+          </div>
+          <div class="p-3 bg-gray-50 rounded-lg">
+            <div class="text-xs font-semibold text-gray-700 mb-1">Saldo = netto af te dragen</div>
+            <div class="text-gray-600"><strong>USt uit omzet − Vorsteuer = bedrag naar Finanzamt.</strong> Bij negatief saldo krijg je terug.</div>
+          </div>
+          <div class="p-3 bg-${kleinunternehmerMogelijk?'green':'gray'}-50 rounded-lg border border-${kleinunternehmerMogelijk?'green':'gray'}-200">
+            <div class="text-xs font-semibold text-${kleinunternehmerMogelijk?'green':'gray'}-700 mb-1">Kleinunternehmer-regel (§19 UStG)</div>
+            <div class="text-${kleinunternehmerMogelijk?'green':'gray'}-700">
+              ${kleinunternehmerMogelijk
+                ? `Je kwalificeert: vorig jaar ${fe(omzetVorigJaar)} (&lt; €22.000) én dit jaar verwacht &lt; €50.000. Geen USt afdragen, wel geen voorbelasting aftrekken. Factuur zonder USt.`
+                : `Niet van toepassing: ${omzetVorigJaar >= 22000 ? `vorig jaar ${fe(omzetVorigJaar)} &ge; €22.000.` : omzetDitJaar >= 50000 ? `dit jaar ${fe(omzetDitJaar)} &ge; €50.000.` : `niet aan beide voorwaarden voldaan.`} Je bent regulier USt-plichtig.`}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 p-3 bg-wax-50 border border-wax-100 rounded-lg text-xs text-wax-800">
+        <strong>Vraag aan Paul:</strong> <button onclick="showPage('adviesraad'); setTimeout(() => adviesraadSelect('steuer'), 200);" class="underline hover:no-underline">open chat met Paul (Steuer)</button> over specifieke situaties (afschrijvingen, kleine waardeartikelen, Lohnsteuer).
+      </div>
+    </div>
+  ` : `
+    <!-- FASE 2: NL BV + DE GmbH -->
+    <div class="grid lg:grid-cols-2 gap-4 mb-6">
+      <!-- NL BV -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="text-3xl flex-shrink-0">🇳🇱</span>
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">NL BV — holding + Academy/IP</h3>
+            <p class="text-xs text-gray-500">Alle IP, Academy-inkomsten en royalty's via NL.</p>
+          </div>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>BTW 21%</strong> op Academy-cursussen (in-person + online) en Friendchise-onboarding gefactureerd naar DE-partners.</li>
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>0% BTW (intra-EU)</strong> op product-leveringen NL → DE GmbH met geldige DE-VAT-ID (zie intra-EU blok hieronder).</li>
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>Aangifte:</strong> kwartaalaangifte via <strong>Belastingdienst.nl</strong> / Mijn Belastingdienst Zakelijk. Deadline einde volgende maand (30 apr / 31 jul / 31 okt / 31 jan).</li>
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>ICP-opgave</strong> (Intracommunautaire Prestaties): kwartaal, samen met BTW-aangifte — verplicht voor elke intra-EU levering.</li>
+          <li class="p-3 bg-green-50 border border-green-200 rounded-lg"><strong class="text-green-800">Innovation Box (9%)</strong>: IP-gerelateerde winst (royalty's, merk) valt onder 9% i.p.v. 25,8% standaard vennootschapsbelasting.</li>
+        </ul>
+      </div>
+
+      <!-- DE GmbH -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="text-3xl flex-shrink-0">🇩🇪</span>
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">DE GmbH — studio's + product-verkoop</h3>
+            <p class="text-xs text-gray-500">100% dochter van NL BV. Doet de operatie in Duitsland.</p>
+          </div>
+        </div>
+        <ul class="space-y-2 text-sm">
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>USt 19%</strong> op waxing-behandelingen, retail NAO-verkoop en doorverkoop wholesale aan Friendchisees.</li>
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>Aangifte:</strong> ELSTER, maandelijks (eerste 2 jaar na oprichting verplicht maandelijks). Deadline 10e van volgende maand.</li>
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>Voorbelasting</strong> aftrekbaar op alle inkopen (inclusief de wholesale-orders van NL BV als die met DE-USt zouden factureren — maar intra-EU is 0%).</li>
+          <li class="p-3 bg-gray-50 rounded-lg"><strong>Reverse charge</strong> bij intra-EU inkoop van NL BV: DE GmbH geeft USt 19% aan in Voranmeldung én trekt dezelfde USt direct af als voorbelasting (netto 0€, maar wel registreren).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Intra-EU -->
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
+      <div class="flex items-start gap-3 mb-4">
+        <span class="text-3xl flex-shrink-0">🔁</span>
+        <div>
+          <h3 class="font-bold text-gray-900 text-lg">Intra-EU levering (NL → DE)</h3>
+          <p class="text-xs text-gray-500">0% BTW op NL-factuur, reverse charge bij ontvanger in DE.</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-3 text-sm">
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <div class="font-bold text-gray-900 mb-1">1. NL BV factureert</div>
+          <div class="text-xs text-gray-600">0% BTW, met vermelding "intracommunautaire levering, art. 138 BTW-richtlijn" + DE-VAT-ID op factuur.</div>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <div class="font-bold text-gray-900 mb-1">2. DE GmbH ontvangt</div>
+          <div class="text-xs text-gray-600">Geeft 19% USt aan (reverse charge) én trekt direct af als Vorsteuer. Netto 0€, wel administratief.</div>
+        </div>
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <div class="font-bold text-gray-900 mb-1">3. Verifieer elke maand</div>
+          <div class="text-xs text-gray-600"><strong>VIES-check</strong>: ec.europa.eu/taxation_customs/vies — bewijs van geldige VAT-ID per transactie.</div>
+        </div>
+      </div>
+      <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-xs text-yellow-800">
+        <strong>Let op:</strong> zonder geldige DE-VAT-ID op je NL-factuur loopt de 0%-regeling vast en moet je alsnog 21% NL-BTW doorberekenen. Check altijd.
+      </div>
+    </div>
+  `}
+
+  <!-- Deadline-kalender (altijd zichtbaar) -->
+  <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h3 class="font-bold text-gray-900 text-lg">📅 Komende deadlines</h3>
+        <p class="text-xs text-gray-500">${btwFase === 1 ? 'Gebaseerd op huidige aangifte-frequentie en omzet' : 'Voorbeeld voor fase 2 (nog niet actief)'}</p>
+      </div>
+    </div>
+    <div class="space-y-2">
+      ${deadlines.slice(0,6).map(d => `
+        <div class="flex items-center gap-4 p-3 border rounded-lg ${urgency(d.datum)}">
+          <div class="text-2xl flex-shrink-0">${d.land === 'DE' ? '🇩🇪' : '🇳🇱'}</div>
+          <div class="flex-1 min-w-0">
+            <div class="font-semibold">${d.type}</div>
+            <div class="text-xs opacity-80">Periode: ${d.periode} · ${d.portal}</div>
+          </div>
+          <div class="text-right">
+            <div class="font-bold text-sm">${fd2(d.datum)}</div>
+            <div class="text-xs opacity-80">${dagenTot(d.datum)}</div>
+          </div>
+        </div>
+      `).join('') || '<p class="text-sm text-gray-400 italic">Geen deadlines te berekenen (omzet-data ontbreekt).</p>'}
+    </div>
+    <div class="mt-3 text-xs text-gray-500 italic">💡 Zet ELSTER-login + BTW-aangifte vast in je agenda 2 dagen vóór deadline.</div>
+  </div>
+
+  <!-- BTW-tarieven referentie -->
+  <div class="bg-gray-50 rounded-2xl border border-gray-100 p-6">
+    <h4 class="font-bold text-gray-900 mb-3">📋 BTW-tarieven referentie</h4>
+    <div class="grid md:grid-cols-2 gap-4 text-sm">
+      <div>
+        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">🇩🇪 Deutschland</div>
+        <ul class="space-y-1">
+          <li class="flex justify-between"><span>Regulier (behandelingen, retail)</span><strong>19%</strong></li>
+          <li class="flex justify-between"><span>Verlaagd (sommige diensten, niet beauty)</span><strong>7%</strong></li>
+          <li class="flex justify-between"><span>Kleinunternehmer drempel</span><strong>€22k vorig / €50k dit jr</strong></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">🇳🇱 Nederland</div>
+        <ul class="space-y-1">
+          <li class="flex justify-between"><span>Regulier (services, IP)</span><strong>21%</strong></li>
+          <li class="flex justify-between"><span>Verlaagd (food, boeken, etc.)</span><strong>9%</strong></li>
+          <li class="flex justify-between"><span>KOR-regeling drempel</span><strong>€20k/jaar</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  `;
 }
 
 
