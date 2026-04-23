@@ -215,6 +215,9 @@
     <a href="#" onclick="return showPage('btw')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="btw">
       <span class="icon text-lg">💶</span><span class="text-sm">BTW & Deadlines</span>
     </a>
+    <a href="#" onclick="return showPage('marketing-assets')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="marketing-assets">
+      <span class="icon text-lg">🗂️</span><span class="text-sm">Marketing Assets</span>
+    </a>
     <a href="#" onclick="return showPage('pipeline')" class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-colors" data-page="pipeline">
       <span class="icon text-lg">📈</span><span class="text-sm" data-t="navPipeline">Pipeline</span>
     </a>
@@ -513,6 +516,17 @@
   <div id="btw-content"></div>
 </div>
 
+<!-- ═══════════════ PAGE: MARKETING ASSETS ═══════════════ -->
+<div id="page-marketing-assets" class="hidden p-6 lg:p-8 fade-in">
+  <div class="page-header flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-1" style="font-family:Georgia,serif">🗂️ Marketing Assets</h1>
+      <p class="text-sm text-gray-500">Alle content die Tom, Max en Jools voor je hebben gemaakt — klaar om te gebruiken.</p>
+    </div>
+  </div>
+  <div id="marketing-assets-content"></div>
+</div>
+
 <!-- ═══════════════ PAGE: PIPELINE ═══════════════ -->
 <div id="page-pipeline" class="hidden p-6 lg:p-8 fade-in">
   <div class="page-header flex items-center justify-between mb-6">
@@ -801,7 +815,7 @@
 <!-- ═══════════════ JAVASCRIPT ═══════════════ -->
 <script>
 // ─── State ───
-const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch','marketing-reports','adviesraad','btw'];
+const PAGES = ['dashboard','businessplan','comms','marketing','agenda','studios','services','klanten','franchisees','pipeline','studenten','cohorten','academy','producten','voorraad','bestellingen','leveranciers','financieel','team','personeel','contacten','taken','friendchise-pitch','marketing-reports','adviesraad','btw','marketing-assets'];
 let data = { franchisees:[], students:[], cohorts:[], products:[], orders:[], suppliers:[], contacts:[], tasks:[], inventory:[], settings:{}, studios:[], services:[], bookings:[], clients:[], notes:{}, bp:{}, academy:{ modules:[], voortgang:{} }, personeel:{ medewerkers:[], uren:[] }, vastelasten:[] };
 let klantenPage = 1;
 const KLANTEN_PER_PAGE = 25;
@@ -922,6 +936,7 @@ function showPage(p) {
     'friendchise-pitch': renderFriendchisePitch,
     'adviesraad': renderAdviesraad,
     'btw': renderBtw,
+    'marketing-assets': renderMarketingAssets,
     'marketing-reports': renderMarketingReports,
     studenten: renderStudenten,
     cohorten: renderCohorten,
@@ -1674,7 +1689,30 @@ function lookupStadt() {
 
 // ═══════════ ADVIESRAAD ═══════════
 let adviesraadCurrent = null;
+let adviesraadLastType = null; // onthoud laatste quick-action type voor "opslaan"
 const adviesraadHistory = {};
+
+// Marketing quick-actions — per specialist 4 kant-en-klare content-generatie prompts
+const MARKETING_QUICK_ACTIONS = {
+  marketing: [
+    { emoji:'📝', label:'Blog-artikel', type:'blog-post', platform:'Blog / website', prompt:'Schrijf een volledig, SEO-geoptimaliseerd blog-artikel (~800 woorden) over "Waxing in [stad kiezen] — wat je moet weten". Output in markdown met: H1 titel, meta-description (150-160 char), 3 target-keywords bovenaan, 4-5 H2-koppen, intro-hook, conclusie met CTA om te boeken bij Wax Affairs. Toon: persoonlijk, informatief, niet-verkoperig.' },
+    { emoji:'📍', label:'Google Business post', type:'gbp-post', platform:'Google Business Profile', prompt:'Schrijf een Google Business Profile post van ~250 tekens voor deze week. Een lokale aanbieding, seizoenstip of promotie. Eén concrete CTA, één emoji, relevant voor Duitse beauty-markt. Output: alleen de post-tekst.' },
+    { emoji:'⭐', label:'Review-response', type:'review-response', platform:'Google Reviews', prompt:'Geef 2 response-templates voor Google reviews: (A) positief 5-sterren review, (B) kritisch 3-sterren review. Warm, professioneel, ~60 woorden elk, gepersonaliseerd invulveld [klantnaam]. Eindig altijd met uitnodiging om terug te komen.' },
+    { emoji:'🔑', label:'Keyword research', type:'keyword-research', platform:'SEO planning', prompt:'Lijst van 15 target keywords voor een waxing-studio in Duitsland. Splits in 3 groepen: short-tail (5), long-tail (5), location-based (5). Per keyword: geschat maandelijks zoekvolume (laag/mid/hoog) en search intent (info / navigation / transactional). Tabel-format.' }
+  ],
+  sea: [
+    { emoji:'🎯', label:'Google Ads campagne', type:'google-ads', platform:'Google Ads', prompt:'Maak een complete Google Ads Search-campagne voor een Wax Affairs studio. Output: 3 ad-groups (Brazilian, Benen/Oksels, Gezicht). Per ad-group: 3 responsive headlines (max 30 char elk) + 2 descriptions (max 90 char elk), 10 keywords in mix van broad/phrase/exact, 5 negative keywords. Daarna: daily budget advies, geo-targeting (radius), demographics. Beauty-benchmarks: CPC, verwachte CTR.' },
+    { emoji:'📱', label:'Meta Ad (Lead Gen)', type:'meta-ad', platform:'Meta Ads Manager', prompt:'Maak 1 Meta Ad voor lead generation (Instagram + Facebook). Output: primary text (~90 woorden), headline (40 char max), description (30 char max), CTA-knop keuze, 3 visuele concepten (korte brief per concept), audience (interesses + behaviors + leeftijd + regio). Budget: €500 test over 7 dagen. Verwachte CPL benoemen.' },
+    { emoji:'🔁', label:'Retargeting setup', type:'retargeting', platform:'Meta / Google', prompt:'Zet een retargeting-strategie op voor websitebezoekers die niet geboekt hebben. Output: 3 audience-segmenten (viewed booking page / viewed prices / viewed homepage only), 3 ad-concepten per segment (primary text + headline), frequency-cap advies, budget-split, timing (hoe lang na bezoek).' },
+    { emoji:'📊', label:'ROAS plan', type:'roas-plan', platform:'Analytics setup', prompt:'Maak een wekelijks ROAS-dashboard template voor een Wax Affairs studio. Output: 5 KPIs om te volgen (CPC, CTR, CR, ROAS, CAC), benchmarks voor beauty in DE per KPI, rode-vlag waardes, optimalisatie-triggers per KPI (bv. "CPC > €2,50 → bid-strategy aanpassen").' }
+  ],
+  social: [
+    { emoji:'📸', label:'Instagram post', type:'instagram-post', platform:'Instagram', prompt:'Maak een volledige Instagram feed-post voor Wax Affairs. Output: caption (~150 woorden, warme persoonlijke toon — Simone die vertelt), 10 hashtags (mix populair + niche + lokaal DE), alt-text voor toegankelijkheid (1 zin), visuele brief (wat staat er op de foto — onderwerp, stijl, kleuren), beste posting-tijd voor DE beauty-doelgroep.' },
+    { emoji:'🎬', label:'Reel script (30 sec)', type:'reel-script', platform:'Instagram Reels / TikTok', prompt:'Schrijf een Reel-script van 30 seconden voor Instagram/TikTok. Onderwerp: een misvatting over waxing (bv. "pijnlijker dan scheren? echt niet"). Output: hook (eerste 3 sec — letterlijke tekst), scene-voor-scene breakdown (3-5 scenes) met voiceover + visueel + text-overlay per scene, trending-sound-suggestie (beschrijving, geen naam), caption (~50 woorden), 5 hashtags.' },
+    { emoji:'📖', label:'Stories set (5)', type:'stories-set', platform:'Instagram Stories', prompt:'Maak een set van 5 Instagram Stories slides voor vandaag. Thema: "een dag in het leven bij Wax Affairs", eindigend met CTA om te boeken. Per slide: text-overlay, achtergrond-beschrijving, sticker/poll-suggestie (met opties), duur in seconden. Flow: ochtendkoffie → klant welkom → behandeling in actie (zonder gezicht) → NAO-product ritueel → CTA met link-sticker.' },
+    { emoji:'🤝', label:'Influencer DM', type:'influencer-dm', platform:'Instagram DM', prompt:'Schrijf een opening-DM naar een micro-influencer (5-20k followers, beauty/wellness, Duitsland). Output: aanhef (persoonlijk, niet "hoi lieverd"), context (1-2 zinnen waarom juist zij), concreet aanbod (gratis behandeling + €100 voor 1 Reel + 3 Stories), waarom haar publiek dit wil weten, volgende-stap CTA. Warm, geen sales-praatje, max 120 woorden.' }
+  ]
+};
 
 async function renderAdviesraad() {
   const sidebar = document.getElementById('adviesraad-personas');
@@ -1699,25 +1737,96 @@ async function renderAdviesraad() {
 
 function adviesraadSelect(id) {
   adviesraadCurrent = id;
+  adviesraadLastType = null;
   document.querySelectorAll('[id^="persona-"]').forEach(el => el.classList.remove('border-wax-500','bg-wax-50'));
   const sel = document.getElementById('persona-' + id);
   if (sel) sel.classList.add('border-wax-500','bg-wax-50');
   const header = document.getElementById('adviesraad-chat-header');
   const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'🔍', sea:'🎯', social:'📱', sales:'💰', finance:'📊' };
-  header.innerHTML = '<div class="flex items-center gap-2"><span class="text-xl">' + (emojiMap[id]||'🎯') + '</span>' +
-    '<strong class="text-gray-900">Gesprek met ' + (sel?.querySelector('.font-semibold')?.textContent || id) + '</strong></div>';
+  const specNaam = sel?.querySelector('.font-semibold')?.textContent || id;
+
+  // Quick actions bar voor marketing-specialists
+  const quickActions = MARKETING_QUICK_ACTIONS[id];
+  const quickActionsHtml = quickActions ? `
+    <div class="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-wax-50/50 to-transparent">
+      <div class="text-[10px] font-bold uppercase tracking-wider text-wax-700 mb-2">⚡ Quick actions — direct uitvoeren</div>
+      <div class="flex flex-wrap gap-2">
+        ${quickActions.map((a, i) => `<button onclick="adviesraadQuickAction(${i})" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-wax-50 border border-wax-200 rounded-lg text-xs font-medium text-gray-700 hover:text-wax-700 transition">
+          <span>${a.emoji}</span><span>${a.label}</span>
+        </button>`).join('')}
+      </div>
+    </div>` : '';
+
+  header.innerHTML = `<div class="flex items-center gap-2 px-1 py-1"><span class="text-xl">${emojiMap[id]||'🎯'}</span>
+    <strong class="text-gray-900">Gesprek met ${specNaam}</strong></div>` + quickActionsHtml;
+
+  renderAdviesraadChat();
+}
+
+function renderAdviesraadChat() {
   const chat = document.getElementById('adviesraad-chat');
-  const hist = adviesraadHistory[id] || [];
+  if (!chat || !adviesraadCurrent) return;
+  const sel = document.getElementById('persona-' + adviesraadCurrent);
+  const specNaam = sel?.querySelector('.font-semibold')?.textContent || adviesraadCurrent;
+  const hist = adviesraadHistory[adviesraadCurrent] || [];
   if (hist.length === 0) {
-    chat.innerHTML = '<div class="text-center text-sm text-gray-400 py-8">Stel je eerste vraag. ' + (sel?.querySelector('.font-semibold')?.textContent || id) + ' denkt met je mee.</div>';
+    chat.innerHTML = '<div class="text-center text-sm text-gray-400 py-8">Stel je eerste vraag of gebruik een quick action. ' + specNaam + ' denkt met je mee.</div>';
   } else {
-    chat.innerHTML = hist.map(m =>
-      m.role === 'user' 
-        ? '<div class="flex justify-end"><div class="bg-wax-600 text-white rounded-2xl rounded-br-sm px-4 py-2 max-w-[80%] text-sm">' + escapeHtml(m.content) + '</div></div>'
-        : '<div class="flex justify-start"><div class="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-2 max-w-[80%] text-sm whitespace-pre-wrap">' + escapeHtml(m.content) + '</div></div>'
-    ).join('');
+    chat.innerHTML = hist.map((m, idx) => {
+      if (m.role === 'user') {
+        return '<div class="flex justify-end"><div class="bg-wax-600 text-white rounded-2xl rounded-br-sm px-4 py-2 max-w-[80%] text-sm">' + escapeHtml(m.content) + '</div></div>';
+      }
+      const meta = m.meta || {};
+      const actions = `<div class="flex gap-1 mt-1.5">
+        <button onclick="kopieerBericht(${idx})" class="text-[11px] px-2 py-1 text-gray-500 hover:text-wax-700 hover:bg-wax-50 rounded transition">📋 Kopiëren</button>
+        ${MARKETING_QUICK_ACTIONS[adviesraadCurrent] ? `<button onclick="opslaanAlsAsset(${idx})" class="text-[11px] px-2 py-1 text-gray-500 hover:text-green-700 hover:bg-green-50 rounded transition">💾 Opslaan als asset</button>` : ''}
+      </div>`;
+      return '<div class="flex flex-col items-start"><div class="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-2 max-w-[85%] text-sm whitespace-pre-wrap">' + escapeHtml(m.content) + '</div>' + actions + '</div>';
+    }).join('');
     chat.scrollTop = chat.scrollHeight;
   }
+}
+
+function kopieerBericht(idx) {
+  const hist = adviesraadHistory[adviesraadCurrent] || [];
+  const msg = hist[idx];
+  if (!msg) return;
+  navigator.clipboard.writeText(msg.content).then(() => toast('Gekopieerd naar klembord')).catch(() => alert('Kopiëren mislukt'));
+}
+
+async function opslaanAlsAsset(idx) {
+  const hist = adviesraadHistory[adviesraadCurrent] || [];
+  const msg = hist[idx];
+  if (!msg) return;
+  const meta = msg.meta || {};
+  const titelDefault = meta.label ? `${meta.label} — ${new Date().toLocaleDateString('nl-NL')}` : `Advies ${adviesraadCurrent} — ${new Date().toLocaleDateString('nl-NL')}`;
+  const titel = prompt('Titel voor dit asset:', titelDefault);
+  if (titel === null) return; // geannuleerd
+  try {
+    const body = {
+      specialist: adviesraadCurrent,
+      type: meta.type || 'chat-response',
+      titel: titel || titelDefault,
+      content: msg.content,
+      platform: meta.platform || '',
+      status: 'draft'
+    };
+    const r = await fetch('/api/marketing-assets', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (!r.ok) throw new Error('Opslaan mislukt');
+    toast('✓ Opgeslagen in Marketing Assets');
+  } catch(e) {
+    alert('Opslaan mislukt: ' + e.message);
+  }
+}
+
+function adviesraadQuickAction(idx) {
+  const actions = MARKETING_QUICK_ACTIONS[adviesraadCurrent];
+  if (!actions || !actions[idx]) return;
+  const action = actions[idx];
+  adviesraadLastType = action; // bewaar voor opslaan-meta
+  const input = document.getElementById('adviesraad-input');
+  if (input) input.value = action.prompt;
+  adviesraadSend();
 }
 
 function escapeHtml(s) {
@@ -1758,11 +1867,13 @@ async function adviesraadSend() {
     if (!r.ok) {
       const err = data.error || 'Fout';
       chat.innerHTML += '<div class="flex justify-start"><div class="bg-red-50 border border-red-200 rounded-2xl px-4 py-2 text-sm text-red-800">⚠️ ' + escapeHtml(err) + (data.detail ? ' — ' + escapeHtml(data.detail) : '') + '</div></div>';
+      chat.scrollTop = chat.scrollHeight;
     } else {
-      adviesraadHistory[adviesraadCurrent].push({ role: 'assistant', content: data.response });
-      chat.innerHTML += '<div class="flex justify-start"><div class="bg-white border border-gray-200 rounded-2xl rounded-bl-sm px-4 py-2 max-w-[80%] text-sm whitespace-pre-wrap">' + escapeHtml(data.response) + '</div></div>';
+      const meta = adviesraadLastType ? { type: adviesraadLastType.type, platform: adviesraadLastType.platform, label: adviesraadLastType.label } : null;
+      adviesraadHistory[adviesraadCurrent].push({ role: 'assistant', content: data.response, meta });
+      adviesraadLastType = null; // reset na gebruik
+      renderAdviesraadChat();
     }
-    chat.scrollTop = chat.scrollHeight;
   } catch (e) {
     document.getElementById('adviesraad-thinking')?.remove();
     chat.innerHTML += '<div class="flex justify-start"><div class="bg-red-50 border border-red-200 rounded-2xl px-4 py-2 text-sm text-red-800">⚠️ Netwerkfout: ' + escapeHtml(String(e)) + '</div></div>';
@@ -2074,6 +2185,155 @@ function renderBtw() {
     </div>
   </div>
   `;
+}
+
+
+// ═══════════ MARKETING ASSETS ═══════════
+let marketingAssetsData = [];
+let marketingAssetsFilter = { specialist: 'all', status: 'all' };
+let marketingAssetSelected = null;
+
+async function renderMarketingAssets() {
+  const el = document.getElementById('marketing-assets-content');
+  if (!el) return;
+  try {
+    const r = await fetch('/api/marketing-assets');
+    marketingAssetsData = await r.json();
+  } catch(e) {
+    marketingAssetsData = [];
+  }
+  renderMarketingAssetsView();
+}
+
+function renderMarketingAssetsView() {
+  const el = document.getElementById('marketing-assets-content');
+  if (!el) return;
+  const emojiMap = { marketing:'🔍', sea:'🎯', social:'📱' };
+  const specialistNaam = { marketing:'Tom (SEO)', sea:'Max (SEA)', social:'Jools (Social)' };
+  const statusLabel = { draft:'Concept', review:'Review', scheduled:'Ingepland', published:'Live' };
+  const statusKleur = { draft:'bg-gray-100 text-gray-700', review:'bg-yellow-100 text-yellow-800', scheduled:'bg-blue-100 text-blue-800', published:'bg-green-100 text-green-800' };
+
+  const filtered = marketingAssetsData.filter(a =>
+    (marketingAssetsFilter.specialist === 'all' || a.specialist === marketingAssetsFilter.specialist) &&
+    (marketingAssetsFilter.status === 'all' || a.status === marketingAssetsFilter.status)
+  );
+
+  // Counts per specialist
+  const count = (spec) => marketingAssetsData.filter(a => a.specialist === spec).length;
+
+  el.innerHTML = `
+  <!-- Filter bar -->
+  <div class="bg-white rounded-xl border border-gray-100 p-4 mb-4 shadow-sm flex items-center gap-3 flex-wrap">
+    <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Specialist:</span>
+    <div class="flex gap-1">
+      <button onclick="marketingAssetsFilter.specialist='all'; renderMarketingAssetsView()" class="px-3 py-1.5 rounded-lg text-xs font-medium transition ${marketingAssetsFilter.specialist==='all'?'bg-wax-600 text-white':'bg-gray-100 text-gray-700 hover:bg-gray-200'}">Alle (${marketingAssetsData.length})</button>
+      <button onclick="marketingAssetsFilter.specialist='marketing'; renderMarketingAssetsView()" class="px-3 py-1.5 rounded-lg text-xs font-medium transition ${marketingAssetsFilter.specialist==='marketing'?'bg-wax-600 text-white':'bg-gray-100 text-gray-700 hover:bg-gray-200'}">🔍 Tom (${count('marketing')})</button>
+      <button onclick="marketingAssetsFilter.specialist='sea'; renderMarketingAssetsView()" class="px-3 py-1.5 rounded-lg text-xs font-medium transition ${marketingAssetsFilter.specialist==='sea'?'bg-wax-600 text-white':'bg-gray-100 text-gray-700 hover:bg-gray-200'}">🎯 Max (${count('sea')})</button>
+      <button onclick="marketingAssetsFilter.specialist='social'; renderMarketingAssetsView()" class="px-3 py-1.5 rounded-lg text-xs font-medium transition ${marketingAssetsFilter.specialist==='social'?'bg-wax-600 text-white':'bg-gray-100 text-gray-700 hover:bg-gray-200'}">📱 Jools (${count('social')})</button>
+    </div>
+    <div class="h-6 w-px bg-gray-200 mx-2"></div>
+    <span class="text-xs font-bold uppercase tracking-wider text-gray-500">Status:</span>
+    <select onchange="marketingAssetsFilter.status=this.value; renderMarketingAssetsView()" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs">
+      <option value="all">Alle</option>
+      <option value="draft" ${marketingAssetsFilter.status==='draft'?'selected':''}>Concept</option>
+      <option value="review" ${marketingAssetsFilter.status==='review'?'selected':''}>Review</option>
+      <option value="scheduled" ${marketingAssetsFilter.status==='scheduled'?'selected':''}>Ingepland</option>
+      <option value="published" ${marketingAssetsFilter.status==='published'?'selected':''}>Live</option>
+    </select>
+    <div class="ml-auto text-xs text-gray-400">${filtered.length} asset${filtered.length===1?'':'s'}</div>
+  </div>
+
+  ${filtered.length === 0 ? `
+    <div class="bg-white rounded-xl border border-gray-100 p-12 text-center">
+      <div class="text-4xl mb-3">🗂️</div>
+      <h3 class="font-bold text-gray-900 mb-1">Nog geen assets</h3>
+      <p class="text-sm text-gray-500 mb-4">Ga naar de Adviesraad, selecteer een marketing-specialist en gebruik de quick actions om je eerste asset te genereren.</p>
+      <button onclick="showPage('adviesraad')" class="btn-primary px-5 py-2 rounded-lg text-sm font-medium">→ Open Adviesraad</button>
+    </div>
+  ` : `
+    <div class="grid lg:grid-cols-5 gap-4">
+      <!-- Lijst -->
+      <div class="lg:col-span-2 space-y-2">
+        ${filtered.map(a => `
+          <div onclick="selecteerAsset('${a.id}')" class="bg-white rounded-xl border ${marketingAssetSelected===a.id?'border-wax-400 ring-2 ring-wax-100':'border-gray-100'} p-4 cursor-pointer hover:border-wax-300 transition shadow-sm">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="text-lg flex-shrink-0">${emojiMap[a.specialist]||'📝'}</span>
+                <div class="font-semibold text-sm text-gray-900 truncate">${a.titel}</div>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded-full ${statusKleur[a.status]||statusKleur.draft} whitespace-nowrap">${statusLabel[a.status]||a.status}</span>
+            </div>
+            <div class="text-xs text-gray-500">${specialistNaam[a.specialist]||a.specialist}${a.platform?` · ${a.platform}`:''}</div>
+            <div class="text-xs text-gray-400 mt-1">${new Date(a.aangemaakt).toLocaleDateString('nl-NL',{day:'numeric',month:'short'})}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Detail -->
+      <div class="lg:col-span-3">
+        ${marketingAssetSelected ? (() => {
+          const a = marketingAssetsData.find(x => x.id === marketingAssetSelected);
+          if (!a) return '<div class="bg-white rounded-xl border border-gray-100 p-6 text-sm text-gray-400 italic">Asset niet gevonden.</div>';
+          return `<div class="bg-white rounded-xl border border-gray-100 shadow-sm">
+            <div class="p-5 border-b border-gray-100">
+              <div class="flex items-start justify-between gap-3 mb-2">
+                <h3 class="font-bold text-gray-900 text-lg">${a.titel}</h3>
+                <span class="text-xs px-2 py-1 rounded-full ${statusKleur[a.status]||statusKleur.draft} whitespace-nowrap">${statusLabel[a.status]||a.status}</span>
+              </div>
+              <div class="text-xs text-gray-500">${emojiMap[a.specialist]||'📝'} ${specialistNaam[a.specialist]||a.specialist}${a.platform?` · ${a.platform}`:''} · ${new Date(a.aangemaakt).toLocaleDateString('nl-NL',{day:'numeric',month:'long',year:'numeric'})}</div>
+            </div>
+            <div class="p-5 bg-gray-50 max-h-[500px] overflow-y-auto">
+              <pre class="text-sm text-gray-800 whitespace-pre-wrap font-sans leading-relaxed">${escapeHtml(a.content)}</pre>
+            </div>
+            <div class="p-4 border-t border-gray-100 flex items-center gap-2 flex-wrap">
+              <button onclick="kopieerAsset('${a.id}')" class="px-3 py-2 bg-wax-600 hover:bg-wax-700 text-white rounded-lg text-sm font-medium">📋 Kopieer content</button>
+              <select onchange="updateAssetStatus('${a.id}', this.value)" class="px-3 py-2 border border-gray-200 rounded-lg text-sm">
+                <option value="draft" ${a.status==='draft'?'selected':''}>Concept</option>
+                <option value="review" ${a.status==='review'?'selected':''}>Review</option>
+                <option value="scheduled" ${a.status==='scheduled'?'selected':''}>Ingepland</option>
+                <option value="published" ${a.status==='published'?'selected':''}>Live</option>
+              </select>
+              <button onclick="verwijderAsset('${a.id}')" class="ml-auto text-sm text-red-500 hover:text-red-700">Verwijderen</button>
+            </div>
+          </div>`;
+        })() : `<div class="bg-white rounded-xl border border-gray-100 p-8 text-center text-sm text-gray-400">Selecteer links een asset om de volledige content te zien.</div>`}
+      </div>
+    </div>
+  `}`;
+}
+
+function selecteerAsset(id) {
+  marketingAssetSelected = id;
+  renderMarketingAssetsView();
+}
+
+function kopieerAsset(id) {
+  const a = marketingAssetsData.find(x => x.id === id);
+  if (!a) return;
+  navigator.clipboard.writeText(a.content).then(() => toast('✓ Content gekopieerd')).catch(() => alert('Kopiëren mislukt'));
+}
+
+async function updateAssetStatus(id, status) {
+  try {
+    const r = await fetch('/api/marketing-assets/' + id, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ status }) });
+    if (!r.ok) throw new Error('Status update mislukt');
+    const asset = marketingAssetsData.find(x => x.id === id);
+    if (asset) asset.status = status;
+    renderMarketingAssetsView();
+    toast('Status bijgewerkt');
+  } catch(e) { alert(e.message); }
+}
+
+async function verwijderAsset(id) {
+  if (!confirm('Dit asset verwijderen?')) return;
+  try {
+    const r = await fetch('/api/marketing-assets/' + id, { method:'DELETE' });
+    if (!r.ok) throw new Error('Verwijderen mislukt');
+    marketingAssetsData = marketingAssetsData.filter(a => a.id !== id);
+    if (marketingAssetSelected === id) marketingAssetSelected = null;
+    renderMarketingAssetsView();
+    toast('Verwijderd');
+  } catch(e) { alert(e.message); }
 }
 
 
