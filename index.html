@@ -4242,8 +4242,8 @@ const T = {
     // BP
     bpOverviewTitel:'Wax Affairs Overview',bpOverviewSub:'Het concept, het team en de kans',
     bpOverviewUitleg:'Wax Affairs is een compleet franchise-concept voor iedereen die een eigen wax-studio wil beginnen — niet alleen voor ervaren specialisten. We leggen de lat hoog dankzij 20 jaar ervaring in waxen én in het runnen van bedrijven. Het concept rust op drie pijlers die elkaar versterken: onze eigen natuurlijke productlijn NAO (zelf geproduceerd, 100% natuurlijk), een academy die zowel interne medewerkers als externe ondernemers opleidt, en een eigen studio-formule. Elke Friendchisee wordt intensief begeleid op vak, business, marketing en operations — zodat je vanaf dag één werkt als een ware professional onder een merk waar klanten op vertrouwen.',
-    bpFranchiseTitel:'Friendchise Model',bpFranchiseSub:'Partner types, P&L en overeenkomsten',
-    bpFranchiseUitleg:'Het Friendchise-model is de kern van de groeistrategie. Partners betalen een eenmalige onboarding fee en vervolgens een maandelijkse royalty over hun omzet. In ruil krijgen zij een volledig concept: merk, training, producten, SOPs en doorlopende begeleiding. Het woord "Friendchise" benadrukt de persoonlijke relatie — dit is geen afstandelijk franchise-systeem maar een partnerschap.',
+    bpFranchiseTitel:'Friendchise Model',bpFranchiseSub:'Het partnerschap, de investering en het rendement',
+    bpFranchiseUitleg:'Friendchise is meer dan een franchise — het woord zegt het al. We werken met mensen, niet met filialen. Als Friendchisee krijg je een compleet bedrijf-in-een-doos: het Wax Affairs merk, 10 dagen vaktraining van Simone, onze eigen natuurlijke productlijn NAO, kant-en-klare SOPs en intensieve business-coaching van Narin. Je betaalt een eenmalige onboarding fee en daarna een royalty over je omzet. Geen afstandelijk hoofdkantoor, maar partners die naast je staan — van je eerste klant tot je volgende cabine.',
     bpAcademyTitel:'Training Academy',bpAcademySub:'Het opleidingsinstituut en talent pipeline',
     bpAcademyUitleg:'De Academy is zowel de winstmotor (90%+ marge) als de strategische moat van het bedrijf. Door zelf de specialisten op te leiden, controleert Wax Affairs de kwaliteit in het hele netwerk. Graduates worden de recruitmentpool voor nieuwe franchise-locaties. De Academy biedt twee formats: intensieve in-person training (10 dagen, €4.000) en een online certificering (5 sessies, €1.000) die ook internationaal schaalbaar is.',
     bpNaoTitel:'Não Productlijn',bpNaoSub:'Eigen cosmeticalijn met 6 producten',
@@ -4305,8 +4305,8 @@ const T = {
     nieuweFranchisee:'+ Franchisee',nieuweStudent:'+ Student',nieuweTaak:'+ Aufgabe',
     bpOverviewTitel:'Wax Affairs Übersicht',bpOverviewSub:'Das Konzept, das Team und die Chance',
     bpOverviewUitleg:'Wax Affairs ist ein vollständiges Franchise-Konzept für alle, die ein eigenes Wax-Studio eröffnen möchten — nicht nur für erfahrene Spezialisten. Wir setzen den Standard hoch dank 20 Jahren Erfahrung im Waxing und im Aufbau von Unternehmen. Das Konzept ruht auf drei sich verstärkenden Säulen: unsere eigene natürliche Produktlinie NAO (selbst produziert, 100% natürlich), eine Academy, die sowohl interne Mitarbeiter als auch externe Unternehmer ausbildet, und eine eigene Studio-Formel. Jede Friendchiserin wird intensiv begleitet in Handwerk, Business, Marketing und Operations — sodass Sie ab dem ersten Tag als echte Profi unter einer Marke arbeiten, der Kunden vertrauen.',
-    bpFranchiseTitel:'Friendchise-Modell',bpFranchiseSub:'Partnertypen, P&L und Vereinbarungen',
-    bpFranchiseUitleg:'Das Friendchise-Modell ist der Kern der Wachstumsstrategie. Partner zahlen eine einmalige Onboarding-Gebühr und anschließend eine monatliche Umsatzbeteiligung. Im Gegenzug erhalten sie ein komplettes Konzept: Marke, Schulung, Produkte, SOPs und laufende Betreuung. Das Wort "Friendchise" betont die persönliche Beziehung — dies ist kein distanziertes Franchise-System, sondern eine Partnerschaft.',
+    bpFranchiseTitel:'Friendchise-Modell',bpFranchiseSub:'Die Partnerschaft, die Investition und die Rendite',
+    bpFranchiseUitleg:'Friendchise ist mehr als ein Franchise — das Wort sagt es bereits. Wir arbeiten mit Menschen, nicht mit Filialen. Als Friendchiserin erhalten Sie ein komplettes Unternehmen-in-einer-Box: die Marke Wax Affairs, 10 Tage Handwerksschulung mit Simone, unsere eigene natürliche Produktlinie NAO, fertige SOPs und intensive Business-Begleitung durch Narin. Sie zahlen eine einmalige Onboarding-Gebühr und danach eine Umsatzbeteiligung. Kein distanziertes Headquarter, sondern Partner, die neben Ihnen stehen — von Ihrer ersten Kundin bis zu Ihrer nächsten Kabine.',
     bpAcademyTitel:'Training Academy',bpAcademySub:'Die Ausbildungsstätte und Talent-Pipeline',
     bpAcademyUitleg:'Die Academy ist sowohl der Gewinnmotor (90%+ Marge) als auch der strategische Vorteil des Unternehmens. Durch die eigene Ausbildung der Spezialisten kontrolliert Wax Affairs die Qualität im gesamten Netzwerk. Absolventen werden zum Rekrutierungspool für neue Franchise-Standorte. Die Academy bietet zwei Formate: intensive Präsenzschulung (10 Tage, €4.000) und eine Online-Zertifizierung (5 Sitzungen, €1.000).',
     bpNaoTitel:'Não Produktlinie',bpNaoSub:'Eigene Kosmetiklinie mit 6 Produkten',
@@ -4468,9 +4468,37 @@ const BP_SECTIES = [
 
   { id:'franchise', icon:'🏪', tKey:'bpFranchise',
     content: () => {
+      const bp = data.bp || {};
+      const ft = bp.franchiseTerms || {};
+      const pl = bp.studioPL || {};
+      const bench = bp.studioBenchmarks || {};
       const fs = data.franchisees;
       const live = fs.filter(f=>f.status==='live').length;
       const pipeline = fs.length;
+
+      const onboardingFee = ft.onboardingFee ?? 15000;
+      const royaltyPct = ft.royaltyPct ?? 5;
+      const royaltyHigh = ft.royaltyHighPct ?? 6;
+      const royaltyThreshold = ft.royaltyThreshold ?? 120000;
+      const contractDuur = ft.contractDuur ?? ft.contractduur ?? '5 jaar, verlengbaar';
+      const territoriaal = ft.territoriaal ?? 'Exclusieve radius';
+      const investMin = ft.investMin ?? 45000;
+      const investMax = ft.investMax ?? 75000;
+      const minBestelling = ft.minBestelling ?? ft.minOrder ?? 200;
+
+      const plOmzet = pl.omzet ?? 126000;
+      const plPersoneel = pl.personeel ?? 34000;
+      const plHuurMin = pl.huurMin ?? 12000;
+      const plInkoop = pl.inkoopProducten ?? 8000;
+      const plRoyaltyPctVal = pl.royaltyPct ?? royaltyPct;
+      const plRoyalty = Math.round(plOmzet * plRoyaltyPctVal / 100);
+      const plMarketing = pl.marketingOverig ?? 7000;
+      const plKosten = plPersoneel + plHuurMin + plInkoop + plRoyalty + plMarketing;
+      const plEbitda = pl.ebitda ?? (plOmzet - plKosten);
+      const plMarge = pl.ebitdaMargePct ?? (plOmzet ? Math.round(plEbitda / plOmzet * 100) : 0);
+      const avgTicket = bench.avgTicket ?? 40;
+      const maandKlanten = avgTicket ? Math.round(plOmzet / avgTicket / 12) : 0;
+
       return `
       <div class="grid lg:grid-cols-3 gap-4 mb-6">
         ${statCard('In Pipeline', pipeline, '📈')}<div></div>
@@ -4481,22 +4509,22 @@ const BP_SECTIES = [
         <div class="bg-white rounded-xl border p-5">
           <h3 class="font-bold text-gray-900 mb-3">Friendchise Terms</h3>
           <div class="space-y-2 text-sm">
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Onboarding Fee</span><span class="font-bold">€15.000</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Royalty</span><span class="font-bold">5% (6% boven €120k)</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Contractduur</span><span class="font-bold">5 jaar, verlengbaar</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Territoriaal</span><span class="font-bold">Exclusieve radius</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Studio investering</span><span class="font-bold">€60-75k</span></div>
-            <div class="flex justify-between py-2"><span class="text-gray-500">Min. productorder</span><span class="font-bold">€200/maand</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Onboarding Fee</span><span class="font-bold">${fe(onboardingFee)}</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Royalty</span><span class="font-bold">${royaltyPct}% (${royaltyHigh}% boven ${fe(royaltyThreshold)})</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Contractduur</span><span class="font-bold">${contractDuur}</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Territoriaal</span><span class="font-bold">${territoriaal}</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Studio investering</span><span class="font-bold">${fe(investMin)} – ${fe(investMax)}</span></div>
+            <div class="flex justify-between py-2"><span class="text-gray-500">Min. productorder</span><span class="font-bold">${fe(minBestelling)}/maand</span></div>
           </div>
         </div>
         <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Studio P&L (Base Case)</h3>
+          <h3 class="font-bold text-gray-900 mb-3">Studio P&L (Base Case, 1 cabine)</h3>
           <div class="space-y-2 text-sm">
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Maandelijkse klanten</span><span class="font-bold">250</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Service omzet</span><span class="font-bold">€120.000/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Product retail</span><span class="font-bold">€6.000/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Totale kosten</span><span class="font-bold">€68.990/jr</span></div>
-            <div class="flex justify-between py-2 bg-green-50 rounded-lg px-3"><span class="text-green-700 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">€57.010 (45%)</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Maandelijkse klanten</span><span class="font-bold">± ${maandKlanten}</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Omzet (services + retail)</span><span class="font-bold">${fe(plOmzet)}/jr</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Personeelskosten</span><span class="font-bold">${fe(plPersoneel)}/jr</span></div>
+            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Totale kosten</span><span class="font-bold">${fe(plKosten)}/jr</span></div>
+            <div class="flex justify-between py-2 bg-green-50 rounded-lg px-3"><span class="text-green-700 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">${fe(plEbitda)} (${plMarge}%)</span></div>
           </div>
         </div>
       </div>`;
