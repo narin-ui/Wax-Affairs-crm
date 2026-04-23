@@ -4240,7 +4240,7 @@ const T = {
     actieveFranchisees:'Actieve Franchisees',studentenInOpleiding:'Studenten in Opleiding',openstaandeOrders:'Openstaande Orders',totaalContacten:'Totaal Contacten',
     nieuweFranchisee:'+ Franchisee',nieuweStudent:'+ Student',nieuweTaak:'+ Taak',
     // BP
-    bpOverviewTitel:'Wax Affairs Overview',bpOverviewSub:'De kans, het team en de visie',
+    bpOverviewTitel:'Wax Affairs Overview',bpOverviewSub:'Het concept, het team en de kans',
     bpOverviewUitleg:'Wax Affairs is een compleet franchise-concept voor iedereen die een eigen wax-studio wil beginnen — niet alleen voor ervaren specialisten. We leggen de lat hoog dankzij 20 jaar ervaring in waxen én in het runnen van bedrijven. Het concept rust op drie pijlers die elkaar versterken: onze eigen natuurlijke productlijn NAO (zelf geproduceerd, 100% natuurlijk), een academy die zowel interne medewerkers als externe ondernemers opleidt, en een eigen studio-formule. Elke Friendchisee wordt intensief begeleid op vak, business, marketing en operations — zodat je vanaf dag één werkt als een ware professional onder een merk waar klanten op vertrouwen.',
     bpFranchiseTitel:'Friendchise Model',bpFranchiseSub:'Partner types, P&L en overeenkomsten',
     bpFranchiseUitleg:'Het Friendchise-model is de kern van de groeistrategie. Partners betalen een eenmalige onboarding fee en vervolgens een maandelijkse royalty over hun omzet. In ruil krijgen zij een volledig concept: merk, training, producten, SOPs en doorlopende begeleiding. Het woord "Friendchise" benadrukt de persoonlijke relatie — dit is geen afstandelijk franchise-systeem maar een partnerschap.',
@@ -4303,7 +4303,7 @@ const T = {
     taken:'Aufgaben',agenda:'Kalender',studios:'Studios',services:'Leistungen',businessplan:'Businessplan',uitloggen:'Abmelden',
     actieveFranchisees:'Aktive Franchisees',studentenInOpleiding:'Studenten in Ausbildung',openstaandeOrders:'Offene Bestellungen',totaalContacten:'Kontakte Gesamt',
     nieuweFranchisee:'+ Franchisee',nieuweStudent:'+ Student',nieuweTaak:'+ Aufgabe',
-    bpOverviewTitel:'Wax Affairs Übersicht',bpOverviewSub:'Die Chance, das Team und die Vision',
+    bpOverviewTitel:'Wax Affairs Übersicht',bpOverviewSub:'Das Konzept, das Team und die Chance',
     bpOverviewUitleg:'Wax Affairs ist ein vollständiges Franchise-Konzept für alle, die ein eigenes Wax-Studio eröffnen möchten — nicht nur für erfahrene Spezialisten. Wir setzen den Standard hoch dank 20 Jahren Erfahrung im Waxing und im Aufbau von Unternehmen. Das Konzept ruht auf drei sich verstärkenden Säulen: unsere eigene natürliche Produktlinie NAO (selbst produziert, 100% natürlich), eine Academy, die sowohl interne Mitarbeiter als auch externe Unternehmer ausbildet, und eine eigene Studio-Formel. Jede Friendchiserin wird intensiv begleitet in Handwerk, Business, Marketing und Operations — sodass Sie ab dem ersten Tag als echte Profi unter einer Marke arbeiten, der Kunden vertrauen.',
     bpFranchiseTitel:'Friendchise-Modell',bpFranchiseSub:'Partnertypen, P&L und Vereinbarungen',
     bpFranchiseUitleg:'Das Friendchise-Modell ist der Kern der Wachstumsstrategie. Partner zahlen eine einmalige Onboarding-Gebühr und anschließend eine monatliche Umsatzbeteiligung. Im Gegenzug erhalten sie ein komplettes Konzept: Marke, Schulung, Produkte, SOPs und laufende Betreuung. Das Wort "Friendchise" betont die persönliche Beziehung — dies ist kein distanziertes Franchise-System, sondern eine Partnerschaft.',
@@ -4410,6 +4410,8 @@ const BP_SECTIES = [
       const proj = bp.projectie || [];
       const team = bp.team || [];
       const p0 = proj[0] || {}; const pL = proj[proj.length-1] || {};
+      const pLEbitda = (pL.omzet || 0) - (pL.kosten || 0);
+      const pLMargin = pL.omzet ? Math.round(pLEbitda / pL.omzet * 100) : 0;
       const icons = {academy:'🎓',producten:'🧴',franchise:'🏪',dtc:'🛒'};
       const colors = {academy:'terra-50',producten:'gray-50',franchise:'wax-50',dtc:'blue-50'};
       return `
@@ -4421,7 +4423,7 @@ const BP_SECTIES = [
             <div class="grid grid-cols-3 gap-4 text-center">
               <div><div class="text-2xl font-bold">${fe(p0.omzet)}</div><div class="text-xs opacity-70">${t('omzet')} ${p0.jaar||''}</div></div>
               <div><div class="text-2xl font-bold">${fe(pL.omzet)}</div><div class="text-xs opacity-70">${t('omzet')} ${pL.jaar||''}</div></div>
-              <div><div class="text-2xl font-bold">~70%</div><div class="text-xs opacity-70">EBITDA ${pL.jaar||''}</div></div>
+              <div><div class="text-2xl font-bold">~${pLMargin}%</div><div class="text-xs opacity-70">EBITDA ${pL.jaar||''}</div></div>
             </div>
           </div>
           <div class="bg-white rounded-xl border p-5">
