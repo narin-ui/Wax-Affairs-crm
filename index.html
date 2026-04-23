@@ -4472,23 +4472,28 @@ const BP_SECTIES = [
       const ft = bp.franchiseTerms || {};
       const pl = bp.studioPL || {};
       const bench = bp.studioBenchmarks || {};
+      const startup = bp.startupInvestering || {};
       const fs = data.franchisees;
       const live = fs.filter(f=>f.status==='live').length;
       const pipeline = fs.length;
 
-      const onboardingFee = ft.onboardingFee ?? 15000;
+      const onboardingFee = ft.onboardingFee ?? startup.onboardingFee ?? 15000;
       const royaltyPct = ft.royaltyPct ?? 5;
       const royaltyHigh = ft.royaltyHighPct ?? 6;
       const royaltyThreshold = ft.royaltyThreshold ?? 120000;
       const contractDuur = ft.contractDuur ?? ft.contractduur ?? '5 jaar, verlengbaar';
       const territoriaal = ft.territoriaal ?? 'Exclusieve radius';
-      const investMin = ft.investMin ?? 45000;
-      const investMax = ft.investMax ?? 75000;
       const minBestelling = ft.minBestelling ?? ft.minOrder ?? 200;
+      const fitOutMin = startup.studioFitOutMin ?? 30000;
+      const fitOutMax = startup.studioFitOutMax ?? 60000;
+      const totaalMin = startup.totaalMin ?? (ft.investMin ?? 45000);
+      const totaalMax = startup.totaalMax ?? (ft.investMax ?? 75000);
+      const werkkapMnd = startup.werkkapitaalMnd ?? 3;
 
       const plOmzet = pl.omzet ?? 126000;
       const plPersoneel = pl.personeel ?? 34000;
       const plHuurMin = pl.huurMin ?? 12000;
+      const plHuurMax = pl.huurMax ?? 18000;
       const plInkoop = pl.inkoopProducten ?? 8000;
       const plRoyaltyPctVal = pl.royaltyPct ?? royaltyPct;
       const plRoyalty = Math.round(plOmzet * plRoyaltyPctVal / 100);
@@ -4497,36 +4502,141 @@ const BP_SECTIES = [
       const plEbitda = pl.ebitda ?? (plOmzet - plKosten);
       const plMarge = pl.ebitdaMargePct ?? (plOmzet ? Math.round(plEbitda / plOmzet * 100) : 0);
       const avgTicket = bench.avgTicket ?? 40;
+      const staffCount = bench.staffCount ?? 2;
       const maandKlanten = avgTicket ? Math.round(plOmzet / avgTicket / 12) : 0;
+      const paybackMnd = plEbitda > 0 ? Math.round((onboardingFee + (fitOutMin+fitOutMax)/2) / plEbitda * 12) : null;
+
+      const pillar = (icon, titel, door, regels) => `
+        <div class="bg-white rounded-xl border border-gray-100 p-5 h-full">
+          <div class="flex items-start gap-3 mb-3">
+            <span class="text-2xl">${icon}</span>
+            <div><div class="font-bold text-sm text-gray-900">${titel}</div>${door?`<div class="text-xs text-gray-400">${door}</div>`:''}</div>
+          </div>
+          <ul class="space-y-1.5 text-xs text-gray-600">
+            ${regels.map(r => `<li class="flex gap-2"><span class="text-wax-500 flex-shrink-0">—</span><span>${r}</span></li>`).join('')}
+          </ul>
+        </div>`;
 
       return `
-      <div class="grid lg:grid-cols-3 gap-4 mb-6">
-        ${statCard('In Pipeline', pipeline, '📈')}<div></div>
+      <!-- STAT ROW -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        ${statCard('In Pipeline', pipeline, '📈')}
         ${statCard('Live Locaties', live, '🏪')}
         ${statCard('Huidige Studios', data.studios.length, '💈')}
       </div>
-      <div class="grid lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Friendchise Terms</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Onboarding Fee</span><span class="font-bold">${fe(onboardingFee)}</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Royalty</span><span class="font-bold">${royaltyPct}% (${royaltyHigh}% boven ${fe(royaltyThreshold)})</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Contractduur</span><span class="font-bold">${contractDuur}</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Territoriaal</span><span class="font-bold">${territoriaal}</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Studio investering</span><span class="font-bold">${fe(investMin)} – ${fe(investMax)}</span></div>
-            <div class="flex justify-between py-2"><span class="text-gray-500">Min. productorder</span><span class="font-bold">${fe(minBestelling)}/maand</span></div>
+
+      <!-- INVESTERING & VOORWAARDEN -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Investering & Voorwaarden</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Wat kost het, wat staat er tegenover — voor elke Friendchisee helder op papier</p>
+          </div>
+          <button onclick="openModal('bp-franchise-terms')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+        </div>
+
+        <!-- Investering: 3 grote getallen -->
+        <div class="grid md:grid-cols-3 gap-4 mb-5">
+          <div class="bg-gradient-to-br from-wax-50 to-white border border-wax-100 rounded-xl p-5">
+            <div class="text-xs text-wax-700 uppercase tracking-wider font-semibold mb-1">Onboarding fee</div>
+            <div class="text-3xl font-bold text-gray-900">${fe(onboardingFee)}</div>
+            <div class="text-xs text-gray-500 mt-1">Eenmalig — dekt training, territorium-setup, starterskit en eerste maand coaching</div>
+          </div>
+          <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-xl p-5">
+            <div class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Studio fit-out</div>
+            <div class="text-3xl font-bold text-gray-900">${fe(fitOutMin)}–${fe(fitOutMax)}</div>
+            <div class="text-xs text-gray-500 mt-1">Afhankelijk van locatie en grootte — huur, inrichting, apparatuur</div>
+          </div>
+          <div class="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-xl p-5">
+            <div class="text-xs text-green-700 uppercase tracking-wider font-semibold mb-1">Totale investering</div>
+            <div class="text-3xl font-bold text-gray-900">${fe(totaalMin)}–${fe(totaalMax)}</div>
+            <div class="text-xs text-gray-500 mt-1">Onboarding + fit-out + ${werkkapMnd} maanden werkkapitaal</div>
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Studio P&L (Base Case, 1 cabine)</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Maandelijkse klanten</span><span class="font-bold">± ${maandKlanten}</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Omzet (services + retail)</span><span class="font-bold">${fe(plOmzet)}/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Personeelskosten</span><span class="font-bold">${fe(plPersoneel)}/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Totale kosten</span><span class="font-bold">${fe(plKosten)}/jr</span></div>
-            <div class="flex justify-between py-2 bg-green-50 rounded-lg px-3"><span class="text-green-700 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">${fe(plEbitda)} (${plMarge}%)</span></div>
+
+        <!-- Lopende voorwaarden: 2x2 grid met uitleg -->
+        <div class="border-t border-gray-100 pt-5">
+          <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Lopende voorwaarden</div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">📊</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Royalty</span><span class="font-bold text-gray-900">${royaltyPct}% van omzet</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Stijgt naar ${royaltyHigh}% zodra de studio ${fe(royaltyThreshold)} bruto-omzet per jaar passeert.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">📦</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Min. productorder</span><span class="font-bold text-gray-900">${fe(minBestelling)}/mnd</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Exclusief NAO-aanbod blijft centraal — minimale afname borgt consistentie in de keten.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">📅</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Contractduur</span><span class="font-bold text-gray-900">${contractDuur}</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Lang genoeg om te bouwen, flexibel genoeg om mee te groeien.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">🌍</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Territorium</span><span class="font-bold text-gray-900">${territoriaal}</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Geen tweede Wax Affairs binnen jouw radius — jij bouwt de regio op, ongestoord.</div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- WAT KRIJG JE ERVOOR — 4 PIJLERS -->
+      <div class="mb-6">
+        <div class="flex items-end justify-between mb-3">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Wat krijg je ervoor</h3>
+            <p class="text-xs text-gray-500">Vier pijlers die samen het Friendchise-pakket vormen</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          ${pillar('🎓','Craft Training','door Simone',['10 dagen intensieve in-person training','Wax-type per huidtype, techniek, temperatuur, timing','Pre-treatment en aftercare met NAO','Praktijkexamen en officieel certificaat','Doorlopende coaching bij kwaliteitsvragen'])}
+          ${pillar('📊','Business Coaching','door Narin',['Businessplan en financiële setup van jouw studio','Pricing, klantacquisitie en retentie','Marketing- en social-mediastrategie','Ondersteuning tijdens opening en eerste maanden','Toegang tot het Wax Affairs netwerk'])}
+          ${pillar('🏪','Brand & System','',['Recht om de merknaam Wax Affairs te voeren','Volledige huisstijl, signage en marketingmiddelen','SOP-manual — werkstandaarden per behandeling','Toegang tot boekingssysteem en klantplatform','Territoriale exclusiviteit in jouw regio'])}
+          ${pillar('🧴','NAO Products','',['Exclusieve toegang tot de NAO productlijn','100% natuurlijk — geen synthetische ingrediënten','Wax, oliën, crèmes, hydrosol en powder','Wholesale-levering rechtstreeks van HQ','Retailverkoop aan klanten voor extra marge'])}
+        </div>
+      </div>
+
+      <!-- STUDIO P&L -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Studio P&L <span class="text-sm font-normal text-gray-400">— Base Case, 1 cabine, jaar 2+</span></h3>
+            <p class="text-xs text-gray-500 mt-0.5">Gebaseerd op operationele data uit de bestaande Duitse studios</p>
+          </div>
+          <button onclick="openModal('bp-studio-pl')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Operationeel</div>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Maandelijkse klanten</span><span class="font-medium">± ${maandKlanten}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Gemiddeld ticket</span><span class="font-medium">${fe(avgTicket)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Bezetting</span><span class="font-medium">${staffCount} medewerkers × 6 u/dag</span></div>
+              ${paybackMnd ? `<div class="flex justify-between py-1.5"><span class="text-gray-600">Terugverdientijd (indicatief)</span><span class="font-medium">± ${paybackMnd} maanden</span></div>` : ''}
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Financieel (per jaar)</div>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Omzet (services + retail)</span><span class="font-medium">${fe(plOmzet)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Personeel</span><span class="font-medium text-red-600">${fe(plPersoneel)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Huur</span><span class="font-medium text-red-600">${fe(plHuurMin)}–${fe(plHuurMax)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Producten + royalty + marketing</span><span class="font-medium text-red-600">${fe(plInkoop + plRoyalty + plMarketing)}</span></div>
+              <div class="flex justify-between py-2 mt-1 bg-green-50 rounded-lg px-3"><span class="text-green-800 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">${fe(plEbitda)} <span class="text-xs">(${plMarge}%)</span></span></div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 italic mt-4">Indicatieve cijfers. Werkelijke resultaten hangen af van locatie, bezetting en lokale markt.</p>
       </div>`;
     }},
 
@@ -5524,6 +5634,8 @@ function openModal(type, id) {
   else if (type === 'bp-revenue-add') content.innerHTML = modalBpRevenueAdd();
   else if (type === 'bp-projectie') content.innerHTML = modalBpProjectie();
   else if (type === 'bp-team') content.innerHTML = modalBpTeam();
+  else if (type === 'bp-franchise-terms') content.innerHTML = modalBpFranchiseTerms();
+  else if (type === 'bp-studio-pl') content.innerHTML = modalBpStudioPL();
   else if (type === 'booking') content.innerHTML = modalBooking(arguments[2], arguments[3]);
   else if (type === 'booking-detail') content.innerHTML = modalBookingDetail(id);
   else if (type === 'studio') content.innerHTML = modalStudio();
@@ -6295,6 +6407,132 @@ async function addTeamMember() {
 
 async function saveBp() {
   await fetch('/api/businessplan', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data.bp) });
+}
+
+// ─── MODAL: BP Franchise Terms ───
+function modalBpFranchiseTerms() {
+  const ft = data.bp.franchiseTerms || (data.bp.franchiseTerms = {});
+  const su = data.bp.startupInvestering || (data.bp.startupInvestering = {});
+  const row = (label, help, path, type='number', suffix='') => {
+    const val = path[0] === 'ft' ? ft[path[1]] : su[path[1]];
+    return `<div>
+      <label class="block text-xs font-semibold text-gray-700 mb-1">${label}</label>
+      ${help?`<p class="text-xs text-gray-400 mb-1.5">${help}</p>`:''}
+      <div class="relative">
+        <input type="${type}" value="${val ?? ''}" onblur="updateBpPath('${path[0]}','${path[1]}',this.value,${type==='number'})" class="w-full px-3 py-2 border rounded-lg text-sm" ${type==='number'?'step="1"':''}>
+        ${suffix?`<span class="absolute right-3 top-2 text-xs text-gray-400">${suffix}</span>`:''}
+      </div>
+    </div>`;
+  };
+  return modalHeader('Friendchise Terms', 'Bewerken') +
+    `<div class="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Wijzigingen worden live doorgevoerd in het Businessplan, de studio-compliance tab en de Friendchise Pitch.</p>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Investering</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Onboarding fee','Eenmalig betaald bij contractondertekening',['ft','onboardingFee'],'number','€')}
+          ${row('Werkkapitaal (maanden)','Aantal maanden buffer meegerekend in totaal',['su','werkkapitaalMnd'],'number','mnd')}
+          ${row('Studio fit-out min','Ondergrens rent + inrichting + apparatuur',['su','studioFitOutMin'],'number','€')}
+          ${row('Studio fit-out max','Bovengrens',['su','studioFitOutMax'],'number','€')}
+          ${row('Totale investering min','Wordt getoond als "totaal"',['su','totaalMin'],'number','€')}
+          ${row('Totale investering max','',['su','totaalMax'],'number','€')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Royalty & orders</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Royalty %','Standaard tarief over bruto omzet',['ft','royaltyPct'],'number','%')}
+          ${row('Royalty % (hoog)','Verhoogd tarief boven de drempel',['ft','royaltyHighPct'],'number','%')}
+          ${row('Royalty drempel','Omzet per jaar waarboven het hoge % geldt',['ft','royaltyThreshold'],'number','€')}
+          ${row('Min. productorder','NAO-afname per maand, borgt consistentie',['ft','minBestelling'],'number','€/mnd')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Contract</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Contractduur','Tekst zoals getoond op de pagina',['ft','contractDuur'],'text')}
+          ${row('Territorium','Korte beschrijving van exclusiviteit',['ft','territoriaal'],'text')}
+        </div>
+      </div>
+
+      <div class="pt-4 border-t">
+        <button onclick="sluitModal(); renderBusinessplan();" class="btn-primary w-full py-3 rounded-lg font-medium">Klaar</button>
+      </div>
+    </div>`;
+}
+
+// ─── MODAL: BP Studio P&L ───
+function modalBpStudioPL() {
+  const pl = data.bp.studioPL || (data.bp.studioPL = {});
+  const bench = data.bp.studioBenchmarks || (data.bp.studioBenchmarks = {});
+  const row = (label, help, path, suffix='') => {
+    const val = path[0] === 'pl' ? pl[path[1]] : bench[path[1]];
+    return `<div>
+      <label class="block text-xs font-semibold text-gray-700 mb-1">${label}</label>
+      ${help?`<p class="text-xs text-gray-400 mb-1.5">${help}</p>`:''}
+      <div class="relative">
+        <input type="number" value="${val ?? ''}" onblur="updateBpPath('${path[0]}','${path[1]}',this.value,true)" class="w-full px-3 py-2 border rounded-lg text-sm" step="1">
+        ${suffix?`<span class="absolute right-3 top-2 text-xs text-gray-400">${suffix}</span>`:''}
+      </div>
+    </div>`;
+  };
+  return modalHeader('Studio P&L — Base Case', 'Bewerken') +
+    `<div class="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Deze cijfers voeden de Business-tab én de Friendchise Pitch (ROI-calculator en P&L).</p>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Benchmarks (1 cabine)</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Omzet per jaar','Services + product-retail samen',['pl','omzet'],'€')}
+          ${row('Avg. revenue per cabine','Wordt getoond als benchmark',['bench','avgRevenuePerCabin'],'€')}
+          ${row('Gemiddeld ticket','Per klantbezoek',['bench','avgTicket'],'€')}
+          ${row('Aantal medewerkers','Per cabine',['bench','staffCount'],'')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Jaarlijkse kosten</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Personeelskosten','Totaal salaris/jaar',['pl','personeel'],'€')}
+          ${row('Huur min','Ondergrens huur/jaar',['pl','huurMin'],'€')}
+          ${row('Huur max','Bovengrens huur/jaar',['pl','huurMax'],'€')}
+          ${row('Productinkoop','NAO-wax + aftercare/jaar',['pl','inkoopProducten'],'€')}
+          ${row('Royalty %','Gebruikt voor studio P&L',['pl','royaltyPct'],'%')}
+          ${row('Marketing + overig','Lokale marketing en misc.',['pl','marketingOverig'],'€')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">EBITDA <span class="text-xs font-normal italic normal-case text-gray-400">(laat leeg om te laten berekenen)</span></h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('EBITDA','Winst vóór belasting',['pl','ebitda'],'€')}
+          ${row('EBITDA-marge','Percentage',['pl','ebitdaMargePct'],'%')}
+        </div>
+      </div>
+
+      <div class="pt-4 border-t">
+        <button onclick="sluitModal(); renderBusinessplan();" class="btn-primary w-full py-3 rounded-lg font-medium">Klaar</button>
+      </div>
+    </div>`;
+}
+
+async function updateBpPath(group, field, val, numeric) {
+  const map = { ft: 'franchiseTerms', su: 'startupInvestering', pl: 'studioPL', bench: 'studioBenchmarks' };
+  const key = map[group];
+  if (!key) return;
+  if (!data.bp[key]) data.bp[key] = {};
+  if (val === '' || val == null) {
+    delete data.bp[key][field];
+  } else if (numeric) {
+    const num = parseFloat(val);
+    data.bp[key][field] = isNaN(num) ? val : num;
+  } else {
+    data.bp[key][field] = val;
+  }
+  await saveBp();
 }
 
 async function snelTaakVanBP(form, sectieTitel) {
