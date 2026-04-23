@@ -78,5 +78,25 @@
     { "id": "lp1", "type": "warning", "icon": "⚠️", "titel": "Feitelijke leiding risico", "omschrijving": "Simone woont in DE. Board meetings formeel in NL houden om belastingrisico te vermijden." },
     { "id": "lp2", "type": "info", "icon": "📋", "titel": "EUIPO trademark", "omschrijving": "EU-brede merkbescherming aanvragen zodra de BV staat." },
     { "id": "lp3", "type": "ok", "icon": "✅", "titel": "Franchise wet", "omschrijving": "NL: wettelijk verankerd (NFC 2021). DE: alleen via BGB — contract is leidend." }
+  ],
+  "marketingStrategie": [
+    { "id": "ms1", "titel": "Founder-led Content", "omschrijving": "Simone's persoonlijke verhaal en 20 jaar expertise op Instagram en TikTok. Geen reclame-praatjes, wel echte inkijk in salon en Academy." },
+    { "id": "ms2", "titel": "Meta & Instagram Ads", "omschrijving": "Twee scherp afgebakende doelgroepen: ervaren waxers die eigen baas willen worden, en ondernemers die een bewezen concept zoeken." },
+    { "id": "ms3", "titel": "SEO & Blog", "omschrijving": "Long-form content (\"hoe start ik een wax-studio\") vangt mensen in de onderzoeksfase — lage CAC, lange levensduur." },
+    { "id": "ms4", "titel": "Partner Referral", "omschrijving": "Academy-graduates krijgen een bonus als zij een nieuwe Friendchisee aandragen — het netwerk werkt voor zichzelf." }
+  ],
+  "techStack": [
+    { "id": "ts1", "naam": "Booking", "tool": "Calendly", "kostenJaarMin": 180, "kostenJaarMax": 180 },
+    { "id": "ts2", "naam": "Webshop", "tool": "Shopify Starter", "kostenJaarMin": 360, "kostenJaarMax": 360 },
+    { "id": "ts3", "naam": "LMS (Academy online)", "tool": "Teachable", "kostenJaarMin": 600, "kostenJaarMax": 1200 },
+    { "id": "ts4", "naam": "Boekhouding", "tool": "Lexware", "kostenJaarMin": 240, "kostenJaarMax": 240 },
+    { "id": "ts5", "naam": "E-mail marketing", "tool": "Mailchimp (free tier)", "kostenJaarMin": 0, "kostenJaarMax": 0 }
+  ],
+  "marketingBudget": [
+    { "jaar": 2026, "bedrag": 2500, "focus": "Organic foundation" },
+    { "jaar": 2027, "bedrag": 10000, "focus": "Eerste paid campaigns" },
+    { "jaar": 2028, "bedrag": 20000, "focus": "Schalen in DE + NL" },
+    { "jaar": 2029, "bedrag": 35000, "focus": "Internationale expansie" },
+    { "jaar": 2030, "bedrag": 50000, "focus": "Volle schaal, B2C + B2B" }
   ]
 }
