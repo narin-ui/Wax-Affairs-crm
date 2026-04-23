@@ -2129,7 +2129,7 @@ function renderFriendchisePitch() {
       <h2 class="text-xl font-bold text-gray-900">${L?'Das Geld — drei Ansichten':'Het geld — drie perspectieven'}</h2>
       <p class="text-sm text-gray-500 mb-4">${L?'Transparenz ist uns wichtig. Drei Zahlen müssen Sie kennen: die Gesamtinvestitionskosten, wie Sie diese finanzieren und welche monatlichen Gebühren laufen.':'Transparantie is belangrijk. Drie getallen moet je kennen: de totale investeringskosten, hoe je die financiert en welke maandlasten doorlopen.'}</p>
       <div class="grid md:grid-cols-3 gap-4 mb-4">
-        <!-- 1. Totale projectsom -->
+        <!-- 1. Totale investeringskosten -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
           <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">1. ${L?'Gesamtinvestitionskosten':'Totale investeringskosten'}</div>
           <div class="text-3xl font-bold text-gray-900 mb-2">${L?'€ 55 – 98k':'€ 55 – 98k'}</div>
@@ -2138,10 +2138,10 @@ function renderFriendchisePitch() {
         </div>
         <!-- 2. Eigen middelen -->
         <div class="bg-wax-50 rounded-xl shadow-sm border-2 border-wax-300 p-5">
-          <div class="text-xs uppercase tracking-wider text-wax-700 font-semibold mb-2">2. ${L?'Finanzierung bestätigt':'Je financiering rond'} ⭐</div>
+          <div class="text-xs uppercase tracking-wider text-wax-700 font-semibold mb-2">2. ${L?'Benötigte Finanzierung':'Benodigde financiering'} ⭐</div>
           <div class="text-3xl font-bold text-wax-900 mb-2">${L?'€ 55 – 98k':'€ 55 – 98k'}</div>
           <p class="text-sm text-gray-700 mb-3">${L?'Was Sie an bestätigter Finanzierung mitbringen. Eigen, Bank, KfW — egal welche Mischung.':'Wat je aan bevestigde financiering meeneemt. Eigen, bank, KfW — maakt niet uit welke mix.'}</p>
-          <div class="text-xs text-wax-700 italic font-semibold">${L?'Quelle ist egal. Bestätigt zählt.':'Bron maakt niet uit. Bevestigd wel.'}</div>
+          <div class="text-xs text-wax-700 italic font-semibold">${L?'Die Gesamtsumme muss zum Start bereitstehen.':'De totale som moet bij start klaarstaan.'}</div>
         </div>
         <!-- 3. Doorlopende kosten -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
@@ -2210,7 +2210,7 @@ function renderFriendchisePitch() {
             </div>
             <p class="text-xs text-gray-400 mb-4">${L?'Corporate-Switcher mit Ersparnissen. Kombiniert eigenes Kapital mit KfW-Kredit.':'Corporate switcher met spaargeld. Combineert eigen kapitaal met KfW-lening.'}</p>
             <div class="space-y-2 text-sm">
-              <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'Projektsumme':'Projectsom'}</span><strong>€ 65.000</strong></div>
+              <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'Investitionskosten':'Investeringskosten'}</span><strong>€ 65.000</strong></div>
               <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'Eigenkapital':'Eigen kapitaal'}</span><strong class="text-wax-300">€ 27.000 (42%)</strong></div>
               <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'KfW-Kredit':'KfW-lening'}</span><strong>€ 38.000 (58%)</strong></div>
               <div class="flex justify-between py-1.5"><span class="text-gray-300">${L?'Monatsrate':'Maandlast'}</span><strong>€ 520</strong></div>
@@ -2218,7 +2218,7 @@ function renderFriendchisePitch() {
             <div class="mt-4 pt-3 border-t border-white/10 text-xs text-gray-400">${L?'7 Jahre · 4,5% Zinsen · nach 7 Jahren schuldenfrei':'7 jaar · 4,5% rente · na 7 jaar schuldenvrij'}</div>
           </div>
 
-          <!-- Voorbeeld 2: Mark 100% KfW zonder eigen geld -->
+          <!-- Voorbeeld 2: Mark met mix eigen + bank + KfW -->
           <div class="bg-wax-500/10 border-2 border-wax-400/50 rounded-xl p-5 relative">
             <div class="absolute -top-3 left-4 bg-wax-500 text-gray-900 px-3 py-0.5 rounded-full text-xs font-bold">${L?'Branchenwechsler':'Branchewisselaar'}</div>
             <div class="flex items-center gap-2 mb-3 mt-1">
@@ -2227,7 +2227,7 @@ function renderFriendchisePitch() {
             </div>
             <p class="text-xs text-gray-400 mb-4">${L?'Branchenwechsler mit bescheidenen R\u00FCcklagen. Kombiniert Eigenkapital mit Bankkredit und KfW-Programm.':'Branchewisselaar met bescheiden spaargeld. Combineert eigen kapitaal met bank en KfW-lening.'}</p>
             <div class="space-y-2 text-sm">
-              <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'Projektsumme':'Projectsom'}</span><strong>€ 65.000</strong></div>
+              <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'Investitionskosten':'Investeringskosten'}</span><strong>€ 65.000</strong></div>
               <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'Eigenkapital':'Eigen kapitaal'}</span><strong class="text-wax-300">€ 13.000 (20%)</strong></div>
               <div class="flex justify-between py-1.5 border-b border-white/10"><span class="text-gray-300">${L?'KfW + Hausbank':'KfW + huisbank'}</span><strong class="text-gray-300">€ 52.000 (80%)</strong></div>
               <div class="flex justify-between py-1.5"><span class="text-gray-300">${L?'Monatsrate':'Maandlast'}</span><strong>€ 514</strong></div>
@@ -2237,7 +2237,7 @@ function renderFriendchisePitch() {
         </div>
 
         <div class="mt-6 pt-5 border-t border-white/10 text-sm text-gray-300">
-          <strong class="text-white">${L?'Die Kernaussage':'De kern'}:</strong> ${L?'Sie entscheiden, wie Sie die Investition finanzieren \u2014 Hauptsache, die € 55\u201398k stehen bestätigt zur Verfügung. Wir begleiten Sie bei der Vorbereitung des Businessplans und beim Gespr\u00E4ch mit der Bank oder dem Investor.':'Jij beslist hoe je de investering financiert \u2014 als de € 55\u201398k maar bevestigd beschikbaar zijn. Wij begeleiden je bij het opstellen van het businessplan en bij het gesprek met bank of investeerder.'}
+          <strong class="text-white">${L?'Die Kernaussage':'De kern'}:</strong> ${L?'Sie entscheiden, wie Sie die Investition finanzieren \u2014 Hauptsache, die Gesamtsumme zum Startzeitpunkt verfügbar ist. Wir begleiten Sie bei der Vorbereitung des Businessplans und beim Gespr\u00E4ch mit der Bank oder dem Investor.':'Jij beslist hoe je de investering financiert \u2014 als de totale som bij start beschikbaar is. Wij begeleiden je bij het opstellen van het businessplan en bij het gesprek met bank of investeerder.'}
         </div>
       </div>
 
@@ -2351,7 +2351,7 @@ function renderFriendchisePitch() {
       </div>
 
       <h2 class="text-xl font-bold text-gray-900 pt-4">${L?'Drei Szenarien — wann haben Sie Ihr Geld zur\u00FCck?':'Drie scenario\u2019s — wanneer heb je je geld terug?'}</h2>
-      <p class="text-sm text-gray-500 mb-5">${L?'Wir rechnen mit drei realistischen Szenarien. Unten sehen Sie pro Szenario, wann Sie Break-even erreichen und wann die komplette Projektsumme (€ 65k) durch EBITDA zurückverdient ist.':'We rekenen met drie realistische scenario\u2019s. Hieronder zie je per scenario wanneer je break-even bereikt en wanneer de complete projectsom (€ 65k) via EBITDA terugverdiend is.'}</p>
+      <p class="text-sm text-gray-500 mb-5">${L?'Wir rechnen mit drei realistischen Szenarien. Unten sehen Sie pro Szenario, wann Sie Break-even erreichen und wann die komplette Investition (€ 65k) durch EBITDA zurückverdient ist.':'We rekenen met drie realistische scenario\u2019s. Hieronder zie je per scenario wanneer je break-even bereikt en wanneer de complete investering (€ 65k) via EBITDA terugverdiend is.'}</p>
 
       <div class="space-y-5">
         <!-- Conservatief -->
@@ -2376,7 +2376,7 @@ function renderFriendchisePitch() {
             <div class="space-y-2 text-sm">
               <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 1</span><div class="flex-1 bg-red-100 rounded h-6 relative"><span class="absolute inset-0 flex items-center px-3 text-xs text-red-800">− € 5.000 (${L?'Aufbau':'opbouw'})</span></div></div>
               <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 2</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-300 rounded" style="width:60%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-800">+ € 16.000</span></div></div>
-              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 3</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:80%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 28.000 \u2713 ${L?'Projektsumme wieder drin':'projectsom terug'}</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 3</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:80%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 28.000 \u2713 ${L?'Investition zurückverdient':'investering terugverdiend'}</span></div></div>
             </div>
           </div>
         </div>
@@ -2402,7 +2402,7 @@ function renderFriendchisePitch() {
             </div>
             <div class="space-y-2 text-sm">
               <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 1</span><div class="flex-1 bg-yellow-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-yellow-200 rounded" style="width:50%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-yellow-800">+ € 18.000 (${L?'breakeven im Monat 7':'break-even in maand 7'})</span></div></div>
-              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 2</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:75%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 50.000 \u2713 ${L?'Projektsumme wieder drin':'projectsom terug'}</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 2</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:75%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 50.000 \u2713 ${L?'Investition zurückverdient':'investering terugverdiend'}</span></div></div>
               <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 3</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-500 rounded" style="width:90%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-white font-semibold">+ € 55.000 (${L?'reiner Gewinn':'pure winst'})</span></div></div>
             </div>
           </div>
@@ -2428,7 +2428,7 @@ function renderFriendchisePitch() {
               <div><div class="text-xs text-gray-500 uppercase">${L?'Monatsgewinn':'Winst/mnd'}</div><div class="font-bold text-gray-900">€ 6.250</div></div>
             </div>
             <div class="space-y-2 text-sm">
-              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 1</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:70%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 35.000 \u2713 ${L?'Projektsumme wieder drin':'projectsom terug'}</span></div></div>
+              <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 1</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-400 rounded" style="width:70%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-green-900 font-semibold">+ € 35.000 \u2713 ${L?'Investition zurückverdient':'investering terugverdiend'}</span></div></div>
               <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 2</span><div class="flex-1 bg-green-100 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-500 rounded" style="width:90%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-white font-semibold">+ € 75.000 (${L?'reiner Gewinn':'pure winst'})</span></div></div>
               <div class="flex items-center gap-3"><span class="w-12 text-xs font-bold text-gray-500">${L?'Jahr':'Jaar'} 3</span><div class="flex-1 bg-green-200 rounded h-6 relative"><div class="absolute left-0 top-0 bottom-0 bg-green-600 rounded" style="width:95%"></div><span class="absolute inset-0 flex items-center px-3 text-xs text-white font-semibold">+ € 85.000 (${L?'Skalierung m\u00F6glich':'opschalen mogelijk'})</span></div></div>
             </div>
