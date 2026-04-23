@@ -2242,21 +2242,40 @@ function renderFriendchisePitch() {
           <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">1. ${L?'Gesamtinvestitionskosten':'Totale investeringskosten'}</div>
           <div class="text-3xl font-bold text-gray-900 mb-2">${L?'€ 55 – 98k':'€ 55 – 98k'}</div>
           <p class="text-sm text-gray-600 mb-3">${L?'Das sind die Kosten, die Sie investieren müssen, um Ihr Studio zu starten.':'Dit zijn de kosten die je moet investeren om je studio te starten.'}</p>
-          <div class="text-xs text-gray-500 italic">${L?'Die Zusammensetzung sehen Sie in der Tabelle weiter unten.':'De samenstelling zie je in de tabel verderop.'}</div>
+          <div class="space-y-1.5 text-xs text-gray-700 border-t border-gray-100 pt-3">
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">🏢 ${L?'Studio (Bau + Einrichtung)':'Studio (bouw + inrichting)'}</span><span class="font-medium tabular-nums">€ 22 – 50k</span></div>
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">🏷️ ${L?'Wax Affairs (Onboarding + 1. Bestellung)':'Wax Affairs (onboarding + 1e bestelling)'}</span><span class="font-medium tabular-nums">€ 13,5 – 15,5k</span></div>
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">💼 ${L?'Gründung + Recht':'Oprichting + juridisch'}</span><span class="font-medium tabular-nums">€ 1,2 – 2,4k</span></div>
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">💰 ${L?'Betriebskapital (3 Mon.)':'Werkkapitaal (3 mnd)'}</span><span class="font-medium tabular-nums">€ 11 – 20k</span></div>
+          </div>
+          <div class="text-xs text-gray-400 italic mt-3">${L?'Komplette Aufschlüsselung in Tabelle weiter unten ↓':'Volledige opsplitsing in tabel hieronder ↓'}</div>
         </div>
         <!-- 2. Eigen middelen -->
         <div class="bg-wax-50 rounded-xl shadow-sm border-2 border-wax-300 p-5">
           <div class="text-xs uppercase tracking-wider text-wax-700 font-semibold mb-2">2. ${L?'Benötigte Finanzierung':'Benodigde financiering'} ⭐</div>
           <div class="text-3xl font-bold text-wax-900 mb-2">${L?'€ 55 – 98k':'€ 55 – 98k'}</div>
           <p class="text-sm text-gray-700 mb-3">${L?'Was Sie an bestätigter Finanzierung mitbringen. Eigen, Bank, KfW — egal welche Mischung.':'Wat je aan bevestigde financiering meeneemt. Eigen, bank, KfW — maakt niet uit welke mix.'}</p>
-          <div class="text-xs text-wax-700 italic font-semibold">${L?'Die Gesamtsumme muss zum Start bereitstehen.':'De totale som moet bij start klaarstaan.'}</div>
+          <div class="space-y-1.5 text-xs text-gray-700 border-t border-wax-200 pt-3">
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">💶 ${L?'Eigen Kapital (min. 20%)':'Eigen vermogen (min. 20%)'}</span><span class="font-medium tabular-nums">${L?'€ 11 – 20k':'€ 11 – 20k'}</span></div>
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">🏦 ${L?'Bank / Hausbank':'Bank / huisbank'}</span><span class="font-medium tabular-nums">${L?'bis 60%':'tot 60%'}</span></div>
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">🇩🇪 ${L?'KfW Startgeld (tot € 125k)':'KfW Startgeld (tot € 125k)'}</span><span class="font-medium tabular-nums">${L?'bis 100%':'tot 100%'}</span></div>
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">👨‍👩‍👧 ${L?'Familie / Investor':'Familie / investeerder'}</span><span class="font-medium tabular-nums">${L?'flexibel':'flexibel'}</span></div>
+          </div>
+          <div class="text-xs text-wax-700 italic font-semibold mt-3">${L?'Die Gesamtsumme muss zum Start bereitstehen.':'De totale som moet bij start klaarstaan.'}</div>
         </div>
         <!-- 3. Doorlopende kosten -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
           <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">3. ${L?'Laufende Gebühren':'Doorlopende fees'}</div>
           <div class="text-3xl font-bold text-gray-900 mb-2">7%</div>
-          <p class="text-sm text-gray-600 mb-3">${L?'vom Umsatz pro Monat (5% Royalty + 2% Marketing). Bei € 10k Umsatz = € 700/Mon.':'van de omzet per maand (5% royalty + 2% marketing). Bij € 10k omzet = € 700/mnd.'}</p>
-          <div class="text-xs text-gray-500 italic">${L?'Keine überraschenden Rechnungen — es ist immer prozentual.':'Geen verrassingsrekeningen — altijd procentueel.'}</div>
+          <p class="text-sm text-gray-600 mb-3">${L?'vom Umsatz pro Monat. Bei € 10k Umsatz = € 700/Mon.':'van de omzet per maand. Bij € 10k omzet = € 700/mnd.'}</p>
+          <div class="space-y-1.5 text-xs text-gray-700 border-t border-gray-100 pt-3">
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">📊 ${L?'Royalty':'Royalty'}</span><span class="font-medium tabular-nums">5%</span></div>
+            <div class="text-[11px] text-gray-400 italic pl-5">${L?'Marke, Support, Qualitätsüberwachung, System':'Merk, support, kwaliteitsborging, systeem'}</div>
+            <div class="flex justify-between gap-2"><span class="flex items-center gap-1.5">📣 ${L?'Marketing-Fee':'Marketing-fee'}</span><span class="font-medium tabular-nums">2%</span></div>
+            <div class="text-[11px] text-gray-400 italic pl-5">${L?'Landesweite Kampagnen, SEO, Content-Library':'Landelijke campagnes, SEO, content-library'}</div>
+            <div class="flex justify-between gap-2 pt-1 border-t border-gray-100 font-semibold"><span>${L?'Bij € 10k/mnd Umsatz':'Bij € 10k/mnd omzet'}</span><span class="tabular-nums">€ 700/mnd</span></div>
+          </div>
+          <div class="text-xs text-gray-500 italic mt-3">${L?'Keine überraschenden Rechnungen — immer prozentual.':'Geen verrassingsrekeningen — altijd procentueel.'}</div>
         </div>
       </div>
 
