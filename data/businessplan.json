@@ -98,5 +98,20 @@
     { "jaar": 2028, "bedrag": 20000, "focus": "Schalen in DE + NL" },
     { "jaar": 2029, "bedrag": 35000, "focus": "Internationale expansie" },
     { "jaar": 2030, "bedrag": 50000, "focus": "Volle schaal, B2C + B2B" }
+  ],
+  "risicos": [
+    { "id": "r1", "impact": "hoog", "titel": "Partner non-compliance", "mitigatie": "Verplichte certificering, maandelijkse audits, mystery shoppers en een schorsingsclausule in elk contract." },
+    { "id": "r2", "impact": "hoog", "titel": "Feitelijke leiding (DE belastingrisico)", "mitigatie": "Simone woont in DE, BV zit in NL. Board meetings formeel in NL, Narin als primaire directeur, formele tax opinion als extra borging." },
+    { "id": "r3", "impact": "medium", "titel": "Supply chain (wax & creams)", "mitigatie": "Dubbele leveranciers (Epifutur + Clover als backup), 3 maanden buffervoorraad, langetermijn prijsafspraken." },
+    { "id": "r4", "impact": "medium", "titel": "Cashflow timing", "mitigatie": "3-6 maanden reserve aanhouden. Academy draait 90%+ marge en fungeert als snelle cash engine om pieken op te vangen." },
+    { "id": "r5", "impact": "medium", "titel": "Key person dependency (Simone)", "mitigatie": "Curriculum volledig documenteren, co-trainer opleiden tegen eind 2026, SOPs reproducibel maken." }
+  ],
+  "kpis": [
+    { "id": "k1", "kpi": "Academy inschrijvingen + conversie lead→betaald", "frequentie": "Maandelijks" },
+    { "id": "k2", "kpi": "Product DTC omzet + gemiddelde orderwaarde", "frequentie": "Maandelijks" },
+    { "id": "k3", "kpi": "Friendchise pipeline: leads / termsheets / getekend / open", "frequentie": "Wekelijks" },
+    { "id": "k4", "kpi": "Bruto marge per revenue stream", "frequentie": "Kwartaal" },
+    { "id": "k5", "kpi": "CAC en LTV per marketingkanaal", "frequentie": "Kwartaal" },
+    { "id": "k6", "kpi": "Netto cash-positie + runway (maanden)", "frequentie": "Maandelijks" }
   ]
 }
