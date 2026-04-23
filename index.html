@@ -2622,6 +2622,67 @@ function renderFriendchisePitch() {
         <p class="text-xs text-gray-500 mt-3">${L?'Bemerkung: die niedrigeren Zahlen gelten für kleinere Städte und einfachere Lagen, die höheren für Premium-Standorte in Großstädten. Ihr realer Betrag landet meist in der Mitte (€ 62–78k).':'Let op: de lagere cijfers gelden voor kleinere steden en eenvoudigere locaties, de hogere voor premium-locaties in grote steden. Jouw werkelijke bedrag zit meestal in het midden (€ 62–78k).'}</p>
       </div>
 
+      <!-- NAO producten — verbruik & verkoop (pitch) -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'NAO Produkte — Eigenverbrauch + Retail':'NAO producten — eigen verbruik + retail'}</h2>
+        <p class="text-sm text-gray-500 mb-4">${L?'Zwei Geschichten: was Ihr Studio bei jeder Behandlung verbraucht, und was Sie zusätzlich verdienen durch den Verkauf von Pflegeprodukten an Kundinnen. Basis: 1 Kabine, ~3.150 Behandlungen pro Jahr, 25% Retail-Konversion.':'Twee verhalen: wat je studio bij elke behandeling verbruikt, en wat je extra verdient door verzorgingsproducten aan klanten te verkopen. Basis: 1 cabine, ~3.150 behandelingen per jaar, 25% retail-conversie.'}</p>
+
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <!-- Kaart 1: Eigen verbruik -->
+          <div class="bg-gradient-to-br from-blue-50 to-white rounded-xl p-5 border border-blue-100 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-2xl">🧴</span>
+              <h3 class="font-bold text-gray-900">${L?'Was Ihr Studio selbst verbraucht':'Wat je studio zélf verbruikt'}</h3>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">${L?'Wachs + Aftercare angewendet während jeder Behandlung — Sie bestellen das routinemäßig.':'Wax + aftercare aangebracht tijdens elke behandeling — dit bestel je routinematig.'}</p>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Depilatory Wax':'Depilatory Wax'}</span><span class="text-right"><strong>~ 110 kg</strong><div class="text-xs text-gray-500">€ 1.320 / jr</div></span></li>
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Post-Dep. Öl (Behandlung)':'Post-Dep. olie (behandeling)'}</span><span class="text-right"><strong>~ 6 L</strong><div class="text-xs text-gray-500">€ 160 / jr</div></span></li>
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Hydrosol Spray':'Hydrosol spray'}</span><span class="text-right"><strong>~ 10 L</strong><div class="text-xs text-gray-500">€ 475 / jr</div></span></li>
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Pre-Dep. Puder':'Pre-Dep. poeder'}</span><span class="text-right"><strong>~ 3 kg</strong><div class="text-xs text-gray-500">€ 160 / jr</div></span></li>
+            </ul>
+            <div class="mt-3 pt-3 border-t border-blue-200 flex justify-between items-baseline font-bold">
+              <span class="text-gray-900">${L?'Eigen verbruik total':'Totaal eigen verbruik'}</span>
+              <span class="text-blue-700">€ 2.115 / jr</span>
+            </div>
+            <p class="text-xs text-gray-500 italic mt-1">${L?'≈ € 175/Monat — läuft automatisch.':'≈ € 175/maand — loopt automatisch.'}</p>
+          </div>
+
+          <!-- Kaart 2: Retail verkoop -->
+          <div class="bg-gradient-to-br from-green-50 to-white rounded-xl p-5 border border-green-100 shadow-sm">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-2xl">💰</span>
+              <h3 class="font-bold text-gray-900">${L?'Was Sie an Kundinnen verkaufen':'Wat je aan klanten verkoopt'}</h3>
+            </div>
+            <p class="text-xs text-gray-500 mb-3">${L?'25% der Kundinnen kauft nach der Behandlung ein Pflegeprodukt mit — extra Umsatz ohne extra Behandlungszeit.':'25% van de klanten koopt een verzorgingsproduct mee na de behandeling — extra omzet zonder extra behandeltijd.'}</p>
+            <ul class="space-y-2 text-sm">
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Aftercare Cream':'Aftercare crème'} <span class="text-xs text-gray-400">(40%)</span></span><span class="text-right"><strong>~ 315 st.</strong><div class="text-xs text-gray-500">omzet € 5.040</div></span></li>
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Post-Dep. Öl':'Post-Dep. olie'} <span class="text-xs text-gray-400">(20%)</span></span><span class="text-right"><strong>~ 158 st.</strong><div class="text-xs text-gray-500">omzet € 2.530</div></span></li>
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Body Scrub':'Body scrub'} <span class="text-xs text-gray-400">(20%)</span></span><span class="text-right"><strong>~ 158 st.</strong><div class="text-xs text-gray-500">omzet € 2.210</div></span></li>
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Hydrosol Spray':'Hydrosol spray'} <span class="text-xs text-gray-400">(12%)</span></span><span class="text-right"><strong>~ 95 st.</strong><div class="text-xs text-gray-500">omzet € 1.140</div></span></li>
+              <li class="flex justify-between items-baseline"><span class="text-gray-700">${L?'Pre-Dep. Puder':'Pre-Dep. poeder'} <span class="text-xs text-gray-400">(8%)</span></span><span class="text-right"><strong>~ 63 st.</strong><div class="text-xs text-gray-500">omzet € 725</div></span></li>
+            </ul>
+            <div class="mt-3 pt-3 border-t border-green-200 space-y-1 text-sm">
+              <div class="flex justify-between"><span class="text-gray-600">${L?'Retail-Umsatz':'Retail-omzet'}</span><span class="font-medium">€ 11.645</span></div>
+              <div class="flex justify-between"><span class="text-gray-600">${L?'− Einkauf (wholesale)':'− Inkoop (wholesale)'}</span><span class="font-medium text-red-600">− € 4.890</span></div>
+              <div class="flex justify-between font-bold pt-1 border-t border-green-100"><span class="text-gray-900">${L?'Netto Marge':'Netto marge'}</span><span class="text-green-700">€ 6.755 / jr</span></div>
+            </div>
+            <p class="text-xs text-gray-500 italic mt-1">${L?'Bonus-Umsatz oben auf Ihre Behandlungen.':'Bonus-omzet bovenop je behandelingen.'}</p>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-xl p-4 text-sm">
+          <div class="flex justify-between items-baseline flex-wrap gap-2">
+            <div>
+              <strong class="text-gray-900">${L?'Total NAO-Einkauf bei HQ':'Totale NAO-inkoop bij HQ'}</strong>
+              <span class="text-xs text-gray-500 ml-2">(${L?'1 Kabine':'1 cabine'})</span>
+            </div>
+            <div class="text-xl font-bold text-gray-900">€ 7.005 / jr · <span class="text-sm text-gray-500">≈ € 585/mnd</span></div>
+          </div>
+          <div class="text-xs text-gray-500 mt-1">${L?'Für 2 Kabinen × 2, für 3 Kabinen × 3. Minimum-Bestellung (€ 200/Monat) wird leicht erreicht.':'Voor 2 cabines × 2, voor 3 cabines × 3. Minimum-bestelling (€ 200/mnd) wordt ruim gehaald.'}</div>
+        </div>
+      </div>
+
       <!-- NIEUW: Maandelijkse vaste lasten -->
       <div>
         <h2 class="text-xl font-bold text-gray-900 mb-2">${L?'Monatliche Fixkosten — was ein Studio laufen lässt':'Maandelijkse vaste lasten — wat een studio draaiende houdt'}</h2>
@@ -7173,126 +7234,118 @@ const BP_SECTIES = [
         </div>
       </div>
 
-      <!-- PRODUCT-AFNAME SCENARIOS -->
-      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mt-6">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <h3 class="font-bold text-gray-900 text-lg">Product-afname per scenario${infoIcon('Hoe werkt dit model?', {
-              bron: 'Voor elk NAO-product berekenen we zowel in-studio verbruik (toegepast tijdens behandelingen) als retail-verkoop (meegegeven aan klanten). Het geheel is wat een studio jaarlijks bij HQ inkoopt.',
-              berekening: [
-                ['Behandelingen/jaar', 'Omzet ÷ gem. ticket'],
-                ['In-studio wax', 'Behandelingen × ' + waxPerBehG + 'g'],
-                ['In-studio aftercare', 'Behandelingen × dosering per product'],
-                ['Retail verkoop', 'Behandelingen × ' + retailConvPct + '% koopt iets'],
-                ['Retail mix', 'Cream 40% · Oil 20% · Scrub 20% · Spray 12% · Powder 8%']
-              ],
-              doel: [
-                'Elke cabine draait ~' + (avgTicket ? Math.round(plOmzet/avgTicket) : 0) + ' behandelingen/jaar',
-                'Consistente aftercare-routine per klant (dezelfde producten elke keer)',
-                'Actief retail aanbieden na behandeling (zinnige ~20-30% conversie)'
-              ],
-              extra: 'Alle aannames zijn aanpasbaar via de Bewerken-knoppen.'
-            })}</h3>
-            <p class="text-xs text-gray-500 mt-0.5">Per NAO-product per scenario: wat verbruikt de studio zelf, wat verkoopt ze retail, wat is de totale inkoop bij HQ.</p>
-          </div>
-          <button onclick="openModal('bp-studio-pl')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
-        </div>
+      <!-- PRODUCT-AFNAME: 2 simpele verhalen -->
+      ${(() => {
+        const baseCase = scenarios[0]; // 1 cabine als base
+        // Splits producten in "studio-verbruik" en "retail"
+        const studioProducten = baseCase.perProduct.filter(r => r.inStudioUnits > 0);
+        const retailProducten = baseCase.perProduct.filter(r => r.retailUnits > 0);
+        const studioTotaal = studioProducten.reduce((s,r) => s + r.inStudioUnits * (r.prod.wholesalePrijs || 0), 0);
+        const retailInkoop = retailProducten.reduce((s,r) => s + r.retailUnits * (r.prod.wholesalePrijs || 0), 0);
+        const retailOmzet = retailProducten.reduce((s,r) => s + r.retailUnits * (r.prod.retailPrijs || 0), 0);
+        const retailMarge = retailOmzet - retailInkoop;
+        const totaalInkoop = studioTotaal + retailInkoop;
+        const minJaar = minBestelling * 12;
 
-        <!-- Overzicht: omzet + behandelingen per scenario -->
-        <div class="grid grid-cols-3 gap-3 mb-5">
-          ${scenarios.map(s => `
-            <div class="p-3 bg-gray-50 rounded-xl text-center">
-              <div class="text-xs text-gray-500 uppercase tracking-wider">${s.cabines} cabine${s.cabines>1?'s':''}</div>
-              <div class="text-lg font-bold text-gray-900 mt-1">${fe(s.omzet).replace(',00','')}</div>
-              <div class="text-xs text-gray-500">${s.behandelingen.toLocaleString('nl-NL')} behandelingen · ${s.retailUnitsTotal} retail-verkopen</div>
+        const verbruikLabel = (r) => {
+          const g = productGebruik[r.prod.id] || {};
+          if (g.inStudioPerBehG) return `${(baseCase.behandelingen * g.inStudioPerBehG / 1000).toFixed(1)} kg`;
+          if (g.inStudioPerBehMl) return `${(baseCase.behandelingen * g.inStudioPerBehMl / 1000).toFixed(1)} L`;
+          return r.inStudioUnits + ' st.';
+        };
+
+        return `<div class="mt-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">NAO producten — verbruik & verkoop</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Basis: 1 cabine · ${baseCase.behandelingen.toLocaleString('nl-NL')} behandelingen/jaar. Schaal × 2 voor twee cabines, × 3 voor drie.</p>
             </div>
-          `).join('')}
-        </div>
-
-        <!-- Gedetailleerde tabel per product -->
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="text-xs text-gray-400 border-b border-gray-100">
-                <th class="text-left py-2 pr-2">Product</th>
-                <th class="text-left px-2">Gebruik</th>
-                ${scenarios.map(s => `<th class="text-right px-2" colspan="2">${s.cabines} cabine${s.cabines>1?'s':''}</th>`).join('')}
-              </tr>
-              <tr class="text-[10px] text-gray-300 border-b border-gray-100">
-                <th></th><th></th>
-                ${scenarios.map(() => `<th class="text-right px-2">Units</th><th class="text-right px-2">Wholesale</th>`).join('')}
-              </tr>
-            </thead>
-            <tbody>
-              ${alleProducten.map((prod, pIdx) => {
-                const rowScenarios = scenarios.map(s => s.perProduct[pIdx]);
-                const gebruik = productGebruik[prod.id] || {};
-                let gebruikLabel = '';
-                if (gebruik.inStudioPerBehG || gebruik.inStudioPerBehMl) {
-                  const mix = gebruik.retailShare > 0 ? ' + retail' : '';
-                  gebruikLabel = `In-studio${mix}`;
-                } else if (gebruik.retailShare > 0) {
-                  gebruikLabel = `Retail (${Math.round(gebruik.retailShare*100)}% mix)`;
-                } else {
-                  gebruikLabel = 'Alternatief';
-                }
-                return `<tr class="border-b border-gray-50 hover:bg-gray-50/50">
-                  <td class="py-2 pr-2">
-                    <div class="font-medium text-gray-900">${prod.naam}</div>
-                    <div class="text-xs text-gray-400">${prod.inhoud || prod.eenheid || ''} · €${prod.wholesalePrijs}/${prod.eenheid === 'kg' ? 'kg' : 'stuk'}${prod.retailPrijs ? ' · retail €' + prod.retailPrijs : ''}</div>
-                  </td>
-                  <td class="px-2 text-xs text-gray-500">${gebruikLabel}</td>
-                  ${rowScenarios.map(r => `
-                    <td class="text-right px-2 tabular-nums">${r.totaalUnits || '—'}${r.inStudioUnits && r.retailUnits ? `<div class="text-[10px] text-gray-400">${r.inStudioUnits} studio + ${r.retailUnits} retail</div>` : ''}</td>
-                    <td class="text-right px-2 tabular-nums font-medium">${r.wholesaleKosten > 0 ? fe(r.wholesaleKosten) : '—'}</td>
-                  `).join('')}
-                </tr>`;
-              }).join('')}
-              <tr class="bg-wax-50 font-bold">
-                <td class="py-3 pr-2">Totale inkoop bij HQ</td>
-                <td class="px-2"></td>
-                ${scenarios.map(s => `
-                  <td class="text-right px-2"></td>
-                  <td class="text-right px-2 tabular-nums text-wax-700">${fe(s.totaalAfname)}</td>
-                `).join('')}
-              </tr>
-              <tr class="text-xs text-gray-500">
-                <td class="py-1 pr-2 italic">Retail-omzet voor studio (bij retail-prijs)</td>
-                <td></td>
-                ${scenarios.map(s => `
-                  <td class="text-right px-2"></td>
-                  <td class="text-right px-2 tabular-nums">${fe(s.retailOmzet)}</td>
-                `).join('')}
-              </tr>
-              <tr class="text-xs">
-                <td class="py-1 pr-2 italic text-gray-500">vs. minimum order (${fe(minBestelling * 12)}/jr)</td>
-                <td></td>
-                ${scenarios.map(s => `
-                  <td class="text-right px-2"></td>
-                  <td class="text-right px-2 font-medium ${s.boven?'text-green-600':'text-yellow-600'}">${s.boven?'✓ ruim boven':'⚠️ onder'}</td>
-                `).join('')}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Aannames uitleg -->
-        <div class="mt-5 p-4 bg-gray-50 rounded-xl text-xs text-gray-600">
-          <div class="font-semibold text-gray-700 mb-2">📋 Aannames (alles aanpasbaar)</div>
-          <div class="grid md:grid-cols-2 gap-x-6 gap-y-1.5">
-            <div>• <strong>In-studio verbruik per behandeling:</strong></div>
-            <div></div>
-            ${perBehProducten.map(prod => {
-              const g = productGebruik[prod.id];
-              const verbruik = g.inStudioPerBehG ? `${g.inStudioPerBehG}g` : `${g.inStudioPerBehMl}ml`;
-              return `<div class="pl-4">— ${prod.naam}: ${verbruik}</div><div></div>`;
-            }).join('')}
-            <div>• <strong>Retail-conversie:</strong> ${retailConvPct}% van klanten koopt 1 product mee</div>
-            <div>• <strong>Retail-mix:</strong> Cream 40% · Oil 20% · Scrub 20% · Spray 12% · Powder 8%</div>
-            <div>• <strong>Minimum productorder:</strong> ${fe(minBestelling)}/mnd (${fe(minBestelling * 12)}/jr)</div>
-            <div>• <strong>Gemiddeld ticket:</strong> ${fe(avgTicket)} per behandeling</div>
+            <button onclick="openModal('bp-studio-pl')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
           </div>
-        </div>
+
+          <div class="grid md:grid-cols-2 gap-4 mb-4">
+            <!-- Kaart 1: Studio eigen verbruik -->
+            <div class="bg-gradient-to-br from-blue-50 to-white border border-blue-100 rounded-2xl p-5">
+              <div class="flex items-start gap-3 mb-3">
+                <span class="text-2xl">🧴</span>
+                <div>
+                  <h4 class="font-bold text-gray-900">Wat je studio zélf verbruikt</h4>
+                  <p class="text-xs text-gray-500">Wax + aftercare toegepast tijdens elke behandeling</p>
+                </div>
+              </div>
+              <div class="space-y-2 text-sm">
+                ${studioProducten.map(r => `
+                  <div class="flex items-baseline justify-between py-1.5 border-b border-blue-50 last:border-0">
+                    <div class="flex-1">
+                      <div class="text-gray-900">${r.prod.naam}</div>
+                      <div class="text-xs text-gray-500">${verbruikLabel(r)} per jaar · ${r.inStudioUnits} verpakking${r.inStudioUnits===1?'':'en'}</div>
+                    </div>
+                    <div class="font-semibold tabular-nums">${fe(r.inStudioUnits * r.prod.wholesalePrijs)}</div>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="flex justify-between items-baseline mt-3 pt-3 border-t border-blue-200 font-bold">
+                <span class="text-gray-900">Totaal eigen verbruik/jaar</span>
+                <span class="text-blue-700 tabular-nums">${fe(studioTotaal)}</span>
+              </div>
+              <p class="text-xs text-gray-500 italic mt-2">± ${fe(Math.round(studioTotaal/12))} per maand — dit is sowieso in je inkoop.</p>
+            </div>
+
+            <!-- Kaart 2: Retail verkoop -->
+            <div class="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-2xl p-5">
+              <div class="flex items-start gap-3 mb-3">
+                <span class="text-2xl">💰</span>
+                <div>
+                  <h4 class="font-bold text-gray-900">Wat je aan klanten verkoopt</h4>
+                  <p class="text-xs text-gray-500">${baseCase.retailUnitsTotal} verkopen/jaar (${retailConvPct}% conversie)</p>
+                </div>
+              </div>
+              <div class="space-y-2 text-sm">
+                ${retailProducten.map(r => `
+                  <div class="flex items-baseline justify-between py-1.5 border-b border-green-50 last:border-0">
+                    <div class="flex-1">
+                      <div class="text-gray-900">${r.prod.naam}</div>
+                      <div class="text-xs text-gray-500">${r.retailUnits} st./jr · inkoop ${fe(r.prod.wholesalePrijs)} → verkoop ${fe(r.prod.retailPrijs)}</div>
+                    </div>
+                    <div class="text-right">
+                      <div class="font-semibold tabular-nums">${fe(r.retailUnits * r.prod.retailPrijs)}</div>
+                      <div class="text-xs text-green-600">marge ${fe(r.retailUnits * (r.prod.retailPrijs - r.prod.wholesalePrijs))}</div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="space-y-1.5 mt-3 pt-3 border-t border-green-200 text-sm">
+                <div class="flex justify-between"><span class="text-gray-600">Retail-omzet</span><span class="tabular-nums font-medium">${fe(retailOmzet)}</span></div>
+                <div class="flex justify-between"><span class="text-gray-600">− Inkoop (wholesale)</span><span class="tabular-nums font-medium text-red-600">− ${fe(retailInkoop)}</span></div>
+                <div class="flex justify-between font-bold pt-1.5 border-t border-green-100"><span class="text-gray-900">Netto marge retail</span><span class="text-green-700 tabular-nums">${fe(retailMarge)}/jr</span></div>
+              </div>
+              <p class="text-xs text-gray-500 italic mt-2">Extra omzet die 100% bovenop de behandelingen komt.</p>
+            </div>
+          </div>
+
+          <!-- Samenvatting + scaler -->
+          <div class="bg-gray-50 rounded-xl p-4">
+            <div class="flex items-baseline justify-between flex-wrap gap-3 mb-3">
+              <div>
+                <div class="text-xs uppercase tracking-wider text-gray-500 font-semibold">Totale inkoop bij HQ (1 cabine)</div>
+                <div class="text-2xl font-bold text-gray-900 mt-0.5">${fe(totaalInkoop)}/jr</div>
+                <div class="text-xs text-gray-500">± ${fe(Math.round(totaalInkoop/12))} per maand${totaalInkoop >= minJaar ? ' — ✓ ruim boven minimum ('+fe(minBestelling)+'/mnd)' : ''}</div>
+              </div>
+              <div class="flex gap-2 text-xs">
+                ${scenarios.map(s => `
+                  <div class="p-2 bg-white rounded-lg border border-gray-200 text-center min-w-[90px]">
+                    <div class="text-[10px] text-gray-400 uppercase">${s.cabines}× cabine</div>
+                    <div class="font-bold text-gray-900 tabular-nums">${fe(s.totaalAfname)}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <p class="text-xs text-gray-500">
+              <strong>Aannames:</strong> ${waxPerBehG}g wax per behandeling, aftercare-dosering per product, ${retailConvPct}% retail-conversie. Klik op ⓘ bovenaan voor details of Bewerken om aan te passen.
+            </p>
+          </div>
+        </div>`;
+      })()}
       </div>`;
     }},
 
