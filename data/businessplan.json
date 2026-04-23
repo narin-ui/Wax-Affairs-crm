@@ -18,7 +18,32 @@
     "branding": 0, "technologie": 400, "juridisch": 0, "productvoorraad": 4000, "marketing": 1500, "totaalMin": 4300, "totaalMax": 7500
   },
   "franchiseTerms": {
-    "onboardingFee": 15000, "royalty": "5% (6% boven €120k)", "contractduur": "5 jaar, verlengbaar", "territoriaal": "Exclusieve radius", "studioInvestering": "€60.000-75.000", "minOrder": 200
+    "onboardingFee": 15000, "royalty": "5% (6% boven €120k)", "contractduur": "5 jaar, verlengbaar", "territoriaal": "Exclusieve radius", "studioInvestering": "€45.000-75.000", "minOrder": 200
+  },
+  "startupInvestering": {
+    "onboardingFee": 15000,
+    "studioFitOutMin": 30000,
+    "studioFitOutMax": 60000,
+    "werkkapitaalMnd": 3,
+    "totaalMin": 45000,
+    "totaalMax": 75000
+  },
+  "studioBenchmarks": {
+    "avgRevenuePerCabin": 120000,
+    "avgTicket": 40,
+    "staffCount": 2,
+    "hoursPerDay": 6
+  },
+  "studioPL": {
+    "omzet": 126000,
+    "personeel": 34000,
+    "huurMin": 12000,
+    "huurMax": 18000,
+    "inkoopProducten": 8000,
+    "royaltyPct": 5,
+    "marketingOverig": 7000,
+    "ebitda": 52700,
+    "ebitdaMargePct": 42
   },
   "team": [
     { "naam": "Simone Costa", "rol": "CEO & Head Trainer", "land": "Duitsland", "beschrijving": "20 jaar waxing expertise. Brand, Academy, kwaliteitsstandaarden." },

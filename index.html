@@ -1396,16 +1396,51 @@ function renderFriendchisePitch() {
 
   // ══════════ THE NUMBERS + ROI CALCULATOR ══════════
   if (pitchSection === 'cijfers') {
+    const bp = (data && data.bp) || {};
+    const startup = bp.startupInvestering || {};
+    const bench = bp.studioBenchmarks || {};
+    const pl = bp.studioPL || {};
+    const targets = bp.prognoseTargets || {};
+    const terms = bp.franchiseTerms || {};
+
+    const onboardingFee = startup.onboardingFee ?? 15000;
+    const fitOutMin = startup.studioFitOutMin ?? 30000;
+    const fitOutMax = startup.studioFitOutMax ?? 60000;
+    const totaalMin = startup.totaalMin ?? 45000;
+    const totaalMax = startup.totaalMax ?? 75000;
+    const werkkapMnd = startup.werkkapitaalMnd ?? 3;
+
+    const avgRevPerCabin = bench.avgRevenuePerCabin ?? targets.studioJaarTarget ?? 120000;
+    const avgTicket = bench.avgTicket ?? 40;
+    const staffCount = bench.staffCount ?? 2;
+    const hoursPerDay = bench.hoursPerDay ?? 6;
+
+    const plOmzet = pl.omzet ?? 126000;
+    const plPersoneel = pl.personeel ?? 34000;
+    const plHuurMin = pl.huurMin ?? 12000;
+    const plHuurMax = pl.huurMax ?? 18000;
+    const plInkoop = pl.inkoopProducten ?? 8000;
+    const plRoyaltyPct = pl.royaltyPct ?? 5;
+    const plRoyalty = Math.round(plOmzet * plRoyaltyPct / 100);
+    const plMarketing = pl.marketingOverig ?? 7000;
+    const plEbitda = pl.ebitda ?? (plOmzet - plPersoneel - plHuurMin - plInkoop - plRoyalty - plMarketing);
+    const plMarge = pl.ebitdaMargePct ?? (plOmzet ? Math.round(plEbitda / plOmzet * 100) : 0);
+
+    const royaltyDrempel = targets.royaltyDrempel ?? 120000;
+    const royaltyHigh = terms.royaltyPctHoog ?? 6;
+
+    const defaultRent = Math.round(plHuurMin / 12);
+
     html += `<div class="max-w-4xl space-y-6">
       <h2 class="text-xl font-bold text-gray-900">Your Investment</h2>
       <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table class="w-full text-sm">
           <thead><tr class="bg-gray-50"><th class="text-left px-5 py-3 font-semibold text-gray-600">Item</th><th class="text-left px-5 py-3 font-semibold text-gray-600">Amount</th><th class="text-left px-5 py-3 font-semibold text-gray-600">What it covers</th></tr></thead>
           <tbody class="divide-y divide-gray-100">
-            <tr><td class="px-5 py-3 font-medium">Onboarding fee (one-off)</td><td class="px-5 py-3 font-bold text-wax-700">${fe(15000)}</td><td class="px-5 py-3 text-gray-600">Training, territory setup, onboarding, starter kit, first month coaching</td></tr>
-            <tr><td class="px-5 py-3 font-medium">Royalty (monthly)</td><td class="px-5 py-3 font-bold text-wax-700">5% of revenue</td><td class="px-5 py-3 text-gray-600">Increases to 6% once studio exceeds ${fe(120000)} gross revenue/year</td></tr>
-            <tr><td class="px-5 py-3 font-medium">Studio fit-out</td><td class="px-5 py-3 font-bold text-wax-700">${fe(30000)} – ${fe(60000)}</td><td class="px-5 py-3 text-gray-600">Rent, fit-out, equipment — depending on location and size</td></tr>
-            <tr class="bg-wax-50"><td class="px-5 py-3 font-bold">Total start-up investment</td><td class="px-5 py-3 font-bold text-wax-700">${fe(45000)} – ${fe(75000)}</td><td class="px-5 py-3 text-gray-600 font-medium">Including onboarding fee + fit-out + 3 months working capital</td></tr>
+            <tr><td class="px-5 py-3 font-medium">Onboarding fee (one-off)</td><td class="px-5 py-3 font-bold text-wax-700">${fe(onboardingFee)}</td><td class="px-5 py-3 text-gray-600">Training, territory setup, onboarding, starter kit, first month coaching</td></tr>
+            <tr><td class="px-5 py-3 font-medium">Royalty (monthly)</td><td class="px-5 py-3 font-bold text-wax-700">${plRoyaltyPct}% of revenue</td><td class="px-5 py-3 text-gray-600">Increases to ${royaltyHigh}% once studio exceeds ${fe(royaltyDrempel)} gross revenue/year</td></tr>
+            <tr><td class="px-5 py-3 font-medium">Studio fit-out</td><td class="px-5 py-3 font-bold text-wax-700">${fe(fitOutMin)} – ${fe(fitOutMax)}</td><td class="px-5 py-3 text-gray-600">Rent, fit-out, equipment — depending on location and size</td></tr>
+            <tr class="bg-wax-50"><td class="px-5 py-3 font-bold">Total start-up investment</td><td class="px-5 py-3 font-bold text-wax-700">${fe(totaalMin)} – ${fe(totaalMax)}</td><td class="px-5 py-3 text-gray-600 font-medium">Including onboarding fee + fit-out + ${werkkapMnd} months working capital</td></tr>
           </tbody>
         </table>
       </div>
@@ -1414,15 +1449,15 @@ function renderFriendchisePitch() {
       <p class="text-sm text-gray-500">Based on actual operating data from Wax Affairs studios in Germany</p>
       <div class="grid grid-cols-3 gap-4">
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-          <div class="text-3xl font-bold text-wax-600 italic">${fe(120000).replace(',00','k').replace('€ ','€')}</div>
+          <div class="text-3xl font-bold text-wax-600 italic">${fe(avgRevPerCabin).replace(',00','k').replace('€ ','€')}</div>
           <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Avg. Revenue / Cabin / Year</div>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-          <div class="text-3xl font-bold text-gray-800">2</div>
-          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Staff x 6 hours/day</div>
+          <div class="text-3xl font-bold text-gray-800">${staffCount}</div>
+          <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Staff x ${hoursPerDay} hours/day</div>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm border border-gray-100">
-          <div class="text-3xl font-bold text-wax-600 italic">${fe(40)}</div>
+          <div class="text-3xl font-bold text-wax-600 italic">${fe(avgTicket)}</div>
           <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Average Ticket</div>
         </div>
       </div>
@@ -1437,11 +1472,11 @@ function renderFriendchisePitch() {
           </div>
           <div>
             <label class="text-xs text-gray-400 block mb-1">Revenue per cabin/year</label>
-            <input type="number" id="roi-revenue" value="126000" step="1000" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
+            <input type="number" id="roi-revenue" value="${plOmzet}" step="1000" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
           </div>
           <div>
             <label class="text-xs text-gray-400 block mb-1">Monthly rent</label>
-            <input type="number" id="roi-rent" value="1200" step="100" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
+            <input type="number" id="roi-rent" value="${defaultRent}" step="100" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm" oninput="updateROI()">
           </div>
         </div>
         <div id="roi-result" class="bg-gray-800/50 rounded-xl p-5"></div>
@@ -1451,13 +1486,13 @@ function renderFriendchisePitch() {
         <div class="px-5 py-3 bg-gray-50 font-semibold text-sm text-gray-700">P&L Overview (1 cabin, Year 2+)</div>
         <table class="w-full text-sm">
           <tbody class="divide-y divide-gray-100">
-            <tr><td class="px-5 py-2.5">Revenue (services + products)</td><td class="px-5 py-2.5 text-right font-medium">± ${fe(126000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Staff costs (2 employees)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(34000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Rent</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(12000)} – ${fe(18000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Product purchases (wax + Nao)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(8000)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Royalty (5% of revenue)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(6300)}</td></tr>
-            <tr><td class="px-5 py-2.5 text-red-600">Local marketing + other</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(7000)}</td></tr>
-            <tr class="bg-green-50"><td class="px-5 py-3 font-bold text-green-800">EBITDA (profit before tax)</td><td class="px-5 py-3 text-right font-bold text-green-700">± ${fe(52700)} <span class="text-xs text-green-600 ml-1">~42% marge</span></td></tr>
+            <tr><td class="px-5 py-2.5">Revenue (services + products)</td><td class="px-5 py-2.5 text-right font-medium">± ${fe(plOmzet)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Staff costs (${staffCount} employees)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(plPersoneel)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Rent</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(plHuurMin)} – ${fe(plHuurMax)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Product purchases (wax + Nao)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(plInkoop)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Royalty (${plRoyaltyPct}% of revenue)</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(plRoyalty)}</td></tr>
+            <tr><td class="px-5 py-2.5 text-red-600">Local marketing + other</td><td class="px-5 py-2.5 text-right font-medium text-red-600">− ${fe(plMarketing)}</td></tr>
+            <tr class="bg-green-50"><td class="px-5 py-3 font-bold text-green-800">EBITDA (profit before tax)</td><td class="px-5 py-3 text-right font-bold text-green-700">± ${fe(plEbitda)} <span class="text-xs text-green-600 ml-1">~${plMarge}% marge</span></td></tr>
           </tbody>
         </table>
       </div>
@@ -1664,21 +1699,31 @@ function renderFriendchisePitch() {
 }
 
 function updateROI() {
+  const bp = (data && data.bp) || {};
+  const pl = bp.studioPL || {};
+  const startup = bp.startupInvestering || {};
+  const targets = bp.prognoseTargets || {};
+  const terms = bp.franchiseTerms || {};
+
   const cabins = parseInt(document.getElementById('roi-cabins')?.value) || 1;
-  const revPerCabin = parseInt(document.getElementById('roi-revenue')?.value) || 126000;
-  const monthlyRent = parseInt(document.getElementById('roi-rent')?.value) || 1200;
+  const revPerCabin = parseInt(document.getElementById('roi-revenue')?.value) || pl.omzet || 126000;
+  const monthlyRent = parseInt(document.getElementById('roi-rent')?.value) || Math.round((pl.huurMin || 12000) / 12);
 
   const totalRev = cabins * revPerCabin;
-  const staffCost = cabins * 34000;
+  const staffCost = cabins * (pl.personeel ?? 34000);
   const rent = monthlyRent * 12;
-  const products = cabins * 8000;
-  const royaltyPct = totalRev > 120000 ? 0.06 : 0.05;
+  const products = cabins * (pl.inkoopProducten ?? 8000);
+  const royaltyDrempel = targets.royaltyDrempel ?? 120000;
+  const royaltyLow = (pl.royaltyPct ?? 5) / 100;
+  const royaltyHigh = (terms.royaltyPctHoog ?? 6) / 100;
+  const royaltyPct = totalRev > royaltyDrempel ? royaltyHigh : royaltyLow;
   const royalty = Math.round(totalRev * royaltyPct);
-  const marketing = 7000;
+  const marketing = pl.marketingOverig ?? 7000;
   const totalCosts = staffCost + rent + products + royalty + marketing;
   const ebitda = totalRev - totalCosts;
   const margin = totalRev ? Math.round(ebitda / totalRev * 100) : 0;
-  const investment = 15000 + (cabins * 35000);
+  const fitOutAvg = Math.round(((startup.studioFitOutMin ?? 30000) + (startup.studioFitOutMax ?? 60000)) / 2);
+  const investment = (startup.onboardingFee ?? 15000) + (cabins * fitOutAvg);
   const payback = ebitda > 0 ? (investment / ebitda * 12).toFixed(0) : '∞';
 
   const el = document.getElementById('roi-result');
