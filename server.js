@@ -392,6 +392,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// ─── Cache bypass voor HTML (voorkomt Fastly CDN en browser caching) ───
+app.get(["/", "/index.html"], (req, res, next) => {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+  res.set("Surrogate-Control", "no-store");
+  res.set("CDN-Cache-Control", "no-store");
+  res.set("Pragma", "no-cache");
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+
 app.use(express.static(__dirname));
 
 // ─── Uploads ───
