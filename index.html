@@ -6683,12 +6683,15 @@ const BP_SECTIES = [
       const royaltyPct = ft.royaltyPct ?? 5;
       const royaltyHigh = ft.royaltyHighPct ?? 6;
       const royaltyThreshold = ft.royaltyThreshold ?? 120000;
+      const royaltyPremium = ft.royaltyPremiumPct ?? null;
+      const royaltyPremiumThreshold = ft.royaltyPremiumThreshold ?? null;
+      const marketingFeePct = ft.marketingFeePct ?? 0;
       const contractDuur = ft.contractDuur ?? ft.contractduur ?? '5 jaar, verlengbaar';
       const territoriaal = ft.territoriaal ?? 'Exclusieve radius';
       const minBestelling = ft.minBestelling ?? ft.minOrder ?? 200;
-      const fitOutMin = startup.studioFitOutMin ?? 30000;
-      const fitOutMax = startup.studioFitOutMax ?? 60000;
-      const totaalMin = startup.totaalMin ?? (ft.investMin ?? 45000);
+      const fitOutMin = startup.studioFitOutMin ?? 20000;
+      const fitOutMax = startup.studioFitOutMax ?? 45000;
+      const totaalMin = startup.totaalMin ?? (ft.investMin ?? 35000);
       const totaalMax = startup.totaalMax ?? (ft.investMax ?? 75000);
       const werkkapMnd = startup.werkkapitaalMnd ?? 3;
 
@@ -6699,14 +6702,34 @@ const BP_SECTIES = [
       const plInkoop = pl.inkoopProducten ?? 8000;
       const plRoyaltyPctVal = pl.royaltyPct ?? royaltyPct;
       const plRoyalty = Math.round(plOmzet * plRoyaltyPctVal / 100);
-      const plMarketing = pl.marketingOverig ?? 7000;
-      const plKosten = plPersoneel + plHuurMin + plInkoop + plRoyalty + plMarketing;
+      const plMarketingFee = Math.round(plOmzet * marketingFeePct / 100);
+      const plMarketingLokaal = pl.marketingLokaal ?? Math.max((pl.marketingOverig ?? 7000) - plMarketingFee, 0);
+      const plKosten = plPersoneel + plHuurMin + plInkoop + plRoyalty + plMarketingFee + plMarketingLokaal;
       const plEbitda = pl.ebitda ?? (plOmzet - plKosten);
       const plMarge = pl.ebitdaMargePct ?? (plOmzet ? Math.round(plEbitda / plOmzet * 100) : 0);
       const avgTicket = bench.avgTicket ?? 40;
       const staffCount = bench.staffCount ?? 2;
+      const waxPerBehG = bench.waxPerBehandelingG ?? 35;
+      const retailConvPct = bench.retailConversiePct ?? 25;
       const maandKlanten = avgTicket ? Math.round(plOmzet / avgTicket / 12) : 0;
       const paybackMnd = plEbitda > 0 ? Math.round((onboardingFee + (fitOutMin+fitOutMax)/2) / plEbitda * 12) : null;
+
+      // Product-afname scenario's (1/2/3 cabines)
+      const waxProduct = (data.products||[]).find(p => p.id === 'nao-wax-001') || { wholesalePrijs: 12 };
+      const waxPrijsPerKg = waxProduct.wholesalePrijs || 12;
+      const aftercareAvgWholesale = 10;
+      const scenarioRij = (cabines) => {
+        const omzet = plOmzet * cabines;
+        const behandelingen = avgTicket ? Math.round(omzet / avgTicket) : 0;
+        const waxKg = Math.round(behandelingen * waxPerBehG / 1000);
+        const waxKosten = waxKg * waxPrijsPerKg;
+        const retailUnits = Math.round(behandelingen * retailConvPct / 100);
+        const retailWholesale = Math.round(retailUnits * aftercareAvgWholesale);
+        const totaalAfname = waxKosten + retailWholesale;
+        const minAfnameJaar = minBestelling * 12;
+        return { cabines, omzet, behandelingen, waxKg, waxKosten, retailUnits, retailWholesale, totaalAfname, boven: totaalAfname >= minAfnameJaar };
+      };
+      const scenarios = [scenarioRij(1), scenarioRij(2), scenarioRij(3)];
 
       const pillar = (icon, titel, door, regels) => `
         <div class="bg-white rounded-xl border border-gray-100 p-5 h-full">
@@ -6756,22 +6779,29 @@ const BP_SECTIES = [
           </div>
         </div>
 
-        <!-- Lopende voorwaarden: 2x2 grid met uitleg -->
+        <!-- Lopende voorwaarden: grid met uitleg -->
         <div class="border-t border-gray-100 pt-5">
           <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Lopende voorwaarden</div>
           <div class="grid md:grid-cols-2 gap-3">
             <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
               <span class="text-xl flex-shrink-0">📊</span>
               <div class="flex-1">
-                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Royalty</span><span class="font-bold text-gray-900">${royaltyPct}% van omzet</span></div>
-                <div class="text-xs text-gray-500 mt-0.5">Stijgt naar ${royaltyHigh}% zodra de studio ${fe(royaltyThreshold)} bruto-omzet per jaar passeert.</div>
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Royalty</span><span class="font-bold text-gray-900">${royaltyPct}% → ${royaltyHigh}%${royaltyPremium?` → ${royaltyPremium}%`:''}</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">${royaltyPct}% tot ${fe(royaltyThreshold)}, ${royaltyHigh}% vanaf ${fe(royaltyThreshold)}${royaltyPremium&&royaltyPremiumThreshold?`, ${royaltyPremium}% vanaf ${fe(royaltyPremiumThreshold)}`:''} bruto-omzet per jaar. HQ verdient méér als jij groeit, niet als jij startgroei nodig hebt.</div>
               </div>
             </div>
+            ${marketingFeePct > 0 ? `<div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">📣</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Marketing-fee</span><span class="font-bold text-gray-900">${marketingFeePct}% van omzet</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Landelijke campagnes, SEO, content-library — centraal gevoerd, zodat elke studio meelift zonder zelf dure agencies in te huren.</div>
+              </div>
+            </div>` : ''}
             <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
               <span class="text-xl flex-shrink-0">📦</span>
               <div class="flex-1">
                 <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Min. productorder</span><span class="font-bold text-gray-900">${fe(minBestelling)}/mnd</span></div>
-                <div class="text-xs text-gray-500 mt-0.5">Exclusief NAO-aanbod blijft centraal — minimale afname borgt consistentie in de keten.</div>
+                <div class="text-xs text-gray-500 mt-0.5">Exclusief NAO-aanbod blijft centraal — minimale afname borgt consistentie in de keten. Bij normale bezetting kom je hier ruim boven.</div>
               </div>
             </div>
             <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
@@ -6833,12 +6863,59 @@ const BP_SECTIES = [
               <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Omzet (services + retail)</span><span class="font-medium">${fe(plOmzet)}</span></div>
               <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Personeel</span><span class="font-medium text-red-600">${fe(plPersoneel)}</span></div>
               <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Huur</span><span class="font-medium text-red-600">${fe(plHuurMin)}–${fe(plHuurMax)}</span></div>
-              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Producten + royalty + marketing</span><span class="font-medium text-red-600">${fe(plInkoop + plRoyalty + plMarketing)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Producten (wholesale NAO)</span><span class="font-medium text-red-600">${fe(plInkoop)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Royalty (${plRoyaltyPctVal}%)</span><span class="font-medium text-red-600">${fe(plRoyalty)}</span></div>
+              ${plMarketingFee > 0 ? `<div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Marketing-fee (${marketingFeePct}%)</span><span class="font-medium text-red-600">${fe(plMarketingFee)}</span></div>` : ''}
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Lokaal marketing + overig</span><span class="font-medium text-red-600">${fe(plMarketingLokaal)}</span></div>
               <div class="flex justify-between py-2 mt-1 bg-green-50 rounded-lg px-3"><span class="text-green-800 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">${fe(plEbitda)} <span class="text-xs">(${plMarge}%)</span></span></div>
             </div>
           </div>
         </div>
         <p class="text-xs text-gray-400 italic mt-4">Indicatieve cijfers. Werkelijke resultaten hangen af van locatie, bezetting en lokale markt.</p>
+      </div>
+
+      <!-- PRODUCT-AFNAME SCENARIOS -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mt-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Product-afname per scenario</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Hoeveel NAO-producten een studio écht afneemt bij 1, 2 of 3 cabines — berekend uit behandelingen, wax-verbruik en retail-conversie.</p>
+          </div>
+          <button onclick="openModal('bp-studio-pl')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead><tr class="text-xs text-gray-400 border-b border-gray-100">
+              <th class="text-left py-2">Scenario</th>
+              <th class="text-right px-2">Omzet/jr</th>
+              <th class="text-right px-2">Behandelingen/jr</th>
+              <th class="text-right px-2">Wax verbruik</th>
+              <th class="text-right px-2">Wax-inkoop</th>
+              <th class="text-right px-2">Retail wholesale</th>
+              <th class="text-right px-2">Totale afname</th>
+              <th class="text-right px-2">vs. minimum</th>
+            </tr></thead>
+            <tbody>
+              ${scenarios.map(s => `
+                <tr class="border-b border-gray-50">
+                  <td class="py-2 font-medium">${s.cabines} cabine${s.cabines>1?'s':''}</td>
+                  <td class="text-right px-2">${fe(s.omzet)}</td>
+                  <td class="text-right px-2">${s.behandelingen.toLocaleString('nl-NL')}</td>
+                  <td class="text-right px-2">${s.waxKg} kg</td>
+                  <td class="text-right px-2">${fe(s.waxKosten)}</td>
+                  <td class="text-right px-2">${fe(s.retailWholesale)} <span class="text-xs text-gray-400">(${s.retailUnits} st.)</span></td>
+                  <td class="text-right px-2 font-bold text-gray-900">${fe(s.totaalAfname)}</td>
+                  <td class="text-right px-2">
+                    <span class="text-xs ${s.boven?'text-green-600':'text-yellow-600'} font-medium">${s.boven?'✓ ruim boven':'⚠️ onder'}</span>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4 p-3 bg-gray-50 rounded-lg text-xs text-gray-600">
+          <strong>Aannames:</strong> ${waxPerBehG}g wax per behandeling (gemiddelde over Brazilian/benen/oksel/etc.), NAO-wax wholesale ${fe(waxPrijsPerKg)}/kg, ${retailConvPct}% van klanten koopt een aftercare-product in de studio (à ${fe(aftercareAvgWholesale)} wholesale). Minimum productorder: ${fe(minBestelling * 12)}/jr (${fe(minBestelling)}/mnd × 12).
+        </div>
       </div>`;
     }},
 
@@ -9403,11 +9480,14 @@ function modalBpFranchiseTerms() {
       </div>
 
       <div>
-        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Royalty & orders</h4>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Royalty & fees</h4>
         <div class="grid md:grid-cols-2 gap-3">
-          ${row('Royalty %','Standaard tarief over bruto omzet',['ft','royaltyPct'],'number','%')}
-          ${row('Royalty % (hoog)','Verhoogd tarief boven de drempel',['ft','royaltyHighPct'],'number','%')}
-          ${row('Royalty drempel','Omzet per jaar waarboven het hoge % geldt',['ft','royaltyThreshold'],'number','€')}
+          ${row('Royalty % (basis)','Standaard tarief over bruto omzet',['ft','royaltyPct'],'number','%')}
+          ${row('Royalty % (middel)','Tarief boven 1e drempel',['ft','royaltyHighPct'],'number','%')}
+          ${row('Royalty drempel 1','Omzet/jaar waarboven het middel-% geldt',['ft','royaltyThreshold'],'number','€')}
+          ${row('Royalty % (premium)','Tarief boven 2e drempel (leeg = uit)',['ft','royaltyPremiumPct'],'number','%')}
+          ${row('Royalty drempel 2','Omzet/jaar waarboven het premium-% geldt',['ft','royaltyPremiumThreshold'],'number','€')}
+          ${row('Marketing-fee %','Maandelijks, voor landelijke campagnes/SEO/content',['ft','marketingFeePct'],'number','%')}
           ${row('Min. productorder','NAO-afname per maand, borgt consistentie',['ft','minBestelling'],'number','€/mnd')}
         </div>
       </div>
@@ -9452,6 +9532,8 @@ function modalBpStudioPL() {
           ${row('Avg. revenue per cabine','Wordt getoond als benchmark',['bench','avgRevenuePerCabin'],'€')}
           ${row('Gemiddeld ticket','Per klantbezoek',['bench','avgTicket'],'€')}
           ${row('Aantal medewerkers','Per cabine',['bench','staffCount'],'')}
+          ${row('Wax per behandeling (g)','Voor scenario-berekening, gemiddeld 30-40g',['bench','waxPerBehandelingG'],'g')}
+          ${row('Retail-conversie %','% klanten die aftercare koopt in de studio',['bench','retailConversiePct'],'%')}
         </div>
       </div>
 

@@ -28,25 +28,30 @@
     "royaltyPct": 5,
     "royaltyHighPct": 6,
     "royaltyThreshold": 120000,
+    "royaltyPremiumPct": 7,
+    "royaltyPremiumThreshold": 200000,
+    "marketingFeePct": 2,
     "contractDuur": "5 jaar, verlengbaar",
     "territoriaal": "Exclusieve radius",
-    "investMin": 45000,
+    "investMin": 35000,
     "investMax": 75000,
     "minBestelling": 200
   },
   "startupInvestering": {
     "onboardingFee": 15000,
-    "studioFitOutMin": 30000,
-    "studioFitOutMax": 60000,
+    "studioFitOutMin": 20000,
+    "studioFitOutMax": 45000,
     "werkkapitaalMnd": 3,
-    "totaalMin": 45000,
+    "totaalMin": 35000,
     "totaalMax": 75000
   },
   "studioBenchmarks": {
     "avgRevenuePerCabin": 120000,
     "avgTicket": 40,
     "staffCount": 2,
-    "hoursPerDay": 6
+    "hoursPerDay": 6,
+    "waxPerBehandelingG": 35,
+    "retailConversiePct": 25
   },
   "studioPL": {
     "omzet": 126000,
