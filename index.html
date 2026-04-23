@@ -6738,7 +6738,12 @@ const BP_SECTIES = [
       const live = fs.filter(f=>f.status==='live').length;
       const pipeline = fs.length;
 
-      const onboardingFee = ft.onboardingFee ?? startup.onboardingFee ?? 15000;
+      const pakket = bp.onboardingPakket || {};
+      const coreBedrag = pakket.coreBedrag ?? ft.onboardingFee ?? startup.onboardingFee ?? 12000;
+      const coreInhoud = pakket.coreInhoud || [];
+      const addons = pakket.addons || [];
+      const addonsTotaal = addons.reduce((s,a) => s + (a.bedrag || 0), 0);
+      const onboardingFee = coreBedrag; // legacy alias — overal core-only
       const royaltyPct = ft.royaltyPct ?? 5;
       const royaltyHigh = ft.royaltyHighPct ?? 6;
       const royaltyThreshold = ft.royaltyThreshold ?? 120000;
@@ -6857,25 +6862,22 @@ const BP_SECTIES = [
         <!-- Investering: 3 grote getallen met info-popovers -->
         <div class="grid md:grid-cols-3 gap-4 mb-5">
           <div class="bg-gradient-to-br from-wax-50 to-white border border-wax-100 rounded-xl p-5">
-            <div class="text-xs text-wax-700 uppercase tracking-wider font-semibold mb-1">Onboarding fee${infoIcon('Onboarding fee — ' + fe(onboardingFee), {
-              bron: 'Eenmalig betaald bij contractondertekening. Dekt alles wat HQ levert om de studio succesvol te laten starten.',
+            <div class="text-xs text-wax-700 uppercase tracking-wider font-semibold mb-1">Onboarding fee (core)${infoIcon('Onboarding core — ' + fe(coreBedrag), {
+              bron: 'Core-pakket, verplicht bij contractondertekening. Dekt wat elke studio nodig heeft om te openen. Extra\'s zijn los te kiezen — zie sectie hieronder.',
               berekening: [
-                ['Craft Training (10 dagen Simone)', '~€5.000'],
-                ['Territorium-onderzoek + afbakening', '~€2.000'],
-                ['Starterskit (wax + aftercare voor 1e maand)', '~€2.000'],
-                ['Business-coaching opstartfase (Narin)', '~€4.000'],
-                ['Openingsmarketing + signage ontwerp', '~€2.000'],
-                ['= Totaal', fe(onboardingFee)]
+                ...coreInhoud.map(c => [c.item, c.kostprijs ? '~' + fe(c.kostprijs) : '']),
+                ['= Core totaal', fe(coreBedrag)]
               ],
               doel: [
                 'Getekend franchise-contract',
                 '10 beschikbare dagen voor in-person training',
                 'Gekozen studio-locatie binnen exclusief territorium',
-                'Eerste maand coaching-slots gereserveerd met Narin'
-              ]
+                'Starterskit ter plaatse voor openingsdag'
+              ],
+              extra: addonsTotaal ? `Optionele add-ons tot ${fe(addonsTotaal)} beschikbaar — zie "Optionele onboarding-extra's" hieronder.` : ''
             })}</div>
-            <div class="text-3xl font-bold text-gray-900">${fe(onboardingFee)}</div>
-            <div class="text-xs text-gray-500 mt-1">Eenmalig — dekt training, territorium-setup, starterskit en eerste maand coaching</div>
+            <div class="text-3xl font-bold text-gray-900">${fe(coreBedrag)}</div>
+            <div class="text-xs text-gray-500 mt-1">${addonsTotaal ? `+ optionele extra's tot ${fe(addonsTotaal)}` : 'Eenmalig — dekt training, territorium-setup, starterskit'}</div>
           </div>
           <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-xl p-5">
             <div class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Studio fit-out${infoIcon('Studio fit-out — ' + fe(fitOutMin) + '–' + fe(fitOutMax), {
@@ -6903,12 +6905,14 @@ const BP_SECTIES = [
           </div>
           <div class="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-xl p-5">
             <div class="text-xs text-green-700 uppercase tracking-wider font-semibold mb-1">Totale investering${infoIcon('Totale investering — ' + fe(totaalMin) + '–' + fe(totaalMax), {
-              bron: 'Som van onboarding + fit-out + werkkapitaal-buffer. Dit is wat je écht nodig hebt op de bank voor dag 1.',
+              bron: 'Som van onboarding core + fit-out + werkkapitaal-buffer. Dit is de ondergrens wat je écht nodig hebt op de bank voor dag 1. Add-ons komen daar optioneel bovenop.',
               berekening: [
-                ['Onboarding fee', fe(onboardingFee)],
+                ['Onboarding core', fe(coreBedrag)],
                 ['Studio fit-out (min – max)', fe(fitOutMin) + '–' + fe(fitOutMax)],
-                [`Werkkapitaal ${werkkapMnd} mnd (huur + loon + inkoop)`, '~€10-15k'],
-                ['= Totale investering', fe(totaalMin) + '–' + fe(totaalMax)]
+                [`Werkkapitaal ${werkkapMnd} mnd (huur + loon + inkoop)`, '~€0-15k'],
+                ['= Totale core investering', fe(totaalMin) + '–' + fe(totaalMax)],
+                ...(addonsTotaal ? [['+ optionele extra\'s', 'tot ' + fe(addonsTotaal)]] : []),
+                ...(addonsTotaal ? [['Max volledig pakket', fe(totaalMax + addonsTotaal)]] : [])
               ],
               doel: [
                 'Eigen middelen of familie/vrienden: min. 20-30% (€7-20k)',
@@ -6916,12 +6920,39 @@ const BP_SECTIES = [
                 'Een eigen buffer aanhouden ~3 maanden vaste lasten',
                 'Businessplan klaar met realistische omzetprognose voor banklening'
               ],
-              extra: 'Terugverdientijd op basis van base case P&L: ± ' + (paybackMnd || '—') + ' maanden na opening.'
+              extra: 'Terugverdientijd op basis van base case P&L (core): ± ' + (paybackMnd || '—') + ' maanden na opening.'
             })}</div>
             <div class="text-3xl font-bold text-gray-900">${fe(totaalMin)}–${fe(totaalMax)}</div>
-            <div class="text-xs text-gray-500 mt-1">Onboarding + fit-out + ${werkkapMnd} maanden werkkapitaal</div>
+            <div class="text-xs text-gray-500 mt-1">Core: onboarding + fit-out + ${werkkapMnd} mnd werkkap.${addonsTotaal ? ` · extra's tot ${fe(addonsTotaal)}` : ''}</div>
           </div>
         </div>
+
+        ${addons.length ? `<!-- Optionele onboarding-extra's -->
+        <div class="border-t border-gray-100 pt-5 mt-5 mb-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h4 class="text-sm font-bold text-gray-900">Optionele onboarding-extra's</h4>
+              <p class="text-xs text-gray-500">Bovenop de core — te kiezen per Friendchisee op basis van behoefte en budget.</p>
+            </div>
+            <button onclick="openModal('bp-onboarding-pakket')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
+          <div class="grid md:grid-cols-3 gap-3">
+            ${addons.map(a => `
+              <div class="relative bg-white border ${a.aanbevolen ? 'border-wax-300' : 'border-gray-200'} rounded-xl p-4">
+                ${a.aanbevolen ? `<span class="absolute -top-2 right-3 text-[10px] font-bold uppercase tracking-wider bg-wax-500 text-white px-2 py-0.5 rounded-full">Aanbevolen</span>` : ''}
+                <div class="flex items-baseline justify-between gap-2 mb-1">
+                  <div class="font-semibold text-sm text-gray-900">${a.titel || ''}</div>
+                  <div class="font-bold text-wax-700 whitespace-nowrap">+${fe(a.bedrag || 0)}</div>
+                </div>
+                ${a.omschrijving ? `<p class="text-xs text-gray-500 leading-relaxed">${a.omschrijving}</p>` : ''}
+              </div>
+            `).join('')}
+          </div>
+          <div class="mt-3 flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <span class="text-xs text-gray-600">Volledig pakket (core + alle extra's):</span>
+            <span class="font-bold text-gray-900">${fe(coreBedrag + addonsTotaal)}</span>
+          </div>
+        </div>` : ''}
 
         <!-- Lopende voorwaarden: grid met uitleg -->
         <div class="border-t border-gray-100 pt-5">
@@ -8553,6 +8584,7 @@ function openModal(type, id) {
   else if (type === 'bp-team') content.innerHTML = modalBpTeam();
   else if (type === 'bp-franchise-terms') content.innerHTML = modalBpFranchiseTerms();
   else if (type === 'bp-studio-pl') content.innerHTML = modalBpStudioPL();
+  else if (type === 'bp-onboarding-pakket') content.innerHTML = modalBpOnboardingPakket();
   else if (type === 'bp-legal-fases') content.innerHTML = modalBpLegalFases();
   else if (type === 'bp-legal-punten') content.innerHTML = modalBpLegalPunten();
   else if (type === 'bp-startup-budget') content.innerHTML = modalBpStartupBudget();
@@ -9878,6 +9910,135 @@ async function updateBpPath(group, field, val, numeric) {
     data.bp[key][field] = val;
   }
   await saveBp();
+}
+
+// ─── MODAL: Onboarding Pakket (core + add-ons) ───
+function modalBpOnboardingPakket() {
+  if (!data.bp.onboardingPakket) data.bp.onboardingPakket = { coreBedrag: 12000, coreInhoud: [], addons: [] };
+  const pak = data.bp.onboardingPakket;
+  if (!pak.coreInhoud) pak.coreInhoud = [];
+  if (!pak.addons) pak.addons = [];
+
+  return modalHeader('Onboarding-pakket', 'Bewerken') +
+    `<div class="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Core = verplicht voor elke Friendchisee. Add-ons zijn optioneel en verhogen de gemiddelde onboarding-inkomsten per studio.</p>
+
+      <!-- Core pakket -->
+      <div class="border border-wax-100 rounded-xl p-5 bg-wax-50/30">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-sm font-bold text-gray-900">Core-pakket (verplicht)</h4>
+          <div class="flex items-center gap-2">
+            <label class="text-xs text-gray-500">Prijs:</label>
+            <div class="relative">
+              <input type="number" value="${pak.coreBedrag ?? 12000}" onblur="updatePakketVeld('coreBedrag',this.value,true); renderBusinessplan();" class="w-24 px-3 py-1.5 border rounded-lg text-sm" step="500">
+              <span class="absolute right-2 top-1.5 text-xs text-gray-400">€</span>
+            </div>
+          </div>
+        </div>
+        <div class="text-xs text-gray-500 mb-2">Wat zit er in de core (kostprijs per item, voor transparantie naar Friendchisee):</div>
+        <div class="space-y-2">
+          ${pak.coreInhoud.map((c,i) => `<div class="flex items-center gap-2">
+            <input type="text" value="${c.item||''}" onblur="updateCoreItem(${i},'item',this.value)" class="flex-1 px-3 py-1.5 border rounded-lg text-sm" placeholder="Beschrijving">
+            <div class="relative w-28">
+              <input type="number" value="${c.kostprijs ?? 0}" onblur="updateCoreItem(${i},'kostprijs',this.value,true)" class="w-full px-3 py-1.5 border rounded-lg text-sm" step="100" placeholder="Kostprijs">
+              <span class="absolute right-2 top-1.5 text-xs text-gray-400">€</span>
+            </div>
+            <button onclick="verwijderCoreItem(${i})" class="text-red-500 hover:text-red-700 text-sm">×</button>
+          </div>`).join('')}
+        </div>
+        <button onclick="voegCoreItemToe()" class="mt-3 text-xs text-wax-600 hover:text-wax-700 font-medium">+ Core-item toevoegen</button>
+      </div>
+
+      <!-- Add-ons -->
+      <div>
+        <h4 class="text-sm font-bold text-gray-900 mb-3">Optionele add-ons</h4>
+        <div class="space-y-3">
+          ${pak.addons.map((a,i) => `<div class="border rounded-xl p-4 space-y-2 ${a.aanbevolen ? 'border-wax-300 bg-wax-50/20' : 'border-gray-200'}">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <input type="text" value="${a.titel||''}" onblur="updateAddon(${i},'titel',this.value)" class="font-bold text-sm px-2 py-1 border rounded-lg" placeholder="Titel">
+                <label class="flex items-center gap-1 text-xs text-gray-500">
+                  <input type="checkbox" ${a.aanbevolen?'checked':''} onchange="updateAddon(${i},'aanbevolen',this.checked)"> aanbevolen
+                </label>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="relative w-28">
+                  <input type="number" value="${a.bedrag ?? 0}" onblur="updateAddon(${i},'bedrag',this.value,true)" class="w-full px-3 py-1.5 border rounded-lg text-sm font-bold" step="100">
+                  <span class="absolute right-2 top-1.5 text-xs text-gray-400">€</span>
+                </div>
+                <button onclick="verwijderAddon(${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+              </div>
+            </div>
+            <textarea onblur="updateAddon(${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-xs" rows="2" placeholder="Wat levert deze add-on precies op?">${a.omschrijving||''}</textarea>
+          </div>`).join('')}
+        </div>
+        <button onclick="voegAddonToe()" class="mt-3 btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Add-on toevoegen</button>
+      </div>
+
+      <div class="p-3 bg-gray-50 rounded-lg text-xs text-gray-600">
+        <strong>Totaal volledig pakket:</strong> ${fe((pak.coreBedrag || 0) + (pak.addons || []).reduce((s,a)=>s+(a.bedrag||0),0))} (core + alle add-ons)
+      </div>
+    </div>`;
+}
+
+async function updatePakketVeld(field, val, numeric) {
+  if (!data.bp.onboardingPakket) data.bp.onboardingPakket = {};
+  if (numeric) { const n = parseFloat(val); data.bp.onboardingPakket[field] = isNaN(n) ? 0 : n; }
+  else data.bp.onboardingPakket[field] = val;
+  // Sync naar franchiseTerms.onboardingFee voor back-compat
+  if (field === 'coreBedrag') {
+    if (!data.bp.franchiseTerms) data.bp.franchiseTerms = {};
+    data.bp.franchiseTerms.onboardingFee = data.bp.onboardingPakket.coreBedrag;
+    if (data.bp.startupInvestering) data.bp.startupInvestering.onboardingFee = data.bp.onboardingPakket.coreBedrag;
+  }
+  await saveBp();
+}
+
+async function updateCoreItem(idx, field, val, numeric) {
+  if (!data.bp.onboardingPakket?.coreInhoud?.[idx]) return;
+  if (numeric) { const n = parseFloat(val); data.bp.onboardingPakket.coreInhoud[idx][field] = isNaN(n) ? 0 : n; }
+  else data.bp.onboardingPakket.coreInhoud[idx][field] = val;
+  await saveBp();
+}
+
+async function voegCoreItemToe() {
+  if (!data.bp.onboardingPakket) data.bp.onboardingPakket = { coreInhoud: [], addons: [] };
+  if (!data.bp.onboardingPakket.coreInhoud) data.bp.onboardingPakket.coreInhoud = [];
+  data.bp.onboardingPakket.coreInhoud.push({ id: 'cc' + Date.now(), item: 'Nieuw item', kostprijs: 0 });
+  await saveBp();
+  openModal('bp-onboarding-pakket');
+}
+
+async function verwijderCoreItem(idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  data.bp.onboardingPakket.coreInhoud.splice(idx, 1);
+  await saveBp();
+  openModal('bp-onboarding-pakket');
+  renderBusinessplan();
+}
+
+async function updateAddon(idx, field, val, numeric) {
+  if (!data.bp.onboardingPakket?.addons?.[idx]) return;
+  if (numeric) { const n = parseFloat(val); data.bp.onboardingPakket.addons[idx][field] = isNaN(n) ? 0 : n; }
+  else data.bp.onboardingPakket.addons[idx][field] = val;
+  await saveBp();
+}
+
+async function voegAddonToe() {
+  if (!data.bp.onboardingPakket) data.bp.onboardingPakket = { coreInhoud: [], addons: [] };
+  if (!data.bp.onboardingPakket.addons) data.bp.onboardingPakket.addons = [];
+  data.bp.onboardingPakket.addons.push({ id: 'ad' + Date.now(), titel: 'Nieuwe add-on', bedrag: 1000, omschrijving: '', aanbevolen: false });
+  await saveBp();
+  openModal('bp-onboarding-pakket');
+  renderBusinessplan();
+}
+
+async function verwijderAddon(idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  data.bp.onboardingPakket.addons.splice(idx, 1);
+  await saveBp();
+  openModal('bp-onboarding-pakket');
+  renderBusinessplan();
 }
 
 async function snelTaakVanBP(form, sectieTitel) {

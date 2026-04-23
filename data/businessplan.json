@@ -24,7 +24,7 @@
     ]
   },
   "franchiseTerms": {
-    "onboardingFee": 15000,
+    "onboardingFee": 12000,
     "royaltyPct": 5,
     "royaltyHighPct": 6,
     "royaltyThreshold": 120000,
@@ -33,17 +33,33 @@
     "marketingFeePct": 2,
     "contractDuur": "5 jaar, verlengbaar",
     "territoriaal": "Exclusieve radius",
-    "investMin": 35000,
-    "investMax": 75000,
+    "investMin": 32000,
+    "investMax": 72000,
     "minBestelling": 200
   },
   "startupInvestering": {
-    "onboardingFee": 15000,
+    "onboardingFee": 12000,
     "studioFitOutMin": 20000,
     "studioFitOutMax": 45000,
     "werkkapitaalMnd": 3,
-    "totaalMin": 35000,
-    "totaalMax": 75000
+    "totaalMin": 32000,
+    "totaalMax": 72000
+  },
+  "onboardingPakket": {
+    "coreBedrag": 12000,
+    "coreLabel": "Core — iedereen",
+    "coreInhoud": [
+      { "id": "cc1", "item": "Craft Training (10 dagen Simone)", "kostprijs": 5000 },
+      { "id": "cc2", "item": "Territorium-onderzoek + afbakening", "kostprijs": 2000 },
+      { "id": "cc3", "item": "Contract-onboarding + juridische setup", "kostprijs": 1500 },
+      { "id": "cc4", "item": "Starterskit (wax + aftercare eerste maand)", "kostprijs": 2000 },
+      { "id": "cc5", "item": "Merk-handleiding + SOPs + launch-checklist", "kostprijs": 1500 }
+    ],
+    "addons": [
+      { "id": "ad1", "titel": "Business coaching pakket", "bedrag": 4000, "omschrijving": "3 maanden wekelijkse 1-op-1 met Narin — pricing, marketing-strategie, operations-inrichting, cashflow-planning.", "aanbevolen": true },
+      { "id": "ad2", "titel": "Launch marketing", "bedrag": 2500, "omschrijving": "Social kick-off campagne, eerste Meta/IG-campagne inclusief content, signage-ontwerp en lokale PR-pitch.", "aanbevolen": false },
+      { "id": "ad3", "titel": "Starterskit XL", "bedrag": 1500, "omschrijving": "Grotere NAO-voorraad (3 maanden i.p.v. 1) — sneller break-even zonder tussentijdse herbestelling.", "aanbevolen": false }
+    ]
   },
   "studioBenchmarks": {
     "avgRevenuePerCabin": 120000,
