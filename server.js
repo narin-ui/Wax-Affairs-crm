@@ -1642,6 +1642,58 @@ const ADVIESRAAD_PERSONAS = {
   }
 };
 
+const MARKTANALYSE_CACHE = {};
+app.post('/api/marktanalyse', async (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const { stadnaam, kaufkraft, categorie, mietMin, mietMax } = req.body || {};
+  if (!stadnaam) return res.status(400).json({ error: 'stadnaam required' });
+  const cacheKey = stadnaam.toLowerCase().trim();
+  if (MARKTANALYSE_CACHE[cacheKey]) return res.json(MARKTANALYSE_CACHE[cacheKey]);
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured' });
+  const systemPrompt = `Je bent een ervaren marktanalist voor beauty- en waxing-studios in Duitsland. Je kent de Duitse beauty-markt, stadsprofielen en concurrentie. Geef altijd concrete, stadspecifieke antwoorden — nooit generiek.`;
+  const userPrompt = `Voor de stad ${stadnaam} (koopkracht-factor ${kaufkraft || 'onbekend'}, categorie ${categorie || '?'}, huur €${mietMin || '?'}-${mietMax || '?'}/m²), analyseer de marktkansen voor een nieuwe Braziliaanse waxing-studio (Wax Affairs franchise).
+
+Wax Affairs concept:
+- Braziliaanse waxing-techniek, trainer Simone Costa (15+ jaar ervaring)
+- Eigen Nao-productlijn (natuurlijke cosmetica)
+- Premium positionering, gemiddelde ticket €50
+- 50m² studio, 2 cabines standaard
+- Doelgroep: vrouwen 25-55, stedelijk, koopkrachtig
+
+Geef terug als PURE JSON (geen markdown, geen tekst ervoor of erna):
+{
+  "kansen": ["kans 1", "kans 2", "kans 3"],
+  "risicos": ["risico 1", "risico 2", "risico 3"],
+  "concurrenten": [{"type": "type concurrent", "beschrijving": "korte beschrijving"}, ...],
+  "potentie_score": N,
+  "potentie_uitleg": "waarom deze score in 1-2 zinnen",
+  "doelgroep": "specifieke doelgroep in ${stadnaam}",
+  "aanbeveling": "1 concrete aanbeveling voor deze stad"
+}
+
+Score 1=laag / 5=zeer hoog. Wees stadspecifiek: noem wijken, doelgroepen, bekende beauty-ketens of salons die in Duitsland actief zijn (Hairfree, Sugaring Factory, Senzera, lokale salons). Antwoord in NEDERLANDS.`;
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1500, system: systemPrompt, messages: [{ role: 'user', content: userPrompt }] })
+    });
+    if (!r.ok) { const errTxt = await r.text(); console.error('Marktanalyse API error:', r.status, errTxt.slice(0, 300)); return res.status(502).json({ error: 'Anthropic API error', status: r.status }); }
+    const data = await r.json();
+    const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('').trim();
+    // Parse JSON uit respons (strip markdown als die er toch in zit)
+    let jsonText = text;
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) jsonText = jsonMatch[0];
+    let parsed;
+    try { parsed = JSON.parse(jsonText); }
+    catch(err) { console.error('JSON parse fail:', jsonText.slice(0,200)); return res.status(500).json({ error: 'Parse error', raw: text.slice(0, 500) }); }
+    MARKTANALYSE_CACHE[cacheKey] = parsed;
+    res.json(parsed);
+  } catch (e) { console.error('Marktanalyse fail:', e); res.status(500).json({ error: String(e) }); }
+});
+
 app.post('/api/adviesraad/chat', async (req, res) => {
   if (!requireAuth(req, res)) return;
   const { persona, message, history } = req.body || {};
