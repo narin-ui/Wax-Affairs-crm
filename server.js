@@ -1247,6 +1247,53 @@ app.delete('/api/marketing/:type/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// ─── Marketing Assets (AI-generated, ready to publish) ───
+app.get('/api/marketing-assets', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  try { res.json(laadJSON('marketing_assets.json') || []); }
+  catch(e) { res.json([]); }
+});
+
+app.post('/api/marketing-assets', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const assets = Array.isArray(laadJSON('marketing_assets.json')) ? laadJSON('marketing_assets.json') : [];
+  const user = getSessionUser(req);
+  const item = {
+    id: 'ma-' + crypto.randomBytes(6).toString('hex'),
+    specialist: req.body.specialist || 'unknown',
+    type: req.body.type || 'generic',
+    titel: req.body.titel || 'Zonder titel',
+    content: req.body.content || '',
+    platform: req.body.platform || '',
+    status: req.body.status || 'draft',
+    publishDatum: req.body.publishDatum || null,
+    tags: req.body.tags || [],
+    auteur: user ? user.naam : 'Onbekend',
+    aangemaakt: new Date().toISOString()
+  };
+  assets.unshift(item);
+  slaJSON('marketing_assets.json', assets);
+  res.json(item);
+});
+
+app.put('/api/marketing-assets/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const assets = Array.isArray(laadJSON('marketing_assets.json')) ? laadJSON('marketing_assets.json') : [];
+  const idx = assets.findIndex(a => a.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Niet gevonden' });
+  Object.assign(assets[idx], req.body, { bijgewerkt: new Date().toISOString() });
+  slaJSON('marketing_assets.json', assets);
+  res.json(assets[idx]);
+});
+
+app.delete('/api/marketing-assets/:id', (req, res) => {
+  if (!requireAuth(req, res)) return;
+  const assets = Array.isArray(laadJSON('marketing_assets.json')) ? laadJSON('marketing_assets.json') : [];
+  const filtered = assets.filter(a => a.id !== req.params.id);
+  slaJSON('marketing_assets.json', filtered);
+  res.json({ ok: true });
+});
+
 // ─── API: Settings ───
 app.get('/api/settings', (req, res) => {
   if (!requireAuth(req, res)) return;
