@@ -233,7 +233,7 @@
       <button onclick="setLang('nl')" class="flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors" id="lang-nl">🇳🇱 NL</button>
       <button onclick="setLang('de')" class="flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors" id="lang-de">🇩🇪 DE</button>
     </div>
-    <div class="px-3 pb-1 text-[10px] text-gray-600 font-mono" title="Deze versie is live">v2026-04-23 12:55 (marktanalyse-lokaal)</div>
+    <div class="px-3 pb-1 text-[10px] text-gray-600 font-mono" title="Deze versie is live">v2026-04-23 13:02 (ma-lookup-fix)</div>
     <a href="/logout" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors text-sm">
       <span>🚪</span> <span data-t="uitloggen">Uitloggen</span>
     </a>
@@ -1587,7 +1587,7 @@ function lookupStadt() {
   const matchKey = key.replace(/[^a-z]/g, '');
   if (window._laatsteMarktStad !== matchKey) {
     window._laatsteMarktStad = matchKey;
-    loadMarktanalyse(label, kaufkraft, kat, data[0], data[1]);
+    loadMarktanalyse(input, key, kaufkraft, kat, data[0], data[1]);
   }
 }
 
@@ -9634,10 +9634,10 @@ async function init() {
 init();
 </script>
 <script>
-async function loadMarktanalyse(stadnaam, kaufkraft, categorie, mietMin, mietMax) {
+async function loadMarktanalyse(stadnaam, stadkey, kaufkraft, categorie, mietMin, mietMax) {
   const div = document.getElementById('marktanalyseResult');
   if (!div) return;
-  const stadkey = (stadnaam || '').toLowerCase().trim().replace(/ß/g, 'ss');
+  // stadkey komt nu als parameter binnen
   const m = (typeof getMarktanalyseLokaal === 'function') ? getMarktanalyseLokaal(stadkey) : null;
   if (m) { renderMarktanalyse(stadnaam, m); return; }
   // Fallback: stad niet in dataset
