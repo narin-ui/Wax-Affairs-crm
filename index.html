@@ -819,6 +819,65 @@ function statCard(label, waarde, icon, sub) {
   </div>`;
 }
 
+// ─── Info-popover: klikbaar ⓘ-icoon dat een uitleg-paneel toont ───
+// Gebruik: ${infoIcon('unique-id', {bron:'...', berekening:[['Omzet','€126k'],...], doel:[...]})}
+let __infoCounter = 0;
+function infoIcon(label, spec) {
+  __infoCounter++;
+  const id = 'info-' + __infoCounter;
+  const bron = spec.bron || '';
+  const berekening = spec.berekening || [];
+  const doel = spec.doel || [];
+  const extra = spec.extra || '';
+  return `<span class="relative inline-block align-baseline">
+    <button type="button" onclick="toggleInfoPanel('${id}', event)" aria-label="Uitleg ${label}" class="inline-flex items-center justify-center w-4 h-4 ml-1 rounded-full bg-wax-100 text-wax-700 text-[10px] font-bold hover:bg-wax-200 transition-colors cursor-pointer" style="line-height:1;vertical-align:baseline;">ⓘ</button>
+    <div id="${id}" class="hidden absolute z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-xl border border-gray-200 p-4 text-left" style="left:-100px;">
+      <div class="flex items-start justify-between mb-2">
+        <div class="text-sm font-bold text-gray-900">${label}</div>
+        <button type="button" onclick="toggleInfoPanel('${id}', event)" class="text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+      </div>
+      ${bron ? `<p class="text-xs text-gray-500 italic mb-3">${bron}</p>` : ''}
+      ${berekening.length ? `<div class="mb-3">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Hoe is dit berekend</div>
+        <div class="space-y-1">
+          ${berekening.map((row, i) => {
+            const [k, v, klein] = row;
+            const isSum = k && (k.startsWith('=') || k.toLowerCase().includes('totaal') || k.toLowerCase().includes('ebitda'));
+            return `<div class="flex justify-between items-baseline gap-2 text-xs ${isSum?'font-bold text-gray-900 border-t border-gray-200 pt-1 mt-1':'text-gray-700'}">
+              <span>${k||''}</span>
+              <span class="tabular-nums">${v||''}</span>
+              ${klein ? `<span class="text-[10px] text-gray-400 italic ml-1">${klein}</span>` : ''}
+            </div>`;
+          }).join('')}
+        </div>
+      </div>` : ''}
+      ${doel.length ? `<div class="mb-2">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">Wat heb je nodig om dit te halen</div>
+        <ul class="space-y-1 text-xs text-gray-700">
+          ${doel.map(d => `<li class="flex gap-2"><span class="text-wax-500 flex-shrink-0">•</span><span>${d}</span></li>`).join('')}
+        </ul>
+      </div>` : ''}
+      ${extra ? `<div class="text-xs text-gray-500 italic pt-2 border-t border-gray-100 mt-2">${extra}</div>` : ''}
+    </div>
+  </span>`;
+}
+
+function toggleInfoPanel(id, ev) {
+  if (ev) { ev.stopPropagation(); ev.preventDefault(); }
+  const el = document.getElementById(id);
+  if (!el) return;
+  // Sluit andere panelen eerst
+  document.querySelectorAll('[id^="info-"]').forEach(p => { if (p !== el) p.classList.add('hidden'); });
+  el.classList.toggle('hidden');
+}
+
+// Klik buiten het paneel = sluiten
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('[id^="info-"]') && !e.target.closest('button[onclick*="toggleInfoPanel"]')) {
+    document.querySelectorAll('[id^="info-"]').forEach(p => p.classList.add('hidden'));
+  }
+});
+
 function toast(msg, type='success') {
   const el = document.createElement('div');
   el.className = `px-4 py-3 rounded-xl shadow-lg text-sm font-medium fade-in ${type==='error'?'bg-red-600 text-white':type==='warning'?'bg-yellow-500 text-white':'bg-gray-900 text-white'}`;
@@ -6760,20 +6819,70 @@ const BP_SECTIES = [
           <button onclick="openModal('bp-franchise-terms')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
         </div>
 
-        <!-- Investering: 3 grote getallen -->
+        <!-- Investering: 3 grote getallen met info-popovers -->
         <div class="grid md:grid-cols-3 gap-4 mb-5">
           <div class="bg-gradient-to-br from-wax-50 to-white border border-wax-100 rounded-xl p-5">
-            <div class="text-xs text-wax-700 uppercase tracking-wider font-semibold mb-1">Onboarding fee</div>
+            <div class="text-xs text-wax-700 uppercase tracking-wider font-semibold mb-1">Onboarding fee${infoIcon('Onboarding fee — ' + fe(onboardingFee), {
+              bron: 'Eenmalig betaald bij contractondertekening. Dekt alles wat HQ levert om de studio succesvol te laten starten.',
+              berekening: [
+                ['Craft Training (10 dagen Simone)', '~€5.000'],
+                ['Territorium-onderzoek + afbakening', '~€2.000'],
+                ['Starterskit (wax + aftercare voor 1e maand)', '~€2.000'],
+                ['Business-coaching opstartfase (Narin)', '~€4.000'],
+                ['Openingsmarketing + signage ontwerp', '~€2.000'],
+                ['= Totaal', fe(onboardingFee)]
+              ],
+              doel: [
+                'Getekend franchise-contract',
+                '10 beschikbare dagen voor in-person training',
+                'Gekozen studio-locatie binnen exclusief territorium',
+                'Eerste maand coaching-slots gereserveerd met Narin'
+              ]
+            })}</div>
             <div class="text-3xl font-bold text-gray-900">${fe(onboardingFee)}</div>
             <div class="text-xs text-gray-500 mt-1">Eenmalig — dekt training, territorium-setup, starterskit en eerste maand coaching</div>
           </div>
           <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-xl p-5">
-            <div class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Studio fit-out</div>
+            <div class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Studio fit-out${infoIcon('Studio fit-out — ' + fe(fitOutMin) + '–' + fe(fitOutMax), {
+              bron: 'Wat het kost om een ruimte op te leveren als werkbare Wax Affairs-studio. Onderkant: bestaande beauty-ruimte overnemen. Bovenkant: volledig nieuw ingerichte unit.',
+              berekening: [
+                ['Huurborg (3 maanden)', '€3k – €6k'],
+                ['Verbouwing / inrichting', '€8k – €20k'],
+                ['Apparatuur (tafel, wax warmer, sterilisator)', '€3k – €7k'],
+                ['Meubilair (receptie, kasten, wachtruimte)', '€2k – €5k'],
+                ['Branding + signage', '€1k – €3k'],
+                ['Initiële NAO-voorraad', '€1,5k – €3k'],
+                ['Reserve / overig', '€1k – €3k'],
+                ['= Totaal', fe(fitOutMin) + '–' + fe(fitOutMax)]
+              ],
+              doel: [
+                'Locatie met minimaal 20-30 m² werkruimte',
+                'Vergunning voor cosmetische behandelingen',
+                'Water + elektra geschikt voor professionele wax-apparatuur',
+                'Huurbare afsluitbare ruimte voor voorraad NAO'
+              ],
+              extra: 'Bovenkant is bijna nooit nodig — bestaande kappers/beauty-ruimte overnemen scheelt snel €10-15k.'
+            })}</div>
             <div class="text-3xl font-bold text-gray-900">${fe(fitOutMin)}–${fe(fitOutMax)}</div>
             <div class="text-xs text-gray-500 mt-1">Afhankelijk van locatie en grootte — huur, inrichting, apparatuur</div>
           </div>
           <div class="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-xl p-5">
-            <div class="text-xs text-green-700 uppercase tracking-wider font-semibold mb-1">Totale investering</div>
+            <div class="text-xs text-green-700 uppercase tracking-wider font-semibold mb-1">Totale investering${infoIcon('Totale investering — ' + fe(totaalMin) + '–' + fe(totaalMax), {
+              bron: 'Som van onboarding + fit-out + werkkapitaal-buffer. Dit is wat je écht nodig hebt op de bank voor dag 1.',
+              berekening: [
+                ['Onboarding fee', fe(onboardingFee)],
+                ['Studio fit-out (min – max)', fe(fitOutMin) + '–' + fe(fitOutMax)],
+                [`Werkkapitaal ${werkkapMnd} mnd (huur + loon + inkoop)`, '~€10-15k'],
+                ['= Totale investering', fe(totaalMin) + '–' + fe(totaalMax)]
+              ],
+              doel: [
+                'Eigen middelen of familie/vrienden: min. 20-30% (€7-20k)',
+                'Financiering restant via lokale bank / KfW-lening (DE)',
+                'Een eigen buffer aanhouden ~3 maanden vaste lasten',
+                'Businessplan klaar met realistische omzetprognose voor banklening'
+              ],
+              extra: 'Terugverdientijd op basis van base case P&L: ± ' + (paybackMnd || '—') + ' maanden na opening.'
+            })}</div>
             <div class="text-3xl font-bold text-gray-900">${fe(totaalMin)}–${fe(totaalMax)}</div>
             <div class="text-xs text-gray-500 mt-1">Onboarding + fit-out + ${werkkapMnd} maanden werkkapitaal</div>
           </div>
@@ -6786,14 +6895,41 @@ const BP_SECTIES = [
             <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
               <span class="text-xl flex-shrink-0">📊</span>
               <div class="flex-1">
-                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Royalty</span><span class="font-bold text-gray-900">${royaltyPct}% → ${royaltyHigh}%${royaltyPremium?` → ${royaltyPremium}%`:''}</span></div>
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Royalty${infoIcon('Royalty staffel', {
+                  bron: 'Royalty wordt maandelijks afgerekend over de bruto-omzet. De staffel stijgt met omzet: HQ verdient pas meer zodra de studio het zich kan veroorloven.',
+                  berekening: [
+                    ['Basis tot ' + fe(royaltyThreshold), royaltyPct + '%'],
+                    [royaltyHigh + '% boven ' + fe(royaltyThreshold), royaltyHigh + '%'],
+                    ...(royaltyPremium && royaltyPremiumThreshold ? [[royaltyPremium + '% boven ' + fe(royaltyPremiumThreshold), royaltyPremium + '%']] : []),
+                    ['Base case €126k omzet', fe(Math.round(126000 * royaltyPct/100)) + ' (' + royaltyPct + '%)']
+                  ],
+                  doel: [
+                    'Maandelijkse omzet-rapportage aan HQ (automatisch via booking-systeem)',
+                    'Per 1e van de maand afgerekend over de vorige maand',
+                    'Drempel-overschrijding wordt per kalenderjaar bepaald'
+                  ],
+                  extra: 'Marktbenchmark: franchise-concepten in beauty/food hanteren 5-8%. Wax Affairs zit aan de onderkant met een groei-vriendelijke staffel.'
+                })}</span><span class="font-bold text-gray-900">${royaltyPct}% → ${royaltyHigh}%${royaltyPremium?` → ${royaltyPremium}%`:''}</span></div>
                 <div class="text-xs text-gray-500 mt-0.5">${royaltyPct}% tot ${fe(royaltyThreshold)}, ${royaltyHigh}% vanaf ${fe(royaltyThreshold)}${royaltyPremium&&royaltyPremiumThreshold?`, ${royaltyPremium}% vanaf ${fe(royaltyPremiumThreshold)}`:''} bruto-omzet per jaar. HQ verdient méér als jij groeit, niet als jij startgroei nodig hebt.</div>
               </div>
             </div>
             ${marketingFeePct > 0 ? `<div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
               <span class="text-xl flex-shrink-0">📣</span>
               <div class="flex-1">
-                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Marketing-fee</span><span class="font-bold text-gray-900">${marketingFeePct}% van omzet</span></div>
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Marketing-fee${infoIcon('Marketing-fee — ' + marketingFeePct + '% van omzet', {
+                  bron: 'Maandelijks, bovenop de royalty. Gaat naar een centraal marketingbudget waarmee HQ landelijke campagnes voert die elke studio voeden met leads.',
+                  berekening: [
+                    ['Base case €126k omzet', fe(Math.round(126000 * marketingFeePct/100))],
+                    ['Per maand bij €10,5k omzet', fe(Math.round(10500 * marketingFeePct/100))]
+                  ],
+                  doel: [
+                    'Landelijke Meta/Instagram-campagnes (voeding voor heel netwerk)',
+                    'SEO en blog-content (\"waxen in [jouw stad]\" pagina\'s)',
+                    'Content-library: foto\'s, video\'s, templates voor social',
+                    'Reputatie-management (reviews, PR, influencers)'
+                  ],
+                  extra: 'Zonder fee zou elke studio zelf ~€300-500/mnd aan marketing moeten uitgeven. Centraal is het effectiever én goedkoper.'
+                })}</span><span class="font-bold text-gray-900">${marketingFeePct}% van omzet</span></div>
                 <div class="text-xs text-gray-500 mt-0.5">Landelijke campagnes, SEO, content-library — centraal gevoerd, zodat elke studio meelift zonder zelf dure agencies in te huren.</div>
               </div>
             </div>` : ''}
@@ -6867,11 +7003,63 @@ const BP_SECTIES = [
               <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Royalty (${plRoyaltyPctVal}%)</span><span class="font-medium text-red-600">${fe(plRoyalty)}</span></div>
               ${plMarketingFee > 0 ? `<div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Marketing-fee (${marketingFeePct}%)</span><span class="font-medium text-red-600">${fe(plMarketingFee)}</span></div>` : ''}
               <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Lokaal marketing + overig</span><span class="font-medium text-red-600">${fe(plMarketingLokaal)}</span></div>
-              <div class="flex justify-between py-2 mt-1 bg-green-50 rounded-lg px-3"><span class="text-green-800 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">${fe(plEbitda)} <span class="text-xs">(${plMarge}%)</span></span></div>
+              <div class="flex justify-between py-2 mt-1 bg-green-50 rounded-lg px-3"><span class="text-green-800 font-medium">Studio EBITDA${infoIcon('Studio EBITDA — ' + fe(plEbitda) + ' (' + plMarge + '%)', {
+                bron: 'EBITDA is winst vóór belasting en rente. Dit is wat de Friendchisee overhoudt om zichzelf uit te betalen, te investeren in groei of te reserveren als buffer.',
+                berekening: [
+                  ['Omzet (behandelingen + retail)', fe(plOmzet)],
+                  ['− Personeel (' + staffCount + ' medewerkers)', '− ' + fe(plPersoneel)],
+                  ['− Huur (ondergrens)', '− ' + fe(plHuurMin)],
+                  ['− NAO producten (wholesale)', '− ' + fe(plInkoop)],
+                  ['− Royalty (' + plRoyaltyPctVal + '%)', '− ' + fe(plRoyalty)],
+                  ...(plMarketingFee > 0 ? [['− Marketing-fee (' + marketingFeePct + '%)', '− ' + fe(plMarketingFee)]] : []),
+                  ['− Lokaal marketing + overig', '− ' + fe(plMarketingLokaal)],
+                  ['= EBITDA', fe(plEbitda)]
+                ],
+                doel: [
+                  '~' + maandKlanten + ' klanten per maand (±' + Math.round(maandKlanten/22) + ' per werkdag)',
+                  'Gemiddeld ticket van ' + fe(avgTicket) + ' per behandeling',
+                  'Bezetting: ' + staffCount + ' medewerkers × 6u × 5 dagen',
+                  'Retail aftercare: ' + retailConvPct + '% van klanten koopt een product mee',
+                  'Lage no-show rate (<5%) — reminders 24u + 2u vooraf',
+                  'Minimaal 35% klanten binnen 5 weken terug (bindings-rate)'
+                ],
+                extra: 'Dit is de base case — jaar 2+. Jaar 1 is meestal break-even (investeringen nog af te schrijven, klantenbase nog in opbouw).'
+              })}</span><span class="font-bold text-green-700">${fe(plEbitda)} <span class="text-xs">(${plMarge}%)</span></span></div>
             </div>
           </div>
         </div>
         <p class="text-xs text-gray-400 italic mt-4">Indicatieve cijfers. Werkelijke resultaten hangen af van locatie, bezetting en lokale markt.</p>
+
+        <!-- WAT MOET JE DOEN OM DIT TE HALEN -->
+        <div class="mt-5 bg-gradient-to-r from-wax-50 to-white border border-wax-100 rounded-xl p-5">
+          <div class="flex items-start gap-3 mb-3">
+            <span class="text-2xl flex-shrink-0">🎯</span>
+            <div>
+              <h4 class="font-bold text-gray-900">Wat moet je doen om deze base case te halen?</h4>
+              <p class="text-xs text-gray-500 mt-0.5">Concrete, meetbare doelen per week en maand. Haal je deze, dan haal je de P&L.</p>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="bg-white rounded-lg p-3 border border-gray-100">
+              <div class="text-xs font-bold text-wax-700 uppercase tracking-wider mb-1">Operationeel</div>
+              <ul class="space-y-1.5 text-xs text-gray-700">
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>${Math.round(maandKlanten/22)} behandelingen/dag</strong> (${maandKlanten}/maand) bij ${avgTicket} min per behandeling gemiddeld</span></li>
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>Bezetting ${staffCount} medewerkers</strong> × 6u × 5 werkdagen = ${staffCount * 6 * 5 * 52} uur beschikbaar/jr</span></li>
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>Retail-conversie ${retailConvPct}%</strong> — van elke 4 klanten koopt 1 een aftercare-product mee</span></li>
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>Bindingsrate min. 35%</strong> binnen 5 weken — met SMS/WhatsApp reminders</span></li>
+              </ul>
+            </div>
+            <div class="bg-white rounded-lg p-3 border border-gray-100">
+              <div class="text-xs font-bold text-wax-700 uppercase tracking-wider mb-1">Marketing & acquisitie</div>
+              <ul class="space-y-1.5 text-xs text-gray-700">
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>~25 nieuwe klanten/maand</strong> nodig voor de eerste 12 maanden (aanname: 1/3 wordt terugkerend)</span></li>
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>Social: 2 posts/week + 1 reel</strong> — founder-led, echte klantstories</span></li>
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>Reviews: min. 5 nieuwe/maand</strong> — automatisch vragen 24u na behandeling</span></li>
+                <li class="flex gap-2"><span class="text-wax-500">•</span><span><strong>Geen korting-acties</strong> — merk-positie boven prijsconcurrentie</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- PRODUCT-AFNAME SCENARIOS -->
