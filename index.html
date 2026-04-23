@@ -466,7 +466,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="mb-6">
       <h1 class="text-3xl font-bold text-gray-900 mb-1" style="font-family:Georgia,serif">🎯 Adviesraad</h1>
-      <p class="text-sm text-gray-500">Zes AI-specialisten die meedenken over Wax Affairs \u2014 bedrijfsvoering, belasting, legal, HR, marketing, sales & finance.</p>
+      <p class="text-sm text-gray-500">Zes AI-specialisten die meedenken over Wax Affairs — bedrijfsvoering, belasting, legal, HR, marketing, sales & finance.</p>
     </div>
 
     <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-900">
@@ -1514,7 +1514,8 @@ function lookupStadt() {
   const jaarNetto = nettoWinst * 12;
   const jaarBehand = realBehand * 12;
   const jaarNao = naoPerMaand * 12;
-  const roiPct = projectsom > 0 ? (jaarEBITDA / projectsom * 100) : 0;
+  const roiPct = projectsom > 0 ? Math.round(jaarEBITDA / projectsom * 100 * 10) / 10 : 0;
+  const nettoJaarwinst = Math.round(nettoWinst * 12);
   const cumul5jNetto = nettoWinst * 60;
   const netto5jNaInvest = cumul5jNetto - projectsom;
   const roiColor = roiPct >= 25 ? 'green' : roiPct >= 15 ? 'yellow' : 'red';
@@ -1525,6 +1526,12 @@ function lookupStadt() {
     '<div class="text-xs text-gray-600 mt-1">' + cabines + ' ' + (L?'Kabine(n)':'cabine(s)') + ' · ' + m2 + ' m² · ' + teamLabel + ' · ' + (L?'Eigenmittel':'Eigen geld') + ' €' + eigenGeld.toLocaleString('de-DE') + '</div>',
     '</div>',
 
+    // HERO-box: killer-cijfers voor financieel-onderlegde lead
+    '<div class="px-5 py-5 bg-gradient-to-br from-gray-900 to-gray-800 text-white grid md:grid-cols-3 gap-4 text-center">' +
+      '<div><div class="text-[10px] uppercase tracking-wider text-gray-400 mb-1">' + (L?"Netto Jahresgewinn":"Netto jaarwinst") + '</div><div class="text-3xl font-bold text-wax-400">€ ' + nettoJaarwinst.toLocaleString("de-DE") + '</div><div class="text-[10px] text-gray-500 mt-1">' + (L?"nach Kreditraten":"na banklasten") + '</div></div>' +
+      '<div><div class="text-[10px] uppercase tracking-wider text-gray-400 mb-1">ROI ' + (L?"pro Jahr":"per jaar") + '</div><div class="text-3xl font-bold text-' + (roiPct>=25?"green":roiPct>=15?"yellow":"red") + '-400">' + roiPct + '%</div><div class="text-[10px] text-gray-500 mt-1">EBITDA ÷ ' + (L?"Investition":"investering") + '</div></div>' +
+      '<div><div class="text-[10px] uppercase tracking-wider text-gray-400 mb-1">' + (L?"5-Jahre netto kumuliert":"5 jaar cumulatief") + '</div><div class="text-3xl font-bold text-wax-400">€ ' + cumul5jNetto.toLocaleString("de-DE") + '</div><div class="text-[10px] text-gray-500 mt-1">' + (L?"abzüglich Investition = € ":"na investering = € ") + netto5jNaInvest.toLocaleString("de-DE") + '</div></div>' +
+    '</div>',
     '<div class="p-5 grid md:grid-cols-3 gap-4 border-b border-gray-100 text-sm">',
     '<div><div class="text-[10px] uppercase tracking-wider text-gray-500">' + (L?'Gesamtinvestition':'Totale investering') + '</div><div class="text-xl font-bold text-gray-900">€ ' + projectsom.toLocaleString('de-DE') + '</div><div class="text-[10px] text-gray-500">' + (cabines===1?'kleinere Studio':cabines===2?(L?'Standard-Studio':'standaard studio'):(L?'gr\u00F6\u00DFere Studio':'grotere studio')) + '</div></div>',
     '<div><div class="text-[10px] uppercase tracking-wider text-gray-500">' + (L?'Monatliche Fixkosten':'Maandelijkse vaste lasten') + '</div><div class="text-xl font-bold text-gray-900">€ ' + kostenVastMax.toLocaleString('de-DE') + '</div><div class="text-[10px] text-gray-500">' + (L?'Miete + NK + Personal + Sonstiges':'Huur + NK + personeel + overig') + '</div></div>',
@@ -2616,7 +2623,7 @@ function renderFriendchisePitch() {
         : 'Indicatieve cijfers op basis van bedrijfsdata. Werkelijke resultaten zijn afhankelijk van locatie, bezetting en lokale markt.'}</p>
     </div>`;
 
-    setTimeout(() => updateROI(), 50);
+    
   }
 
   // ══════════ IDEAAL PROFIEL ══════════
@@ -3418,33 +3425,6 @@ function renderFriendchisePitch() {
   el.innerHTML = html;
 }
 
-function updateROI() {
-  const cabins = parseInt(document.getElementById('roi-cabins')?.value) || 1;
-  const revPerCabin = parseInt(document.getElementById('roi-revenue')?.value) || 126000;
-  const monthlyRent = parseInt(document.getElementById('roi-rent')?.value) || 1200;
-
-  const totalRev = cabins * revPerCabin;
-  const staffCost = cabins * 34000;
-  const rent = monthlyRent * 12;
-  const products = cabins * 8000;
-  const royaltyPct = totalRev > 120000 ? 0.06 : 0.05;
-  const royalty = Math.round(totalRev * royaltyPct);
-  const marketing = 7000;
-  const totalCosts = staffCost + rent + products + royalty + marketing;
-  const ebitda = totalRev - totalCosts;
-  const margin = totalRev ? Math.round(ebitda / totalRev * 100) : 0;
-  const investment = 15000 + (cabins * 35000);
-  const payback = ebitda > 0 ? (investment / ebitda * 12).toFixed(0) : '∞';
-
-  const el = document.getElementById('roi-result');
-  if (!el) return;
-  el.innerHTML = `<div class="grid grid-cols-4 gap-4 text-center">
-    <div><div class="text-2xl font-bold text-wax-400">${fe(totalRev)}</div><div class="text-xs text-gray-400 mt-1">Omzet/jaar</div></div>
-    <div><div class="text-2xl font-bold text-green-400">${fe(ebitda)}</div><div class="text-xs text-gray-400 mt-1">EBITDA</div></div>
-    <div><div class="text-2xl font-bold ${margin >= 30 ? 'text-green-400' : 'text-yellow-400'}">${margin}%</div><div class="text-xs text-gray-400 mt-1">Marge</div></div>
-    <div><div class="text-2xl font-bold text-wax-400">${payback} mnd</div><div class="text-xs text-gray-400 mt-1">Terugverdientijd</div></div>
-  </div>`;
-}
 
 // ─── RENDER: Pipeline ───
 function renderPipeline() {
