@@ -18,7 +18,15 @@
     "branding": 0, "technologie": 400, "juridisch": 0, "productvoorraad": 4000, "marketing": 1500, "totaalMin": 4300, "totaalMax": 7500
   },
   "franchiseTerms": {
-    "onboardingFee": 15000, "royalty": "5% (6% boven €120k)", "contractduur": "5 jaar, verlengbaar", "territoriaal": "Exclusieve radius", "studioInvestering": "€45.000-75.000", "minOrder": 200
+    "onboardingFee": 15000,
+    "royaltyPct": 5,
+    "royaltyHighPct": 6,
+    "royaltyThreshold": 120000,
+    "contractDuur": "5 jaar, verlengbaar",
+    "territoriaal": "Exclusieve radius",
+    "investMin": 45000,
+    "investMax": 75000,
+    "minBestelling": 200
   },
   "startupInvestering": {
     "onboardingFee": 15000,

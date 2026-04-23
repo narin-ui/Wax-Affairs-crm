@@ -2204,7 +2204,7 @@ function renderFinDirectie(el) {
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4B6}</span><span class="text-gray-600">Onboarding fee</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.onboardingFee || 15000)} (eenmalig)</span></div>
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4CA}</span><span class="text-gray-600">Royalty</span><span class="ml-auto font-medium text-gray-900">${franchiseTerms.royaltyPct || '5'}% (${franchiseTerms.royaltyHighPct || '6'}% boven \u20AC${fn(franchiseTerms.royaltyThreshold || 120000)})</span></div>
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4C5}</span><span class="text-gray-600">Contractduur</span><span class="ml-auto font-medium text-gray-900">${franchiseTerms.contractDuur || '5 jaar, verlengbaar'}</span></div>
-            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F3D7}\uFE0F</span><span class="text-gray-600">Studio investering</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.investMin || 60000)}-${fn(franchiseTerms.investMax || 75000)}</span></div>
+            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F3D7}\uFE0F</span><span class="text-gray-600">Studio investering</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.investMin || 45000)}-${fn(franchiseTerms.investMax || 75000)}</span></div>
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4E6}</span><span class="text-gray-600">Min. bestelling</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.minBestelling || 200)}/maand</span></div>
           </div>
         </div>
@@ -2443,7 +2443,7 @@ function renderFinPnL(el) {
     .filter(b => ['bevestigd','voltooid'].includes(b.status) && b.datum >= jaarStart && b.datum <= jaarEnd)
     .reduce((s, b) => s + bookingPrijs(b), 0);
 
-  const royaltyPct = yearOmzet > (franchiseTerms.royaltyThreshold || 120000) ? 0.06 : 0.05;
+  const royaltyPct = yearOmzet > (franchiseTerms.royaltyThreshold || 120000) ? (franchiseTerms.royaltyHighPct ?? 6) / 100 : (franchiseTerms.royaltyPct ?? 5) / 100;
   const royalties = studioOmzet * royaltyPct;
   const onboardingFees = parseFloat(franchiseTerms.onboardingFee) || 15000;
   const productVerkoop = 1200; // placeholder
@@ -6801,9 +6801,14 @@ function modalStudioDetail(id) {
   } else if (studioDetailTab === 'compliance') {
     // ══════════════ TAB: FRANCHISE COMPLIANCE ══════════════
     const ft = (data.bp||{}).franchiseTerms || {};
-    const ftOnboarding2 = ft.onboardingFee || 15000;
-    const ftRoyaltyPct2 = 5;
-    const ftMinOrder = ft.minOrder || ft.minBestelling || 200;
+    const ftOnboarding2 = ft.onboardingFee ?? 15000;
+    const ftRoyaltyPct2 = ft.royaltyPct ?? 5;
+    const ftRoyaltyHigh2 = ft.royaltyHighPct ?? 6;
+    const ftRoyaltyThreshold2 = ft.royaltyThreshold ?? 120000;
+    const ftMinOrder = ft.minBestelling ?? ft.minOrder ?? 200;
+    const ftContractDuur = ft.contractDuur ?? ft.contractduur ?? '5 jaar, verlengbaar';
+    const ftInvestMin = ft.investMin ?? 45000;
+    const ftInvestMax = ft.investMax ?? 75000;
     const royaltyExpected = monthRevenue * (ftRoyaltyPct2 / 100);
 
     // Find franchisee for this studio
@@ -6828,16 +6833,16 @@ function modalStudioDetail(id) {
       ${checkItem(false, 'Minimum productbestelling', '€0 / ' + fe(ftMinOrder) + ' vereist per maand', 'Actie nodig')}
       ${checkItem(true, 'Academy certificering', 'Wax Professional certificering', null)}
       ${checkItem(false, 'Kwaliteitsinspectie', 'Nog niet gepland', null)}
-      ${checkItem(isLive, 'Contractstatus', (ft.contractduur || ft.contractDuur || '5 jaar, verlengbaar'), null)}
+      ${checkItem(isLive, 'Contractstatus', ftContractDuur, null)}
     </div>
 
     <div class="mt-6 bg-gray-50 rounded-xl p-5 border border-gray-100">
       <h4 class="text-xs font-bold text-gray-500 uppercase mb-3">Franchise Voorwaarden</h4>
       <div class="grid grid-cols-2 gap-3 text-sm">
         <div class="flex justify-between"><span class="text-gray-600">💶 Onboarding fee</span><span class="font-medium">${fe(ftOnboarding2)} (eenmalig)</span></div>
-        <div class="flex justify-between"><span class="text-gray-600">📊 Royalty</span><span class="font-medium">${ft.royalty || '5% (6% boven €120k)'}</span></div>
-        <div class="flex justify-between"><span class="text-gray-600">📅 Contractduur</span><span class="font-medium">${ft.contractduur || ft.contractDuur || '5 jaar'}</span></div>
-        <div class="flex justify-between"><span class="text-gray-600">🏗️ Studio investering</span><span class="font-medium">${ft.studioInvestering || '€60.000-75.000'}</span></div>
+        <div class="flex justify-between"><span class="text-gray-600">📊 Royalty</span><span class="font-medium">${ftRoyaltyPct2}% (${ftRoyaltyHigh2}% boven ${fe(ftRoyaltyThreshold2)})</span></div>
+        <div class="flex justify-between"><span class="text-gray-600">📅 Contractduur</span><span class="font-medium">${ftContractDuur}</span></div>
+        <div class="flex justify-between"><span class="text-gray-600">🏗️ Studio investering</span><span class="font-medium">${fe(ftInvestMin)}-${fe(ftInvestMax)}</span></div>
         <div class="flex justify-between"><span class="text-gray-600">📦 Min. bestelling</span><span class="font-medium">${fe(ftMinOrder)}/maand</span></div>
         <div class="flex justify-between"><span class="text-gray-600">🌍 Territorium</span><span class="font-medium">${ft.territoriaal || 'Exclusieve radius'}</span></div>
       </div>
