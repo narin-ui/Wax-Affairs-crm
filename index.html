@@ -1410,6 +1410,12 @@ const WAX_STADT_DATA = {
   'erfurt': [7, 11, 0.87, 'Erfurt (C-stad)', 'Erfurt (C-Stadt)', 'C'],
   'magdeburg': [7, 10, 0.87, 'Magdeburg (C-stad)', 'Magdeburg (C-Stadt)', 'C'],
   'rostock': [8, 12, 0.89, 'Rostock (C-stad)', 'Rostock (C-Stadt)', 'C'],
+  // No-umlaut aliases (Dusseldorf, Munchen, Koln, Nurnberg, Munster zonder umlaut)
+  'dusseldorf': [16, 24, 1.22, 'Dusseldorf (A-stad)', 'Duesseldorf (A-Stadt)', 'A'],
+  'munchen': [28, 38, 1.36, 'Munchen (A+-stad)', 'Muenchen (A+-Stadt)', 'A+'],
+  'koln': [14, 20, 1.06, 'Koln (A-stad)', 'Koeln (A-Stadt)', 'A'],
+  'nurnberg': [11, 16, 1.01, 'Nurnberg (B-stad)', 'Nuernberg (B-Stadt)', 'B'],
+  'munster': [10, 15, 1.05, 'Munster (C+, studentenstad)', 'Muenster (C+, Studentenstadt)', 'C+'],
   '_unbekannt': [9, 14, 1.00, 'onbekende stad', 'unbekannte Stadt', '?']
 };
 
@@ -10379,6 +10385,11 @@ WAX_MARKTANALYSE_DATA['köln'] = WAX_MARKTANALYSE_DATA['koeln'];
 WAX_MARKTANALYSE_DATA['nürnberg'] = WAX_MARKTANALYSE_DATA['nuernberg'];
 WAX_MARKTANALYSE_DATA['münster'] = WAX_MARKTANALYSE_DATA['muenster'];
 WAX_MARKTANALYSE_DATA['frankfurt am main'] = WAX_MARKTANALYSE_DATA['frankfurt'];
+WAX_MARKTANALYSE_DATA['dusseldorf'] = WAX_MARKTANALYSE_DATA['duesseldorf'];
+WAX_MARKTANALYSE_DATA['munchen'] = WAX_MARKTANALYSE_DATA['muenchen'];
+WAX_MARKTANALYSE_DATA['koln'] = WAX_MARKTANALYSE_DATA['koeln'];
+WAX_MARKTANALYSE_DATA['nurnberg'] = WAX_MARKTANALYSE_DATA['nuernberg'];
+WAX_MARKTANALYSE_DATA['munster'] = WAX_MARKTANALYSE_DATA['muenster'];
 
 // Lookup-functie: probeer genormaliseerde key, dan met umlauts, dan fallback
 function getMarktanalyseLokaal(stadkey) {
