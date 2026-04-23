@@ -15,7 +15,13 @@
     { "jaar": 2030, "omzet": 2010000, "academy": 1080000, "producten": 480000, "franchiseFees": 60000, "royalties": 390000, "kosten": 860000, "locaties": 24, "studenten": 480 }
   ],
   "startupBudget": {
-    "branding": 0, "technologie": 400, "juridisch": 0, "productvoorraad": 4000, "marketing": 1500, "totaalMin": 4300, "totaalMax": 7500
+    "items": [
+      { "id": "sb1", "label": "Branding", "beschrijving": "AI-tools + eigen design, geen bureau", "min": 0, "max": 0 },
+      { "id": "sb2", "label": "Technologie", "beschrijving": "Shopify + Calendly + LMS (eerste jaar)", "min": 300, "max": 500 },
+      { "id": "sb3", "label": "Juridisch", "beschrijving": "Fase 1: geen BV-oprichting nodig", "min": 0, "max": 0 },
+      { "id": "sb4", "label": "Productvoorraad", "beschrijving": "NAO + wax buffer voor eerste orders", "min": 3000, "max": 5000 },
+      { "id": "sb5", "label": "Marketing", "beschrijving": "Organic content + eerste test-ads", "min": 1000, "max": 2000 }
+    ]
   },
   "franchiseTerms": {
     "onboardingFee": 15000,
