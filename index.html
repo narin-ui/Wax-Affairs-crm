@@ -1469,7 +1469,7 @@ function lookupStadt() {
   const kostenVastMax = mietMax + nkMax + overhead + teamKost;
   const kostenVastMin = mietMin + nkMin + overhead + teamKost;
 
-  const avgTicket = 50;
+  const avgTicket = parseInt(document.getElementById('ticketSlider')?.value) || 50;
   const varFactor = 0.81;
   const breakEvenOmzet = kostenVastMax / varFactor;
   const breakEvenBehand = Math.ceil(breakEvenOmzet / avgTicket);
@@ -1478,7 +1478,7 @@ function lookupStadt() {
   const behand3000 = behandVoorWinst(3000);
   const behand5000 = behandVoorWinst(5000);
 
-  const bezettingRealistisch = 0.70;
+  const bezettingRealistisch = (parseInt(document.getElementById('bezettingSlider')?.value) || 70) / 100;
   const realBehand = Math.round(maxBehand * bezettingRealistisch);
   const realOmzet = Math.round(realBehand * avgTicket * kaufkraft);
   const ebitdaReal = Math.round(realOmzet * varFactor - kostenVastMax);
@@ -1527,11 +1527,11 @@ function lookupStadt() {
     '<div class="text-xs text-gray-600 mt-1">' + cabines + ' ' + (L?'Kabine(n)':'cabine(s)') + ' · ' + m2 + ' m² · ' + teamLabel + ' · ' + (L?'Eigenmittel':'Eigen geld') + ' €' + eigenGeld.toLocaleString('de-DE') + '</div>',
     '</div>',
 
-    // HERO-box: killer-cijfers voor financieel-onderlegde lead
-    '<div class="px-5 py-5 bg-gradient-to-br from-gray-900 to-gray-800 text-white grid md:grid-cols-3 gap-4 text-center">' +
-      '<div><div class="text-[10px] uppercase tracking-wider text-gray-400 mb-1">' + (L?"Netto Jahresgewinn":"Netto jaarwinst") + '</div><div class="text-3xl font-bold text-wax-400">€ ' + nettoJaarwinst.toLocaleString("de-DE") + '</div><div class="text-[10px] text-gray-500 mt-1">' + (L?"nach Kreditraten":"na banklasten") + '</div></div>' +
-      '<div><div class="text-[10px] uppercase tracking-wider text-gray-400 mb-1">ROI ' + (L?"pro Jahr":"per jaar") + '</div><div class="text-3xl font-bold text-' + (roiPct>=25?"green":roiPct>=15?"yellow":"red") + '-400">' + roiPct + '%</div><div class="text-[10px] text-gray-500 mt-1">EBITDA ÷ ' + (L?"Investition":"investering") + '</div></div>' +
-      '<div><div class="text-[10px] uppercase tracking-wider text-gray-400 mb-1">' + (L?"5-Jahre netto kumuliert":"5 jaar cumulatief") + '</div><div class="text-3xl font-bold text-wax-400">€ ' + cumul5jNetto.toLocaleString("de-DE") + '</div><div class="text-[10px] text-gray-500 mt-1">' + (L?"abzüglich Investition = € ":"na investering = € ") + netto5jNaInvest.toLocaleString("de-DE") + '</div></div>' +
+    // HERO v2: SIMPEL — 3 begrijpelijke kern-cijfers (netto/mnd, netto/jr, terugverdiend)
+    '<div class="px-6 py-8 bg-gradient-to-br from-gray-900 to-gray-800 text-white grid md:grid-cols-3 gap-6 text-center">' +
+      '<div><div class="text-[11px] uppercase tracking-widest text-gray-400 mb-2 font-semibold">' + (L?"Netto pro Monat":"Netto per maand") + '</div><div class="text-5xl font-bold text-wax-300">€ ' + nettoWinst.toLocaleString("de-DE") + '</div><div class="text-xs text-gray-500 mt-2">' + (L?"nach Bankrate":"na banklasten") + '</div></div>' +
+      '<div><div class="text-[11px] uppercase tracking-widest text-gray-400 mb-2 font-semibold">' + (L?"Netto pro Jahr":"Netto per jaar") + '</div><div class="text-5xl font-bold text-wax-300">€ ' + nettoJaarwinst.toLocaleString("de-DE") + '</div><div class="text-xs text-gray-500 mt-2">' + (L?"nach Bankrate":"na banklasten") + '</div></div>' +
+      '<div><div class="text-[11px] uppercase tracking-widest text-gray-400 mb-2 font-semibold">' + (L?"Zurückverdient":"Terugverdiend") + '</div><div class="text-5xl font-bold text-white">' + paybackMnd + ' ' + (L?"Mon.":"mnd") + '</div><div class="text-xs text-gray-500 mt-2">' + (L?"komplette Investition":"volledige investering") + '</div></div>' +
     '</div>',
     '<div class="p-5 grid md:grid-cols-3 gap-4 border-b border-gray-100 text-sm">',
     '<div><div class="text-[10px] uppercase tracking-wider text-gray-500">' + (L?'Gesamtinvestition':'Totale investering') + '</div><div class="text-xl font-bold text-gray-900">€ ' + projectsom.toLocaleString('de-DE') + '</div><div class="text-[10px] text-gray-500">' + (cabines===1?'kleinere Studio':cabines===2?(L?'Standard-Studio':'standaard studio'):(L?'gr\u00F6\u00DFere Studio':'grotere studio')) + '</div></div>',
@@ -2190,6 +2190,20 @@ function renderFriendchisePitch() {
             <option value="ft1" selected>${L?'+1 Vollzeit':'+1 fulltime'}</option>
             <option value="ft2">${L?'+2 Vollzeit':'+2 fulltime'}</option>
           </select>
+        </div>
+        <!-- Interactieve sliders -->
+        <div class="mt-3 p-4 bg-wax-100/60 border border-wax-200 rounded-lg space-y-3">
+          <div class="text-[11px] uppercase tracking-wider text-wax-800 font-semibold">✨ ${L?'Schieben Sie die Regler — alles rechnet automatisch neu':'Schuif de regelaars — alles rekent automatisch mee'}</div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <label class="text-xs text-gray-700 font-medium min-w-[130px]">${L?'Durchschnittsticket':'Gemiddeld ticket'}:</label>
+            <input type="range" id="ticketSlider" min="30" max="100" step="5" value="50" oninput="document.getElementById('ticketLabel').textContent='€'+this.value;if(document.getElementById('stadtInput').value.trim())lookupStadt();" class="flex-1 min-w-[120px] accent-wax-600">
+            <span id="ticketLabel" class="font-bold text-wax-800 min-w-[50px] text-right">€50</span>
+          </div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <label class="text-xs text-gray-700 font-medium min-w-[130px]">${L?'Auslastung realistisch':'Bezetting realistisch'}:</label>
+            <input type="range" id="bezettingSlider" min="40" max="95" step="5" value="70" oninput="document.getElementById('bezettingLabel').textContent=this.value+'%';if(document.getElementById('stadtInput').value.trim())lookupStadt();" class="flex-1 min-w-[120px] accent-wax-600">
+            <span id="bezettingLabel" class="font-bold text-wax-800 min-w-[50px] text-right">70%</span>
+          </div>
         </div>
         <div id="stadtResult" class="mt-4"></div>
         <div class="mt-4 flex flex-wrap gap-2 text-xs">
