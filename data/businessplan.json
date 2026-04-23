@@ -62,5 +62,15 @@
     "studioMaandTarget": 10000,
     "totaalJaarTarget2026": 401000,
     "royaltyDrempel": 120000
-  }
+  },
+  "legalFases": [
+    { "id": "lf1", "label": "Fase 1 — Nu", "kleur": "green", "trigger": "", "titel": "Opereren onder Simone's Duitse bedrijf", "omschrijving": "50/50 partner agreement, geen setup-kosten. Werkt tot de eerste Friendchisees tekenen." },
+    { "id": "lf2", "label": "Fase 2 — Mid 2027", "kleur": "blue", "trigger": "2 Friendchisees getekend + 1 Academy-cohort afgerond", "titel": "Nederlandse BV + Duitse GmbH", "omschrijving": "NL BV (50/50) houdt alle IP (merk, formules, SOPs) en valt onder Innovation Box (9% op IP). Duitse GmbH (100% dochter) doet de operatie." },
+    { "id": "lf3", "label": "Fase 3 — 2029+", "kleur": "purple", "trigger": "10+ live locaties en stabiele cashflow", "titel": "Vastgoed onder eigen beheer", "omschrijving": "Studios kopen en verhuren aan Friendchisees — vierde, minder volatiele inkomstenstroom en extra zekerheid voor partners." }
+  ],
+  "legalPunten": [
+    { "id": "lp1", "type": "warning", "icon": "⚠️", "titel": "Feitelijke leiding risico", "omschrijving": "Simone woont in DE. Board meetings formeel in NL houden om belastingrisico te vermijden." },
+    { "id": "lp2", "type": "info", "icon": "📋", "titel": "EUIPO trademark", "omschrijving": "EU-brede merkbescherming aanvragen zodra de BV staat." },
+    { "id": "lp3", "type": "ok", "icon": "✅", "titel": "Franchise wet", "omschrijving": "NL: wettelijk verankerd (NFC 2021). DE: alleen via BGB — contract is leidend." }
+  ]
 }
