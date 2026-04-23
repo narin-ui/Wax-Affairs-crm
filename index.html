@@ -2092,6 +2092,41 @@ function renderFriendchisePitch() {
 
   // ══════════ THE NUMBERS + ROI CALCULATOR ══════════
   if (pitchSection === 'cijfers') {
+    const bp = (data && data.bp) || {};
+    const startup = bp.startupInvestering || {};
+    const bench = bp.studioBenchmarks || {};
+    const pl = bp.studioPL || {};
+    const targets = bp.prognoseTargets || {};
+    const terms = bp.franchiseTerms || {};
+
+    const onboardingFee = startup.onboardingFee ?? 15000;
+    const fitOutMin = startup.studioFitOutMin ?? 30000;
+    const fitOutMax = startup.studioFitOutMax ?? 60000;
+    const totaalMin = startup.totaalMin ?? 45000;
+    const totaalMax = startup.totaalMax ?? 75000;
+    const werkkapMnd = startup.werkkapitaalMnd ?? 3;
+
+    const avgRevPerCabin = bench.avgRevenuePerCabin ?? targets.studioJaarTarget ?? 120000;
+    const avgTicket = bench.avgTicket ?? 40;
+    const staffCount = bench.staffCount ?? 2;
+    const hoursPerDay = bench.hoursPerDay ?? 6;
+
+    const plOmzet = pl.omzet ?? 126000;
+    const plPersoneel = pl.personeel ?? 34000;
+    const plHuurMin = pl.huurMin ?? 12000;
+    const plHuurMax = pl.huurMax ?? 18000;
+    const plInkoop = pl.inkoopProducten ?? 8000;
+    const plRoyaltyPct = pl.royaltyPct ?? 5;
+    const plRoyalty = Math.round(plOmzet * plRoyaltyPct / 100);
+    const plMarketing = pl.marketingOverig ?? 7000;
+    const plEbitda = pl.ebitda ?? (plOmzet - plPersoneel - plHuurMin - plInkoop - plRoyalty - plMarketing);
+    const plMarge = pl.ebitdaMargePct ?? (plOmzet ? Math.round(plEbitda / plOmzet * 100) : 0);
+
+    const royaltyDrempel = targets.royaltyDrempel ?? 120000;
+    const royaltyHigh = terms.royaltyPctHoog ?? 6;
+
+    const defaultRent = Math.round(plHuurMin / 12);
+
     html += `<div class="max-w-4xl space-y-6">
       <div class="bg-gradient-to-r from-wax-50 to-white rounded-xl p-6 border border-wax-200">
         <p class="text-gray-700 leading-relaxed">${L
@@ -3930,7 +3965,7 @@ function renderFinDirectie(el) {
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4B6}</span><span class="text-gray-600">Onboarding fee</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.onboardingFee || 15000)} (eenmalig)</span></div>
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4CA}</span><span class="text-gray-600">Royalty</span><span class="ml-auto font-medium text-gray-900">${franchiseTerms.royaltyPct || '5'}% (${franchiseTerms.royaltyHighPct || '6'}% boven \u20AC${fn(franchiseTerms.royaltyThreshold || 120000)})</span></div>
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4C5}</span><span class="text-gray-600">Contractduur</span><span class="ml-auto font-medium text-gray-900">${franchiseTerms.contractDuur || '5 jaar, verlengbaar'}</span></div>
-            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F3D7}\uFE0F</span><span class="text-gray-600">Studio investering</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.investMin || 60000)}-${fn(franchiseTerms.investMax || 75000)}</span></div>
+            <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F3D7}\uFE0F</span><span class="text-gray-600">Studio investering</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.investMin || 45000)}-${fn(franchiseTerms.investMax || 75000)}</span></div>
             <div class="flex items-center gap-2 py-1.5 text-sm"><span>\u{1F4E6}</span><span class="text-gray-600">Min. bestelling</span><span class="ml-auto font-medium text-gray-900">\u20AC${fn(franchiseTerms.minBestelling || 200)}/maand</span></div>
           </div>
         </div>
@@ -4169,7 +4204,7 @@ function renderFinPnL(el) {
     .filter(b => ['bevestigd','voltooid'].includes(b.status) && b.datum >= jaarStart && b.datum <= jaarEnd)
     .reduce((s, b) => s + bookingPrijs(b), 0);
 
-  const royaltyPct = yearOmzet > (franchiseTerms.royaltyThreshold || 120000) ? 0.06 : 0.05;
+  const royaltyPct = yearOmzet > (franchiseTerms.royaltyThreshold || 120000) ? (franchiseTerms.royaltyHighPct ?? 6) / 100 : (franchiseTerms.royaltyPct ?? 5) / 100;
   const royalties = studioOmzet * royaltyPct;
   const onboardingFees = parseFloat(franchiseTerms.onboardingFee) || 15000;
   const productVerkoop = 1200; // placeholder
@@ -6339,28 +6374,28 @@ const T = {
     actieveFranchisees:'Actieve Franchisees',studentenInOpleiding:'Studenten in Opleiding',openstaandeOrders:'Openstaande Orders',totaalContacten:'Totaal Contacten',
     nieuweFranchisee:'+ Franchisee',nieuweStudent:'+ Student',nieuweTaak:'+ Taak',
     // BP
-    bpOverviewTitel:'Wax Affairs Overview',bpOverviewSub:'De kans, het team en de visie',
-    bpOverviewUitleg:'Wax Affairs is een franchise-concept in de professionele waxing industrie. Het bedrijf combineert drie elkaar versterkende inkomstenstromen: een training academy die specialisten opleidt, een eigen cosmeticalijn (Não) die aan partners wordt verkocht, en een franchise-model waarbij opgeleide ondernemers hun eigen studio openen onder het Wax Affairs merk. Dit maakt het bedrijfsmodel bijzonder sterk: elke nieuwe franchisee koopt producten af, elke Academy-graduate is een potentiële franchisee, en het merk wordt sterker met elke locatie.',
-    bpFranchiseTitel:'Friendchise Model',bpFranchiseSub:'Partner types, P&L en overeenkomsten',
-    bpFranchiseUitleg:'Het Friendchise-model is de kern van de groeistrategie. Partners betalen een eenmalige onboarding fee en vervolgens een maandelijkse royalty over hun omzet. In ruil krijgen zij een volledig concept: merk, training, producten, SOPs en doorlopende begeleiding. Het woord "Friendchise" benadrukt de persoonlijke relatie — dit is geen afstandelijk franchise-systeem maar een partnerschap.',
-    bpAcademyTitel:'Training Academy',bpAcademySub:'Het opleidingsinstituut en talent pipeline',
-    bpAcademyUitleg:'De Academy is zowel de winstmotor (90%+ marge) als de strategische moat van het bedrijf. Door zelf de specialisten op te leiden, controleert Wax Affairs de kwaliteit in het hele netwerk. Graduates worden de recruitmentpool voor nieuwe franchise-locaties. De Academy biedt twee formats: intensieve in-person training (10 dagen, €4.000) en een online certificering (5 sessies, €1.000) die ook internationaal schaalbaar is.',
-    bpNaoTitel:'Não Productlijn',bpNaoSub:'Eigen cosmeticalijn met 6 producten',
-    bpNaoUitleg:'Não ("nee" in het Portugees — een verwijzing naar Simone\'s Braziliaanse roots) is de eigen cosmeticalijn van Wax Affairs. De professionele wax is exclusief voor franchise-partners (niet voor consumenten), wat de partner-relatie versterkt. De overige vijf producten (scrub, olie, spray, poeder, crème) worden zowel wholesale aan partners als direct aan consumenten verkocht via de webshop. Alle producten worden geproduceerd in Portugal en Polen met natuurlijke ingrediënten en duurzame verpakkingen.',
-    bpLegalTitel:'Juridische Structuur',bpLegalSub:'Ondernemingsvorm, IP en belasting',
-    bpLegalUitleg:'De juridische structuur is bewust gefaseerd opgezet om kosten laag te houden tot er omzet is. In fase 1 wordt er geopereerd onder Simone\'s bestaande Duitse bedrijf. Zodra 2 franchise-partners zijn getekend, wordt een Nederlandse BV opgericht (lager minimumkapitaal, gunstiger belastingregime) die eigenaar wordt van een Duitse GmbH. Alle intellectuele eigendom (merk, formules, SOPs) blijft in de BV, die via het Innovation Box-regime slechts 9% belasting betaalt op IP-inkomsten.',
-    bpFinTitel:'Financieel Model',bpFinSub:'Investeringen, omzet en winstgevendheid',
-    bpFinUitleg:'Het financieel model laat zien dat Wax Affairs met een zeer kleine investering (€4.300-7.500) kan starten en binnen het eerste volledige jaar winstgevend is. Dit komt door het asset-light model: HQ bezit geen studio\'s, de Academy heeft 90%+ marge, en de vaste kosten zijn minimaal. De 5-jaars projectie gaat uit van een conservatieve groei naar 24 franchise-locaties en €2M+ omzet in 2030.',
-    bpMarketingTitel:'Marketing & Technologie',bpMarketingSub:'Hoe we klanten en partners bereiken',
-    bpMarketingUitleg:'De marketingstrategie draait om founder-led content: Simone\'s persoonlijke verhaal en 20 jaar expertise zijn het gezicht van het merk op social media. Daarnaast worden twee specifieke doelgroepen via Meta/Instagram ads bereikt: ervaren waxing-specialisten die een eigen zaak willen, en ondernemers die een bewezen concept zoeken. SEO-content ("hoe start ik een wax studio") trekt organisch verkeer. Het marketingbudget groeit mee met de omzet.',
-    bpRisksTitle:'Risico\'s & KPIs',bpRisksSub:'Wat kan misgaan en hoe meten we succes',
-    bpRisksUitleg:'Elk businessplan heeft risico\'s. De twee grootste zijn: (1) kwaliteitscontrole bij franchise-partners — hierom is er een streng certificeringssysteem, mystery shoppers en een schorsingsclausule. (2) Het "feitelijke leiding" belastingrisico — omdat Simone in Duitsland woont maar de BV in Nederland zit, moet structureel geborgd worden dat strategische besluiten in NL worden genomen.',
-    bpRoadmapTitel:'Implementatie Roadmap',bpRoadmapSub:'Concrete stappen van nu tot lancering',
-    bpRoadmapUitleg:'De roadmap laat zien welke taken wanneer af moeten zijn. Elke taak is toegewezen aan Simone (training, producten, kwaliteit) of Narin (business, juridisch, financieel). Klik op een taak om de status te wijzigen of om het toe te wijzen aan iemand anders.',
-    bpDecisionsTitel:'Besluiten & Actiepunten',bpDecisionsSub:'Vastleggen wat we bespreken en besluiten',
-    bpDecisionsUitleg:'Gebruik deze pagina tijdens jullie meeting om besluiten vast te leggen en actiepunten toe te wijzen. De "Actiepunten omzetten naar Taken" knop maakt automatisch taken aan in de Roadmap met de juiste toewijzing.',
-    bpMarketTitel:'Markt & Concurrentie',bpMarketSub:'Marktomvang en onze positie',
-    bpMarketUitleg:'De wereldwijde hair removal markt is ~$12 miljard en groeit 5-6% per jaar. In Duitsland is waxing een groeiende markt met sterke vraag in steden. Het probleem: de meeste studio\'s worden gerund door individuen zonder standaardisatie — inconsistente kwaliteit, geen training, geen merkbeleving. Wax Affairs lost dit op door craft en business samen te brengen in een schaalbaar franchise-concept.',
+    bpOverviewTitel:'Wax Affairs Overview',bpOverviewSub:'Het concept, het team en de kans',
+    bpOverviewUitleg:'Wax Affairs is een compleet franchise-concept voor iedereen die een eigen wax-studio wil beginnen — niet alleen voor ervaren specialisten. We leggen de lat hoog dankzij 20 jaar ervaring in waxen én in het runnen van bedrijven. Het concept rust op drie pijlers die elkaar versterken: onze eigen natuurlijke productlijn NAO (zelf geproduceerd, 100% natuurlijk), een academy die zowel interne medewerkers als externe ondernemers opleidt, en een eigen studio-formule. Elke Friendchisee wordt intensief begeleid op vak, business, marketing en operations — zodat je vanaf dag één werkt als een ware professional onder een merk waar klanten op vertrouwen.',
+    bpFranchiseTitel:'Friendchise Model',bpFranchiseSub:'Het partnerschap, de investering en het rendement',
+    bpFranchiseUitleg:'Friendchise is meer dan een franchise — het woord zegt het al. We werken met mensen, niet met filialen. Als Friendchisee krijg je een compleet bedrijf-in-een-doos: het Wax Affairs merk, 10 dagen vaktraining van Simone, onze eigen natuurlijke productlijn NAO, kant-en-klare SOPs en intensieve business-coaching van Narin. Je betaalt een eenmalige onboarding fee en daarna een royalty over je omzet. Geen afstandelijk hoofdkantoor, maar partners die naast je staan — van je eerste klant tot je volgende cabine.',
+    bpAcademyTitel:'Training Academy',bpAcademySub:'Waar we ons eigen talent opleiden',
+    bpAcademyUitleg:'De Academy is het hart van de kwaliteit en meteen een van de sterkste inkomstenstromen (90%+ marge). Door zelf onze specialisten op te leiden houden we de standaard in het hele netwerk in eigen hand — en elke graduate is een potentiële toekomstige Friendchisee. De Academy biedt drie instappunten: korte Workshops voor wie wil kennismaken, Online Trainingen voor zelfstandig leren op afstand, en het intensieve in-person certificeringsprogramma voor ervaren waxers, interne medewerkers en aankomende Friendchisees. Alle prijzen en marges staan in het Businessplan en passen zich automatisch door tot op de Friendchise Pitch.',
+    bpNaoTitel:'Não Productlijn',bpNaoSub:'Onze eigen productlijn — 100% natuurlijk',
+    bpNaoUitleg:'Não betekent "nee" in het Portugees — een knipoog naar Simone\'s Braziliaanse roots en een bewuste keuze tegen synthetische troep. Het is onze eigen cosmeticalijn, ontwikkeld in Portugal en Polen met natuurlijke ingrediënten en duurzame verpakkingen. De professionele wax is exclusief voor Friendchise-partners, de pre- en aftercare (scrub, olie, spray, poeder, crème) verkopen partners in hun studio én wij direct aan consumenten via de webshop. Zo verdien je als Friendchisee drie keer aan elk product: marge bij inkoop, marge bij retail, en de wetenschap dat je klant met een kwaliteitsproduct thuiskomt.',
+    bpLegalTitel:'Juridische Structuur',bpLegalSub:'Groeien zonder vooruit te lopen op jezelf',
+    bpLegalUitleg:'Als je een merk bouwt dat over 5 jaar 25 studios telt, moet de structuur mee kunnen groeien — zonder dat je vandaag al duizenden euro\'s aan setup verbrandt. Daarom bouwen we in drie fases. Nu werken we onder Simone\'s bestaande Duitse bedrijf: niets kost niets. Zodra de eerste Friendchisees tekenen richten we een Nederlandse BV op — laag minimumkapitaal, gunstiger belastingregime en toegang tot de Innovation Box, waar het IP (merk, formules, SOPs) thuishoort en maar 9% belast wordt. Pas als we echt volume hebben komt fase 3: studios in eigen vastgoed. Elke fase heeft een trigger — we zetten de volgende stap pas als we er klaar voor zijn, niet omdat een boekhouder zegt dat het "tijd is".',
+    bpFinTitel:'Financieel Model',bpFinSub:'Klein starten, slim groeien, snel winstgevend',
+    bpFinUitleg:'Wax Affairs start met een hele kleine investering — geen kantoor, geen voorraad-berg, geen voorgefinancierde studio\'s. HQ is asset-light: wij bezitten de Academy, het merk en de productlijn; Friendchisees investeren zelf in hun studio. Doordat de Academy 90%+ marge draait, zijn we al in het eerste volledige jaar winstgevend. De projectie hieronder is conservatief geraamd — geleidelijke groei naar €2M+ omzet in 2030, gedragen door Academy-inkomsten, product-marges en royalties van 24 Friendchise-locaties. Geen exit-droom, wél een bedrijf dat elk jaar meer geld verdient dan het uitgeeft.',
+    bpMarketingTitel:'Marketing & Technologie',bpMarketingSub:'Persoonlijk, slim en betaalbaar',
+    bpMarketingUitleg:'Wax Affairs draait op verhaal, niet op budget. Het gezicht is Simone — haar 20 jaar expertise, haar salon, haar keuzes — en dat zie je terug op Instagram en TikTok. Paid marketing zetten we gericht in op twee duidelijke doelgroepen: ervaren waxers die toe zijn aan hun eigen studio, en ondernemers die een bewezen concept zoeken. SEO en blog vangen mensen op die in de oriëntatiefase zitten. Academy-graduates krijgen een referral-bonus, zodat het netwerk zichzelf voedt. Tools: lean, bewezen en betaalbaar — minder dan €2.000 per jaar om HQ draaiende te houden. Het marketingbudget groeit jaar op jaar mee met de omzet, nooit eerder.',
+    bpRisksTitel:'Risico\'s & KPIs',bpRisksSub:'Eerlijk over wat kan misgaan — en hoe we het meten',
+    bpRisksUitleg:'Elk ambitieus plan heeft risico\'s — het verschil zit in of je ze benoemt of wegkijkt. Wij benoemen ze. De twee grootste: kwaliteitscontrole bij Friendchisees (opgevangen met verplichte certificering, maandelijkse audits, mystery shoppers en een schorsingsclausule) en het fiscale "feitelijke leiding"-vraagstuk (Simone woont in DE, de BV staat in NL — dus board meetings formeel in Nederland, Narin als primaire directeur, en een tax opinion als extra slot op de deur). Daarnaast monitoren we maandelijks KPIs die vroeg waarschuwen voordat een probleem een crisis wordt. Liever nu eerlijk zijn dan later verrast worden.',
+    bpRoadmapTitel:'Implementatie Roadmap',bpRoadmapSub:'Van papier naar praktijk — in fases',
+    bpRoadmapUitleg:'Een plan zonder taken is een dagdroom. Dit is waar we de strategie vertalen naar concrete acties — wie doet wat, wanneer, en hoever zijn we. Elke taak is toegewezen aan Simone (vak, producten, kwaliteit) of Narin (business, juridisch, financieel), verdeeld over fases. Klik op een vinkje om de status te wijzigen — open → bezig → klaar. Zo zie je in één oogopslag of we op koers liggen, of dat er iets moet worden herprioriteerd.',
+    bpDecisionsTitel:'Besluiten & Actiepunten',bpDecisionsSub:'Wat we besluiten blijft staan, wat we afspreken wordt gedaan',
+    bpDecisionsUitleg:'Deze pagina is jullie werkkopie tijdens elke meeting — één plek waar open vragen, genomen besluiten en nieuwe actiepunten landen. Alles wordt automatisch opgeslagen terwijl jullie typen. Zet actiepunten met een streepje op een eigen regel (bv. "- Simone: contact opnemen met Epifutur") en klik op "Actiepunten omzetten naar Taken" — dan verschijnen ze direct in de Roadmap, met de juiste toewijzing. Geen losse memo\'s meer, geen "wie zou dat ook alweer doen".',
+    bpMarketTitel:'Markt & Concurrentie',bpMarketSub:'Waar we spelen en waarom wij winnen',
+    bpMarketUitleg:'De wereldwijde hair-removal markt is rond de $12 miljard en groeit met 5-6% per jaar. In Duitsland is waxing in de grote steden een duidelijk groeimarkt — alleen zit de aanbodkant scheef. Wax in the City heeft het merk, maar geen training-pipeline of franchise-machine. European Wax Center heeft het franchise-model, maar zit niet in Europa. En de honderden lokale independents leveren wisselende kwaliteit zonder merk of standaard. Daar stappen wij in: craft én business in één schaalbaar concept, met onze eigen academy als talent-pijplijn en NAO-producten als structurele marge. Niet de goedkoopste, wel de meest doordachte.',
     bewerken:'Bewerken',opslaan:'Opslaan',annuleren:'Annuleren',toevoegen:'Toevoegen',verwijderen:'Verwijderen',
     revenueStream:'Inkomstenstroom',naam:'Naam',beschrijving:'Beschrijving',model:'Verdienmodel',marge:'Marge',
     jaar:'Jaar',omzet:'Omzet',kosten:'Kosten',winst:'Winst',locaties:'Locaties',
@@ -6428,28 +6463,28 @@ const T = {
     taken:'Aufgaben',agenda:'Kalender',studios:'Studios',services:'Leistungen',businessplan:'Businessplan',uitloggen:'Abmelden',
     actieveFranchisees:'Aktive Franchisees',studentenInOpleiding:'Studenten in Ausbildung',openstaandeOrders:'Offene Bestellungen',totaalContacten:'Kontakte Gesamt',
     nieuweFranchisee:'+ Franchisee',nieuweStudent:'+ Student',nieuweTaak:'+ Aufgabe',
-    bpOverviewTitel:'Wax Affairs Übersicht',bpOverviewSub:'Die Chance, das Team und die Vision',
-    bpOverviewUitleg:'Wax Affairs ist ein Franchise-Konzept in der professionellen Waxing-Branche. Das Unternehmen kombiniert drei sich gegenseitig verstärkende Einnahmequellen: eine Schulungsakademie, die Spezialisten ausbildet, eine eigene Kosmetiklinie (Não), die an Partner verkauft wird, und ein Franchise-Modell, bei dem ausgebildete Unternehmer ihr eigenes Studio unter der Marke Wax Affairs eröffnen. Dies macht das Geschäftsmodell besonders stark: Jeder neue Franchisee kauft Produkte, jeder Academy-Absolvent ist ein potenzieller Franchisee, und die Marke wird mit jedem Standort stärker.',
-    bpFranchiseTitel:'Friendchise-Modell',bpFranchiseSub:'Partnertypen, P&L und Vereinbarungen',
-    bpFranchiseUitleg:'Das Friendchise-Modell ist der Kern der Wachstumsstrategie. Partner zahlen eine einmalige Onboarding-Gebühr und anschließend eine monatliche Umsatzbeteiligung. Im Gegenzug erhalten sie ein komplettes Konzept: Marke, Schulung, Produkte, SOPs und laufende Betreuung. Das Wort "Friendchise" betont die persönliche Beziehung — dies ist kein distanziertes Franchise-System, sondern eine Partnerschaft.',
-    bpAcademyTitel:'Training Academy',bpAcademySub:'Die Ausbildungsstätte und Talent-Pipeline',
-    bpAcademyUitleg:'Die Academy ist sowohl der Gewinnmotor (90%+ Marge) als auch der strategische Vorteil des Unternehmens. Durch die eigene Ausbildung der Spezialisten kontrolliert Wax Affairs die Qualität im gesamten Netzwerk. Absolventen werden zum Rekrutierungspool für neue Franchise-Standorte. Die Academy bietet zwei Formate: intensive Präsenzschulung (10 Tage, €4.000) und eine Online-Zertifizierung (5 Sitzungen, €1.000).',
-    bpNaoTitel:'Não Produktlinie',bpNaoSub:'Eigene Kosmetiklinie mit 6 Produkten',
-    bpNaoUitleg:'Não ("nein" auf Portugiesisch — ein Verweis auf Simones brasilianische Wurzeln) ist die eigene Kosmetiklinie von Wax Affairs. Das professionelle Wachs ist exklusiv für Franchise-Partner (nicht für Verbraucher), was die Partnerbindung stärkt. Die übrigen fünf Produkte werden sowohl im Großhandel an Partner als auch direkt an Verbraucher über den Webshop verkauft.',
-    bpLegalTitel:'Rechtsstruktur',bpLegalSub:'Unternehmensform, IP und Steuern',
-    bpLegalUitleg:'Die Rechtsstruktur ist bewusst in Phasen aufgebaut, um Kosten niedrig zu halten, bis Umsatz generiert wird. In Phase 1 wird unter Simones bestehendem deutschen Unternehmen operiert. Sobald 2 Franchise-Partner unterschrieben haben, wird eine niederländische BV gegründet (niedrigeres Mindestkapital, günstigeres Steuerregime), die eine deutsche GmbH besitzt. Alles geistiges Eigentum bleibt in der BV.',
-    bpFinTitel:'Finanzmodell',bpFinSub:'Investitionen, Umsatz und Rentabilität',
-    bpFinUitleg:'Das Finanzmodell zeigt, dass Wax Affairs mit einer sehr kleinen Investition (€4.300-7.500) starten kann und innerhalb des ersten vollen Jahres profitabel ist. Dies liegt am Asset-Light-Modell: Das HQ besitzt keine Studios, die Academy hat 90%+ Marge, und die Fixkosten sind minimal.',
-    bpMarketingTitel:'Marketing & Technologie',bpMarketingSub:'Wie wir Kunden und Partner erreichen',
-    bpMarketingUitleg:'Die Marketingstrategie basiert auf Founder-led Content: Simones persönliche Geschichte und 20 Jahre Expertise sind das Gesicht der Marke in sozialen Medien. Zusätzlich werden zwei spezifische Zielgruppen über Meta/Instagram-Ads erreicht: erfahrene Waxing-Spezialisten und Unternehmer, die ein bewährtes Konzept suchen.',
-    bpRisksTitle:'Risiken & KPIs',bpRisksSub:'Was schiefgehen kann und wie wir messen',
-    bpRisksUitleg:'Jeder Businessplan hat Risiken. Die beiden größten sind: (1) Qualitätskontrolle bei Franchise-Partnern — deshalb gibt es ein strenges Zertifizierungssystem und Mystery Shopper. (2) Das steuerliche Risiko der "tatsächlichen Geschäftsleitung" — da Simone in Deutschland lebt, aber die BV in den Niederlanden sitzt.',
-    bpRoadmapTitel:'Umsetzungs-Roadmap',bpRoadmapSub:'Konkrete Schritte von jetzt bis zum Start',
-    bpRoadmapUitleg:'Die Roadmap zeigt, welche Aufgaben wann erledigt sein müssen. Jede Aufgabe ist Simone (Schulung, Produkte, Qualität) oder Narin (Business, Recht, Finanzen) zugewiesen. Klicken Sie auf eine Aufgabe, um den Status zu ändern.',
-    bpDecisionsTitel:'Entscheidungen & Aktionspunkte',bpDecisionsSub:'Was wir besprechen und beschließen',
-    bpDecisionsUitleg:'Nutzen Sie diese Seite während des Meetings, um Entscheidungen festzuhalten und Aktionspunkte zuzuweisen. Der Button "Aktionspunkte in Aufgaben umwandeln" erstellt automatisch Aufgaben in der Roadmap.',
-    bpMarketTitel:'Markt & Wettbewerb',bpMarketSub:'Marktgröße und unsere Position',
-    bpMarketUitleg:'Der weltweite Markt für Haarentfernung beträgt ~$12 Milliarden und wächst jährlich um 5-6%. In Deutschland ist Waxing ein wachsender Markt. Das Problem: Die meisten Studios werden von Einzelpersonen ohne Standardisierung betrieben. Wax Affairs löst dies durch die Kombination von Handwerk und Business in einem skalierbaren Franchise-Konzept.',
+    bpOverviewTitel:'Wax Affairs Übersicht',bpOverviewSub:'Das Konzept, das Team und die Chance',
+    bpOverviewUitleg:'Wax Affairs ist ein vollständiges Franchise-Konzept für alle, die ein eigenes Wax-Studio eröffnen möchten — nicht nur für erfahrene Spezialisten. Wir setzen den Standard hoch dank 20 Jahren Erfahrung im Waxing und im Aufbau von Unternehmen. Das Konzept ruht auf drei sich verstärkenden Säulen: unsere eigene natürliche Produktlinie NAO (selbst produziert, 100% natürlich), eine Academy, die sowohl interne Mitarbeiter als auch externe Unternehmer ausbildet, und eine eigene Studio-Formel. Jede Friendchiserin wird intensiv begleitet in Handwerk, Business, Marketing und Operations — sodass Sie ab dem ersten Tag als echte Profi unter einer Marke arbeiten, der Kunden vertrauen.',
+    bpFranchiseTitel:'Friendchise-Modell',bpFranchiseSub:'Die Partnerschaft, die Investition und die Rendite',
+    bpFranchiseUitleg:'Friendchise ist mehr als ein Franchise — das Wort sagt es bereits. Wir arbeiten mit Menschen, nicht mit Filialen. Als Friendchiserin erhalten Sie ein komplettes Unternehmen-in-einer-Box: die Marke Wax Affairs, 10 Tage Handwerksschulung mit Simone, unsere eigene natürliche Produktlinie NAO, fertige SOPs und intensive Business-Begleitung durch Narin. Sie zahlen eine einmalige Onboarding-Gebühr und danach eine Umsatzbeteiligung. Kein distanziertes Headquarter, sondern Partner, die neben Ihnen stehen — von Ihrer ersten Kundin bis zu Ihrer nächsten Kabine.',
+    bpAcademyTitel:'Training Academy',bpAcademySub:'Wo wir unser eigenes Talent ausbilden',
+    bpAcademyUitleg:'Die Academy ist das Herz unserer Qualität und gleichzeitig eine der stärksten Einnahmequellen (90%+ Marge). Indem wir unsere Spezialisten selbst ausbilden, behalten wir den Standard im gesamten Netzwerk in der Hand — und jede Absolventin ist eine potenzielle zukünftige Friendchiserin. Die Academy bietet drei Einstiegsmöglichkeiten: kurze Workshops zum Kennenlernen, Online-Schulungen für selbständiges Lernen, und das intensive Präsenz-Zertifizierungsprogramm für erfahrene Waxerinnen, interne Mitarbeiter und angehende Friendchiserinnen. Alle Preise und Margen stehen im Businessplan und werden automatisch bis zur Friendchise Pitch synchronisiert.',
+    bpNaoTitel:'Não Produktlinie',bpNaoSub:'Unsere eigene Produktlinie — 100% natürlich',
+    bpNaoUitleg:'Não bedeutet "nein" auf Portugiesisch — ein Augenzwinkern an Simones brasilianische Wurzeln und eine bewusste Absage an synthetische Inhaltsstoffe. Es ist unsere eigene Kosmetiklinie, entwickelt in Portugal und Polen mit natürlichen Zutaten und nachhaltiger Verpackung. Das professionelle Wachs ist exklusiv für Friendchise-Partner, die Pre- und Aftercare-Produkte (Scrub, Öl, Spray, Puder, Creme) verkaufen Partner in ihrem Studio und wir direkt an Verbraucher über den Webshop. So verdient jede Friendchiserin dreifach an jedem Produkt: Marge beim Einkauf, Marge im Retail, und die Gewissheit, dass die Kundin mit einem Qualitätsprodukt nach Hause geht.',
+    bpLegalTitel:'Rechtsstruktur',bpLegalSub:'Wachsen, ohne sich selbst vorauszulaufen',
+    bpLegalUitleg:'Wenn man eine Marke aufbaut, die in 5 Jahren 25 Studios zählt, muss die Struktur mitwachsen können — ohne dass man heute schon tausende Euro für Setup verbrennt. Deshalb bauen wir in drei Phasen. Jetzt arbeiten wir unter Simones bestehendem deutschen Unternehmen: nichts kostet nichts. Sobald die ersten Friendchiserinnen unterschreiben, gründen wir eine niederländische BV — niedriges Mindestkapital, günstigeres Steuerregime und Zugang zur Innovation Box, wo das IP (Marke, Rezepturen, SOPs) hingehört und nur mit 9% besteuert wird. Erst wenn wir wirklich Volumen haben, kommt Phase 3: Studios in eigener Immobilie. Jede Phase hat einen Trigger — wir machen den nächsten Schritt erst, wenn wir bereit sind, nicht weil ein Buchhalter sagt, es sei "an der Zeit".',
+    bpFinTitel:'Finanzmodell',bpFinSub:'Klein starten, klug wachsen, schnell profitabel',
+    bpFinUitleg:'Wax Affairs startet mit einer sehr kleinen Investition — kein Büro, kein Lagerberg, keine vorfinanzierten Studios. Das HQ ist asset-light: Wir besitzen die Academy, die Marke und die Produktlinie; Friendchiserinnen investieren selbst in ihr Studio. Da die Academy 90%+ Marge generiert, sind wir bereits im ersten vollen Jahr profitabel. Die Projektion unten ist konservativ geschätzt — schrittweises Wachstum auf €2M+ Umsatz in 2030, getragen von Academy-Einnahmen, Produktmargen und Royalties von 24 Friendchise-Standorten. Kein Exit-Traum, sondern ein Unternehmen, das jedes Jahr mehr verdient als es ausgibt.',
+    bpMarketingTitel:'Marketing & Technologie',bpMarketingSub:'Persönlich, smart und bezahlbar',
+    bpMarketingUitleg:'Wax Affairs lebt von Geschichten, nicht von Budgets. Das Gesicht ist Simone — ihre 20 Jahre Expertise, ihr Salon, ihre Entscheidungen — und das sieht man auf Instagram und TikTok. Paid Marketing setzen wir gezielt für zwei klare Zielgruppen ein: erfahrene Waxerinnen, die bereit sind für ihr eigenes Studio, und Unternehmer, die ein bewährtes Konzept suchen. SEO und Blog erreichen Menschen in der Orientierungsphase. Academy-Absolventinnen bekommen einen Referral-Bonus, sodass das Netzwerk sich selbst nährt. Tools: schlank, bewährt und bezahlbar — weniger als €2.000 pro Jahr, um das HQ am Laufen zu halten. Das Marketingbudget wächst Jahr für Jahr mit dem Umsatz mit, nie vorher.',
+    bpRisksTitel:'Risiken & KPIs',bpRisksSub:'Ehrlich, was schiefgehen kann — und wie wir es messen',
+    bpRisksUitleg:'Jeder ambitionierte Plan hat Risiken — der Unterschied ist, ob man sie benennt oder wegschaut. Wir benennen sie. Die beiden größten: Qualitätskontrolle bei Friendchiserinnen (abgesichert durch verpflichtende Zertifizierung, monatliche Audits, Mystery Shopper und eine Suspendierungsklausel) und die steuerliche Frage der "tatsächlichen Geschäftsleitung" (Simone lebt in DE, die BV sitzt in NL — also Board Meetings formal in den Niederlanden, Narin als primäre Geschäftsführerin, und ein Steuergutachten als zusätzliches Sicherungsschloss). Zusätzlich überwachen wir monatlich KPIs, die früh warnen, bevor ein Problem zur Krise wird. Lieber jetzt ehrlich sein als später überrascht werden.',
+    bpRoadmapTitel:'Umsetzungs-Roadmap',bpRoadmapSub:'Vom Papier zur Praxis — in Phasen',
+    bpRoadmapUitleg:'Ein Plan ohne Aufgaben ist ein Tagtraum. Hier übersetzen wir die Strategie in konkrete Aktionen — wer macht was, wann, und wie weit sind wir. Jede Aufgabe ist Simone (Handwerk, Produkte, Qualität) oder Narin (Business, Recht, Finanzen) zugewiesen, verteilt auf Phasen. Klicken Sie auf einen Haken, um den Status zu ändern — offen → in Arbeit → erledigt. So sieht man auf einen Blick, ob wir auf Kurs sind oder etwas neu priorisiert werden muss.',
+    bpDecisionsTitel:'Entscheidungen & Aktionspunkte',bpDecisionsSub:'Was wir beschließen, bleibt stehen — was wir verabreden, wird getan',
+    bpDecisionsUitleg:'Diese Seite ist Ihre Arbeitskopie für jedes Meeting — ein Ort, an dem offene Fragen, gefasste Entscheidungen und neue Aktionspunkte landen. Alles wird automatisch gespeichert, während Sie tippen. Setzen Sie Aktionspunkte mit einem Strich auf eine eigene Zeile (z.B. "- Simone: Epifutur kontaktieren") und klicken Sie auf "Aktionspunkte in Aufgaben umwandeln" — dann erscheinen sie direkt in der Roadmap, mit der richtigen Zuweisung. Keine losen Notizen mehr, kein "wer sollte das nochmal machen".',
+    bpMarketTitel:'Markt & Wettbewerb',bpMarketSub:'Wo wir spielen — und warum wir gewinnen',
+    bpMarketUitleg:'Der weltweite Markt für Haarentfernung umfasst rund $12 Milliarden und wächst jährlich um 5-6%. In Deutschland ist Waxing in den großen Städten ein klarer Wachstumsmarkt — nur ist das Angebot schief verteilt. Wax in the City hat die Marke, aber keine Training-Pipeline und keine Franchise-Maschine. European Wax Center hat das Franchise-Modell, ist aber nicht in Europa. Und Hunderte lokaler Unabhängiger liefern schwankende Qualität ohne Marke oder Standard. Genau hier steigen wir ein: Handwerk und Business in einem skalierbaren Konzept, mit unserer eigenen Academy als Talentpipeline und NAO-Produkten als struktureller Marge. Nicht die Günstigsten, aber die Durchdachtesten.',
     bewerken:'Bearbeiten',opslaan:'Speichern',annuleren:'Abbrechen',toevoegen:'Hinzufügen',verwijderen:'Löschen',
     revenueStream:'Einnahmequelle',naam:'Name',beschrijving:'Beschreibung',model:'Geschäftsmodell',marge:'Marge',
     jaar:'Jahr',omzet:'Umsatz',kosten:'Kosten',winst:'Gewinn',locaties:'Standorte',
@@ -6577,6 +6612,8 @@ const BP_SECTIES = [
       const proj = bp.projectie || [];
       const team = bp.team || [];
       const p0 = proj[0] || {}; const pL = proj[proj.length-1] || {};
+      const pLEbitda = (pL.omzet || 0) - (pL.kosten || 0);
+      const pLMargin = pL.omzet ? Math.round(pLEbitda / pL.omzet * 100) : 0;
       const icons = {academy:'🎓',producten:'🧴',franchise:'🏪',dtc:'🛒'};
       const colors = {academy:'terra-50',producten:'gray-50',franchise:'wax-50',dtc:'blue-50'};
       return `
@@ -6588,7 +6625,7 @@ const BP_SECTIES = [
             <div class="grid grid-cols-3 gap-4 text-center">
               <div><div class="text-2xl font-bold">${fe(p0.omzet)}</div><div class="text-xs opacity-70">${t('omzet')} ${p0.jaar||''}</div></div>
               <div><div class="text-2xl font-bold">${fe(pL.omzet)}</div><div class="text-xs opacity-70">${t('omzet')} ${pL.jaar||''}</div></div>
-              <div><div class="text-2xl font-bold">~70%</div><div class="text-xs opacity-70">EBITDA ${pL.jaar||''}</div></div>
+              <div><div class="text-2xl font-bold">~${pLMargin}%</div><div class="text-xs opacity-70">EBITDA ${pL.jaar||''}</div></div>
             </div>
           </div>
           <div class="bg-white rounded-xl border p-5">
@@ -6633,50 +6670,204 @@ const BP_SECTIES = [
 
   { id:'franchise', icon:'🏪', tKey:'bpFranchise',
     content: () => {
+      const bp = data.bp || {};
+      const ft = bp.franchiseTerms || {};
+      const pl = bp.studioPL || {};
+      const bench = bp.studioBenchmarks || {};
+      const startup = bp.startupInvestering || {};
       const fs = data.franchisees;
       const live = fs.filter(f=>f.status==='live').length;
       const pipeline = fs.length;
+
+      const onboardingFee = ft.onboardingFee ?? startup.onboardingFee ?? 15000;
+      const royaltyPct = ft.royaltyPct ?? 5;
+      const royaltyHigh = ft.royaltyHighPct ?? 6;
+      const royaltyThreshold = ft.royaltyThreshold ?? 120000;
+      const contractDuur = ft.contractDuur ?? ft.contractduur ?? '5 jaar, verlengbaar';
+      const territoriaal = ft.territoriaal ?? 'Exclusieve radius';
+      const minBestelling = ft.minBestelling ?? ft.minOrder ?? 200;
+      const fitOutMin = startup.studioFitOutMin ?? 30000;
+      const fitOutMax = startup.studioFitOutMax ?? 60000;
+      const totaalMin = startup.totaalMin ?? (ft.investMin ?? 45000);
+      const totaalMax = startup.totaalMax ?? (ft.investMax ?? 75000);
+      const werkkapMnd = startup.werkkapitaalMnd ?? 3;
+
+      const plOmzet = pl.omzet ?? 126000;
+      const plPersoneel = pl.personeel ?? 34000;
+      const plHuurMin = pl.huurMin ?? 12000;
+      const plHuurMax = pl.huurMax ?? 18000;
+      const plInkoop = pl.inkoopProducten ?? 8000;
+      const plRoyaltyPctVal = pl.royaltyPct ?? royaltyPct;
+      const plRoyalty = Math.round(plOmzet * plRoyaltyPctVal / 100);
+      const plMarketing = pl.marketingOverig ?? 7000;
+      const plKosten = plPersoneel + plHuurMin + plInkoop + plRoyalty + plMarketing;
+      const plEbitda = pl.ebitda ?? (plOmzet - plKosten);
+      const plMarge = pl.ebitdaMargePct ?? (plOmzet ? Math.round(plEbitda / plOmzet * 100) : 0);
+      const avgTicket = bench.avgTicket ?? 40;
+      const staffCount = bench.staffCount ?? 2;
+      const maandKlanten = avgTicket ? Math.round(plOmzet / avgTicket / 12) : 0;
+      const paybackMnd = plEbitda > 0 ? Math.round((onboardingFee + (fitOutMin+fitOutMax)/2) / plEbitda * 12) : null;
+
+      const pillar = (icon, titel, door, regels) => `
+        <div class="bg-white rounded-xl border border-gray-100 p-5 h-full">
+          <div class="flex items-start gap-3 mb-3">
+            <span class="text-2xl">${icon}</span>
+            <div><div class="font-bold text-sm text-gray-900">${titel}</div>${door?`<div class="text-xs text-gray-400">${door}</div>`:''}</div>
+          </div>
+          <ul class="space-y-1.5 text-xs text-gray-600">
+            ${regels.map(r => `<li class="flex gap-2"><span class="text-wax-500 flex-shrink-0">—</span><span>${r}</span></li>`).join('')}
+          </ul>
+        </div>`;
+
       return `
-      <div class="grid lg:grid-cols-3 gap-4 mb-6">
-        ${statCard('In Pipeline', pipeline, '📈')}<div></div>
+      <!-- STAT ROW -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        ${statCard('In Pipeline', pipeline, '📈')}
         ${statCard('Live Locaties', live, '🏪')}
         ${statCard('Huidige Studios', data.studios.length, '💈')}
       </div>
-      <div class="grid lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Friendchise Terms</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Onboarding Fee</span><span class="font-bold">€15.000</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Royalty</span><span class="font-bold">5% (6% boven €120k)</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Contractduur</span><span class="font-bold">5 jaar, verlengbaar</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Territoriaal</span><span class="font-bold">Exclusieve radius</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Studio investering</span><span class="font-bold">€60-75k</span></div>
-            <div class="flex justify-between py-2"><span class="text-gray-500">Min. productorder</span><span class="font-bold">€200/maand</span></div>
+
+      <!-- INVESTERING & VOORWAARDEN -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Investering & Voorwaarden</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Wat kost het, wat staat er tegenover — voor elke Friendchisee helder op papier</p>
+          </div>
+          <button onclick="openModal('bp-franchise-terms')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+        </div>
+
+        <!-- Investering: 3 grote getallen -->
+        <div class="grid md:grid-cols-3 gap-4 mb-5">
+          <div class="bg-gradient-to-br from-wax-50 to-white border border-wax-100 rounded-xl p-5">
+            <div class="text-xs text-wax-700 uppercase tracking-wider font-semibold mb-1">Onboarding fee</div>
+            <div class="text-3xl font-bold text-gray-900">${fe(onboardingFee)}</div>
+            <div class="text-xs text-gray-500 mt-1">Eenmalig — dekt training, territorium-setup, starterskit en eerste maand coaching</div>
+          </div>
+          <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-xl p-5">
+            <div class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Studio fit-out</div>
+            <div class="text-3xl font-bold text-gray-900">${fe(fitOutMin)}–${fe(fitOutMax)}</div>
+            <div class="text-xs text-gray-500 mt-1">Afhankelijk van locatie en grootte — huur, inrichting, apparatuur</div>
+          </div>
+          <div class="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-xl p-5">
+            <div class="text-xs text-green-700 uppercase tracking-wider font-semibold mb-1">Totale investering</div>
+            <div class="text-3xl font-bold text-gray-900">${fe(totaalMin)}–${fe(totaalMax)}</div>
+            <div class="text-xs text-gray-500 mt-1">Onboarding + fit-out + ${werkkapMnd} maanden werkkapitaal</div>
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Studio P&L (Base Case)</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Maandelijkse klanten</span><span class="font-bold">250</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Service omzet</span><span class="font-bold">€120.000/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Product retail</span><span class="font-bold">€6.000/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Totale kosten</span><span class="font-bold">€68.990/jr</span></div>
-            <div class="flex justify-between py-2 bg-green-50 rounded-lg px-3"><span class="text-green-700 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">€57.010 (45%)</span></div>
+
+        <!-- Lopende voorwaarden: 2x2 grid met uitleg -->
+        <div class="border-t border-gray-100 pt-5">
+          <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Lopende voorwaarden</div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">📊</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Royalty</span><span class="font-bold text-gray-900">${royaltyPct}% van omzet</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Stijgt naar ${royaltyHigh}% zodra de studio ${fe(royaltyThreshold)} bruto-omzet per jaar passeert.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">📦</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Min. productorder</span><span class="font-bold text-gray-900">${fe(minBestelling)}/mnd</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Exclusief NAO-aanbod blijft centraal — minimale afname borgt consistentie in de keten.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">📅</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Contractduur</span><span class="font-bold text-gray-900">${contractDuur}</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Lang genoeg om te bouwen, flexibel genoeg om mee te groeien.</div>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-gray-50">
+              <span class="text-xl flex-shrink-0">🌍</span>
+              <div class="flex-1">
+                <div class="flex items-baseline justify-between gap-2"><span class="font-semibold text-sm text-gray-900">Territorium</span><span class="font-bold text-gray-900">${territoriaal}</span></div>
+                <div class="text-xs text-gray-500 mt-0.5">Geen tweede Wax Affairs binnen jouw radius — jij bouwt de regio op, ongestoord.</div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- WAT KRIJG JE ERVOOR — 4 PIJLERS -->
+      <div class="mb-6">
+        <div class="flex items-end justify-between mb-3">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Wat krijg je ervoor</h3>
+            <p class="text-xs text-gray-500">Vier pijlers die samen het Friendchise-pakket vormen</p>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          ${pillar('🎓','Craft Training','door Simone',['10 dagen intensieve in-person training','Wax-type per huidtype, techniek, temperatuur, timing','Pre-treatment en aftercare met NAO','Praktijkexamen en officieel certificaat','Doorlopende coaching bij kwaliteitsvragen'])}
+          ${pillar('📊','Business Coaching','door Narin',['Businessplan en financiële setup van jouw studio','Pricing, klantacquisitie en retentie','Marketing- en social-mediastrategie','Ondersteuning tijdens opening en eerste maanden','Toegang tot het Wax Affairs netwerk'])}
+          ${pillar('🏪','Brand & System','',['Recht om de merknaam Wax Affairs te voeren','Volledige huisstijl, signage en marketingmiddelen','SOP-manual — werkstandaarden per behandeling','Toegang tot boekingssysteem en klantplatform','Territoriale exclusiviteit in jouw regio'])}
+          ${pillar('🧴','NAO Products','',['Exclusieve toegang tot de NAO productlijn','100% natuurlijk — geen synthetische ingrediënten','Wax, oliën, crèmes, hydrosol en powder','Wholesale-levering rechtstreeks van HQ','Retailverkoop aan klanten voor extra marge'])}
+        </div>
+      </div>
+
+      <!-- STUDIO P&L -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Studio P&L <span class="text-sm font-normal text-gray-400">— Base Case, 1 cabine, jaar 2+</span></h3>
+            <p class="text-xs text-gray-500 mt-0.5">Gebaseerd op operationele data uit de bestaande Duitse studios</p>
+          </div>
+          <button onclick="openModal('bp-studio-pl')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Operationeel</div>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Maandelijkse klanten</span><span class="font-medium">± ${maandKlanten}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Gemiddeld ticket</span><span class="font-medium">${fe(avgTicket)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Bezetting</span><span class="font-medium">${staffCount} medewerkers × 6 u/dag</span></div>
+              ${paybackMnd ? `<div class="flex justify-between py-1.5"><span class="text-gray-600">Terugverdientijd (indicatief)</span><span class="font-medium">± ${paybackMnd} maanden</span></div>` : ''}
+            </div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Financieel (per jaar)</div>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-gray-600">Omzet (services + retail)</span><span class="font-medium">${fe(plOmzet)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Personeel</span><span class="font-medium text-red-600">${fe(plPersoneel)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Huur</span><span class="font-medium text-red-600">${fe(plHuurMin)}–${fe(plHuurMax)}</span></div>
+              <div class="flex justify-between py-1.5 border-b border-gray-100"><span class="text-red-600">− Producten + royalty + marketing</span><span class="font-medium text-red-600">${fe(plInkoop + plRoyalty + plMarketing)}</span></div>
+              <div class="flex justify-between py-2 mt-1 bg-green-50 rounded-lg px-3"><span class="text-green-800 font-medium">Studio EBITDA</span><span class="font-bold text-green-700">${fe(plEbitda)} <span class="text-xs">(${plMarge}%)</span></span></div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 italic mt-4">Indicatieve cijfers. Werkelijke resultaten hangen af van locatie, bezetting en lokale markt.</p>
       </div>`;
     }},
 
   { id:'academy', icon:'🎓', tKey:'bpAcademy',
     content: () => {
+      const bp = data.bp || {};
       const students = data.students;
       const cohorts = data.cohorts;
+      const rs = bp.revenueStreams || [];
+      const proj = bp.projectie || [];
+      const academyTypes = ['workshop','online','academy'];
+      const academyStreams = rs.filter(r => academyTypes.includes(r.type));
+      const inPerson = rs.find(r => r.type === 'academy');
+      const typeStyle = {
+        workshop: { kleur:'bg-blue-50', label:'Workshops' },
+        online:   { kleur:'bg-terra-50', label:'Online' },
+        academy:  { kleur:'bg-wax-50', label:'In-person' },
+      };
+      const costFromMarge = (prijs, marge) => {
+        if (prijs == null || marge == null) return null;
+        return Math.round(prijs * (100 - marge) / 100);
+      };
+
       return `
       <div class="grid lg:grid-cols-4 gap-4 mb-6">
         ${statCard('Studenten', students.length, '🎓')}
         ${statCard('Cohorten', cohorts.length, '📚')}
         ${statCard('Gecertificeerd', students.filter(s=>s.status==='gecertificeerd'||s.status==='geplaatst').length, '✅')}
-        ${statCard('In-person prijs', '€4.000', '💰')}
+        ${statCard('In-person prijs', inPerson?.prijsGemiddeld != null ? fe(inPerson.prijsGemiddeld) : '—', '💰')}
       </div>
       <div class="grid lg:grid-cols-2 gap-6 mb-6">
         <div class="bg-white rounded-xl border p-5">
@@ -6686,25 +6877,29 @@ const BP_SECTIES = [
           </div>
         </div>
         <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Unit Economics</h3>
-          <div class="space-y-3">
-            <div class="p-4 bg-wax-50 rounded-xl">
-              <div class="text-xs text-gray-500 mb-1">In-person (per student)</div>
-              <div class="flex justify-between"><span class="text-sm">Prijs: <strong>€4.000</strong></span><span class="text-sm">Kosten: <strong>€350</strong></span><span class="text-sm text-green-600 font-bold">Marge: 91%</span></div>
-            </div>
-            <div class="p-4 bg-terra-50 rounded-xl">
-              <div class="text-xs text-gray-500 mb-1">Online (per student)</div>
-              <div class="flex justify-between"><span class="text-sm">Prijs: <strong>€1.000</strong></span><span class="text-sm">Kosten: <strong>€100</strong></span><span class="text-sm text-green-600 font-bold">Marge: 90%</span></div>
-            </div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-gray-900">Unit Economics</h3>
+            <button onclick="openModal('bp-revenue')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
           </div>
-          <h4 class="font-semibold text-sm mt-4 mb-2">Capaciteitsplan</h4>
+          <div class="space-y-3">
+            ${academyStreams.map(r => {
+              const stijl = typeStyle[r.type] || { kleur:'bg-gray-50', label:r.type };
+              const kosten = costFromMarge(r.prijsGemiddeld, r.marge);
+              return `<div class="p-4 ${stijl.kleur} rounded-xl">
+                <div class="text-xs text-gray-500 mb-1">${r.naam} <span class="text-gray-400">(${stijl.label})</span></div>
+                <div class="flex justify-between flex-wrap gap-2">
+                  <span class="text-sm">Prijs: <strong>${r.prijsGemiddeld != null ? fe(r.prijsGemiddeld) : '—'}</strong></span>
+                  <span class="text-sm">Kosten: <strong>${kosten != null ? fe(kosten) : '—'}</strong></span>
+                  <span class="text-sm text-green-600 font-bold">Marge: ${r.marge != null ? r.marge + '%' : '—'}</span>
+                </div>
+              </div>`;
+            }).join('') || '<p class="text-xs text-gray-400 italic">Geen academy-streams geconfigureerd.</p>'}
+          </div>
+          <h4 class="font-semibold text-sm mt-4 mb-2">Capaciteitsplan <span class="text-xs font-normal text-gray-400">(uit 5-jaars projectie)</span></h4>
           <table class="w-full text-xs">
-            <thead><tr class="text-gray-400"><th class="text-left py-1">Jaar</th><th class="text-right">In-person</th><th class="text-right">Online</th><th class="text-right">Omzet</th></tr></thead>
+            <thead><tr class="text-gray-400"><th class="text-left py-1">${t('jaar')}</th><th class="text-right">${t('studenten')}</th><th class="text-right">Academy-omzet</th></tr></thead>
             <tbody>
-              <tr class="border-t"><td class="py-1">2026</td><td class="text-right">16</td><td class="text-right">30</td><td class="text-right font-medium">€94k</td></tr>
-              <tr class="border-t"><td class="py-1">2027</td><td class="text-right">80</td><td class="text-right">150</td><td class="text-right font-medium">€470k</td></tr>
-              <tr class="border-t"><td class="py-1">2028</td><td class="text-right">120</td><td class="text-right">250</td><td class="text-right font-medium">€730k</td></tr>
-              <tr class="border-t"><td class="py-1">2030</td><td class="text-right">200</td><td class="text-right">440</td><td class="text-right font-medium">€1.24M</td></tr>
+              ${proj.map(p => `<tr class="border-t"><td class="py-1">${p.jaar}</td><td class="text-right">${p.studenten ?? '—'}</td><td class="text-right font-medium">${p.academy != null ? fe(p.academy) : '—'}</td></tr>`).join('')}
             </tbody>
           </table>
         </div>
@@ -6712,249 +6907,586 @@ const BP_SECTIES = [
     }},
 
   { id:'nao', icon:'🧴', tKey:'bpNao',
-    content: () => `
+    content: () => {
+      const producten = data.products || [];
+      const leveranciers = data.suppliers || [];
+      const flagFor = (loc='') => /portugal/i.test(loc) ? '🇵🇹' : /polen|poland/i.test(loc) ? '🇵🇱' : /duitsland|germany/i.test(loc) ? '🇩🇪' : /nederland|netherlands/i.test(loc) ? '🇳🇱' : '🏭';
+
+      // Certificering totals
+      const needed = producten.filter(p => p.certificeringStatus === 'needed');
+      const certMin = needed.reduce((s,p) => s + (p.certificeringKostenMin || 0), 0);
+      const certMax = needed.reduce((s,p) => s + (p.certificeringKostenMax || 0), 0);
+      const doneCount = producten.filter(p => p.certificeringStatus === 'done').length;
+
+      return `
+      <!-- Product cards -->
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        ${data.products.map(p => {
+        ${producten.map(p => {
           const wm = p.wholesalePrijs && p.cogs ? Math.round((1-p.cogs/p.wholesalePrijs)*100) : 0;
           const rm = p.retailPrijs && p.cogs ? Math.round((1-p.cogs/p.retailPrijs)*100) : 0;
-          return `<div class="bg-white rounded-xl border p-4">
-            <div class="flex items-center justify-between mb-2"><span class="font-bold text-sm text-gray-900">${p.naam}</span><span class="text-xs px-2 py-0.5 rounded-full bg-wax-100 text-wax-700">${p.categorie}</span></div>
-            <div class="grid grid-cols-3 gap-2 text-center text-xs mt-2">
-              <div><div class="text-gray-400">COGS</div><div class="font-bold">${fe(p.cogs)}</div></div>
-              <div><div class="text-gray-400">WS</div><div class="font-bold">${fe(p.wholesalePrijs)}</div><div class="text-green-600">${wm}%</div></div>
-              <div><div class="text-gray-400">Retail</div><div class="font-bold">${fe(p.retailPrijs||0)}</div>${rm?`<div class="text-green-600">${rm}%</div>`:''}</div>
+          return `<div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+            <div class="flex items-start justify-between mb-3">
+              <div><div class="font-bold text-sm text-gray-900">${p.naam}</div>${p.inhoud?`<div class="text-xs text-gray-400 mt-0.5">${p.inhoud}</div>`:''}</div>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-wax-100 text-wax-700 flex-shrink-0">${p.categorie}</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center text-xs">
+              <div class="p-2 bg-gray-50 rounded-lg"><div class="text-gray-400 uppercase tracking-wider text-[10px]">COGS</div><div class="font-bold text-sm mt-0.5">${fe(p.cogs)}</div></div>
+              <div class="p-2 bg-gray-50 rounded-lg"><div class="text-gray-400 uppercase tracking-wider text-[10px]">Wholesale</div><div class="font-bold text-sm mt-0.5">${fe(p.wholesalePrijs)}</div><div class="text-green-600 text-[11px]">${wm}% marge</div></div>
+              <div class="p-2 bg-gray-50 rounded-lg"><div class="text-gray-400 uppercase tracking-wider text-[10px]">Retail</div><div class="font-bold text-sm mt-0.5">${p.retailPrijs ? fe(p.retailPrijs) : '—'}</div>${rm?`<div class="text-green-600 text-[11px]">${rm}% marge</div>`:'<div class="text-[11px] text-gray-400">B2B only</div>'}</div>
             </div>
           </div>`;
         }).join('')}
       </div>
+
       <div class="grid lg:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Supply Chain</h3>
+        <!-- Supply Chain -->
+        <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900">Supply Chain</h3>
+              <p class="text-xs text-gray-400 mt-0.5">Leveranciers die de Não-lijn mogelijk maken</p>
+            </div>
+            <button onclick="showPage('leveranciers')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">Beheer →</button>
+          </div>
           <div class="space-y-2 text-sm">
-            <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-lg"><span>🇵🇹</span><div><strong>Epifutur</strong> (Leiria) — Wax productie</div></div>
-            <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-lg"><span>🇵🇹</span><div><strong>PinoPine</strong> (Aveiro) — Hoofdingrediënt wax</div></div>
-            <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-lg"><span>🇵🇱</span><div><strong>NISHA</strong> (Polen) — Scrub, Oil, Spray, Powder</div></div>
-            <div class="flex items-center gap-3 p-2.5 bg-gray-50 rounded-lg"><span>🇵🇱</span><div><strong>Clover</strong> (Polen) — Alternatief / backup</div></div>
+            ${leveranciers.length ? leveranciers.map(s => `
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <span class="text-xl flex-shrink-0">${flagFor(s.locatie)}</span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-baseline gap-2 flex-wrap">
+                    <strong class="text-sm text-gray-900">${s.naam}</strong>
+                    ${s.locatie?`<span class="text-xs text-gray-400">${s.locatie}</span>`:''}
+                  </div>
+                  ${s.producten?`<div class="text-xs text-gray-500 mt-0.5">${s.producten}</div>`:''}
+                  ${s.website?`<a href="https://${s.website.replace(/^https?:\/\//,'')}" target="_blank" class="text-xs text-wax-600 hover:underline">${s.website}</a>`:''}
+                </div>
+              </div>
+            `).join('') : '<p class="text-xs text-gray-400 italic">Nog geen leveranciers toegevoegd.</p>'}
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Certificering Status</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex items-center justify-between py-2 border-b"><span>Body Scrub</span><span class="badge bg-green-100 text-green-700">CPSR Done</span></div>
-            <div class="flex items-center justify-between py-2 border-b"><span>Depilatory Wax</span><span class="badge bg-yellow-100 text-yellow-700">Needed €550-750</span></div>
-            <div class="flex items-center justify-between py-2 border-b"><span>Post-Depilatory Oil</span><span class="badge bg-yellow-100 text-yellow-700">Needed €300-550</span></div>
-            <div class="flex items-center justify-between py-2 border-b"><span>Lavender Hydrosol</span><span class="badge bg-yellow-100 text-yellow-700">Needed €250-400</span></div>
-            <div class="flex items-center justify-between py-2 border-b"><span>Pre-Dep Powder</span><span class="badge bg-yellow-100 text-yellow-700">Needed €250-350</span></div>
-            <div class="flex items-center justify-between py-2"><span>Aftercare Cream</span><span class="badge bg-yellow-100 text-yellow-700">Needed €300-550</span></div>
-            <div class="mt-3 p-3 bg-wax-50 rounded-lg text-xs"><strong>Totaal certificering:</strong> €1.650-2.750 (one-off voor hele lijn)</div>
+
+        <!-- Certificering -->
+        <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900">Certificering (CPSR)</h3>
+              <p class="text-xs text-gray-400 mt-0.5">Klik op een status om te wijzigen · ${doneCount}/${producten.length} klaar</p>
+            </div>
+          </div>
+          <div class="space-y-1.5 text-sm">
+            ${producten.map(p => {
+              const st = p.certificeringStatus;
+              let badge;
+              if (st === 'done') {
+                badge = `<button onclick="cycleCertStatus('${p.id}')" class="badge bg-green-100 text-green-700 hover:bg-green-200 transition-colors">✓ Done</button>`;
+              } else if (st === 'needed') {
+                badge = `<span class="inline-flex items-center gap-1">
+                  <span class="text-xs text-gray-400">€</span>
+                  <input type="number" value="${p.certificeringKostenMin ?? ''}" onblur="updateCertCost('${p.id}','min',this.value)" class="w-14 text-xs px-1.5 py-0.5 border rounded" placeholder="min">
+                  <span class="text-xs text-gray-400">–</span>
+                  <input type="number" value="${p.certificeringKostenMax ?? ''}" onblur="updateCertCost('${p.id}','max',this.value)" class="w-14 text-xs px-1.5 py-0.5 border rounded" placeholder="max">
+                  <button onclick="cycleCertStatus('${p.id}')" class="badge bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors">Needed</button>
+                </span>`;
+              } else {
+                badge = `<button onclick="cycleCertStatus('${p.id}')" class="badge bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">—</button>`;
+              }
+              return `<div class="flex items-center justify-between py-1.5 gap-3">
+                <span class="text-gray-700 truncate">${p.naam}</span>
+                ${badge}
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="mt-4 p-3 bg-wax-50 border border-wax-100 rounded-lg text-xs">
+            <strong class="text-wax-800">Resterend voor complete lijn:</strong> ${fe(certMin)} – ${fe(certMax)} <span class="text-wax-700">(${needed.length} product${needed.length===1?'':'en'} te certificeren, one-off investering)</span>
           </div>
         </div>
-      </div>` },
+      </div>`;
+    }},
 
   { id:'legal', icon:'⚖️', tKey:'bpLegal',
-    content: () => `
-      <div class="bg-white rounded-xl border p-5 mb-6">
-        <h3 class="font-bold text-gray-900 mb-4">Gefaseerde Structuur</h3>
-        <div class="space-y-4">
-          <div class="p-4 bg-green-50 border border-green-200 rounded-xl">
-            <div class="flex items-center gap-2 mb-2"><span class="badge bg-green-500 text-white">Fase 1 — Nu</span></div>
-            <p class="text-sm">Opereren onder Simone's bestaande Duitse bedrijf. 50/50 partner agreement. Zero setup cost.</p>
+    content: () => {
+      const bp = data.bp || {};
+      const fases = bp.legalFases || [];
+      const punten = bp.legalPunten || [];
+      const kleurKaart = { green:'bg-green-50 border-green-200', blue:'bg-blue-50 border-blue-200', purple:'bg-purple-50 border-purple-200', yellow:'bg-yellow-50 border-yellow-200', gray:'bg-gray-50 border-gray-200' };
+      const kleurBadge = { green:'bg-green-500', blue:'bg-blue-500', purple:'bg-purple-500', yellow:'bg-yellow-500', gray:'bg-gray-500' };
+      const puntKleur = { warning:'bg-yellow-50 border-yellow-200', info:'bg-blue-50 border-blue-200', ok:'bg-green-50 border-green-200' };
+
+      return `
+      <!-- Gefaseerde structuur -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Gefaseerde Structuur</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Elke fase heeft een trigger — we groeien als we er klaar voor zijn, niet eerder</p>
           </div>
-          <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl">
-            <div class="flex items-center gap-2 mb-2"><span class="badge bg-blue-500 text-white">Fase 2 — Mid 2027</span><span class="text-xs text-gray-500">Trigger: 2 Friendchisees + 1 cohort</span></div>
-            <p class="text-sm">Nederlandse BV (50/50) + Duitse GmbH (100% eigendom BV). IP in NL, operatie in DE.</p>
-          </div>
-          <div class="p-4 bg-purple-50 border border-purple-200 rounded-xl">
-            <div class="flex items-center gap-2 mb-2"><span class="badge bg-purple-500 text-white">Fase 3 — 2029</span><span class="text-xs text-gray-500">Trigger: 10+ locaties + stabiele cashflow</span></div>
-            <p class="text-sm">Vastgoed: studiolocaties kopen en verhuren aan franchisees. 4e omzetstroom.</p>
-          </div>
+          <button onclick="openModal('bp-legal-fases')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+        </div>
+        <div class="space-y-3">
+          ${fases.map(f => `
+            <div class="p-4 ${kleurKaart[f.kleur]||kleurKaart.gray} border rounded-xl">
+              <div class="flex items-center gap-2 mb-2 flex-wrap">
+                <span class="badge ${kleurBadge[f.kleur]||kleurBadge.gray} text-white">${f.label||''}</span>
+                ${f.trigger?`<span class="text-xs text-gray-500">Trigger: ${f.trigger}</span>`:''}
+              </div>
+              ${f.titel?`<div class="font-semibold text-sm text-gray-900 mb-1">${f.titel}</div>`:''}
+              <p class="text-sm text-gray-700">${f.omschrijving||''}</p>
+            </div>
+          `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen fases geconfigureerd.</p>'}
         </div>
       </div>
+
       <div class="grid lg:grid-cols-2 gap-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">NL BV vs DE GmbH</h3>
+        <!-- NL BV vs DE GmbH (stabiele juridische feiten, hardcoded) -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <h3 class="font-bold text-gray-900 mb-1">NL BV vs DE GmbH</h3>
+          <p class="text-xs text-gray-400 mb-4">Waarom de holding in Nederland thuishoort</p>
           <div class="text-sm space-y-2">
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Min. kapitaal</span><span><strong class="text-green-600">€0,01</strong> vs €25.000</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Vennootschapsbelasting</span><span><strong class="text-green-600">19%</strong> vs ~30%</span></div>
-            <div class="flex justify-between py-2 border-b"><span class="text-gray-500">Innovation Box</span><span><strong class="text-green-600">9% op IP</strong> vs n.v.t.</span></div>
+            <div class="flex justify-between py-2 border-b border-gray-100"><span class="text-gray-500">Min. kapitaal</span><span><strong class="text-green-600">€0,01</strong> vs €25.000</span></div>
+            <div class="flex justify-between py-2 border-b border-gray-100"><span class="text-gray-500">Vennootschapsbelasting</span><span><strong class="text-green-600">19%</strong> vs ~30%</span></div>
+            <div class="flex justify-between py-2 border-b border-gray-100"><span class="text-gray-500">Innovation Box</span><span><strong class="text-green-600">9% op IP</strong> vs n.v.t.</span></div>
             <div class="flex justify-between py-2"><span class="text-gray-500">Oprichtingstijd</span><span><strong class="text-green-600">1-2 weken</strong> vs 3-6 weken</span></div>
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Aandachtspunten</h3>
+
+        <!-- Aandachtspunten -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="font-bold text-gray-900">Aandachtspunten</h3>
+            <button onclick="openModal('bp-legal-punten')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
+          <p class="text-xs text-gray-400 mb-4">Risico's en checkpoints in de gaten te houden</p>
           <div class="space-y-2 text-sm">
-            <div class="p-2.5 bg-yellow-50 border border-yellow-200 rounded-lg">⚠️ <strong>Feitelijke leiding risico</strong> — Simone woont in DE. Board meetings formeel in NL houden.</div>
-            <div class="p-2.5 bg-blue-50 border border-blue-200 rounded-lg">📋 <strong>EUIPO trademark</strong> — EU-brede merkbescherming aanvragen.</div>
-            <div class="p-2.5 bg-green-50 border border-green-200 rounded-lg">✅ <strong>Franchise wet</strong> — NL: wettelijk verankerd (NFC 2021). DE: alleen BGB.</div>
+            ${punten.map(p => `
+              <div class="p-3 ${puntKleur[p.type]||puntKleur.info} border rounded-lg">
+                <div class="flex items-start gap-2">
+                  <span class="flex-shrink-0">${p.icon||'•'}</span>
+                  <div class="flex-1"><strong>${p.titel||''}</strong>${p.omschrijving?` — ${p.omschrijving}`:''}</div>
+                </div>
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen aandachtspunten toegevoegd.</p>'}
           </div>
         </div>
-      </div>` },
+      </div>`;
+    }},
 
   { id:'financials', icon:'💰', tKey:'bpFin',
-    content: () => `
-      <div class="bg-white rounded-xl border p-5 mb-6">
-        <h3 class="font-bold text-gray-900 mb-4">Startup Budget</h3>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          <div class="text-center p-3 bg-gray-50 rounded-xl"><div class="text-xs text-gray-400">Branding</div><div class="text-lg font-bold text-green-600">€0</div><div class="text-xs text-gray-400">AI + eigen design</div></div>
-          <div class="text-center p-3 bg-gray-50 rounded-xl"><div class="text-xs text-gray-400">Technologie</div><div class="text-lg font-bold">€300-500</div><div class="text-xs text-gray-400">Shopify+Calendly+LMS</div></div>
-          <div class="text-center p-3 bg-gray-50 rounded-xl"><div class="text-xs text-gray-400">Productvoorraad</div><div class="text-lg font-bold">€3-5k</div><div class="text-xs text-gray-400">Não + wax buffer</div></div>
-          <div class="text-center p-3 bg-gray-50 rounded-xl"><div class="text-xs text-gray-400">Marketing</div><div class="text-lg font-bold">€1-2k</div><div class="text-xs text-gray-400">Organic + test</div></div>
+    content: () => {
+      const bp = data.bp || {};
+      const sb = bp.startupBudget || {};
+      const items = sb.items || [];
+      const proj = bp.projectie || [];
+      const sbMin = items.reduce((s,x) => s + (x.min || 0), 0);
+      const sbMax = items.reduce((s,x) => s + (x.max || 0), 0);
+      const formatCompact = (n) => {
+        if (!n && n !== 0) return '—';
+        if (Math.abs(n) >= 1000000) return '€' + (n/1000000).toFixed(2).replace(/\.?0+$/,'') + 'M';
+        if (Math.abs(n) >= 1000) return '€' + Math.round(n/1000) + 'k';
+        return fe(n);
+      };
+      const rangeDisplay = (min, max) => {
+        if (min === max) return fe(min);
+        if (min === 0 && max === 0) return '€0';
+        return `${fe(min)} – ${fe(max)}`;
+      };
+
+      return `
+      <!-- Startup budget -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Startup Budget</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Wat nodig is om HQ operationeel te krijgen — bewust klein gehouden</p>
+          </div>
+          <button onclick="openModal('bp-startup-budget')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
         </div>
-        <div class="p-4 bg-wax-50 rounded-xl text-center"><span class="text-sm text-gray-600">Totale investering: </span><span class="text-xl font-bold text-wax-700">€4.300 — €7.500</span></div>
+        <div class="grid grid-cols-2 lg:grid-cols-${Math.min(items.length||1, 5)} gap-3 mb-4">
+          ${items.map(it => `
+            <div class="text-center p-4 bg-gray-50 rounded-xl">
+              <div class="text-xs text-gray-400 uppercase tracking-wider">${it.label}</div>
+              <div class="text-lg font-bold ${(it.max||0)===0?'text-green-600':'text-gray-900'} mt-1">${rangeDisplay(it.min||0, it.max||0)}</div>
+              ${it.beschrijving?`<div class="text-xs text-gray-400 mt-1">${it.beschrijving}</div>`:''}
+            </div>
+          `).join('') || '<p class="text-xs text-gray-400 italic col-span-full">Nog geen budgetposten toegevoegd.</p>'}
+        </div>
+        <div class="p-4 bg-wax-50 border border-wax-100 rounded-xl text-center">
+          <span class="text-sm text-gray-600">Totale investering: </span>
+          <span class="text-xl font-bold text-wax-700">${fe(sbMin)} — ${fe(sbMax)}</span>
+          <p class="text-xs text-gray-500 mt-1">Eenmalig, om de eerste Academy-cohort en eerste Friendchisee-pipeline mogelijk te maken</p>
+        </div>
       </div>
-      <div class="bg-white rounded-xl border p-5 mb-6">
-        <h3 class="font-bold text-gray-900 mb-4">5-Jaars P&L</h3>
+
+      <!-- 5-jaars P&L uit projectie -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">5-Jaars P&L</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Conservatieve projectie — de groei komt uit Academy + product-marges + royalties</p>
+          </div>
+          <button onclick="openModal('bp-projectie')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
-            <thead><tr class="text-xs text-gray-400 border-b"><th class="text-left py-2">Regel</th><th class="text-right">2026</th><th class="text-right">2027</th><th class="text-right">2028</th><th class="text-right">2029</th><th class="text-right">2030</th></tr></thead>
+            <thead><tr class="text-xs text-gray-400 border-b">
+              <th class="text-left py-2">Regel</th>
+              ${proj.map(p => `<th class="text-right px-2">${p.jaar}</th>`).join('')}
+            </tr></thead>
             <tbody>
-              <tr class="border-b"><td class="py-2">Training Academy</td><td class="text-right">€240k</td><td class="text-right">€470k</td><td class="text-right">€730k</td><td class="text-right">€920k</td><td class="text-right">€1.08M</td></tr>
-              <tr class="border-b"><td class="py-2">Producten (WS+DTC)</td><td class="text-right">€74k</td><td class="text-right">€132k</td><td class="text-right">€240k</td><td class="text-right">€360k</td><td class="text-right">€480k</td></tr>
-              <tr class="border-b"><td class="py-2">Franchise Fees</td><td class="text-right">€60k</td><td class="text-right">€100k</td><td class="text-right">€120k</td><td class="text-right">€80k</td><td class="text-right">€60k</td></tr>
-              <tr class="border-b"><td class="py-2">Royalties</td><td class="text-right">€27k</td><td class="text-right">€67k</td><td class="text-right">€180k</td><td class="text-right">€292k</td><td class="text-right">€390k</td></tr>
-              <tr class="border-b bg-wax-50 font-bold"><td class="py-2">TOTAAL OMZET</td><td class="text-right">€401k</td><td class="text-right">€769k</td><td class="text-right">€1.27M</td><td class="text-right">€1.65M</td><td class="text-right">€2.01M</td></tr>
-              <tr class="border-b"><td class="py-2">Totale Kosten</td><td class="text-right">€380k</td><td class="text-right">€415k</td><td class="text-right">€575k</td><td class="text-right">€715k</td><td class="text-right">€860k</td></tr>
-              <tr class="bg-green-50 font-bold"><td class="py-2">OPERATING PROFIT</td><td class="text-right text-green-700">€21k</td><td class="text-right text-green-700">€354k</td><td class="text-right text-green-700">€695k</td><td class="text-right text-green-700">€1.04M</td><td class="text-right text-green-700">€1.15M</td></tr>
+              <tr class="border-b"><td class="py-2 text-gray-600">Training Academy</td>${proj.map(p => `<td class="text-right px-2">${formatCompact(p.academy)}</td>`).join('')}</tr>
+              <tr class="border-b"><td class="py-2 text-gray-600">Producten (WS+DTC)</td>${proj.map(p => `<td class="text-right px-2">${formatCompact(p.producten)}</td>`).join('')}</tr>
+              <tr class="border-b"><td class="py-2 text-gray-600">Franchise Fees</td>${proj.map(p => `<td class="text-right px-2">${formatCompact(p.franchiseFees)}</td>`).join('')}</tr>
+              <tr class="border-b"><td class="py-2 text-gray-600">Royalties</td>${proj.map(p => `<td class="text-right px-2">${formatCompact(p.royalties)}</td>`).join('')}</tr>
+              <tr class="border-b bg-wax-50 font-bold"><td class="py-2">TOTAAL OMZET</td>${proj.map(p => `<td class="text-right px-2 text-wax-700">${formatCompact(p.omzet)}</td>`).join('')}</tr>
+              <tr class="border-b"><td class="py-2 text-red-600">− Totale Kosten</td>${proj.map(p => `<td class="text-right px-2 text-red-600">${formatCompact(p.kosten)}</td>`).join('')}</tr>
+              <tr class="bg-green-50 font-bold">
+                <td class="py-3">OPERATING PROFIT</td>
+                ${proj.map(p => {
+                  const ebitda = (p.omzet||0) - (p.kosten||0);
+                  return `<td class="text-right px-2 text-green-700">${formatCompact(ebitda)}</td>`;
+                }).join('')}
+              </tr>
+              <tr class="text-xs">
+                <td class="py-1 text-gray-400 italic">Marge</td>
+                ${proj.map(p => {
+                  const ebitda = (p.omzet||0) - (p.kosten||0);
+                  const m = p.omzet ? Math.round(ebitda / p.omzet * 100) : 0;
+                  return `<td class="text-right px-2 text-gray-400">${m}%</td>`;
+                }).join('')}
+              </tr>
             </tbody>
           </table>
         </div>
-      </div>` },
+      </div>`;
+    }},
 
   { id:'marketing', icon:'📣', tKey:'bpMarketing',
-    content: () => `
+    content: () => {
+      const bp = data.bp || {};
+      const strategie = bp.marketingStrategie || [];
+      const techStack = bp.techStack || [];
+      const mBudget = bp.marketingBudget || [];
+      const tsMin = techStack.reduce((s,x) => s + (x.kostenJaarMin || 0), 0);
+      const tsMax = techStack.reduce((s,x) => s + (x.kostenJaarMax || 0), 0);
+      const rangeDisplay = (min, max) => {
+        if (min === max) return min === 0 ? '€0' : fe(min);
+        return `${fe(min)} – ${fe(max)}`;
+      };
+
+      return `
       <div class="grid lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Marketing Strategie</h3>
+        <!-- Marketing Strategie -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">Marketing Strategie</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Vier kanalen, elk met een eigen rol in de funnel</p>
+            </div>
+            <button onclick="openModal('bp-marketing-strategie')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
           <div class="space-y-3">
-            <div class="p-3 bg-gray-50 rounded-lg"><strong class="text-sm">Founder-led Content</strong><p class="text-xs text-gray-500 mt-1">Simone's persoonlijke verhaal en expertise op Instagram + TikTok</p></div>
-            <div class="p-3 bg-gray-50 rounded-lg"><strong class="text-sm">Meta / Instagram Ads</strong><p class="text-xs text-gray-500 mt-1">2 doelgroepen: waxing professionals + ondernemers die willen starten</p></div>
-            <div class="p-3 bg-gray-50 rounded-lg"><strong class="text-sm">SEO / Blog</strong><p class="text-xs text-gray-500 mt-1">"How to start a wax studio" content voor organisch verkeer</p></div>
-            <div class="p-3 bg-gray-50 rounded-lg"><strong class="text-sm">Partner Referral</strong><p class="text-xs text-gray-500 mt-1">Academy graduates krijgen referral bonus</p></div>
+            ${strategie.map(s => `
+              <div class="p-3 bg-gray-50 rounded-lg">
+                <strong class="text-sm text-gray-900">${s.titel||''}</strong>
+                ${s.omschrijving?`<p class="text-xs text-gray-500 mt-1">${s.omschrijving}</p>`:''}
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen strategie-kanalen toegevoegd.</p>'}
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Tech Stack</h3>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between py-2 border-b"><span>Booking (Calendly)</span><span>€180/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span>Webshop (Shopify Starter)</span><span>€360/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span>LMS (Teachable)</span><span>€600-1.200/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span>Boekhouding (Lexware)</span><span>€240/jr</span></div>
-            <div class="flex justify-between py-2 border-b"><span>Email (Mailchimp)</span><span>€0 (free)</span></div>
-            <div class="flex justify-between py-2 font-bold bg-wax-50 rounded-lg px-3"><span>Totaal</span><span>€1.380-1.980/jr</span></div>
+
+        <!-- Tech Stack + Marketing Budget -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">Tech Stack</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Lean en bewezen — geen dure all-in-one suites</p>
+            </div>
+            <button onclick="openModal('bp-tech-stack')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
           </div>
-          <h4 class="font-semibold text-sm mt-4 mb-2">Marketing Budget per Jaar</h4>
-          <div class="flex gap-2 flex-wrap">
-            <span class="text-xs px-2 py-1 rounded bg-gray-100">2026: €2-3k</span>
-            <span class="text-xs px-2 py-1 rounded bg-gray-100">2027: €10k</span>
-            <span class="text-xs px-2 py-1 rounded bg-gray-100">2028: €20k</span>
-            <span class="text-xs px-2 py-1 rounded bg-gray-100">2029: €35k</span>
-            <span class="text-xs px-2 py-1 rounded bg-gray-100">2030: €50k</span>
+          <div class="space-y-1.5 text-sm">
+            ${techStack.map(ts => `
+              <div class="flex justify-between py-1.5 border-b border-gray-100">
+                <span class="text-gray-700">${ts.naam||''} ${ts.tool?`<span class="text-gray-400 text-xs">(${ts.tool})</span>`:''}</span>
+                <span class="font-medium">${rangeDisplay(ts.kostenJaarMin||0, ts.kostenJaarMax||0)}${(ts.kostenJaarMax||0)>0?'/jr':''}</span>
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen tools toegevoegd.</p>'}
+            <div class="flex justify-between py-2 font-bold bg-wax-50 rounded-lg px-3 mt-2">
+              <span>Totaal</span>
+              <span class="text-wax-700">${rangeDisplay(tsMin, tsMax)}/jr</span>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-5 border-t border-gray-100">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="font-bold text-sm text-gray-900">Marketing Budget per Jaar</h4>
+              <button onclick="openModal('bp-marketing-budget')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+            </div>
+            <div class="space-y-1.5">
+              ${mBudget.map(b => `
+                <div class="flex items-center justify-between py-1.5 text-sm">
+                  <span class="font-medium text-gray-700">${b.jaar}</span>
+                  <div class="flex items-center gap-3">
+                    ${b.focus?`<span class="text-xs text-gray-400 italic">${b.focus}</span>`:''}
+                    <span class="font-bold text-gray-900 w-20 text-right">${fe(b.bedrag||0)}</span>
+                  </div>
+                </div>
+              `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen budget-jaren toegevoegd.</p>'}
+            </div>
           </div>
         </div>
-      </div>` },
+      </div>`;
+    }},
 
   { id:'risks', icon:'⚡', tKey:'bpRisks',
-    content: () => `
+    content: () => {
+      const bp = data.bp || {};
+      const risicos = bp.risicos || [];
+      const kpis = bp.kpis || [];
+      const impactStyle = {
+        hoog:   { icon:'🔴', label:'Hoog',   kleur:'text-red-600',    bg:'border-red-100'    },
+        medium: { icon:'🟡', label:'Medium', kleur:'text-yellow-700', bg:'border-yellow-100' },
+        laag:   { icon:'🟢', label:'Laag',   kleur:'text-green-700',  bg:'border-green-100'  }
+      };
+
+      return `
       <div class="grid lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Top Risico's & Mitigatie</h3>
+        <!-- Risico's -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">Top Risico's & Mitigatie</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Wat we zien aankomen én hoe we het opvangen</p>
+            </div>
+            <button onclick="openModal('bp-risicos')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
           <div class="space-y-2">
-            ${[
-              ['🔴','Partner non-compliance','Hoog','Verplichte certificering, maandelijkse audits, mystery shopper, schorsingsclausule'],
-              ['🔴','Simone feitelijke leiding (DE tax)','Hoog','Board meetings in NL, Narin als primaire directeur, formeel tax opinion'],
-              ['🟡','Supply chain (wax & creams)','Medium','Dubbele leveranciers, 3 maanden buffer, langetermijn prijsafspraken'],
-              ['🟡','Cashflow timing','Medium','3-6 maanden reserve, Academy als snelle cash engine'],
-              ['🟡','Key person (Simone)','Medium','Curriculum documenteren, co-trainer opleiden eind 2026']
-            ].map(([icon,risk,sev,mit]) => `<div class="p-3 border rounded-lg"><div class="flex items-center gap-2 mb-1"><span>${icon}</span><strong class="text-sm">${risk}</strong><span class="ml-auto text-xs text-gray-400">${sev}</span></div><p class="text-xs text-gray-500">${mit}</p></div>`).join('')}
+            ${risicos.map(r => {
+              const s = impactStyle[r.impact] || impactStyle.medium;
+              return `<div class="p-3 border ${s.bg} rounded-lg">
+                <div class="flex items-center gap-2 mb-1">
+                  <span>${s.icon}</span>
+                  <strong class="text-sm text-gray-900">${r.titel||''}</strong>
+                  <span class="ml-auto text-xs font-semibold ${s.kleur}">${s.label}</span>
+                </div>
+                <p class="text-xs text-gray-600 leading-relaxed">${r.mitigatie||''}</p>
+              </div>`;
+            }).join('') || '<p class="text-xs text-gray-400 italic">Nog geen risico\'s toegevoegd.</p>'}
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">KPIs (Maandelijks/Kwartaal)</h3>
-          <div class="space-y-2 text-sm">
-            ${['Academy inschrijvingen + conversie lead→betaald','Product DTC omzet + gemiddelde orderwaarde','Franchise pipeline: leads/termsheets/getekend/open','Bruto marge per stream','CAC en LTV per kanaal','Netto cash positie + runway'].map(k => `<div class="flex items-center gap-2 py-2 border-b"><span class="w-2 h-2 rounded-full bg-wax-400"></span>${k}</div>`).join('')}
+
+        <!-- KPIs -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">KPIs</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Vroege waarschuwing — voordat een dip een probleem wordt</p>
+            </div>
+            <button onclick="openModal('bp-kpis')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
+          <div class="space-y-1.5 text-sm">
+            ${kpis.map(k => `
+              <div class="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0">
+                <span class="w-2 h-2 rounded-full bg-wax-400 mt-1.5 flex-shrink-0"></span>
+                <div class="flex-1">
+                  <div class="text-gray-700">${k.kpi||''}</div>
+                  ${k.frequentie?`<div class="text-xs text-gray-400 mt-0.5">${k.frequentie}</div>`:''}
+                </div>
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen KPIs toegevoegd.</p>'}
           </div>
         </div>
-      </div>` },
+      </div>`;
+    }},
 
   { id:'roadmap', icon:'🗺️', tKey:'bpRoadmap',
     content: () => {
+      const taken = data.tasks || [];
+      const klaar = taken.filter(t => t.status==='klaar').length;
+      const bezig = taken.filter(t => t.status==='bezig').length;
+      const open = taken.length - klaar - bezig;
+      const overallPct = taken.length ? Math.round(klaar / taken.length * 100) : 0;
+
       const faseGroups = {};
-      data.tasks.forEach(t => { const f = t.fase||'Overig'; if (!faseGroups[f]) faseGroups[f]=[]; faseGroups[f].push(t); });
-      return `<div class="space-y-4">
-        ${Object.entries(faseGroups).map(([fase, taken]) => {
-          const done = taken.filter(t=>t.status==='klaar').length;
-          const pct = taken.length ? Math.round(done/taken.length*100) : 0;
-          return `<div class="bg-white rounded-xl border p-5">
+      taken.forEach(t => { const f = t.fase||'Overig'; if (!faseGroups[f]) faseGroups[f]=[]; faseGroups[f].push(t); });
+
+      return `
+      <!-- Overall progress -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Totale Voortgang</h3>
+            <p class="text-xs text-gray-500 mt-0.5">${taken.length} taken verspreid over ${Object.keys(faseGroups).length} fases</p>
+          </div>
+          <button onclick="openModal('taak')" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium">+ Taak toevoegen</button>
+        </div>
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          <div class="text-center p-3 bg-green-50 border border-green-100 rounded-xl">
+            <div class="text-2xl font-bold text-green-700">${klaar}</div>
+            <div class="text-xs text-green-600 uppercase tracking-wider mt-0.5">Klaar</div>
+          </div>
+          <div class="text-center p-3 bg-yellow-50 border border-yellow-100 rounded-xl">
+            <div class="text-2xl font-bold text-yellow-700">${bezig}</div>
+            <div class="text-xs text-yellow-600 uppercase tracking-wider mt-0.5">Bezig</div>
+          </div>
+          <div class="text-center p-3 bg-gray-50 border border-gray-100 rounded-xl">
+            <div class="text-2xl font-bold text-gray-700">${open}</div>
+            <div class="text-xs text-gray-500 uppercase tracking-wider mt-0.5">Open</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-wax-400 to-wax-500 rounded-full transition-all" style="width:${overallPct}%"></div></div>
+          <span class="text-sm font-semibold text-gray-700 w-12 text-right">${overallPct}%</span>
+        </div>
+      </div>
+
+      <!-- Fases -->
+      <div class="space-y-4">
+        ${Object.entries(faseGroups).map(([fase, tks]) => {
+          const done = tks.filter(t=>t.status==='klaar').length;
+          const pct = tks.length ? Math.round(done/tks.length*100) : 0;
+          const allDone = done === tks.length && tks.length > 0;
+          return `<div class="bg-white rounded-xl border ${allDone?'border-green-200 bg-green-50/30':'border-gray-100'} p-5 shadow-sm">
             <div class="flex items-center gap-3 mb-3">
+              ${allDone?'<span class="text-green-600">✓</span>':''}
               <span class="font-bold text-gray-900">${fase}</span>
-              <div class="flex-1 h-2 bg-gray-100 rounded-full"><div class="h-full bg-wax-400 rounded-full" style="width:${pct}%"></div></div>
-              <span class="text-xs text-gray-500">${done}/${taken.length}</span>
+              <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden"><div class="h-full ${allDone?'bg-green-500':'bg-wax-400'} rounded-full transition-all" style="width:${pct}%"></div></div>
+              <span class="text-xs font-semibold text-gray-600">${done}/${tks.length}</span>
             </div>
             <div class="space-y-1">
-              ${taken.map(t => `<div class="flex items-center gap-3 py-1.5 px-2 rounded-lg hover:bg-gray-50">
-                <button onclick="cycleTaakStatus('${t.id}'); renderBusinessplan();" class="w-6 h-6 rounded border-2 flex-shrink-0 flex items-center justify-center text-xs ${t.status==='klaar'?'bg-green-500 border-green-500 text-white':t.status==='bezig'?'bg-yellow-400 border-yellow-400 text-white':'border-gray-300'}">${t.status==='klaar'?'✓':t.status==='bezig'?'◉':''}</button>
-                <span class="text-sm flex-1 ${t.status==='klaar'?'line-through text-gray-400':''}">${t.titel}</span>
+              ${tks.map(t => `<div class="flex items-center gap-3 py-1.5 px-2 rounded-lg hover:bg-gray-50 group">
+                <button onclick="cycleTaakStatus('${t.id}'); renderBusinessplan();" class="w-6 h-6 rounded border-2 flex-shrink-0 flex items-center justify-center text-xs ${t.status==='klaar'?'bg-green-500 border-green-500 text-white':t.status==='bezig'?'bg-yellow-400 border-yellow-400 text-white':'border-gray-300 hover:border-wax-400'}">${t.status==='klaar'?'✓':t.status==='bezig'?'◉':''}</button>
+                <span class="text-sm flex-1 ${t.status==='klaar'?'line-through text-gray-400':'text-gray-700'} cursor-pointer" onclick="openModal('taak-detail','${t.id}')">${t.titel}</span>
                 ${persoonAvatar(t.toegewezenAan)}
-                <span class="text-xs text-gray-400">${t.deadline?fd(t.deadline):''}</span>
+                <span class="text-xs text-gray-400 min-w-[70px] text-right">${t.deadline?fd(t.deadline):''}</span>
               </div>`).join('')}
             </div>
           </div>`;
-        }).join('')}
+        }).join('') || '<p class="text-sm text-gray-400 italic text-center py-10">Nog geen taken. Voeg er één toe om te beginnen.</p>'}
       </div>`;
     }},
 
   { id:'decisions', icon:'✅', tKey:'bpDecisions',
-    content: () => `
-      <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
-        <h3 class="font-bold text-gray-900 mb-2">Meeting Agenda</h3>
-        <p class="text-sm text-gray-600">Noteer hier jullie besluiten en actiepunten. Alles wordt automatisch opgeslagen.</p>
+    content: () => {
+      const acties = (data.notes.actions||'').split('\n').filter(l => l.trim().length > 3);
+      const bestaandeTitels = new Set((data.tasks||[]).map(t => (t.titel||'').trim()));
+      const nieuweActies = acties.map(l => l.replace(/^[-\s*\[\]xX]+/, '').trim()).filter(l => l && !bestaandeTitels.has(l));
+
+      return `
+      <!-- Meeting banner -->
+      <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-2xl p-5 mb-6">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl flex-shrink-0">📝</span>
+          <div>
+            <h3 class="font-bold text-gray-900 mb-1">Meeting Werkkopie</h3>
+            <p class="text-sm text-gray-600">Noteer live wat jullie bespreken. Auto-save, geen verloren notities. Tip: zet nieuwe actiepunten met een <code class="text-xs bg-yellow-100 px-1 py-0.5 rounded">-</code> op een eigen regel.</p>
+          </div>
+        </div>
       </div>
+
       <div class="grid lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Open Vragen / Besluiten</h3>
-          <textarea id="bp-notes-decisions" onblur="saveBpNotes()" class="w-full h-48 px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:border-wax-400" placeholder="- Welke leverancier kiezen we? NISHA of Clover?&#10;- Wanneer starten we met de eerste cohort?&#10;- Hoeveel wax bestellen we initieel?&#10;- ...">${data.notes.decisions||''}</textarea>
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-gray-900">Open Vragen / Besluiten</h3>
+            <span class="text-xs text-gray-400">Wat moet er nog uit?</span>
+          </div>
+          <textarea id="bp-notes-decisions" onblur="saveBpNotes(); renderBusinessplan();" class="w-full h-48 px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:border-wax-400 focus:outline-none" placeholder="- Welke leverancier kiezen we? NISHA of Clover?&#10;- Wanneer starten we met de eerste cohort?&#10;- Hoeveel wax bestellen we initieel?">${data.notes.decisions||''}</textarea>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Actiepunten uit Meeting</h3>
-          <textarea id="bp-notes-actions" onblur="saveBpNotes()" class="w-full h-48 px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:border-wax-400" placeholder="- [ ] Simone: contact opnemen met Epifutur&#10;- [ ] Narin: franchise agreement afronden&#10;- [ ] Samen: launch datum definitief bepalen&#10;- ...">${data.notes.actions||''}</textarea>
+        <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-gray-900">Actiepunten uit Meeting</h3>
+            <span class="text-xs ${nieuweActies.length?'text-wax-600 font-medium':'text-gray-400'}">${nieuweActies.length} nieuw → Taken</span>
+          </div>
+          <textarea id="bp-notes-actions" onblur="saveBpNotes(); renderBusinessplan();" class="w-full h-48 px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:border-wax-400 focus:outline-none" placeholder="- Simone: contact opnemen met Epifutur&#10;- Narin: franchise agreement afronden&#10;- Samen: launch datum definitief bepalen">${data.notes.actions||''}</textarea>
         </div>
       </div>
-      <div class="bg-white rounded-xl border p-5">
+
+      <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm mb-6">
         <h3 class="font-bold text-gray-900 mb-3">Algemene Meeting Notities</h3>
-        <textarea id="bp-notes-general" onblur="saveBpNotes()" class="w-full h-32 px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:border-wax-400" placeholder="Vrije notities...">${data.notes.general||''}</textarea>
+        <textarea id="bp-notes-general" onblur="saveBpNotes()" class="w-full h-32 px-4 py-3 border border-gray-200 rounded-xl text-sm resize-none focus:border-wax-400 focus:outline-none" placeholder="Vrije notities — losse observaties, quotes, ideeën die je later wilt teruglezen…">${data.notes.general||''}</textarea>
       </div>
-      <div class="mt-4">
-        <button onclick="maakTakenVanActies()" class="btn-primary px-6 py-3 rounded-xl font-medium">Actiepunten omzetten naar Taken →</button>
-      </div>` },
+
+      <div class="flex items-center justify-between bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+        <div>
+          <h4 class="font-bold text-sm text-gray-900">Actiepunten → Roadmap</h4>
+          <p class="text-xs text-gray-500 mt-0.5">${nieuweActies.length ? `${nieuweActies.length} nieuw actiepunt${nieuweActies.length===1?'':'en'} klaar om over te zetten naar de Roadmap` : 'Geen nieuwe actiepunten om over te zetten'}</p>
+        </div>
+        <button onclick="maakTakenVanActies()" ${nieuweActies.length===0?'disabled':''} class="btn-primary px-6 py-3 rounded-xl font-medium ${nieuweActies.length===0?'opacity-40 cursor-not-allowed':''}">Omzetten naar Taken →</button>
+      </div>`;
+    }},
 
   { id:'market', icon:'🌍', tKey:'bpMarket',
-    content: () => `
+    content: () => {
+      const bp = data.bp || {};
+      const omvang = bp.marktOmvang || [];
+      const concurrenten = bp.concurrenten || [];
+      const moat = bp.moat || [];
+      const kleurBg = { wax:'bg-wax-50', gray:'bg-gray-50', blue:'bg-blue-50', green:'bg-green-50', terra:'bg-terra-50', yellow:'bg-yellow-50', purple:'bg-purple-50' };
+      const kleurAcc = { wax:'text-wax-700', gray:'text-gray-800', blue:'text-blue-700', green:'text-green-700', terra:'text-terra-700', yellow:'text-yellow-700', purple:'text-purple-700' };
+
+      return `
       <div class="grid lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Marktomvang</h3>
+        <!-- Marktomvang -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">Marktomvang</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Waar het geld is, waar wij spelen</p>
+            </div>
+            <button onclick="openModal('bp-markt-omvang')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
           <div class="space-y-3">
-            <div class="p-4 bg-wax-50 rounded-xl text-center"><div class="text-xs text-gray-500">Globale hair removal markt</div><div class="text-2xl font-bold text-wax-700">~$12B</div><div class="text-xs text-gray-400">CAGR 5-6%</div></div>
-            <div class="p-4 bg-gray-50 rounded-xl text-center"><div class="text-xs text-gray-500">Duitsland waxing (top steden)</div><div class="text-2xl font-bold">€250M-€1B</div><div class="text-xs text-gray-400">jaarlijks adresseerbaar</div></div>
+            ${omvang.map(o => `
+              <div class="p-4 ${kleurBg[o.kleur]||'bg-gray-50'} rounded-xl text-center">
+                <div class="text-xs text-gray-500">${o.label||''}</div>
+                <div class="text-2xl font-bold ${kleurAcc[o.kleur]||'text-gray-900'} mt-0.5">${o.waarde||'—'}</div>
+                ${o.detail?`<div class="text-xs text-gray-400 mt-0.5">${o.detail}</div>`:''}
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen marktdata toegevoegd.</p>'}
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Concurrenten</h3>
+
+        <!-- Concurrenten -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">Concurrenten</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Wie er al is, wat ze missen</p>
+            </div>
+            <button onclick="openModal('bp-concurrenten')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
           <div class="space-y-2 text-sm">
-            <div class="p-3 border rounded-lg"><strong>Wax in the City (DE)</strong><p class="text-xs text-gray-400 mt-1">Sterk merk, geen training pipeline, geen franchise expansie</p></div>
-            <div class="p-3 border rounded-lg"><strong>European Wax Center (USA)</strong><p class="text-xs text-gray-400 mt-1">Bewezen franchise, membership model — maar US cost structure</p></div>
-            <div class="p-3 border rounded-lg"><strong>Lokale independents</strong><p class="text-xs text-gray-400 mt-1">Lage prijs, maar inconsistente kwaliteit en geen training</p></div>
+            ${concurrenten.map(c => `
+              <div class="p-3 border border-gray-100 rounded-lg">
+                <div class="flex items-baseline gap-2 flex-wrap">
+                  <strong class="text-gray-900">${c.naam||''}</strong>
+                  ${c.regio?`<span class="text-xs text-gray-400">${c.regio}</span>`:''}
+                </div>
+                ${c.omschrijving?`<p class="text-xs text-gray-500 mt-1 leading-relaxed">${c.omschrijving}</p>`:''}
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen concurrenten toegevoegd.</p>'}
           </div>
         </div>
       </div>
-      <div class="bg-white rounded-xl border p-5">
-        <h3 class="font-bold text-gray-900 mb-3">Onze Moat (Verdedigbaarheid)</h3>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div class="p-4 bg-wax-50 rounded-xl text-center"><div class="text-2xl mb-2">🎓</div><div class="text-sm font-bold">Academy Pipeline</div><div class="text-xs text-gray-500 mt-1">Gecertificeerde talent pipeline</div></div>
-          <div class="p-4 bg-terra-50 rounded-xl text-center"><div class="text-2xl mb-2">🧴</div><div class="text-sm font-bold">Não Producten</div><div class="text-xs text-gray-500 mt-1">Verplichte wholesale = recurring revenue</div></div>
-          <div class="p-4 bg-blue-50 rounded-xl text-center"><div class="text-2xl mb-2">🏛️</div><div class="text-sm font-bold">NL BV + IP</div><div class="text-xs text-gray-500 mt-1">Innovation Box 9% + EU trademark</div></div>
-          <div class="p-4 bg-green-50 rounded-xl text-center"><div class="text-2xl mb-2">💡</div><div class="text-sm font-bold">Lean HQ</div><div class="text-xs text-gray-500 mt-1">Snel winstgevend, asset-light model</div></div>
+
+      <!-- Moat -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Onze Moat — Verdedigbaarheid</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Waarom een concurrent ons niet zomaar kopieert</p>
+          </div>
+          <button onclick="openModal('bp-moat')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
         </div>
-      </div>` },
+        <div class="grid md:grid-cols-2 lg:grid-cols-${Math.min(moat.length||1,4)} gap-3">
+          ${moat.map(m => `
+            <div class="p-4 ${kleurBg[m.kleur]||'bg-gray-50'} rounded-xl">
+              <div class="text-2xl mb-2">${m.icon||'✨'}</div>
+              <div class="text-sm font-bold text-gray-900">${m.titel||''}</div>
+              ${m.omschrijving?`<div class="text-xs text-gray-600 mt-1 leading-relaxed">${m.omschrijving}</div>`:''}
+            </div>
+          `).join('') || '<p class="text-xs text-gray-400 italic col-span-full">Nog geen moat-punten toegevoegd.</p>'}
+        </div>
+      </div>`;
+    }},
 ];
 
 let bpSectieIdx = 0;
@@ -7641,6 +8173,19 @@ function openModal(type, id) {
   else if (type === 'bp-revenue-add') content.innerHTML = modalBpRevenueAdd();
   else if (type === 'bp-projectie') content.innerHTML = modalBpProjectie();
   else if (type === 'bp-team') content.innerHTML = modalBpTeam();
+  else if (type === 'bp-franchise-terms') content.innerHTML = modalBpFranchiseTerms();
+  else if (type === 'bp-studio-pl') content.innerHTML = modalBpStudioPL();
+  else if (type === 'bp-legal-fases') content.innerHTML = modalBpLegalFases();
+  else if (type === 'bp-legal-punten') content.innerHTML = modalBpLegalPunten();
+  else if (type === 'bp-startup-budget') content.innerHTML = modalBpStartupBudget();
+  else if (type === 'bp-marketing-strategie') content.innerHTML = modalBpMarketingStrategie();
+  else if (type === 'bp-tech-stack') content.innerHTML = modalBpTechStack();
+  else if (type === 'bp-marketing-budget') content.innerHTML = modalBpMarketingBudget();
+  else if (type === 'bp-risicos') content.innerHTML = modalBpRisicos();
+  else if (type === 'bp-kpis') content.innerHTML = modalBpKpis();
+  else if (type === 'bp-markt-omvang') content.innerHTML = modalBpMarktOmvang();
+  else if (type === 'bp-concurrenten') content.innerHTML = modalBpConcurrenten();
+  else if (type === 'bp-moat') content.innerHTML = modalBpMoat();
   else if (type === 'booking') content.innerHTML = modalBooking(arguments[2], arguments[3]);
   else if (type === 'booking-detail') content.innerHTML = modalBookingDetail(id);
   else if (type === 'studio') content.innerHTML = modalStudio();
@@ -8239,8 +8784,41 @@ async function saveTaak(form) {
 // ─── MODAL: BP Revenue Streams ───
 function modalBpRevenue() {
   const rs = data.bp.revenueStreams || [];
+  const numField = (label, idx, field, val, suffix='') =>
+    `<div><label class="block text-xs text-gray-500 mb-1">${label}</label>
+      <div class="relative"><input type="number" value="${val ?? ''}" onblur="updateRSNum(${idx},'${field}',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" step="${field==='marge'||field==='margeWholesale'||field==='margeRetail'||field==='royaltyPct'||field==='royaltyPctHoog'?'0.1':'1'}">
+      ${suffix?`<span class="absolute right-3 top-2 text-xs text-gray-400">${suffix}</span>`:''}</div></div>`;
+  const priceBlock = (r, i) => {
+    if (['workshop','online','academy'].includes(r.type)) {
+      return `<div class="grid grid-cols-2 gap-2">
+        ${numField('Prijs (€)', i, 'prijsGemiddeld', r.prijsGemiddeld, '€')}
+        ${numField('Marge', i, 'marge', r.marge, '%')}
+      </div>`;
+    }
+    if (r.type === 'producten') {
+      return `<div class="grid grid-cols-2 gap-2">
+        ${numField('Marge wholesale', i, 'margeWholesale', r.margeWholesale, '%')}
+        ${numField('Marge retail', i, 'margeRetail', r.margeRetail, '%')}
+      </div>`;
+    }
+    if (r.type === 'franchise') {
+      return `<div class="grid grid-cols-2 gap-2">
+        ${numField('Onboarding fee', i, 'onboardingFee', r.onboardingFee, '€')}
+        ${numField('Royalty drempel', i, 'royaltyDrempel', r.royaltyDrempel, '€')}
+        ${numField('Royalty %', i, 'royaltyPct', r.royaltyPct, '%')}
+        ${numField('Royalty % (hoog)', i, 'royaltyPctHoog', r.royaltyPctHoog, '%')}
+      </div>`;
+    }
+    if (r.type === 'dtc') {
+      return `<div class="grid grid-cols-1 gap-2">
+        ${numField('Marge', i, 'marge', r.marge, '%')}
+      </div>`;
+    }
+    return '';
+  };
   return modalHeader(t('revenueStream')+'s', t('bewerken')) +
-    `<div class="p-6 space-y-4">
+    `<div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Prijzen en marges worden live gesynchroniseerd met het Businessplan en de Friendchise Pitch.</p>
       ${rs.map((r,i) => `<div class="border rounded-xl p-4 space-y-3">
         <div class="flex items-center justify-between">
           <span class="font-bold text-sm">${r.naam}</span>
@@ -8249,9 +8827,17 @@ function modalBpRevenue() {
         <input type="text" value="${r.naam}" onblur="updateRS(${i},'naam',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="${t('naam')}">
         <textarea onblur="updateRS(${i},'beschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="${t('beschrijving')}">${r.beschrijving||''}</textarea>
         <input type="text" value="${r.model||''}" onblur="updateRS(${i},'model',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="${t('model')}">
+        ${priceBlock(r, i)}
       </div>`).join('')}
       <button onclick="openModal('bp-revenue-add')" class="btn-primary w-full py-3 rounded-lg font-medium">+ ${t('revenueStream')} ${t('toevoegen')}</button>
     </div>`;
+}
+
+async function updateRSNum(idx, field, val) {
+  if (!data.bp.revenueStreams) return;
+  const num = val === '' ? null : parseFloat(val);
+  data.bp.revenueStreams[idx][field] = isNaN(num) ? null : num;
+  await saveBp();
 }
 
 function modalBpRevenueAdd() {
@@ -8371,6 +8957,544 @@ async function addTeamMember() {
 
 async function saveBp() {
   await fetch('/api/businessplan', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data.bp) });
+}
+
+async function cycleCertStatus(productId) {
+  const p = (data.products || []).find(x => x.id === productId);
+  if (!p) return;
+  const cycle = { done: 'needed', needed: null, null: 'done' };
+  const next = cycle[p.certificeringStatus ?? 'null'];
+  p.certificeringStatus = next;
+  if (next !== 'needed') {
+    delete p.certificeringKostenMin;
+    delete p.certificeringKostenMax;
+  }
+  await apiPut(`/api/products/${productId}`, p);
+  renderBusinessplan();
+}
+
+async function updateCertCost(productId, which, val) {
+  const p = (data.products || []).find(x => x.id === productId);
+  if (!p) return;
+  const field = which === 'min' ? 'certificeringKostenMin' : 'certificeringKostenMax';
+  const num = parseFloat(val);
+  if (val === '' || isNaN(num)) delete p[field];
+  else p[field] = num;
+  await apiPut(`/api/products/${productId}`, p);
+  renderBusinessplan();
+}
+
+// ─── MODAL: BP Legal Fases ───
+function modalBpLegalFases() {
+  if (!data.bp.legalFases) data.bp.legalFases = [];
+  const fases = data.bp.legalFases;
+  const kleuren = ['green','blue','purple','yellow','gray'];
+  return modalHeader('Juridische Fases', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Voeg fases toe of pas ze aan. Wijzigingen zichtbaar op de Legal-tab.</p>
+      ${fases.map((f,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${f.label || 'Fase ' + (i+1)}</span>
+          <button onclick="verwijderLegalFase(${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" value="${f.label||''}" onblur="updateBpArr('legalFases',${i},'label',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Label (bv. 'Fase 1 — Nu')">
+          <select onchange="updateBpArr('legalFases',${i},'kleur',this.value)" class="px-3 py-2 border rounded-lg text-sm">
+            ${kleuren.map(k => `<option value="${k}" ${f.kleur===k?'selected':''}>${k}</option>`).join('')}
+          </select>
+        </div>
+        <input type="text" value="${f.titel||''}" onblur="updateBpArr('legalFases',${i},'titel',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Korte titel (bv. 'Nederlandse BV + Duitse GmbH')">
+        <input type="text" value="${f.trigger||''}" onblur="updateBpArr('legalFases',${i},'trigger',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Trigger (wanneer deze fase ingaat)">
+        <textarea onblur="updateBpArr('legalFases',${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Uitleg">${f.omschrijving||''}</textarea>
+      </div>`).join('')}
+      <button onclick="voegLegalFaseToe()" class="btn-primary w-full py-3 rounded-lg font-medium">+ Fase toevoegen</button>
+    </div>`;
+}
+
+async function voegLegalFaseToe() {
+  if (!data.bp.legalFases) data.bp.legalFases = [];
+  data.bp.legalFases.push({ id:'lf'+Date.now(), label:'Nieuwe fase', kleur:'gray', trigger:'', titel:'', omschrijving:'' });
+  await saveBp();
+  openModal('bp-legal-fases');
+}
+
+async function verwijderLegalFase(idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  data.bp.legalFases.splice(idx, 1);
+  await saveBp();
+  openModal('bp-legal-fases');
+  renderBusinessplan();
+}
+
+// ─── MODAL: BP Legal Aandachtspunten ───
+function modalBpLegalPunten() {
+  if (!data.bp.legalPunten) data.bp.legalPunten = [];
+  const punten = data.bp.legalPunten;
+  const types = [{v:'warning',l:'⚠️ Waarschuwing'},{v:'info',l:'📋 Info'},{v:'ok',l:'✅ Goed geregeld'}];
+  return modalHeader('Juridische Aandachtspunten', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Aandachtspunten en risico's die in de gaten gehouden moeten worden.</p>
+      ${punten.map((p,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${p.titel || 'Punt ' + (i+1)}</span>
+          <button onclick="verwijderLegalPunt(${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <select onchange="updateBpArr('legalPunten',${i},'type',this.value)" class="px-3 py-2 border rounded-lg text-sm col-span-2">
+            ${types.map(k => `<option value="${k.v}" ${p.type===k.v?'selected':''}>${k.l}</option>`).join('')}
+          </select>
+          <input type="text" value="${p.icon||''}" onblur="updateBpArr('legalPunten',${i},'icon',this.value)" class="px-3 py-2 border rounded-lg text-sm text-center" placeholder="Icon">
+        </div>
+        <input type="text" value="${p.titel||''}" onblur="updateBpArr('legalPunten',${i},'titel',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Titel">
+        <textarea onblur="updateBpArr('legalPunten',${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Toelichting">${p.omschrijving||''}</textarea>
+      </div>`).join('')}
+      <button onclick="voegLegalPuntToe()" class="btn-primary w-full py-3 rounded-lg font-medium">+ Aandachtspunt toevoegen</button>
+    </div>`;
+}
+
+async function voegLegalPuntToe() {
+  if (!data.bp.legalPunten) data.bp.legalPunten = [];
+  data.bp.legalPunten.push({ id:'lp'+Date.now(), type:'info', icon:'📋', titel:'Nieuw aandachtspunt', omschrijving:'' });
+  await saveBp();
+  openModal('bp-legal-punten');
+}
+
+async function verwijderLegalPunt(idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  data.bp.legalPunten.splice(idx, 1);
+  await saveBp();
+  openModal('bp-legal-punten');
+  renderBusinessplan();
+}
+
+async function updateBpArr(arrKey, idx, field, val) {
+  if (!data.bp[arrKey] || !data.bp[arrKey][idx]) return;
+  data.bp[arrKey][idx][field] = val;
+  await saveBp();
+}
+
+async function updateBpNestedArr(parentKey, arrKey, idx, field, val, numeric) {
+  if (!data.bp[parentKey]) data.bp[parentKey] = {};
+  if (!data.bp[parentKey][arrKey]) data.bp[parentKey][arrKey] = [];
+  if (!data.bp[parentKey][arrKey][idx]) return;
+  if (numeric) {
+    const num = parseFloat(val);
+    data.bp[parentKey][arrKey][idx][field] = isNaN(num) ? 0 : num;
+  } else {
+    data.bp[parentKey][arrKey][idx][field] = val;
+  }
+  await saveBp();
+}
+
+// ─── MODAL: BP Startup Budget ───
+function modalBpStartupBudget() {
+  if (!data.bp.startupBudget) data.bp.startupBudget = { items: [] };
+  if (!data.bp.startupBudget.items) data.bp.startupBudget.items = [];
+  const items = data.bp.startupBudget.items;
+  return modalHeader('Startup Budget', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Elke post heeft een min- en max-bedrag. Het totaal wordt automatisch berekend.</p>
+      ${items.map((it,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${it.label || 'Post ' + (i+1)}</span>
+          <button onclick="verwijderStartupPost(${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <input type="text" value="${it.label||''}" onblur="updateBpNestedArr('startupBudget','items',${i},'label',this.value,false)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Label">
+        <input type="text" value="${it.beschrijving||''}" onblur="updateBpNestedArr('startupBudget','items',${i},'beschrijving',this.value,false)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Korte toelichting">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs text-gray-500 mb-1">Min (€)</label>
+            <input type="number" value="${it.min ?? 0}" onblur="updateBpNestedArr('startupBudget','items',${i},'min',this.value,true)" class="w-full px-3 py-2 border rounded-lg text-sm" step="100">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-500 mb-1">Max (€)</label>
+            <input type="number" value="${it.max ?? 0}" onblur="updateBpNestedArr('startupBudget','items',${i},'max',this.value,true)" class="w-full px-3 py-2 border rounded-lg text-sm" step="100">
+          </div>
+        </div>
+      </div>`).join('')}
+      <button onclick="voegStartupPostToe()" class="btn-primary w-full py-3 rounded-lg font-medium">+ Post toevoegen</button>
+    </div>`;
+}
+
+async function voegStartupPostToe() {
+  if (!data.bp.startupBudget) data.bp.startupBudget = { items: [] };
+  if (!data.bp.startupBudget.items) data.bp.startupBudget.items = [];
+  data.bp.startupBudget.items.push({ id:'sb'+Date.now(), label:'Nieuwe post', beschrijving:'', min:0, max:0 });
+  await saveBp();
+  openModal('bp-startup-budget');
+}
+
+async function verwijderStartupPost(idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  data.bp.startupBudget.items.splice(idx, 1);
+  await saveBp();
+  openModal('bp-startup-budget');
+  renderBusinessplan();
+}
+
+// ─── MODAL: Marketing Strategie ───
+function modalBpMarketingStrategie() {
+  if (!data.bp.marketingStrategie) data.bp.marketingStrategie = [];
+  const items = data.bp.marketingStrategie;
+  return modalHeader('Marketing Strategie', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((s,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${s.titel || 'Kanaal ' + (i+1)}</span>
+          <button onclick="verwijderBpArrItem('marketingStrategie',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <input type="text" value="${s.titel||''}" onblur="updateBpArr('marketingStrategie',${i},'titel',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Titel (bv. Founder-led Content)">
+        <textarea onblur="updateBpArr('marketingStrategie',${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Korte uitleg van dit kanaal">${s.omschrijving||''}</textarea>
+      </div>`).join('')}
+      <button onclick="voegBpArrItem('marketingStrategie',{titel:'Nieuw kanaal',omschrijving:''})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Kanaal toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: Tech Stack ───
+function modalBpTechStack() {
+  if (!data.bp.techStack) data.bp.techStack = [];
+  const items = data.bp.techStack;
+  return modalHeader('Tech Stack', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((ts,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${ts.naam || 'Tool ' + (i+1)}</span>
+          <button onclick="verwijderBpArrItem('techStack',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" value="${ts.naam||''}" onblur="updateBpArr('techStack',${i},'naam',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Categorie (Booking, LMS...)">
+          <input type="text" value="${ts.tool||''}" onblur="updateBpArr('techStack',${i},'tool',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Tool-naam (Calendly...)">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label class="block text-xs text-gray-500 mb-1">Min €/jr</label><input type="number" value="${ts.kostenJaarMin ?? 0}" onblur="updateBpArrNum('techStack',${i},'kostenJaarMin',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" step="10"></div>
+          <div><label class="block text-xs text-gray-500 mb-1">Max €/jr</label><input type="number" value="${ts.kostenJaarMax ?? 0}" onblur="updateBpArrNum('techStack',${i},'kostenJaarMax',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" step="10"></div>
+        </div>
+      </div>`).join('')}
+      <button onclick="voegBpArrItem('techStack',{naam:'Nieuwe tool',tool:'',kostenJaarMin:0,kostenJaarMax:0})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Tool toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: Marketing Budget ───
+function modalBpMarketingBudget() {
+  if (!data.bp.marketingBudget) data.bp.marketingBudget = [];
+  const items = data.bp.marketingBudget;
+  return modalHeader('Marketing Budget per Jaar', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((b,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">Jaar ${b.jaar || ''}</span>
+          <button onclick="verwijderBpArrItem('marketingBudget',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label class="block text-xs text-gray-500 mb-1">Jaar</label><input type="number" value="${b.jaar ?? ''}" onblur="updateBpArrNum('marketingBudget',${i},'jaar',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" step="1"></div>
+          <div><label class="block text-xs text-gray-500 mb-1">Budget €</label><input type="number" value="${b.bedrag ?? 0}" onblur="updateBpArrNum('marketingBudget',${i},'bedrag',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" step="500"></div>
+        </div>
+        <input type="text" value="${b.focus||''}" onblur="updateBpArr('marketingBudget',${i},'focus',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Focus (bv. 'Organic foundation')">
+      </div>`).join('')}
+      <button onclick="voegBpArrItem('marketingBudget',{jaar:new Date().getFullYear(),bedrag:0,focus:''})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Jaar toevoegen</button>
+    </div>`;
+}
+
+async function voegBpArrItem(arrKey, tpl) {
+  if (!data.bp[arrKey]) data.bp[arrKey] = [];
+  data.bp[arrKey].push({ id: arrKey + Date.now(), ...tpl });
+  await saveBp();
+  const modalMap = { marketingStrategie:'bp-marketing-strategie', techStack:'bp-tech-stack', marketingBudget:'bp-marketing-budget' };
+  openModal(modalMap[arrKey]);
+}
+
+async function verwijderBpArrItem(arrKey, idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  if (!data.bp[arrKey]) return;
+  data.bp[arrKey].splice(idx, 1);
+  await saveBp();
+  const modalMap = { marketingStrategie:'bp-marketing-strategie', techStack:'bp-tech-stack', marketingBudget:'bp-marketing-budget' };
+  openModal(modalMap[arrKey]);
+  renderBusinessplan();
+}
+
+async function updateBpArrNum(arrKey, idx, field, val) {
+  if (!data.bp[arrKey] || !data.bp[arrKey][idx]) return;
+  const num = parseFloat(val);
+  data.bp[arrKey][idx][field] = isNaN(num) ? 0 : num;
+  await saveBp();
+}
+
+// ─── MODAL: Risico's ───
+function modalBpRisicos() {
+  if (!data.bp.risicos) data.bp.risicos = [];
+  const items = data.bp.risicos;
+  const impacts = [{v:'hoog',l:'🔴 Hoog'},{v:'medium',l:'🟡 Medium'},{v:'laag',l:'🟢 Laag'}];
+  return modalHeader('Risico\'s & Mitigatie', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((r,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${r.titel || 'Risico ' + (i+1)}</span>
+          <button onclick="verwijderRisicoKpi('risicos',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <select onchange="updateBpArr('risicos',${i},'impact',this.value)" class="px-3 py-2 border rounded-lg text-sm">
+            ${impacts.map(o => `<option value="${o.v}" ${r.impact===o.v?'selected':''}>${o.l}</option>`).join('')}
+          </select>
+          <input type="text" value="${r.titel||''}" onblur="updateBpArr('risicos',${i},'titel',this.value)" class="px-3 py-2 border rounded-lg text-sm col-span-2" placeholder="Titel (bv. Partner non-compliance)">
+        </div>
+        <textarea onblur="updateBpArr('risicos',${i},'mitigatie',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Hoe we het opvangen">${r.mitigatie||''}</textarea>
+      </div>`).join('')}
+      <button onclick="voegRisicoKpiToe('risicos',{impact:'medium',titel:'Nieuw risico',mitigatie:''})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Risico toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: KPIs ───
+function modalBpKpis() {
+  if (!data.bp.kpis) data.bp.kpis = [];
+  const items = data.bp.kpis;
+  const frequenties = ['Wekelijks','Maandelijks','Kwartaal','Jaarlijks'];
+  return modalHeader('KPIs', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((k,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${k.kpi ? k.kpi.slice(0,40) + (k.kpi.length>40?'…':'') : 'KPI ' + (i+1)}</span>
+          <button onclick="verwijderRisicoKpi('kpis',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <input type="text" value="${k.kpi||''}" onblur="updateBpArr('kpis',${i},'kpi',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="KPI (bv. Academy inschrijvingen + conversie)">
+        <select onchange="updateBpArr('kpis',${i},'frequentie',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm">
+          ${frequenties.map(f => `<option value="${f}" ${k.frequentie===f?'selected':''}>${f}</option>`).join('')}
+        </select>
+      </div>`).join('')}
+      <button onclick="voegRisicoKpiToe('kpis',{kpi:'Nieuwe KPI',frequentie:'Maandelijks'})" class="btn-primary w-full py-3 rounded-lg font-medium">+ KPI toevoegen</button>
+    </div>`;
+}
+
+async function voegRisicoKpiToe(arrKey, tpl) {
+  if (!data.bp[arrKey]) data.bp[arrKey] = [];
+  data.bp[arrKey].push({ id: arrKey[0] + Date.now(), ...tpl });
+  await saveBp();
+  openModal(arrKey === 'risicos' ? 'bp-risicos' : 'bp-kpis');
+}
+
+async function verwijderRisicoKpi(arrKey, idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  if (!data.bp[arrKey]) return;
+  data.bp[arrKey].splice(idx, 1);
+  await saveBp();
+  openModal(arrKey === 'risicos' ? 'bp-risicos' : 'bp-kpis');
+  renderBusinessplan();
+}
+
+// ─── Generieke array editor helpers ───
+const MARKET_MODALS = { marktOmvang:'bp-markt-omvang', concurrenten:'bp-concurrenten', moat:'bp-moat' };
+
+async function voegMarketItemToe(arrKey, tpl) {
+  if (!data.bp[arrKey]) data.bp[arrKey] = [];
+  data.bp[arrKey].push({ id: arrKey + Date.now(), ...tpl });
+  await saveBp();
+  openModal(MARKET_MODALS[arrKey]);
+}
+
+async function verwijderMarketItem(arrKey, idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  if (!data.bp[arrKey]) return;
+  data.bp[arrKey].splice(idx, 1);
+  await saveBp();
+  openModal(MARKET_MODALS[arrKey]);
+  renderBusinessplan();
+}
+
+const KLEUR_OPTIES = ['wax','gray','blue','green','terra','yellow','purple'];
+
+// ─── MODAL: Markt Omvang ───
+function modalBpMarktOmvang() {
+  if (!data.bp.marktOmvang) data.bp.marktOmvang = [];
+  const items = data.bp.marktOmvang;
+  return modalHeader('Marktomvang', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((o,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${o.label || 'Marktsegment ' + (i+1)}</span>
+          <button onclick="verwijderMarketItem('marktOmvang',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <input type="text" value="${o.label||''}" onblur="updateBpArr('marktOmvang',${i},'label',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Label (bv. Globale hair removal markt)">
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" value="${o.waarde||''}" onblur="updateBpArr('marktOmvang',${i},'waarde',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Waarde (bv. ~$12B)">
+          <input type="text" value="${o.detail||''}" onblur="updateBpArr('marktOmvang',${i},'detail',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Detail (bv. CAGR 5-6%)">
+        </div>
+        <select onchange="updateBpArr('marktOmvang',${i},'kleur',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm">
+          ${KLEUR_OPTIES.map(k => `<option value="${k}" ${o.kleur===k?'selected':''}>Kleur: ${k}</option>`).join('')}
+        </select>
+      </div>`).join('')}
+      <button onclick="voegMarketItemToe('marktOmvang',{label:'Nieuw segment',waarde:'',detail:'',kleur:'gray'})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Segment toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: Concurrenten ───
+function modalBpConcurrenten() {
+  if (!data.bp.concurrenten) data.bp.concurrenten = [];
+  const items = data.bp.concurrenten;
+  return modalHeader('Concurrenten', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((c,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${c.naam || 'Concurrent ' + (i+1)}</span>
+          <button onclick="verwijderMarketItem('concurrenten',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <input type="text" value="${c.naam||''}" onblur="updateBpArr('concurrenten',${i},'naam',this.value)" class="px-3 py-2 border rounded-lg text-sm col-span-2" placeholder="Naam">
+          <input type="text" value="${c.regio||''}" onblur="updateBpArr('concurrenten',${i},'regio',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Regio (DE/USA)">
+        </div>
+        <textarea onblur="updateBpArr('concurrenten',${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Sterkte + zwakte">${c.omschrijving||''}</textarea>
+      </div>`).join('')}
+      <button onclick="voegMarketItemToe('concurrenten',{naam:'Nieuwe concurrent',regio:'',omschrijving:''})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Concurrent toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: Moat ───
+function modalBpMoat() {
+  if (!data.bp.moat) data.bp.moat = [];
+  const items = data.bp.moat;
+  return modalHeader('Moat — Verdedigbaarheid', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((m,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${m.titel || 'Moat ' + (i+1)}</span>
+          <button onclick="verwijderMarketItem('moat',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+          <input type="text" value="${m.icon||''}" onblur="updateBpArr('moat',${i},'icon',this.value)" class="px-3 py-2 border rounded-lg text-sm text-center" placeholder="🎓">
+          <input type="text" value="${m.titel||''}" onblur="updateBpArr('moat',${i},'titel',this.value)" class="px-3 py-2 border rounded-lg text-sm col-span-3" placeholder="Titel">
+        </div>
+        <textarea onblur="updateBpArr('moat',${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Waarom dit ons verdedigbaar maakt">${m.omschrijving||''}</textarea>
+        <select onchange="updateBpArr('moat',${i},'kleur',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm">
+          ${KLEUR_OPTIES.map(k => `<option value="${k}" ${m.kleur===k?'selected':''}>Kleur: ${k}</option>`).join('')}
+        </select>
+      </div>`).join('')}
+      <button onclick="voegMarketItemToe('moat',{icon:'✨',titel:'Nieuw moat-punt',omschrijving:'',kleur:'gray'})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Moat-punt toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: BP Franchise Terms ───
+function modalBpFranchiseTerms() {
+  const ft = data.bp.franchiseTerms || (data.bp.franchiseTerms = {});
+  const su = data.bp.startupInvestering || (data.bp.startupInvestering = {});
+  const row = (label, help, path, type='number', suffix='') => {
+    const val = path[0] === 'ft' ? ft[path[1]] : su[path[1]];
+    return `<div>
+      <label class="block text-xs font-semibold text-gray-700 mb-1">${label}</label>
+      ${help?`<p class="text-xs text-gray-400 mb-1.5">${help}</p>`:''}
+      <div class="relative">
+        <input type="${type}" value="${val ?? ''}" onblur="updateBpPath('${path[0]}','${path[1]}',this.value,${type==='number'})" class="w-full px-3 py-2 border rounded-lg text-sm" ${type==='number'?'step="1"':''}>
+        ${suffix?`<span class="absolute right-3 top-2 text-xs text-gray-400">${suffix}</span>`:''}
+      </div>
+    </div>`;
+  };
+  return modalHeader('Friendchise Terms', 'Bewerken') +
+    `<div class="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Wijzigingen worden live doorgevoerd in het Businessplan, de studio-compliance tab en de Friendchise Pitch.</p>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Investering</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Onboarding fee','Eenmalig betaald bij contractondertekening',['ft','onboardingFee'],'number','€')}
+          ${row('Werkkapitaal (maanden)','Aantal maanden buffer meegerekend in totaal',['su','werkkapitaalMnd'],'number','mnd')}
+          ${row('Studio fit-out min','Ondergrens rent + inrichting + apparatuur',['su','studioFitOutMin'],'number','€')}
+          ${row('Studio fit-out max','Bovengrens',['su','studioFitOutMax'],'number','€')}
+          ${row('Totale investering min','Wordt getoond als "totaal"',['su','totaalMin'],'number','€')}
+          ${row('Totale investering max','',['su','totaalMax'],'number','€')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Royalty & orders</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Royalty %','Standaard tarief over bruto omzet',['ft','royaltyPct'],'number','%')}
+          ${row('Royalty % (hoog)','Verhoogd tarief boven de drempel',['ft','royaltyHighPct'],'number','%')}
+          ${row('Royalty drempel','Omzet per jaar waarboven het hoge % geldt',['ft','royaltyThreshold'],'number','€')}
+          ${row('Min. productorder','NAO-afname per maand, borgt consistentie',['ft','minBestelling'],'number','€/mnd')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Contract</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Contractduur','Tekst zoals getoond op de pagina',['ft','contractDuur'],'text')}
+          ${row('Territorium','Korte beschrijving van exclusiviteit',['ft','territoriaal'],'text')}
+        </div>
+      </div>
+
+      <div class="pt-4 border-t">
+        <button onclick="sluitModal(); renderBusinessplan();" class="btn-primary w-full py-3 rounded-lg font-medium">Klaar</button>
+      </div>
+    </div>`;
+}
+
+// ─── MODAL: BP Studio P&L ───
+function modalBpStudioPL() {
+  const pl = data.bp.studioPL || (data.bp.studioPL = {});
+  const bench = data.bp.studioBenchmarks || (data.bp.studioBenchmarks = {});
+  const row = (label, help, path, suffix='') => {
+    const val = path[0] === 'pl' ? pl[path[1]] : bench[path[1]];
+    return `<div>
+      <label class="block text-xs font-semibold text-gray-700 mb-1">${label}</label>
+      ${help?`<p class="text-xs text-gray-400 mb-1.5">${help}</p>`:''}
+      <div class="relative">
+        <input type="number" value="${val ?? ''}" onblur="updateBpPath('${path[0]}','${path[1]}',this.value,true)" class="w-full px-3 py-2 border rounded-lg text-sm" step="1">
+        ${suffix?`<span class="absolute right-3 top-2 text-xs text-gray-400">${suffix}</span>`:''}
+      </div>
+    </div>`;
+  };
+  return modalHeader('Studio P&L — Base Case', 'Bewerken') +
+    `<div class="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Deze cijfers voeden de Business-tab én de Friendchise Pitch (ROI-calculator en P&L).</p>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Benchmarks (1 cabine)</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Omzet per jaar','Services + product-retail samen',['pl','omzet'],'€')}
+          ${row('Avg. revenue per cabine','Wordt getoond als benchmark',['bench','avgRevenuePerCabin'],'€')}
+          ${row('Gemiddeld ticket','Per klantbezoek',['bench','avgTicket'],'€')}
+          ${row('Aantal medewerkers','Per cabine',['bench','staffCount'],'')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Jaarlijkse kosten</h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('Personeelskosten','Totaal salaris/jaar',['pl','personeel'],'€')}
+          ${row('Huur min','Ondergrens huur/jaar',['pl','huurMin'],'€')}
+          ${row('Huur max','Bovengrens huur/jaar',['pl','huurMax'],'€')}
+          ${row('Productinkoop','NAO-wax + aftercare/jaar',['pl','inkoopProducten'],'€')}
+          ${row('Royalty %','Gebruikt voor studio P&L',['pl','royaltyPct'],'%')}
+          ${row('Marketing + overig','Lokale marketing en misc.',['pl','marketingOverig'],'€')}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">EBITDA <span class="text-xs font-normal italic normal-case text-gray-400">(laat leeg om te laten berekenen)</span></h4>
+        <div class="grid md:grid-cols-2 gap-3">
+          ${row('EBITDA','Winst vóór belasting',['pl','ebitda'],'€')}
+          ${row('EBITDA-marge','Percentage',['pl','ebitdaMargePct'],'%')}
+        </div>
+      </div>
+
+      <div class="pt-4 border-t">
+        <button onclick="sluitModal(); renderBusinessplan();" class="btn-primary w-full py-3 rounded-lg font-medium">Klaar</button>
+      </div>
+    </div>`;
+}
+
+async function updateBpPath(group, field, val, numeric) {
+  const map = { ft: 'franchiseTerms', su: 'startupInvestering', pl: 'studioPL', bench: 'studioBenchmarks' };
+  const key = map[group];
+  if (!key) return;
+  if (!data.bp[key]) data.bp[key] = {};
+  if (val === '' || val == null) {
+    delete data.bp[key][field];
+  } else if (numeric) {
+    const num = parseFloat(val);
+    data.bp[key][field] = isNaN(num) ? val : num;
+  } else {
+    data.bp[key][field] = val;
+  }
+  await saveBp();
 }
 
 async function snelTaakVanBP(form, sectieTitel) {
@@ -8968,9 +10092,14 @@ function modalStudioDetail(id) {
   } else if (studioDetailTab === 'compliance') {
     // ══════════════ TAB: FRANCHISE COMPLIANCE ══════════════
     const ft = (data.bp||{}).franchiseTerms || {};
-    const ftOnboarding2 = ft.onboardingFee || 15000;
-    const ftRoyaltyPct2 = 5;
-    const ftMinOrder = ft.minOrder || ft.minBestelling || 200;
+    const ftOnboarding2 = ft.onboardingFee ?? 15000;
+    const ftRoyaltyPct2 = ft.royaltyPct ?? 5;
+    const ftRoyaltyHigh2 = ft.royaltyHighPct ?? 6;
+    const ftRoyaltyThreshold2 = ft.royaltyThreshold ?? 120000;
+    const ftMinOrder = ft.minBestelling ?? ft.minOrder ?? 200;
+    const ftContractDuur = ft.contractDuur ?? ft.contractduur ?? '5 jaar, verlengbaar';
+    const ftInvestMin = ft.investMin ?? 45000;
+    const ftInvestMax = ft.investMax ?? 75000;
     const royaltyExpected = monthRevenue * (ftRoyaltyPct2 / 100);
 
     // Find franchisee for this studio
@@ -8995,16 +10124,16 @@ function modalStudioDetail(id) {
       ${checkItem(false, 'Minimum productbestelling', '€0 / ' + fe(ftMinOrder) + ' vereist per maand', 'Actie nodig')}
       ${checkItem(true, 'Academy certificering', 'Wax Professional certificering', null)}
       ${checkItem(false, 'Kwaliteitsinspectie', 'Nog niet gepland', null)}
-      ${checkItem(isLive, 'Contractstatus', (ft.contractduur || ft.contractDuur || '5 jaar, verlengbaar'), null)}
+      ${checkItem(isLive, 'Contractstatus', ftContractDuur, null)}
     </div>
 
     <div class="mt-6 bg-gray-50 rounded-xl p-5 border border-gray-100">
       <h4 class="text-xs font-bold text-gray-500 uppercase mb-3">Franchise Voorwaarden</h4>
       <div class="grid grid-cols-2 gap-3 text-sm">
         <div class="flex justify-between"><span class="text-gray-600">💶 Onboarding fee</span><span class="font-medium">${fe(ftOnboarding2)} (eenmalig)</span></div>
-        <div class="flex justify-between"><span class="text-gray-600">📊 Royalty</span><span class="font-medium">${ft.royalty || '5% (6% boven €120k)'}</span></div>
-        <div class="flex justify-between"><span class="text-gray-600">📅 Contractduur</span><span class="font-medium">${ft.contractduur || ft.contractDuur || '5 jaar'}</span></div>
-        <div class="flex justify-between"><span class="text-gray-600">🏗️ Studio investering</span><span class="font-medium">${ft.studioInvestering || '€60.000-75.000'}</span></div>
+        <div class="flex justify-between"><span class="text-gray-600">📊 Royalty</span><span class="font-medium">${ftRoyaltyPct2}% (${ftRoyaltyHigh2}% boven ${fe(ftRoyaltyThreshold2)})</span></div>
+        <div class="flex justify-between"><span class="text-gray-600">📅 Contractduur</span><span class="font-medium">${ftContractDuur}</span></div>
+        <div class="flex justify-between"><span class="text-gray-600">🏗️ Studio investering</span><span class="font-medium">${fe(ftInvestMin)}-${fe(ftInvestMax)}</span></div>
         <div class="flex justify-between"><span class="text-gray-600">📦 Min. bestelling</span><span class="font-medium">${fe(ftMinOrder)}/maand</span></div>
         <div class="flex justify-between"><span class="text-gray-600">🌍 Territorium</span><span class="font-medium">${ft.territoriaal || 'Exclusieve radius'}</span></div>
       </div>

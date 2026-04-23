@@ -1,8 +1,8 @@
 {
   "revenueStreams": [
     { "id": "rs1a", "naam": "Workshops", "type": "workshop", "beschrijving": "Korte hands-on sessies (3-4 uur) over specifieke wax-technieken. Laagdrempelig, open inschrijving.", "model": "Per deelnemer", "prijsGemiddeld": 350, "marge": 85 },
-    { "id": "rs1b", "naam": "Online Trainingen", "type": "online", "beschrijving": "Zelfstandig te volgen online modules met video, theorie en quizzen. Certificaat per module.", "model": "Per student", "prijsGemiddeld": 750, "marge": 90 },
-    { "id": "rs1c", "naam": "Academy", "type": "academy", "beschrijving": "Uitgebreid in-person certificeringsprogramma over meerdere weken. Vereist ervaring, franchise-ready.", "model": "Per student", "prijsGemiddeld": 3500, "marge": 91 },
+    { "id": "rs1b", "naam": "Online Trainingen", "type": "online", "beschrijving": "Zelfstandig te volgen online modules met video, theorie en quizzen. Certificaat per module.", "model": "Per student", "prijsGemiddeld": 1000, "marge": 90 },
+    { "id": "rs1c", "naam": "Academy", "type": "academy", "beschrijving": "Intensief in-person certificeringsprogramma (10 dagen). Voor ervaren waxers, interne medewerkers en aankomende Friendchisees.", "model": "Per student", "prijsGemiddeld": 4000, "marge": 91 },
     { "id": "rs2", "naam": "Não Productlijn", "type": "producten", "beschrijving": "Eigen cosmeticalijn: wax (wholesale) + aftercare (wholesale + DTC webshop)", "model": "Wholesale + DTC", "margeWholesale": 43, "margeRetail": 71 },
     { "id": "rs3", "naam": "Friendchise", "type": "franchise", "beschrijving": "Full-brand franchise studio met exclusief territorium, training en begeleiding", "model": "Onboarding fee + royalty", "onboardingFee": 15000, "royaltyPct": 5, "royaltyPctHoog": 6, "royaltyDrempel": 120000 },
     { "id": "rs4", "naam": "DTC Webshop", "type": "dtc", "beschrijving": "Directe consumentenverkoop van Não producten via waxaffairs.de", "model": "E-commerce", "marge": 70 }
@@ -15,10 +15,49 @@
     { "jaar": 2030, "omzet": 2010000, "academy": 1080000, "producten": 480000, "franchiseFees": 60000, "royalties": 390000, "kosten": 860000, "locaties": 24, "studenten": 480 }
   ],
   "startupBudget": {
-    "branding": 0, "technologie": 400, "juridisch": 0, "productvoorraad": 4000, "marketing": 1500, "totaalMin": 4300, "totaalMax": 7500
+    "items": [
+      { "id": "sb1", "label": "Branding", "beschrijving": "AI-tools + eigen design, geen bureau", "min": 0, "max": 0 },
+      { "id": "sb2", "label": "Technologie", "beschrijving": "Shopify + Calendly + LMS (eerste jaar)", "min": 300, "max": 500 },
+      { "id": "sb3", "label": "Juridisch", "beschrijving": "Fase 1: geen BV-oprichting nodig", "min": 0, "max": 0 },
+      { "id": "sb4", "label": "Productvoorraad", "beschrijving": "NAO + wax buffer voor eerste orders", "min": 3000, "max": 5000 },
+      { "id": "sb5", "label": "Marketing", "beschrijving": "Organic content + eerste test-ads", "min": 1000, "max": 2000 }
+    ]
   },
   "franchiseTerms": {
-    "onboardingFee": 15000, "royalty": "5% (6% boven €120k)", "contractduur": "5 jaar, verlengbaar", "territoriaal": "Exclusieve radius", "studioInvestering": "€60.000-75.000", "minOrder": 200
+    "onboardingFee": 15000,
+    "royaltyPct": 5,
+    "royaltyHighPct": 6,
+    "royaltyThreshold": 120000,
+    "contractDuur": "5 jaar, verlengbaar",
+    "territoriaal": "Exclusieve radius",
+    "investMin": 45000,
+    "investMax": 75000,
+    "minBestelling": 200
+  },
+  "startupInvestering": {
+    "onboardingFee": 15000,
+    "studioFitOutMin": 30000,
+    "studioFitOutMax": 60000,
+    "werkkapitaalMnd": 3,
+    "totaalMin": 45000,
+    "totaalMax": 75000
+  },
+  "studioBenchmarks": {
+    "avgRevenuePerCabin": 120000,
+    "avgTicket": 40,
+    "staffCount": 2,
+    "hoursPerDay": 6
+  },
+  "studioPL": {
+    "omzet": 126000,
+    "personeel": 34000,
+    "huurMin": 12000,
+    "huurMax": 18000,
+    "inkoopProducten": 8000,
+    "royaltyPct": 5,
+    "marketingOverig": 7000,
+    "ebitda": 52700,
+    "ebitdaMargePct": 42
   },
   "team": [
     { "naam": "Simone Costa", "rol": "CEO & Head Trainer", "land": "Duitsland", "beschrijving": "20 jaar waxing expertise. Brand, Academy, kwaliteitsstandaarden." },
@@ -29,5 +68,65 @@
     "studioMaandTarget": 10000,
     "totaalJaarTarget2026": 401000,
     "royaltyDrempel": 120000
-  }
+  },
+  "legalFases": [
+    { "id": "lf1", "label": "Fase 1 — Nu", "kleur": "green", "trigger": "", "titel": "Opereren onder Simone's Duitse bedrijf", "omschrijving": "50/50 partner agreement, geen setup-kosten. Werkt tot de eerste Friendchisees tekenen." },
+    { "id": "lf2", "label": "Fase 2 — Mid 2027", "kleur": "blue", "trigger": "2 Friendchisees getekend + 1 Academy-cohort afgerond", "titel": "Nederlandse BV + Duitse GmbH", "omschrijving": "NL BV (50/50) houdt alle IP (merk, formules, SOPs) en valt onder Innovation Box (9% op IP). Duitse GmbH (100% dochter) doet de operatie." },
+    { "id": "lf3", "label": "Fase 3 — 2029+", "kleur": "purple", "trigger": "10+ live locaties en stabiele cashflow", "titel": "Vastgoed onder eigen beheer", "omschrijving": "Studios kopen en verhuren aan Friendchisees — vierde, minder volatiele inkomstenstroom en extra zekerheid voor partners." }
+  ],
+  "legalPunten": [
+    { "id": "lp1", "type": "warning", "icon": "⚠️", "titel": "Feitelijke leiding risico", "omschrijving": "Simone woont in DE. Board meetings formeel in NL houden om belastingrisico te vermijden." },
+    { "id": "lp2", "type": "info", "icon": "📋", "titel": "EUIPO trademark", "omschrijving": "EU-brede merkbescherming aanvragen zodra de BV staat." },
+    { "id": "lp3", "type": "ok", "icon": "✅", "titel": "Franchise wet", "omschrijving": "NL: wettelijk verankerd (NFC 2021). DE: alleen via BGB — contract is leidend." }
+  ],
+  "marketingStrategie": [
+    { "id": "ms1", "titel": "Founder-led Content", "omschrijving": "Simone's persoonlijke verhaal en 20 jaar expertise op Instagram en TikTok. Geen reclame-praatjes, wel echte inkijk in salon en Academy." },
+    { "id": "ms2", "titel": "Meta & Instagram Ads", "omschrijving": "Twee scherp afgebakende doelgroepen: ervaren waxers die eigen baas willen worden, en ondernemers die een bewezen concept zoeken." },
+    { "id": "ms3", "titel": "SEO & Blog", "omschrijving": "Long-form content (\"hoe start ik een wax-studio\") vangt mensen in de onderzoeksfase — lage CAC, lange levensduur." },
+    { "id": "ms4", "titel": "Partner Referral", "omschrijving": "Academy-graduates krijgen een bonus als zij een nieuwe Friendchisee aandragen — het netwerk werkt voor zichzelf." }
+  ],
+  "techStack": [
+    { "id": "ts1", "naam": "Booking", "tool": "Calendly", "kostenJaarMin": 180, "kostenJaarMax": 180 },
+    { "id": "ts2", "naam": "Webshop", "tool": "Shopify Starter", "kostenJaarMin": 360, "kostenJaarMax": 360 },
+    { "id": "ts3", "naam": "LMS (Academy online)", "tool": "Teachable", "kostenJaarMin": 600, "kostenJaarMax": 1200 },
+    { "id": "ts4", "naam": "Boekhouding", "tool": "Lexware", "kostenJaarMin": 240, "kostenJaarMax": 240 },
+    { "id": "ts5", "naam": "E-mail marketing", "tool": "Mailchimp (free tier)", "kostenJaarMin": 0, "kostenJaarMax": 0 }
+  ],
+  "marketingBudget": [
+    { "jaar": 2026, "bedrag": 2500, "focus": "Organic foundation" },
+    { "jaar": 2027, "bedrag": 10000, "focus": "Eerste paid campaigns" },
+    { "jaar": 2028, "bedrag": 20000, "focus": "Schalen in DE + NL" },
+    { "jaar": 2029, "bedrag": 35000, "focus": "Internationale expansie" },
+    { "jaar": 2030, "bedrag": 50000, "focus": "Volle schaal, B2C + B2B" }
+  ],
+  "risicos": [
+    { "id": "r1", "impact": "hoog", "titel": "Partner non-compliance", "mitigatie": "Verplichte certificering, maandelijkse audits, mystery shoppers en een schorsingsclausule in elk contract." },
+    { "id": "r2", "impact": "hoog", "titel": "Feitelijke leiding (DE belastingrisico)", "mitigatie": "Simone woont in DE, BV zit in NL. Board meetings formeel in NL, Narin als primaire directeur, formele tax opinion als extra borging." },
+    { "id": "r3", "impact": "medium", "titel": "Supply chain (wax & creams)", "mitigatie": "Dubbele leveranciers (Epifutur + Clover als backup), 3 maanden buffervoorraad, langetermijn prijsafspraken." },
+    { "id": "r4", "impact": "medium", "titel": "Cashflow timing", "mitigatie": "3-6 maanden reserve aanhouden. Academy draait 90%+ marge en fungeert als snelle cash engine om pieken op te vangen." },
+    { "id": "r5", "impact": "medium", "titel": "Key person dependency (Simone)", "mitigatie": "Curriculum volledig documenteren, co-trainer opleiden tegen eind 2026, SOPs reproducibel maken." }
+  ],
+  "kpis": [
+    { "id": "k1", "kpi": "Academy inschrijvingen + conversie lead→betaald", "frequentie": "Maandelijks" },
+    { "id": "k2", "kpi": "Product DTC omzet + gemiddelde orderwaarde", "frequentie": "Maandelijks" },
+    { "id": "k3", "kpi": "Friendchise pipeline: leads / termsheets / getekend / open", "frequentie": "Wekelijks" },
+    { "id": "k4", "kpi": "Bruto marge per revenue stream", "frequentie": "Kwartaal" },
+    { "id": "k5", "kpi": "CAC en LTV per marketingkanaal", "frequentie": "Kwartaal" },
+    { "id": "k6", "kpi": "Netto cash-positie + runway (maanden)", "frequentie": "Maandelijks" }
+  ],
+  "marktOmvang": [
+    { "id": "mo1", "label": "Globale hair removal markt", "waarde": "~$12B", "detail": "CAGR 5-6%", "kleur": "wax" },
+    { "id": "mo2", "label": "Duitsland waxing (top steden)", "waarde": "€250M-€1B", "detail": "jaarlijks adresseerbaar", "kleur": "gray" }
+  ],
+  "concurrenten": [
+    { "id": "c1", "naam": "Wax in the City", "regio": "DE", "omschrijving": "Sterk merk, maar geen training pipeline en geen structurele franchise-expansie." },
+    { "id": "c2", "naam": "European Wax Center", "regio": "USA", "omschrijving": "Bewezen franchise-model met membership, maar US-kostenstructuur en niet in Europa actief." },
+    { "id": "c3", "naam": "Lokale independents", "regio": "Overal", "omschrijving": "Lage prijs, maar inconsistente kwaliteit, geen training en geen merkbeleving." }
+  ],
+  "moat": [
+    { "id": "m1", "icon": "🎓", "titel": "Academy Pipeline", "omschrijving": "Gecertificeerde talent-pipeline — wie bij ons leert, kent onze standaard.", "kleur": "wax" },
+    { "id": "m2", "icon": "🧴", "titel": "NAO Producten", "omschrijving": "Exclusieve productlijn = verplichte wholesale = recurring revenue.", "kleur": "terra" },
+    { "id": "m3", "icon": "🏛️", "titel": "NL BV + IP", "omschrijving": "Innovation Box (9% op IP) + EU-trademark = structureel fiscaal en juridisch voordeel.", "kleur": "blue" },
+    { "id": "m4", "icon": "💡", "titel": "Lean HQ", "omschrijving": "Asset-light model, snel winstgevend, geen dure infrastructuur.", "kleur": "green" }
+  ]
 }

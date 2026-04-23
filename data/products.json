@@ -13,16 +13,56 @@
     "inhoud": "1 kg",
     "beschrijving": "Professionele natuurlijke ontharingswax voor gebruik in de salon. Premium formule met 10 hoogwaardige ingredienten, ontwikkeld met Portugese pijnhars als basis. Geschikt voor alle lichaamsdelen inclusief gevoelige zones.",
     "ingredienten": [
-      { "inci": "Glyceryl Hydrogenated Rosinate", "percentage": 50, "rol": "Pijnhars basis - hoofdingrediënt, geproduceerd in Portugal door PinoPine" },
-      { "inci": "Cera Alba (Organic Beeswax)", "percentage": 12, "rol": "Geeft body en textuur aan de wax" },
-      { "inci": "Colophonium (Extra Light Natural Resin)", "percentage": 10, "rol": "Verbetert hechting aan haar" },
-      { "inci": "Simmondsia Chinensis Seed Oil (Jojoba)", "percentage": 8, "rol": "Voedt en conditioneert de huid" },
-      { "inci": "Euphorbia Cerifera Cera (Candelilla Wax)", "percentage": 6, "rol": "Vegan wax - stabiliseert textuur" },
-      { "inci": "Oryza Sativa Cera (Rice Bran Wax)", "percentage": 5, "rol": "Verzacht en maakt de formule gladder" },
-      { "inci": "Chamomilla Recutita Flower Extract (Macerated Oil)", "percentage": 4, "rol": "Ontstekingsremmend - kalmeert de huid" },
-      { "inci": "Vitis Vinifera Seed Oil (Grapeseed)", "percentage": 3, "rol": "Lichte basisolie - huidverzorgend" },
-      { "inci": "Tocopherol (Vitamin E)", "percentage": 1.5, "rol": "Antioxidant - beschermt de formule" },
-      { "inci": "Bisabolol (Natural)", "percentage": 0.5, "rol": "Kalmerend - vermindert roodheid na waxen" }
+      {
+        "inci": "Glyceryl Hydrogenated Rosinate",
+        "percentage": 50,
+        "rol": "Pijnhars basis - hoofdingrediënt, geproduceerd in Portugal door PinoPine"
+      },
+      {
+        "inci": "Cera Alba (Organic Beeswax)",
+        "percentage": 12,
+        "rol": "Geeft body en textuur aan de wax"
+      },
+      {
+        "inci": "Colophonium (Extra Light Natural Resin)",
+        "percentage": 10,
+        "rol": "Verbetert hechting aan haar"
+      },
+      {
+        "inci": "Simmondsia Chinensis Seed Oil (Jojoba)",
+        "percentage": 8,
+        "rol": "Voedt en conditioneert de huid"
+      },
+      {
+        "inci": "Euphorbia Cerifera Cera (Candelilla Wax)",
+        "percentage": 6,
+        "rol": "Vegan wax - stabiliseert textuur"
+      },
+      {
+        "inci": "Oryza Sativa Cera (Rice Bran Wax)",
+        "percentage": 5,
+        "rol": "Verzacht en maakt de formule gladder"
+      },
+      {
+        "inci": "Chamomilla Recutita Flower Extract (Macerated Oil)",
+        "percentage": 4,
+        "rol": "Ontstekingsremmend - kalmeert de huid"
+      },
+      {
+        "inci": "Vitis Vinifera Seed Oil (Grapeseed)",
+        "percentage": 3,
+        "rol": "Lichte basisolie - huidverzorgend"
+      },
+      {
+        "inci": "Tocopherol (Vitamin E)",
+        "percentage": 1.5,
+        "rol": "Antioxidant - beschermt de formule"
+      },
+      {
+        "inci": "Bisabolol (Natural)",
+        "percentage": 0.5,
+        "rol": "Kalmerend - vermindert roodheid na waxen"
+      }
     ],
     "gebruik": "Verwarm de wax in een professionele wax heater tot de juiste werktemperatuur. Breng aan in de haargroeirichting met een spatel. Laat kort uitharden en verwijder met een snelle beweging tegen de haargroeirichting in.",
     "verkoopargumenten": [
@@ -35,7 +75,10 @@
     ],
     "verpakking": "Professionele verpakking per kg voor salongebruik",
     "productie": "Portugal (Epifutur, Leiria)",
-    "certificering": "EU Safety Assessment vereist (CPSR via CTL)"
+    "certificering": "EU Safety Assessment vereist (CPSR via CTL)",
+    "certificeringStatus": "needed",
+    "certificeringKostenMin": 550,
+    "certificeringKostenMax": 750
   },
   {
     "id": "nao-wax-001b",
@@ -51,15 +94,51 @@
     "inhoud": "1 kg",
     "beschrijving": "Economische variant van de natuurlijke ontharingswax, speciaal ontworpen voor grotere lichaamsdelen zoals benen. 100% vegan formule met carnauba wax in plaats van bijenwas. Circa 40% lagere kostprijs met behoud van kwaliteit.",
     "ingredienten": [
-      { "inci": "Glyceryl Hydrogenated Rosinate", "percentage": 50, "rol": "Pijnhars basis - hoofdingrediënt" },
-      { "inci": "Copernicia Cerifera Cera (Carnauba Wax)", "percentage": 12, "rol": "100% vegan vervanging voor bijenwas" },
-      { "inci": "Colophonium (Extra Light Natural Resin)", "percentage": 10, "rol": "Verbetert hechting aan haar" },
-      { "inci": "Helianthus Annuus Seed Oil (High Oleic Sunflower)", "percentage": 8, "rol": "Voedende olie - vervangt jojoba" },
-      { "inci": "Euphorbia Cerifera Cera (Candelilla Wax)", "percentage": 6, "rol": "Vegan wax - stabiliseert textuur" },
-      { "inci": "Oryza Sativa Cera (Rice Bran Wax)", "percentage": 5, "rol": "Verzacht en maakt de formule gladder" },
-      { "inci": "Aloe Barbadensis Leaf Powder", "percentage": 4, "rol": "Kalmerend en hydraterend" },
-      { "inci": "Vitis Vinifera Seed Oil (Grapeseed)", "percentage": 3, "rol": "Lichte basisolie - huidverzorgend" },
-      { "inci": "Tocopherol (Vitamin E)", "percentage": 2, "rol": "Antioxidant - beschermt de formule" }
+      {
+        "inci": "Glyceryl Hydrogenated Rosinate",
+        "percentage": 50,
+        "rol": "Pijnhars basis - hoofdingrediënt"
+      },
+      {
+        "inci": "Copernicia Cerifera Cera (Carnauba Wax)",
+        "percentage": 12,
+        "rol": "100% vegan vervanging voor bijenwas"
+      },
+      {
+        "inci": "Colophonium (Extra Light Natural Resin)",
+        "percentage": 10,
+        "rol": "Verbetert hechting aan haar"
+      },
+      {
+        "inci": "Helianthus Annuus Seed Oil (High Oleic Sunflower)",
+        "percentage": 8,
+        "rol": "Voedende olie - vervangt jojoba"
+      },
+      {
+        "inci": "Euphorbia Cerifera Cera (Candelilla Wax)",
+        "percentage": 6,
+        "rol": "Vegan wax - stabiliseert textuur"
+      },
+      {
+        "inci": "Oryza Sativa Cera (Rice Bran Wax)",
+        "percentage": 5,
+        "rol": "Verzacht en maakt de formule gladder"
+      },
+      {
+        "inci": "Aloe Barbadensis Leaf Powder",
+        "percentage": 4,
+        "rol": "Kalmerend en hydraterend"
+      },
+      {
+        "inci": "Vitis Vinifera Seed Oil (Grapeseed)",
+        "percentage": 3,
+        "rol": "Lichte basisolie - huidverzorgend"
+      },
+      {
+        "inci": "Tocopherol (Vitamin E)",
+        "percentage": 2,
+        "rol": "Antioxidant - beschermt de formule"
+      }
     ],
     "gebruik": "Verwarm de wax in een professionele wax heater tot de juiste werktemperatuur. Ideaal voor grote lichaamsdelen (benen, rug, armen). Breng aan in de haargroeirichting met een spatel. Laat kort uitharden en verwijder snel.",
     "verkoopargumenten": [
@@ -72,7 +151,10 @@
     ],
     "verpakking": "Professionele verpakking per kg voor salongebruik",
     "productie": "Portugal (Epifutur, Leiria)",
-    "certificering": "EU Safety Assessment vereist (CPSR via CTL)"
+    "certificering": "EU Safety Assessment vereist (CPSR via CTL)",
+    "certificeringStatus": "needed",
+    "certificeringKostenMin": 550,
+    "certificeringKostenMax": 750
   },
   {
     "id": "nao-scrub-002",
@@ -88,19 +170,71 @@
     "inhoud": "200g",
     "beschrijving": "Natuurlijke suikerscrub voor lichaamsverzorging, speciaal ontwikkeld voor gebruik na ontharing. Exfolieert dode huidcellen, voorkomt ingegroeide haartjes en laat de huid zijdezacht achter. 13 natuurlijke ingrediënten in een duurzame tarwestro verpakking.",
     "ingredienten": [
-      { "inci": "Sucrose", "percentage": null, "rol": "Natuurlijke suiker - hoofd-exfoliant" },
-      { "inci": "Cocos Nucifera Oil", "percentage": null, "rol": "Kokosolie - hydrateert en verzacht" },
-      { "inci": "Prunus Amygdalus Dulcis Oil", "percentage": null, "rol": "Zoete amandelolie - voedende basisolie" },
-      { "inci": "Olea Europaea Fruit Oil", "percentage": null, "rol": "Olijfolie - regenererend en beschermend" },
-      { "inci": "Rosmarinus Officinalis Leaf Powder", "percentage": null, "rol": "Rozemarijnpoeder - antioxidant en textuur" },
-      { "inci": "Citrus Aurantium Dulcis Peel Oil", "percentage": null, "rol": "Zoete sinaasappel essentiële olie - geur en verhelderend" },
-      { "inci": "Glycine Soja Oil", "percentage": null, "rol": "Sojaolie - huidverzorgend" },
-      { "inci": "Tocopherol", "percentage": null, "rol": "Vitamine E - natuurlijk conserveermiddel" },
-      { "inci": "Beta-Sitosterol", "percentage": null, "rol": "Plantsterol - ontstekingsremmend" },
-      { "inci": "Squalene", "percentage": null, "rol": "Huidherstellend - diep hydraterend" },
-      { "inci": "Limonene", "percentage": null, "rol": "Natuurlijk geurcomponent" },
-      { "inci": "Linalool", "percentage": null, "rol": "Natuurlijk geurcomponent" },
-      { "inci": "Citral", "percentage": null, "rol": "Natuurlijk geurcomponent" }
+      {
+        "inci": "Sucrose",
+        "percentage": null,
+        "rol": "Natuurlijke suiker - hoofd-exfoliant"
+      },
+      {
+        "inci": "Cocos Nucifera Oil",
+        "percentage": null,
+        "rol": "Kokosolie - hydrateert en verzacht"
+      },
+      {
+        "inci": "Prunus Amygdalus Dulcis Oil",
+        "percentage": null,
+        "rol": "Zoete amandelolie - voedende basisolie"
+      },
+      {
+        "inci": "Olea Europaea Fruit Oil",
+        "percentage": null,
+        "rol": "Olijfolie - regenererend en beschermend"
+      },
+      {
+        "inci": "Rosmarinus Officinalis Leaf Powder",
+        "percentage": null,
+        "rol": "Rozemarijnpoeder - antioxidant en textuur"
+      },
+      {
+        "inci": "Citrus Aurantium Dulcis Peel Oil",
+        "percentage": null,
+        "rol": "Zoete sinaasappel essentiële olie - geur en verhelderend"
+      },
+      {
+        "inci": "Glycine Soja Oil",
+        "percentage": null,
+        "rol": "Sojaolie - huidverzorgend"
+      },
+      {
+        "inci": "Tocopherol",
+        "percentage": null,
+        "rol": "Vitamine E - natuurlijk conserveermiddel"
+      },
+      {
+        "inci": "Beta-Sitosterol",
+        "percentage": null,
+        "rol": "Plantsterol - ontstekingsremmend"
+      },
+      {
+        "inci": "Squalene",
+        "percentage": null,
+        "rol": "Huidherstellend - diep hydraterend"
+      },
+      {
+        "inci": "Limonene",
+        "percentage": null,
+        "rol": "Natuurlijk geurcomponent"
+      },
+      {
+        "inci": "Linalool",
+        "percentage": null,
+        "rol": "Natuurlijk geurcomponent"
+      },
+      {
+        "inci": "Citral",
+        "percentage": null,
+        "rol": "Natuurlijk geurcomponent"
+      }
     ],
     "gebruik": "Gebruik 2-3 dagen na de waxbehandeling om ingegroeide haartjes te voorkomen. Breng de scrub aan op een vochtige huid en masseer in cirkelvormige bewegingen. Spoel af met lauw water. Gebruik 2-3x per week voor optimaal resultaat.",
     "verkoopargumenten": [
@@ -114,7 +248,8 @@
     ],
     "verpakking": "Tarwestro pot (200g) met bamboe deksel en kraft papier label. Biologisch afbreekbaar.",
     "productie": "Polen (voorheen Spanje - La Fabrica Artigianale)",
-    "certificering": "Volledig EU-gecertificeerd. Safety Assessment afgerond, CPNP geregistreerd."
+    "certificering": "Volledig EU-gecertificeerd. Safety Assessment afgerond, CPNP geregistreerd.",
+    "certificeringStatus": "done"
   },
   {
     "id": "nao-oil-003",
@@ -142,7 +277,10 @@
     ],
     "verpakking": "Frosted glass fles (200ml) met bamboe pomp en kraft papier label. Het kraft label biedt extra UV-bescherming (~60% coverage).",
     "productie": "Wordt bepaald",
-    "certificering": "EU-certificering vereist"
+    "certificering": "EU-certificering vereist",
+    "certificeringStatus": "needed",
+    "certificeringKostenMin": 300,
+    "certificeringKostenMax": 550
   },
   {
     "id": "nao-spray-004",
@@ -158,10 +296,26 @@
     "inhoud": "100ml",
     "beschrijving": "Kalmerende lavendelhydrosol spray voor na de ontharing. Vermindert roodheid, kalmeert de huid en verfrissend. Kan ook als gezichtstoner of kalmerende mist worden gebruikt. Slechts 4 natuurlijke ingrediënten - het puurste product in de lijn.",
     "ingredienten": [
-      { "inci": "Lavandula Angustifolia Flower Water", "percentage": 98.5, "rol": "Lavendel hydrosol - kalmeert, verzacht en verfrist de huid" },
-      { "inci": "Sodium Levulinate", "percentage": 0.7, "rol": "Natuurlijk conserveermiddel (uit maïs), COSMOS/ECOCERT goedgekeurd" },
-      { "inci": "Sodium Anisate", "percentage": 0.5, "rol": "Natuurlijk conserveermiddel (uit anijs), COSMOS goedgekeurd" },
-      { "inci": "Glycerin (Vegetable)", "percentage": 0.3, "rol": "Hydrateert en verzacht de huid" }
+      {
+        "inci": "Lavandula Angustifolia Flower Water",
+        "percentage": 98.5,
+        "rol": "Lavendel hydrosol - kalmeert, verzacht en verfrist de huid"
+      },
+      {
+        "inci": "Sodium Levulinate",
+        "percentage": 0.7,
+        "rol": "Natuurlijk conserveermiddel (uit maïs), COSMOS/ECOCERT goedgekeurd"
+      },
+      {
+        "inci": "Sodium Anisate",
+        "percentage": 0.5,
+        "rol": "Natuurlijk conserveermiddel (uit anijs), COSMOS goedgekeurd"
+      },
+      {
+        "inci": "Glycerin (Vegetable)",
+        "percentage": 0.3,
+        "rol": "Hydrateert en verzacht de huid"
+      }
     ],
     "gebruik": "Na de waxbehandeling: spray op een afstand van 15-20cm op de behandelde huid. Laat intrekken, niet afspoelen. Ook te gebruiken als dagelijkse gezichtstoner of kalmerende mist. Bewaren op een koele, donkere plaats.",
     "verkoopargumenten": [
@@ -175,7 +329,10 @@
     ],
     "verpakking": "Frosted glass fles (100ml) met fijne mist bamboe spray top en kraft papier label.",
     "productie": "Polen (NISHA/Clover). Grondstof: Franse biologische lavendel hydrosol (Nature In Bottle).",
-    "certificering": "EU-certificering vereist. Kosten: 400-650 EUR. Goedkoopste product om te certificeren. pH moet 5.0-5.5 zijn per batch."
+    "certificering": "EU-certificering vereist. Kosten: 400-650 EUR. Goedkoopste product om te certificeren. pH moet 5.0-5.5 zijn per batch.",
+    "certificeringStatus": "needed",
+    "certificeringKostenMin": 250,
+    "certificeringKostenMax": 400
   },
   {
     "id": "nao-powder-005",
@@ -191,10 +348,26 @@
     "inhoud": "100g",
     "beschrijving": "100% natuurlijk pre-depilatory poeder dat voor de waxbehandeling op de huid wordt aangebracht. Absorbeert vocht, kalmeert de huid en zorgt voor optimale hechting van de wax. Vrij van talk, parabenen en chemicaliën.",
     "ingredienten": [
-      { "inci": "Micronised Dolomite", "percentage": 50, "rol": "Natuurlijk mineraal - kalmeert en remineraliseert de huid" },
-      { "inci": "Maranta Arundinacea Root Powder (Arrowroot)", "percentage": 25, "rol": "Natuurlijk plantaardig - verzacht en verfrist" },
-      { "inci": "Kaolin (White Clay)", "percentage": 15, "rol": "Natuurlijke klei - absorbeert vocht" },
-      { "inci": "Avena Sativa Kernel Flour (Colloidal Oat)", "percentage": 10, "rol": "Natuurlijk ontstekingsremmend - voor gevoelige huid" }
+      {
+        "inci": "Micronised Dolomite",
+        "percentage": 50,
+        "rol": "Natuurlijk mineraal - kalmeert en remineraliseert de huid"
+      },
+      {
+        "inci": "Maranta Arundinacea Root Powder (Arrowroot)",
+        "percentage": 25,
+        "rol": "Natuurlijk plantaardig - verzacht en verfrist"
+      },
+      {
+        "inci": "Kaolin (White Clay)",
+        "percentage": 15,
+        "rol": "Natuurlijke klei - absorbeert vocht"
+      },
+      {
+        "inci": "Avena Sativa Kernel Flour (Colloidal Oat)",
+        "percentage": 10,
+        "rol": "Natuurlijk ontstekingsremmend - voor gevoelige huid"
+      }
     ],
     "gebruik": "Breng voor de waxbehandeling een dun laagje poeder aan op de te behandelen huid. Het poeder absorbeert overtollig vocht en olie, waardoor de wax beter hecht aan het haar en niet aan de huid. Gebruik de draaibare sifter dop voor gecontroleerde dosering.",
     "verkoopargumenten": [
@@ -209,7 +382,10 @@
     ],
     "verpakking": "Tarwestro pot (100g) met draaibare sifter insert (gaatjes 0.8-1.2mm) en bamboe deksel. Kraft papier label.",
     "productie": "Polen (NISHA Manufacturing / Clover Cosmetics)",
-    "certificering": "EU-certificering vereist. Kosten: 250-350 EUR. Safety Assessment 150 EUR (4 ingrediënten = goedkoopste categorie)."
+    "certificering": "EU-certificering vereist. Kosten: 250-350 EUR. Safety Assessment 150 EUR (4 ingrediënten = goedkoopste categorie).",
+    "certificeringStatus": "needed",
+    "certificeringKostenMin": 250,
+    "certificeringKostenMax": 350
   },
   {
     "id": "nao-cream-006",
@@ -232,6 +408,9 @@
     ],
     "verpakking": "Nog te bepalen",
     "productie": "Nog te bepalen",
-    "certificering": "Nog te bepalen"
+    "certificering": "Nog te bepalen",
+    "certificeringStatus": "needed",
+    "certificeringKostenMin": 300,
+    "certificeringKostenMax": 550
   }
 ]
