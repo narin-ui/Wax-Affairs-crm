@@ -45,6 +45,17 @@
     "totaalMin": 32000,
     "totaalMax": 72000
   },
+  "studioFitOut": {
+    "items": [
+      { "id": "fo1", "label": "Huurborg", "beschrijving": "3 maanden huur als zekerheid — teruggekregen aan het einde van de huur", "min": 3000, "max": 5000 },
+      { "id": "fo2", "label": "Verbouwing & inrichting", "beschrijving": "Schilderwerk, vloeren, wanden, afwerking — laag bij overname bestaande beauty-ruimte, hoog bij nieuwbouw", "min": 8000, "max": 20000 },
+      { "id": "fo3", "label": "Apparatuur", "beschrijving": "Professionele wax-warmer, behandeltafel, sterilisator, lampen, behandelwagen", "min": 3000, "max": 7000 },
+      { "id": "fo4", "label": "Meubilair", "beschrijving": "Receptie-balie, wachtruimte, klantkasten, spiegels, opslag voor NAO-voorraad", "min": 2000, "max": 5000 },
+      { "id": "fo5", "label": "Branding & signage", "beschrijving": "Buitenreclame, gevelbelettering, drukwerk, visitekaartjes — conform Wax Affairs huisstijl", "min": 1000, "max": 3000 },
+      { "id": "fo6", "label": "Initiële NAO-voorraad", "beschrijving": "Extra wax + aftercare voor de eerste weken, bovenop de starterskit in core", "min": 2000, "max": 3000 },
+      { "id": "fo7", "label": "Reserve / onvoorzien", "beschrijving": "Buffer voor kleine onverwachte posten tijdens verbouwing en opening", "min": 1000, "max": 2000 }
+    ]
+  },
   "onboardingPakket": {
     "coreBedrag": 12000,
     "coreLabel": "Core — iedereen",
