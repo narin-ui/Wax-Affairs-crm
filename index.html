@@ -6773,22 +6773,57 @@ const BP_SECTIES = [
       const maandKlanten = avgTicket ? Math.round(plOmzet / avgTicket / 12) : 0;
       const paybackMnd = plEbitda > 0 ? Math.round((onboardingFee + (fitOutMin+fitOutMax)/2) / plEbitda * 12) : null;
 
-      // Product-afname scenario's (1/2/3 cabines)
-      const waxProduct = (data.products||[]).find(p => p.id === 'nao-wax-001') || { wholesalePrijs: 12 };
-      const waxPrijsPerKg = waxProduct.wholesalePrijs || 12;
-      const aftercareAvgWholesale = 10;
+      // ── Product-afname model ──
+      // Per product: in-studio verbruik per behandeling + aandeel in retail-verkoop (som retailShares = 1.0).
+      // inStudioPerBehG: wax gebruikt tijdens behandeling (g)
+      // inStudioPerBehMl: aftercare toegepast tijdens behandeling (ml)
+      // inhoudG / inhoudMl: wat er in 1 verpakking zit
+      // retailShare: % van alle retail-verkopen dat dit product is
+      const productGebruik = {
+        'nao-wax-001':    { inStudioPerBehG: 35,   inhoudG: 1000, retailShare: 0    }, // Premium wax, in-studio
+        'nao-wax-001b':   { inStudioPerBehG: 0,    inhoudG: 1000, retailShare: 0    }, // Economic — alternatief, niet standaard
+        'nao-powder-005': { inStudioPerBehG: 1,    inhoudG: 100,  retailShare: 0.08 }, // Pre-depilatory powder
+        'nao-oil-003':    { inStudioPerBehMl: 2,   inhoudMl: 200, retailShare: 0.20 }, // Post-depilatory oil
+        'nao-spray-004':  { inStudioPerBehMl: 3,   inhoudMl: 100, retailShare: 0.12 }, // Hydrosol spray
+        'nao-scrub-002':  { inhoudG: 200,                         retailShare: 0.20 }, // Body scrub (alleen retail)
+        'nao-cream-006':  {                                       retailShare: 0.40 }  // Aftercare cream (alleen retail, meest gekocht)
+      };
+      const alleProducten = (data.products || []).filter(p => productGebruik[p.id] && p.actief !== false);
+
+      const scenarioPerProduct = (cabines, behandelingen, retailUnitsTotal) => {
+        return alleProducten.map(prod => {
+          const gebruik = productGebruik[prod.id] || {};
+          let inStudioUnits = 0;
+          let inStudioLabel = '';
+          if (gebruik.inStudioPerBehG && gebruik.inhoudG) {
+            const totaalG = behandelingen * gebruik.inStudioPerBehG;
+            inStudioUnits = Math.ceil(totaalG / gebruik.inhoudG);
+            inStudioLabel = `${(totaalG/1000).toFixed(1)} kg (${gebruik.inStudioPerBehG}g/beh)`;
+          } else if (gebruik.inStudioPerBehMl && gebruik.inhoudMl) {
+            const totaalMl = behandelingen * gebruik.inStudioPerBehMl;
+            inStudioUnits = Math.ceil(totaalMl / gebruik.inhoudMl);
+            inStudioLabel = `${(totaalMl/1000).toFixed(1)} L (${gebruik.inStudioPerBehMl}ml/beh)`;
+          }
+          const retailUnits = Math.round(retailUnitsTotal * (gebruik.retailShare || 0));
+          const totaalUnits = inStudioUnits + retailUnits;
+          const wholesaleKosten = totaalUnits * (prod.wholesalePrijs || 0);
+          const retailOmzet = retailUnits * (prod.retailPrijs || 0);
+          return { prod, inStudioUnits, inStudioLabel, retailUnits, totaalUnits, wholesaleKosten, retailOmzet };
+        });
+      };
+
       const scenarioRij = (cabines) => {
         const omzet = plOmzet * cabines;
         const behandelingen = avgTicket ? Math.round(omzet / avgTicket) : 0;
-        const waxKg = Math.round(behandelingen * waxPerBehG / 1000);
-        const waxKosten = waxKg * waxPrijsPerKg;
-        const retailUnits = Math.round(behandelingen * retailConvPct / 100);
-        const retailWholesale = Math.round(retailUnits * aftercareAvgWholesale);
-        const totaalAfname = waxKosten + retailWholesale;
+        const retailUnitsTotal = Math.round(behandelingen * retailConvPct / 100);
+        const perProduct = scenarioPerProduct(cabines, behandelingen, retailUnitsTotal);
+        const totaalAfname = perProduct.reduce((s, x) => s + x.wholesaleKosten, 0);
+        const retailOmzet = perProduct.reduce((s, x) => s + x.retailOmzet, 0);
         const minAfnameJaar = minBestelling * 12;
-        return { cabines, omzet, behandelingen, waxKg, waxKosten, retailUnits, retailWholesale, totaalAfname, boven: totaalAfname >= minAfnameJaar };
+        return { cabines, omzet, behandelingen, retailUnitsTotal, perProduct, totaalAfname, retailOmzet, boven: totaalAfname >= minAfnameJaar };
       };
       const scenarios = [scenarioRij(1), scenarioRij(2), scenarioRij(3)];
+      const perBehProducten = alleProducten.filter(p => productGebruik[p.id].inStudioPerBehG || productGebruik[p.id].inStudioPerBehMl);
 
       const pillar = (icon, titel, door, regels) => `
         <div class="bg-white rounded-xl border border-gray-100 p-5 h-full">
@@ -7066,43 +7101,121 @@ const BP_SECTIES = [
       <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm mt-6">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <h3 class="font-bold text-gray-900 text-lg">Product-afname per scenario</h3>
-            <p class="text-xs text-gray-500 mt-0.5">Hoeveel NAO-producten een studio écht afneemt bij 1, 2 of 3 cabines — berekend uit behandelingen, wax-verbruik en retail-conversie.</p>
+            <h3 class="font-bold text-gray-900 text-lg">Product-afname per scenario${infoIcon('Hoe werkt dit model?', {
+              bron: 'Voor elk NAO-product berekenen we zowel in-studio verbruik (toegepast tijdens behandelingen) als retail-verkoop (meegegeven aan klanten). Het geheel is wat een studio jaarlijks bij HQ inkoopt.',
+              berekening: [
+                ['Behandelingen/jaar', 'Omzet ÷ gem. ticket'],
+                ['In-studio wax', 'Behandelingen × ' + waxPerBehG + 'g'],
+                ['In-studio aftercare', 'Behandelingen × dosering per product'],
+                ['Retail verkoop', 'Behandelingen × ' + retailConvPct + '% koopt iets'],
+                ['Retail mix', 'Cream 40% · Oil 20% · Scrub 20% · Spray 12% · Powder 8%']
+              ],
+              doel: [
+                'Elke cabine draait ~' + (avgTicket ? Math.round(plOmzet/avgTicket) : 0) + ' behandelingen/jaar',
+                'Consistente aftercare-routine per klant (dezelfde producten elke keer)',
+                'Actief retail aanbieden na behandeling (zinnige ~20-30% conversie)'
+              ],
+              extra: 'Alle aannames zijn aanpasbaar via de Bewerken-knoppen.'
+            })}</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Per NAO-product per scenario: wat verbruikt de studio zelf, wat verkoopt ze retail, wat is de totale inkoop bij HQ.</p>
           </div>
           <button onclick="openModal('bp-studio-pl')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
         </div>
+
+        <!-- Overzicht: omzet + behandelingen per scenario -->
+        <div class="grid grid-cols-3 gap-3 mb-5">
+          ${scenarios.map(s => `
+            <div class="p-3 bg-gray-50 rounded-xl text-center">
+              <div class="text-xs text-gray-500 uppercase tracking-wider">${s.cabines} cabine${s.cabines>1?'s':''}</div>
+              <div class="text-lg font-bold text-gray-900 mt-1">${fe(s.omzet).replace(',00','')}</div>
+              <div class="text-xs text-gray-500">${s.behandelingen.toLocaleString('nl-NL')} behandelingen · ${s.retailUnitsTotal} retail-verkopen</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Gedetailleerde tabel per product -->
         <div class="overflow-x-auto">
           <table class="w-full text-sm">
-            <thead><tr class="text-xs text-gray-400 border-b border-gray-100">
-              <th class="text-left py-2">Scenario</th>
-              <th class="text-right px-2">Omzet/jr</th>
-              <th class="text-right px-2">Behandelingen/jr</th>
-              <th class="text-right px-2">Wax verbruik</th>
-              <th class="text-right px-2">Wax-inkoop</th>
-              <th class="text-right px-2">Retail wholesale</th>
-              <th class="text-right px-2">Totale afname</th>
-              <th class="text-right px-2">vs. minimum</th>
-            </tr></thead>
+            <thead>
+              <tr class="text-xs text-gray-400 border-b border-gray-100">
+                <th class="text-left py-2 pr-2">Product</th>
+                <th class="text-left px-2">Gebruik</th>
+                ${scenarios.map(s => `<th class="text-right px-2" colspan="2">${s.cabines} cabine${s.cabines>1?'s':''}</th>`).join('')}
+              </tr>
+              <tr class="text-[10px] text-gray-300 border-b border-gray-100">
+                <th></th><th></th>
+                ${scenarios.map(() => `<th class="text-right px-2">Units</th><th class="text-right px-2">Wholesale</th>`).join('')}
+              </tr>
+            </thead>
             <tbody>
-              ${scenarios.map(s => `
-                <tr class="border-b border-gray-50">
-                  <td class="py-2 font-medium">${s.cabines} cabine${s.cabines>1?'s':''}</td>
-                  <td class="text-right px-2">${fe(s.omzet)}</td>
-                  <td class="text-right px-2">${s.behandelingen.toLocaleString('nl-NL')}</td>
-                  <td class="text-right px-2">${s.waxKg} kg</td>
-                  <td class="text-right px-2">${fe(s.waxKosten)}</td>
-                  <td class="text-right px-2">${fe(s.retailWholesale)} <span class="text-xs text-gray-400">(${s.retailUnits} st.)</span></td>
-                  <td class="text-right px-2 font-bold text-gray-900">${fe(s.totaalAfname)}</td>
-                  <td class="text-right px-2">
-                    <span class="text-xs ${s.boven?'text-green-600':'text-yellow-600'} font-medium">${s.boven?'✓ ruim boven':'⚠️ onder'}</span>
+              ${alleProducten.map((prod, pIdx) => {
+                const rowScenarios = scenarios.map(s => s.perProduct[pIdx]);
+                const gebruik = productGebruik[prod.id] || {};
+                let gebruikLabel = '';
+                if (gebruik.inStudioPerBehG || gebruik.inStudioPerBehMl) {
+                  const mix = gebruik.retailShare > 0 ? ' + retail' : '';
+                  gebruikLabel = `In-studio${mix}`;
+                } else if (gebruik.retailShare > 0) {
+                  gebruikLabel = `Retail (${Math.round(gebruik.retailShare*100)}% mix)`;
+                } else {
+                  gebruikLabel = 'Alternatief';
+                }
+                return `<tr class="border-b border-gray-50 hover:bg-gray-50/50">
+                  <td class="py-2 pr-2">
+                    <div class="font-medium text-gray-900">${prod.naam}</div>
+                    <div class="text-xs text-gray-400">${prod.inhoud || prod.eenheid || ''} · €${prod.wholesalePrijs}/${prod.eenheid === 'kg' ? 'kg' : 'stuk'}${prod.retailPrijs ? ' · retail €' + prod.retailPrijs : ''}</div>
                   </td>
-                </tr>
-              `).join('')}
+                  <td class="px-2 text-xs text-gray-500">${gebruikLabel}</td>
+                  ${rowScenarios.map(r => `
+                    <td class="text-right px-2 tabular-nums">${r.totaalUnits || '—'}${r.inStudioUnits && r.retailUnits ? `<div class="text-[10px] text-gray-400">${r.inStudioUnits} studio + ${r.retailUnits} retail</div>` : ''}</td>
+                    <td class="text-right px-2 tabular-nums font-medium">${r.wholesaleKosten > 0 ? fe(r.wholesaleKosten) : '—'}</td>
+                  `).join('')}
+                </tr>`;
+              }).join('')}
+              <tr class="bg-wax-50 font-bold">
+                <td class="py-3 pr-2">Totale inkoop bij HQ</td>
+                <td class="px-2"></td>
+                ${scenarios.map(s => `
+                  <td class="text-right px-2"></td>
+                  <td class="text-right px-2 tabular-nums text-wax-700">${fe(s.totaalAfname)}</td>
+                `).join('')}
+              </tr>
+              <tr class="text-xs text-gray-500">
+                <td class="py-1 pr-2 italic">Retail-omzet voor studio (bij retail-prijs)</td>
+                <td></td>
+                ${scenarios.map(s => `
+                  <td class="text-right px-2"></td>
+                  <td class="text-right px-2 tabular-nums">${fe(s.retailOmzet)}</td>
+                `).join('')}
+              </tr>
+              <tr class="text-xs">
+                <td class="py-1 pr-2 italic text-gray-500">vs. minimum order (${fe(minBestelling * 12)}/jr)</td>
+                <td></td>
+                ${scenarios.map(s => `
+                  <td class="text-right px-2"></td>
+                  <td class="text-right px-2 font-medium ${s.boven?'text-green-600':'text-yellow-600'}">${s.boven?'✓ ruim boven':'⚠️ onder'}</td>
+                `).join('')}
+              </tr>
             </tbody>
           </table>
         </div>
-        <div class="mt-4 p-3 bg-gray-50 rounded-lg text-xs text-gray-600">
-          <strong>Aannames:</strong> ${waxPerBehG}g wax per behandeling (gemiddelde over Brazilian/benen/oksel/etc.), NAO-wax wholesale ${fe(waxPrijsPerKg)}/kg, ${retailConvPct}% van klanten koopt een aftercare-product in de studio (à ${fe(aftercareAvgWholesale)} wholesale). Minimum productorder: ${fe(minBestelling * 12)}/jr (${fe(minBestelling)}/mnd × 12).
+
+        <!-- Aannames uitleg -->
+        <div class="mt-5 p-4 bg-gray-50 rounded-xl text-xs text-gray-600">
+          <div class="font-semibold text-gray-700 mb-2">📋 Aannames (alles aanpasbaar)</div>
+          <div class="grid md:grid-cols-2 gap-x-6 gap-y-1.5">
+            <div>• <strong>In-studio verbruik per behandeling:</strong></div>
+            <div></div>
+            ${perBehProducten.map(prod => {
+              const g = productGebruik[prod.id];
+              const verbruik = g.inStudioPerBehG ? `${g.inStudioPerBehG}g` : `${g.inStudioPerBehMl}ml`;
+              return `<div class="pl-4">— ${prod.naam}: ${verbruik}</div><div></div>`;
+            }).join('')}
+            <div>• <strong>Retail-conversie:</strong> ${retailConvPct}% van klanten koopt 1 product mee</div>
+            <div>• <strong>Retail-mix:</strong> Cream 40% · Oil 20% · Scrub 20% · Spray 12% · Powder 8%</div>
+            <div>• <strong>Minimum productorder:</strong> ${fe(minBestelling)}/mnd (${fe(minBestelling * 12)}/jr)</div>
+            <div>• <strong>Gemiddeld ticket:</strong> ${fe(avgTicket)} per behandeling</div>
+          </div>
         </div>
       </div>`;
     }},
