@@ -233,7 +233,7 @@
       <button onclick="setLang('nl')" class="flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors" id="lang-nl">🇳🇱 NL</button>
       <button onclick="setLang('de')" class="flex-1 py-1.5 rounded-lg text-xs font-medium transition-colors" id="lang-de">🇩🇪 DE</button>
     </div>
-    <div class="px-3 pb-1 text-[10px] text-gray-600 font-mono" title="Deze versie is live">v2026-04-23 12:05 (marktanalyse-v1)</div>
+    <div class="px-3 pb-1 text-[10px] text-gray-600 font-mono" title="Deze versie is live">v2026-04-23 12:55 (marktanalyse-lokaal)</div>
     <a href="/logout" class="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-500 hover:bg-gray-800 hover:text-gray-300 transition-colors text-sm">
       <span>🚪</span> <span data-t="uitloggen">Uitloggen</span>
     </a>
@@ -9637,23 +9637,11 @@ init();
 async function loadMarktanalyse(stadnaam, kaufkraft, categorie, mietMin, mietMax) {
   const div = document.getElementById('marktanalyseResult');
   if (!div) return;
-  div.innerHTML = '<div class="bg-white rounded-xl border border-wax-200 shadow-sm p-5 text-sm text-gray-600 flex items-center gap-3"><div class="animate-spin h-4 w-4 border-2 border-wax-500 border-t-transparent rounded-full"></div><span>\u2728 Marktanalyse wordt geladen voor <strong>' + stadnaam + '</strong>... (duurt 5-15 sec)</span></div>';
-  try {
-    const r = await fetch('/api/marktanalyse', {
-      method: 'POST',
-      headers: {'content-type': 'application/json'},
-      body: JSON.stringify({ stadnaam, kaufkraft, categorie, mietMin, mietMax })
-    });
-    if (!r.ok) {
-      div.innerHTML = '<div class="text-xs text-red-600 p-3 bg-red-50 rounded border border-red-200">Marktanalyse kon niet worden geladen (status ' + r.status + ').</div>';
-      return;
-    }
-    const m = await r.json();
-    renderMarktanalyse(stadnaam, m);
-  } catch (e) {
-    console.error('loadMarktanalyse error:', e);
-    div.innerHTML = '<div class="text-xs text-red-600 p-3 bg-red-50 rounded border border-red-200">Fout bij laden marktanalyse: ' + e.message + '</div>';
-  }
+  const stadkey = (stadnaam || '').toLowerCase().trim().replace(/ß/g, 'ss');
+  const m = (typeof getMarktanalyseLokaal === 'function') ? getMarktanalyseLokaal(stadkey) : null;
+  if (m) { renderMarktanalyse(stadnaam, m); return; }
+  // Fallback: stad niet in dataset
+  div.innerHTML = '<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 text-sm text-gray-600"><div class="font-semibold text-gray-900 mb-2">Marktanalyse niet beschikbaar</div><div class="text-xs">Voor <strong>' + stadnaam + '</strong> is nog geen gecureerde marktanalyse beschikbaar. Neem contact op voor een maatwerk analyse op basis van businessplan deep-dive.</div></div>';
 }
 
 function renderMarktanalyse(stadnaam, m) {
@@ -9687,6 +9675,343 @@ function renderMarktanalyse(stadnaam, m) {
       '<div><div class="text-xs uppercase tracking-wider text-wax-700 font-semibold mb-1">\uD83D\uDCA1 Aanbeveling</div><div class="text-gray-900 font-medium">' + (m.aanbeveling || '') + '</div></div>' +
     '</div>' +
   '</div>';
+}
+
+</script>
+<script>
+const WAX_MARKTANALYSE_DATA = {
+  'muenchen': {
+    kansen: ['Hoogste koopkracht in Duitsland (factor 1.36) - premium pricing €60-80 realistisch, geen prijsweerstand', 'Concentratie jonge professionele vrouwen in Schwabing, Maxvorstadt, Haidhausen, Glockenbachviertel', 'Groeiende Latijns-Amerikaanse community (~8.000 Brazilianen) die authentieke Braziliaanse waxing herkent en waardeert'],
+    risicos: ['Verzadigde markt: Senzera 4 vestigingen, Hairfree 3, plus 40+ kleinere salons', 'Hoogste huren DE (€25-38/m²) drukken marge eerste 18 maanden - break-even kan 8-12 maanden duren', 'Personeelsschaarste: gekwalificeerde waxers €3.500+ bruto, verloop 25-35% per jaar'],
+    concurrenten: [{type:'Senzera (ketting)',beschrijving:'4 vestigingen Isartor/Maxvorstadt/Schwabing/Bogenhausen, prijs €45-65'},{type:'Hairfree',beschrijving:'3 vestigingen, laser-focus maar zelfde doelgroep'},{type:'Lokale boutiques',beschrijving:'40+ kleinere salons (Alba Beauty, Waxbar e.a.)'}],
+    potentie_score: 4,
+    potentie_uitleg: 'Sterke koopkracht maar verzadigd. Winbaar met duidelijke Braziliaanse specialisatie en juiste wijkkeuze.',
+    doelgroep: 'Vrouwen 28-45 in Schwabing/Haidhausen/Glockenbachviertel, expat-community, Latijns-Amerikaanse gemeenschap',
+    aanbeveling: 'Start Haidhausen of Glockenbachviertel. Positioneer als enige echte Braziliaanse waxing-specialist. Launch via partnerships Brazilian Cultural Center en Lat-Am events.'
+  },
+  'frankfurt': {
+    kansen: ['Internationale bankensector: koopkracht 1.28, 450.000+ expats die premium verwachten', 'Westend, Nordend, Bornheim, Sachsenhausen: werkende vrouwen 28-50 met beauty-budget', 'Lagere dichtheid waxing-specialisten dan München - gat in markt voor premium Braziliaans'],
+    risicos: ['Senzera 2 sterke vestigingen (Eschenheim, Sachsenhausen) claimen high-end', 'Huur Westend/Nordend €20-30/m² - verkeerde locatie = break-even maand 10+', 'Expat-turnover (3 jaar gemiddeld) - continu nieuwe klanten werven'],
+    concurrenten: [{type:'Senzera',beschrijving:'2 vestigingen, premium €50-70'},{type:'Nude Wax Lounge',beschrijving:'Instagram-boutique Bornheim'},{type:'Kosmetikstudios',beschrijving:'25+ salons met waxing als bijproduct'}],
+    potentie_score: 5,
+    potentie_uitleg: 'Een van sterkste Duitse markten: hoge koopkracht, expats waarderen Engels+Portugees, minder verzadigd dan München.',
+    doelgroep: 'Bankiers-vrouwen 30-50 Westend/Nordend/Bornheim, expats Brazilie/UK/VS, hoger opgeleide Goethe-studentes',
+    aanbeveling: 'Nordend of Bornheim (Berger Strasse/Fressgass). Engelstalige website, Brazilian-owned identiteit prominent.'
+  },
+  'hamburg': {
+    kansen: ['Eimsbuttel, Eppendorf, Winterhude, Ottensen: hoogste dichtheid 25-45 werkende vrouwen DE', 'Hamburg waardeert natuurlijk + duurzaam - Nao-productlijn past perfect', 'Minder ketens dan München/Frankfurt - ruimte voor premium specialist'],
+    risicos: ['Hamburger prijsbewust ondanks koopkracht - €60+ vraagt sterkere waarde-communicatie', 'Senzera 2 goede vestigingen Rotherbaum + Winterhude', 'Donkere winters: bezetting nov/feb dipt 15-20%, cashflow-planning cruciaal'],
+    concurrenten: [{type:'Senzera',beschrijving:'2 gevestigde vestigingen'},{type:'Waxing Hamburg',beschrijving:'Boutique specialist Eppendorf'},{type:'Hairfree',beschrijving:'2 vestigingen, laser-focus'}],
+    potentie_score: 4,
+    potentie_uitleg: 'Solide markt met goede koopkracht, lagere saturatie. Nao-sustainability-verhaal geeft voordeel.',
+    doelgroep: 'Werkende vrouwen 28-45 Eimsbuttel/Eppendorf/Winterhude, media-professionals, duurzaamheidsbewust publiek',
+    aanbeveling: 'Eppendorf of Eimsbuttel. Communiceer Nao-natuurlijkheid als hoofdargument. Partnerships duurzame mode + wellness.'
+  }
+};
+WAX_MARKTANALYSE_DATA['stuttgart'] = {
+  kansen: ['Automobiel-industrie (Mercedes, Porsche) - hoge inkomens werkende vrouwen, koopkracht 1.20', 'Stuttgart-West, Sud, Heslach: concentratie doelgroep met weinig alternatieven', 'Minder ketens dan andere A-steden - witte vlek voor Braziliaanse specialisatie'],
+  risicos: ['Zwabische consument kritisch op prijs - service-excellentie moet onberispelijk', 'Centrum-locaties schaars/duur door topografie', 'Conservatief publiek - Braziliaans concept vraagt meer uitleg'],
+  concurrenten: [{type:'Senzera',beschrijving:'1 vestiging Konigstrasse'},{type:'Hairfree',beschrijving:'2 vestigingen'},{type:'Kosmetikstudio ketens',beschrijving:'Lokale salons met waxing'}],
+  potentie_score: 4,
+  potentie_uitleg: 'Sterke koopkracht en onderbediende specialistenmarkt. Consument vraagt zorgvuldige introductie.',
+  doelgroep: 'Professionele vrouwen 30-50 Stuttgart-West/Sud, automobiel-kader vrouwen',
+  aanbeveling: 'Stuttgart-West of Hauptbahnhof-omgeving. Investeer eerste 3 maanden in persoonlijke consulten - Zwabische klant converteert op ervaring.'
+};
+WAX_MARKTANALYSE_DATA['duesseldorf'] = {
+  kansen: ['Duitse modehoofdstad - 2e hoogste beauty-besteding per hoofd na München', 'Konigsallee, Flingern, Oberkassel: modebewuste werkende vrouwen', 'Japanse+Koreaanse community (25.000+) waardeert esthetische precisie'],
+  risicos: ['Zeer competitief: 3 Senzera + 5 grote salons + talloze boutiques', 'Huren centrum München-niveau, vooral rond Ko', 'Modebewuste klant verwacht continuous innovation - sterk marketingbudget nodig'],
+  concurrenten: [{type:'Senzera',beschrijving:'3 vestigingen Altstadt/Oberkassel/Flingern'},{type:'Waxing House Dusseldorf',beschrijving:'Boutique Oberkassel, Instagram-sterk'},{type:'Sugaring Factory',beschrijving:'2 vestigingen, alternatieve depilatie'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Financieel aantrekkelijk maar verzadigd. Alleen bij unieke positionering en hoog marketingbudget winbaar.',
+  doelgroep: 'Modebewuste vrouwen 25-45 Flingern/Oberkassel, JP-KR community, beauty-influencers',
+  aanbeveling: 'Vermijd directe centrum-competitie. Kies Flingern-Nord of Bilk. Investeer zwaar in Instagram/TikTok.'
+};
+WAX_MARKTANALYSE_DATA['berlin'] = {
+  kansen: ['Enorme markt 3.7M inwoners, sterke 25-40 creative class in Prenzlauer Berg/Mitte/Friedrichshain/Neukolln', 'Grootste Braziliaanse community DE (~15.000) - authenticiteits-verhaal werkt sterk', 'Lagere huren dan München/Frankfurt (€15-22/m²) - betere marges jaar 1'],
+  risicos: ['Lagere koopkracht (1.02) - €60+ vraagt duidelijke communicatie', 'Beauty-markt zeer gefragmenteerd - naamsbekendheid opbouwen kost tijd', 'Klantretentie creatieve klant ~60% (DE-gemiddelde 75%)'],
+  concurrenten: [{type:'Waxing Berlin',beschrijving:'3 vestigingen (Mitte/Charlottenburg/Prenzlauer Berg), sterk merk'},{type:'Senzera',beschrijving:'3 vestigingen, breed aanbod'},{type:'Independent studios',beschrijving:'50+ specialisten, vaak expat-gerund'}],
+  potentie_score: 4,
+  potentie_uitleg: 'Enorm volume en sterke Braziliaanse community. Locatie-keuze bepaalt succes sterker dan elders.',
+  doelgroep: 'Creatieve 25-40 Prenzlauer Berg/Mitte/Friedrichshain, Braziliaanse community, LGBTQ+, expats',
+  aanbeveling: 'Prenzlauer Berg (Kollwitzplatz) of Mitte (Torstrasse). Portugese taal prominent. Launch-event Braziliaanse cultuur.'
+};
+WAX_MARKTANALYSE_DATA['koeln'] = {
+  kansen: ['Belgisches Viertel, Sudstadt, Ehrenfeld: creatieve werkende vrouwen 25-40', 'Uitgaans- en netwerkcultuur - beauty verankerd in levensstijl', 'Minder premium-concurrentie dan Duesseldorf'],
+  risicos: ['Rheinisch relaxter - pricing doordacht instellen', 'Senzera 2 vestigingen in beste wijken', 'Huren Belgisches Viertel stijgen snel (€18-25/m²)'],
+  concurrenten: [{type:'Senzera',beschrijving:'2 goed gelegen vestigingen'},{type:'Lokale boutiques',beschrijving:'Sugaring Factory Ehrenfeld, Instagram-studios'},{type:'Hairfree',beschrijving:'1 vestiging Neumarkt'}],
+  potentie_score: 4,
+  potentie_uitleg: 'Solide markt met goede doelgroep-dichtheid en iets minder verzadiging dan Duesseldorf.',
+  doelgroep: 'Vrouwen 25-45 Belgisches Viertel/Sudstadt/Ehrenfeld, media/reclame, creatieve sector',
+  aanbeveling: 'Sudstadt of Ehrenfeld voor authentieke positionering. Karneval strategisch gebruiken voor zichtbaarheid.'
+};
+WAX_MARKTANALYSE_DATA['wiesbaden'] = {
+  kansen: ['Zeer hoge koopkracht (1.14), top 10 rijkste steden DE per hoofd', 'Professionele vrouwen en executives-partners in Nerotal/Dichterviertel/Sonnenberg', 'Opmerkelijk weinig waxing-specialisten voor deze welvaart - witte vlek'],
+  risicos: ['Kleinere stad (280k) - doelgroep beperkt, klantretentie cruciaal', 'Conservatief - Braziliaans concept vraagt zorgvuldige introductie', 'Nabijheid Frankfurt: high-end klanten reizen daarheen'],
+  concurrenten: [{type:'Senzera',beschrijving:'1 vestiging centrum, niet dominant'},{type:'Lokale salons',beschrijving:'15+ kleinere salons'},{type:'Dr. Zenker Klinik',beschrijving:'Medische esthetiek, doelgroep-overlap'}],
+  potentie_score: 5,
+  potentie_uitleg: 'Uitzonderlijke combinatie koopkracht + onderbediendheid. Een van sterkste vestigingskansen DE.',
+  doelgroep: 'Welvarende vrouwen 30-55, executives-partners Nerotal/Dichterviertel, kuurstad-toeristen',
+  aanbeveling: 'Centrum (Kurhaus/Wilhelmstrasse) of Dichterviertel. Premium positioneren met verfijnd interieur. Partnership wellnesshotels.'
+};
+WAX_MARKTANALYSE_DATA['bad homburg'] = {
+  kansen: ['Op 1 na hoogste koopkracht DE (1.35)', 'Extreme concentratie executives en bankiers-partners uit Frankfurt', 'Zeer weinig gespecialiseerd beauty-aanbod - blauwe oceaan'],
+  risicos: ['Kleine gemeente (54k) - elke klant kostbaar', 'Forensen reizen naar Frankfurt voor meer keuze', 'Conservatief/kritisch publiek - persoonlijke benadering vereist'],
+  concurrenten: [{type:'Beauty-boutiques',beschrijving:'4-5 kleinere studios, geen waxing-spec'},{type:'Nabijgelegen Frankfurt',beschrijving:'Senzera FFM trekt sommigen'},{type:'Hotel-spa',beschrijving:'Steigenberger e.a. bieden basic beauty'}],
+  potentie_score: 5,
+  potentie_uitleg: 'Cijfer-technisch goudmijn: hoogste koopkracht in extreme concentratie met minimale concurrentie.',
+  doelgroep: 'Bankiers-partners 35-60, welvarende gepensioneerden, Frankfurt-forensen die lokaal willen',
+  aanbeveling: 'Louisenstrasse of nabij Kurpark. Lokale golf/countryclubs voor referral-netwerk. Persoonlijke intro-dinners eerste 50 klanten.'
+};
+WAX_MARKTANALYSE_DATA['bad soden'] = {
+  kansen: ['Zeer hoge koopkracht (1.32) - welvarende Taunus-forenzen', 'Simone Costas eigen vestiging sinds 2007 - gevestigde merkbekendheid', 'Geen directe waxing-concurrentie - eerste kandidaat dichtbij moederbedrijf'],
+  risicos: ['Kleine gemeente (23k) beperkt marktomvang', 'Forensen-schema (zaterdag piek, doordeweeks lager)', 'Bij overname: goodwill zorgvuldig bespreken'],
+  concurrenten: [{type:'Bestaande WA Bad Soden',beschrijving:'Simones studio - basis bij overname, NIET bij nieuwe'},{type:'Kleine studios',beschrijving:'3-4 lokale salons'},{type:'Nabijgelegen steden',beschrijving:'Frankfurt en Bad Homburg'}],
+  potentie_score: 4,
+  potentie_uitleg: 'Zeer aantrekkelijk maar klein. Hoogste potentie bij overname bestaande studio, niet nieuwe vestiging.',
+  doelgroep: 'Welvarende forenzen-vrouwen 30-55, executives-partners, gepensioneerden',
+  aanbeveling: 'Overweeg overname Simones studio ipv nieuw. Anders: Taunus-regio breder (Oberursel, Kronberg).'
+};
+WAX_MARKTANALYSE_DATA['mainz'] = {
+  kansen: ['Johannes Gutenberg-Universitat (31.000 studenten) + werkende dertigers in Altstadt/Neustadt', 'ZDF-hoofdkantoor brengt media-professionals', 'Wijncultuur trekt welvarend publiek'],
+  risicos: ['Studenten-segment minder koopkrachtig - pricing-mix nodig', 'Nabijgelegen Wiesbaden trekt welvarende klanten', 'Klein centrum - locatiekeuze zeer impactvol'],
+  concurrenten: [{type:'Boutique salons',beschrijving:'8-10 salons, geen specialisatie'},{type:'Studenten-aanbod',beschrijving:'Goedkope alternatieven bij universiteit'},{type:'Wiesbaden-aantrekking',beschrijving:'Reele concurrentie voor welvarend segment'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Gemengd beeld: studenten lager, professionals hoger. Succes = juiste wijk-keuze.',
+  doelgroep: 'Vrouwen 28-45 Altstadt/Neustadt, ZDF-medewerkers, academische professionals',
+  aanbeveling: 'Neustadt voor mix student + werkend. Prijs-segmentatie: studentenvariant dinsdagochtend.'
+};
+WAX_MARKTANALYSE_DATA['bonn'] = {
+  kansen: ['Voormalige hoofdstad - overheids- en diplomatiek corps', 'VN-locatie + DHL-hoofdkantoor = internationale professionals', 'Bad Godesberg en centrum: welvarende 30-55 doelgroep'],
+  risicos: ['Klein (330k) en aging population', 'Conservatief - Braziliaans concept vraagt uitleg', 'Koeln trekt welvarend segment'],
+  concurrenten: [{type:'Lokale salons',beschrijving:'10+ beauty-boutiques'},{type:'Hairfree',beschrijving:'1 vestiging'},{type:'Koeln-salons',beschrijving:'Welvarenden kiezen daar'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Goede koopkracht en internationaal publiek. Beperkt door stadsgrootte en oudere bevolking.',
+  doelgroep: 'VN/overheidspersoneel, diplomatiek corps, academisch publiek, welvarend Bad Godesberg',
+  aanbeveling: 'Bad Godesberg of centrum. Engelstalige marketing cruciaal. Partnerships met internationale organisaties.'
+};
+WAX_MARKTANALYSE_DATA['leipzig'] = {
+  kansen: ['Snelst groeiende stad Oost-DE - creatieve instroom 25-35', 'Sudvorstadt/Plagwitz/Schleussig: trendsetter-wijken', 'Lage huren (€9-14/m²) - meer ademruimte'],
+  risicos: ['Lagere koopkracht (0.93) - €45-55 realistischer dan €60+', 'Markt in opbouwfase - klantacquisitie kost marketing', 'Ost-DE consument prijsbewust - intro-aanbiedingen nodig'],
+  concurrenten: [{type:'Senzera Leipzig',beschrijving:'1 vestiging Zentrum, marktleider'},{type:'Boutique studios',beschrijving:'5-8 Instagram-waxers'},{type:'Kosmetikstudios',beschrijving:'Basic beauty'}],
+  potentie_score: 4,
+  potentie_uitleg: 'Groeimarkt met goede toekomst. Pricing aanpassen op regionale koopkracht.',
+  doelgroep: 'Creatieve 25-40 Sudvorstadt/Plagwitz/Schleussig, media, post-docs, west-DE instroom',
+  aanbeveling: 'Plagwitz of Sudvorstadt. Betaalbaar-premium (€50-60). Sterk social + influencers.'
+};
+WAX_MARKTANALYSE_DATA['dresden'] = {
+  kansen: ['Microchip-industrie (TSMC, Infineon, GlobalFoundries) - hoog opgeleide 30-50 werkende vrouwen', 'Neustadt: creatieve/jonge professionele scene', 'Toerisme 3.5M bezoekers - hotels als partners'],
+  risicos: ['Lagere koopkracht (0.94) - premium uitdagend', 'Sachsische consument meer kappersbezoeker dan beauty-studio', 'Koude winters: bezetting jan/feb -20%'],
+  concurrenten: [{type:'Lokale salons',beschrijving:'12-15 salons met waxing'},{type:'Hotel-spa',beschrijving:'Top hotels bieden beauty'},{type:'Senzera afwezig',beschrijving:'Geen keten - opening'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Techsector gunstig maar tragere beauty-adoptie dan west-DE. Lange opbouw verwacht.',
+  doelgroep: 'Techsector vrouwen 30-50, Neustadt-creatief, welvarend Blasewitz',
+  aanbeveling: 'Neustadt voor doelgroep. Partnership microchip-bedrijven voor corporate-vouchers. 18-24 maanden opbouw.'
+};
+WAX_MARKTANALYSE_DATA['nuernberg'] = {
+  kansen: ['Industriele regio Middle Franken met stabiele werkpopulatie', 'Altstadt + Johannis: verfijnde 30-50 doelgroep', 'Weinig waxing-specialisten voor deze grootte'],
+  risicos: ['Frankische consument loyaal maar kritisch', 'Hogere regionale werkloosheid', 'Huren Altstadt stijgen snel'],
+  concurrenten: [{type:'Senzera',beschrijving:'1 gevestigde vestiging centrum'},{type:'Boutique salons',beschrijving:'8-10 beauty-studios'},{type:'Hairfree',beschrijving:'1 vestiging laser-focus'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Redelijke markt zonder topextremen. Werkbaar maar groei kost tijd.',
+  doelgroep: 'Vrouwen 30-55 Altstadt/Johannis, industrieel kader, midden-management',
+  aanbeveling: 'Altstadt voor prestige of Johannis voor dichtheid. Referral-systeem voor Frankische loyaliteit.'
+};
+
+// Compact dataset voor overige steden (essentiele info per stad)
+WAX_MARKTANALYSE_DATA['hannover'] = {
+  kansen: ['Messe-stad, internationale bezoekers periodiek', 'List en Oststadt: doelgroep-wijken werkende vrouwen 30-50', 'Lagere concurrentie in premium-waxing-segment'],
+  risicos: ['Koopkracht op DE-gemiddelde (1.01)', 'Dipperiodes tussen Messen', 'Beauty-cultuur buiten Messeweken beperkt'],
+  concurrenten: [{type:'Senzera',beschrijving:'1 vestiging centrum'},{type:'Lokale salons',beschrijving:'10+ kleinere aanbieders'},{type:'Hotel-spa Messehotels',beschrijving:'Basic beauty voor Messebezoekers'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Stabiele markt zonder pieken, solide voor gedisciplineerde opbouw.',
+  doelgroep: 'Werkende vrouwen 30-50 List/Oststadt, Messe-professionals, internationale zakenreizigers',
+  aanbeveling: 'List of Oststadt als startwijk. Specials rond grote Messe-periodes (CeBIT, Hannover Messe).'
+};
+WAX_MARKTANALYSE_DATA['bremen'] = {
+  kansen: ['Viertel en Schwachhausen: creatieve + werkende doelgroep', 'Weinig premium-waxing-aanbod', 'Havenstad-internationaliteit brengt diverse clientele'],
+  risicos: ['Lagere koopkracht (0.97)', 'Hanzeatische terughoudendheid - trage adoptie premium-concepten', 'Kleinere marktomvang (570k)'],
+  concurrenten: [{type:'Lokale beauty-salons',beschrijving:'8+ studios met waxing-aanbod'},{type:'Senzera afwezig',beschrijving:'Geen grote keten - blauwe oceaan'},{type:'Hotel-spa',beschrijving:'Paar hotels met basic beauty'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Rustige markt met ruimte voor specialist. Langere opbouwperiode verwacht.',
+  doelgroep: 'Werkende vrouwen Viertel/Schwachhausen, havenindustrie-management, creatieve professionals',
+  aanbeveling: 'Viertel voor creatieve match. Geduldige 18-24 maanden opbouwfase inplannen.'
+};
+WAX_MARKTANALYSE_DATA['freiburg'] = {
+  kansen: ['Universiteitsstad met welvarend academisch publiek', 'Nachhaltigkeitsbewustzijn past perfect bij Nao-productlijn', 'Weinig gespecialiseerde waxing-concurrentie'],
+  risicos: ['Kleinere markt (230k)', 'Alternatieve consumenten-cultuur minder premium-gericht', 'Centrum-huren hoog voor stadsgrootte'],
+  concurrenten: [{type:'Boutique salons',beschrijving:'6-8 kleinere aanbieders'},{type:'Nachhaltigheits-gerichte beauty',beschrijving:'Trendsetter-concurrenten met bio-focus'},{type:'Hairfree afwezig',beschrijving:'Geen grote laser-keten'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Niche-markt met goed doelgroep-match maar beperkt volume.',
+  doelgroep: 'Academisch publiek 30-50, nachhaltigkeitsbewuste professionals, welvarende Wiehre-bewoners',
+  aanbeveling: 'Communiceer Nao-natuurlijkheid prominent. Partnerships met bio-labels en duurzame mode-winkels.'
+};
+WAX_MARKTANALYSE_DATA['heidelberg'] = {
+  kansen: ['Academische stad, koopkracht 1.05', 'Internationaal publiek via Universiteit en SAP-nabijheid', 'Onbediend in waxing-specialisme'],
+  risicos: ['Kleine stad (160k)', 'Seasonaliteit door academisch jaar (dip augustus)', 'Nabijheid Mannheim verdeelt klantpool'],
+  concurrenten: [{type:'Beauty-boutiques',beschrijving:'5-7 salons waxing als bijproduct'},{type:'Mannheim-salons',beschrijving:'Indirecte concurrentie voor Oststadt-bewoners'},{type:'Heidelberg-studenten aanbod',beschrijving:'Goedkope alternatieven'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Aantrekkelijk profiel maar stadsgrootte beperkt. Goede niche bij juiste positionering.',
+  doelgroep: 'Academische professionals, internationaal publiek, welvarende Weststadt/Neuenheim',
+  aanbeveling: 'Altstadt (prestige) of Weststadt (doelgroep). Engelstalige service cruciaal voor internationaal publiek.'
+};
+WAX_MARKTANALYSE_DATA['essen'] = {
+  kansen: ['Ruhrgebied-centrum, Siemens/thyssenkrupp hoofdkantoren - corporate doelgroep', 'Ruettenscheid-wijk heeft verfijnde doelgroep', 'Weinig waxing-ketens voor stadsgrootte'],
+  risicos: ['Lagere koopkracht (0.95)', 'Ruhrgebied-consument prijsbewust', 'Verzadigde basic beauty-markt'],
+  concurrenten: [{type:'Senzera',beschrijving:'1 vestiging'},{type:'Lokale studios',beschrijving:'15+ kleinere aanbieders'},{type:'Hairfree',beschrijving:'1 vestiging'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Potentieel bij juiste wijk (uitsluitend Ruettenscheid). Pricing-gevoeligheid vraagt aanpassing.',
+  doelgroep: 'Ruettenscheid-bewoners 30-50, corporate managers vrouwen Siemens/thyssenkrupp',
+  aanbeveling: 'Uitsluitend Ruettenscheid voor doelgroep-match. Pricing iets onder München-niveau (€45-55).'
+};
+WAX_MARKTANALYSE_DATA['dortmund'] = {
+  kansen: ['Grote werkende populatie Innenstadt en Kreuzviertel', 'Minder concurrentie dan buursteden', 'Betaalbare huren geven marge'],
+  risicos: ['Lagere koopkracht (0.92)', 'Beauty-cultuur minder ontwikkeld dan Duesseldorf', 'Opbouwperiode langer dan A-steden'],
+  concurrenten: [{type:'Senzera',beschrijving:'1 vestiging'},{type:'Lokale salons',beschrijving:'10+ aanbieders'},{type:'Sugaring Factory',beschrijving:'1 vestiging'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Uitdagende markt - geschikter als 2e of 3e Wax Affairs uitbreiding dan eerste.',
+  doelgroep: 'Werkende professionals Kreuzviertel, corporate management',
+  aanbeveling: 'Kreuzviertel voor doelgroep-match. Overweeg nauwere specialisatie voor snellere introductie.'
+};
+WAX_MARKTANALYSE_DATA['duisburg'] = {
+  kansen: ['Industriele werkende populatie stabiele inkomens', 'Weinig beauty-specialisten'],
+  risicos: ['Laagste koopkracht dataset (0.87)', 'Minder ontwikkelde beauty-cultuur', 'Klanten reizen naar Duesseldorf/Essen'],
+  concurrenten: [{type:'Basic beauty-salons',beschrijving:'12+ kleinere aanbieders'},{type:'Duesseldorf-aantrekking',beschrijving:'Verlies welvarend segment'}],
+  potentie_score: 1,
+  potentie_uitleg: 'Zwakste stad in dataset. Niet aanbevolen als eerste franchise-locatie.',
+  doelgroep: 'Beperkt - werkende dertigers centrum en Neudorf',
+  aanbeveling: 'Niet aanbevolen voor premium Braziliaans concept. Alternatieve steden overwegen.'
+};
+WAX_MARKTANALYSE_DATA['bochum'] = {
+  kansen: ['Ruhr-Universitaet Bochum brengt jonge werkende populatie', 'Ehrenfeldviertel heeft creatieve doelgroep', 'Relatief onbediende markt'],
+  risicos: ['Lage koopkracht (0.92)', 'Kleinere marktomvang (360k)', 'Alternatieven Essen/Dortmund bij klantvoorkeur'],
+  concurrenten: [{type:'Boutique salons',beschrijving:'6-8 aanbieders'},{type:'Nabijgelegen steden',beschrijving:'Essen/Dortmund indirecte concurrentie'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Beperkte markt met lage koopkracht. Alleen bij juiste niche-positionering.',
+  doelgroep: 'Universitair personeel, Ehrenfeldviertel-bewoners, jonge werkende dertigers',
+  aanbeveling: 'Niet prioriteit. Alleen bij sterke lokale marktkennis en lagere pricing.'
+};
+WAX_MARKTANALYSE_DATA['muenster'] = {
+  kansen: ['Student plus koopkracht (1.05) is zeldzame combinatie', 'Kreuzviertel en Hafen: groeiende creatieve scene', 'Fietsstad-cultuur = relaxt wellness-bewust publiek'],
+  risicos: ['Studenten-segment minder koopkrachtig', 'Kleinere stad (316k)', 'Alternatieven Dortmund/Duesseldorf'],
+  concurrenten: [{type:'Kleine studios',beschrijving:'10+ lokale beauty-salons'},{type:'Senzera afwezig',beschrijving:'Geen grote keten'},{type:'Hairfree afwezig',beschrijving:'Opening'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Solide niche door unieke student-koopkracht mix. Goede 2e/3e franchise-locatie.',
+  doelgroep: 'Werkende 28-45 Kreuzviertel, academisch personeel, media-professionals',
+  aanbeveling: 'Kreuzviertel of rond Prinzipalmarkt. Segment-pricing: studentenvariant mogelijk op rustige dagdelen.'
+};
+WAX_MARKTANALYSE_DATA['augsburg'] = {
+  kansen: ['Nabijheid München zonder München-huren - pendelaars met hoger budget', 'Historisch centrum trekt welvarend publiek', 'Weinig waxing-specialisten'],
+  risicos: ['Welvarende Augsburgers kiezen soms München voor beauty', 'Kleiner dan München (300k)', 'Conservatief Beiers publiek'],
+  concurrenten: [{type:'Basic salons',beschrijving:'10+ lokale aanbieders'},{type:'München-aantrekking',beschrijving:'Premium segment verlies'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Redelijke optie voor München-pendelaars die lokaal willen afnemen.',
+  doelgroep: 'Werkende München-pendelaars, welvarende Augsburger centrum-bewoners',
+  aanbeveling: 'Centrum of Maximilianstrasse. Positioneer als lokale premium-optie voor wie München wil ontlopen.'
+};
+WAX_MARKTANALYSE_DATA['karlsruhe'] = {
+  kansen: ['Karlsruher Institut fuer Technologie + tech-industrie, hoog opgeleide 30-50', 'Weststadt en Durlach: doelgroep-wijken', 'Relatief hoge koopkracht (1.06) voor stadsgrootte'],
+  risicos: ['Kleinere stad (310k)', 'Concurrentie Heidelberg/Mannheim', 'Beauty-cultuur minder ontwikkeld'],
+  concurrenten: [{type:'Lokale salons',beschrijving:'8+ aanbieders'},{type:'Regio-salons',beschrijving:'Heidelberg/Mannheim'}],
+  potentie_score: 3,
+  potentie_uitleg: 'Tech-profiel gunstig, stadsgrootte beperkt maximum. Werkbaar maar geen topprioriteit.',
+  doelgroep: 'IT-sector werkende vrouwen, academisch personeel KIT, welvarend Weststadt',
+  aanbeveling: 'Weststadt voor doelgroep. Partnership met tech-bedrijven en KIT.'
+};
+WAX_MARKTANALYSE_DATA['mannheim'] = {
+  kansen: ['Werkende populatie Jungbusch en Neckarstadt-Ost', 'Multiculturele stad - diverse doelgroep', 'Centrale Rhein-Neckar regio bereik'],
+  risicos: ['Gemiddelde koopkracht (1.00) zonder hefboom', 'Verdeelde markt met Heidelberg/Ludwigshafen', 'Imagoprobleem buiten centrum'],
+  concurrenten: [{type:'Lokale salons',beschrijving:'12+ aanbieders'},{type:'Heidelberg',beschrijving:'Trekt welvarend segment'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Uitdagende markt - studenten plus gemengde doelgroep maakt positionering lastig.',
+  doelgroep: 'Werkende vrouwen Jungbusch/Neckarstadt-Ost, universitair personeel',
+  aanbeveling: 'Neckarstadt-Ost of Jungbusch voor trendy-match. Niet als eerste franchise.'
+};
+WAX_MARKTANALYSE_DATA['aachen'] = {
+  kansen: ['RWTH Aachen: internationaal hoog opgeleid publiek', 'Nabijheid Belgie/Nederland geeft extra catchment', 'Historisch centrum trekt toerisme-inkomsten'],
+  risicos: ['Kleinere stad (250k)', 'Studenten-segment domineert - beperkte premium-doelgroep', 'Koeln trekt welvarend segment'],
+  concurrenten: [{type:'Studenten-studios',beschrijving:'Basic aanbod'},{type:'Premium salons',beschrijving:'3-4 aanbieders'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Interessant door internationale profiel maar beperkte premium-doelgroep.',
+  doelgroep: 'Internationale professionals RWTH, welvarende centrum-bewoners, expats uit NL/BE',
+  aanbeveling: 'Engelstalige service plus proximity tot RWTH. Niet als prioriteit-franchise.'
+};
+WAX_MARKTANALYSE_DATA['kiel'] = {
+  kansen: ['Kustlocatie met toerisme-inkomsten', 'Universiteitsstad werkende alumni', 'Minder waxing-concurrentie'],
+  risicos: ['Lage koopkracht (0.97)', 'Seizoensafhankelijk door toerisme', 'Koude lange winters - bezetting dipt'],
+  concurrenten: [{type:'Kleine salons',beschrijving:'6+ lokale aanbieders'},{type:'Hotel-spa',beschrijving:'Toerisme-gerichte beauty'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Beperkte markt met seizoenseffecten. Niet prioritair.',
+  doelgroep: 'Werkende dertigers centrum, academisch personeel CAU',
+  aanbeveling: 'Alleen bij sterke lokale partnerschappen of overname bestaande salon.'
+};
+WAX_MARKTANALYSE_DATA['braunschweig'] = {
+  kansen: ['Werkende populatie Innenstadt + Oestliches Ringgebiet', 'Volkswagen-nabijheid brengt automotive-professionals', 'Weinig premium-waxing aanbod'],
+  risicos: ['Gemiddelde koopkracht', 'Kleinere stad (250k)', 'Beauty-cultuur beperkt'],
+  concurrenten: [{type:'Lokale salons',beschrijving:'8+ aanbieders'},{type:'Hannover concurrentie',beschrijving:'Sommige welvarenden reizen'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Solide werkpopulatie zonder koopkracht-excellentie. Werkbaar maar niet prioritair.',
+  doelgroep: 'VW-sector professionals vrouwen, werkende Innenstadt-bewoners',
+  aanbeveling: 'Innenstadt voor bereikbaarheid. Partnership automotive-sector (VW, Continental).'
+};
+WAX_MARKTANALYSE_DATA['wuppertal'] = {
+  kansen: ['Relatief lage huren (€7-11/m²)', 'Elberfeld + Barmen: werkende populatie'],
+  risicos: ['Lagere koopkracht (0.92)', 'Kleinere stad met dalende populatie', 'Beauty-cultuur minder ontwikkeld'],
+  concurrenten: [{type:'Kleine salons',beschrijving:'6+ lokale aanbieders'},{type:'Koeln/Duesseldorf',beschrijving:'Trekken premium'}],
+  potentie_score: 1,
+  potentie_uitleg: 'Zwakke markt voor premium Braziliaans concept. Niet aanbevolen.',
+  doelgroep: 'Beperkt: Elberfeld-professionals',
+  aanbeveling: 'Niet aanbevolen voor franchise. Andere steden overwegen.'
+};
+WAX_MARKTANALYSE_DATA['bielefeld'] = {
+  kansen: ['Miele en Dr. Oetker hoofdkantoren - corporate werkpopulatie', 'Altstadt heeft koopkrachtige doelgroep', 'Weinig directe concurrentie'],
+  risicos: ['Gemiddelde stad (335k) zonder trekkracht', 'Corporate-dominantie in consumentengedrag', 'Beperkte uitgaansscene dempt beauty-cultuur'],
+  concurrenten: [{type:'Beauty-salons',beschrijving:'10+ basic aanbieders'},{type:'Muenster-aantrekking',beschrijving:'Sommige welvarenden reizen'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Onderbediende maar beperkte markt. Werkbaar met geduld.',
+  doelgroep: 'Corporate werkende vrouwen Altstadt, Miele/Dr. Oetker-kader',
+  aanbeveling: 'Altstadt voor prestige. Partnerships met grote werkgevers (Miele, Dr. Oetker, Gildemeister).'
+};
+WAX_MARKTANALYSE_DATA['erfurt'] = {
+  kansen: ['Hoofdstad Thueringen met overheidspersoneel', 'Groeiende startup-scene', 'Lage huurprijzen geven cashflow-ruimte'],
+  risicos: ['Lage koopkracht (0.87)', 'Ost-Duitse prijsgevoeligheid', 'Kleinere marktomvang (215k)'],
+  concurrenten: [{type:'Lokale aanbieders',beschrijving:'6+ salons'},{type:'Leipzig-aantrekking',beschrijving:'Premium klanten reizen'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Beperkt financieel aantrekkelijk door lage koopkracht. Niet prioritair.',
+  doelgroep: 'Overheidspersoneel, startup-professionals',
+  aanbeveling: 'Niet als eerste franchise. Mogelijk als 5e+ expansie.'
+};
+WAX_MARKTANALYSE_DATA['magdeburg'] = {
+  kansen: ['Intel-fabriek investering (2024+) brengt hoog opgeleide werknemers', 'Werkende populatie Innenstadt-Nord', 'Relatief lage concurrentie'],
+  risicos: ['Lage koopkracht (0.87)', 'Bevolkingsdaling', 'Intel-impact nog onzeker'],
+  concurrenten: [{type:'Basic salons',beschrijving:'6-8 lokale aanbieders'},{type:'Intel-effect',beschrijving:'Toekomstverwachting nog onbewezen'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Potentiele groei door Intel maar huidige markt zwak. Wachten op effect.',
+  doelgroep: 'Toekomstig Intel-medewerkers, huidig overheidspersoneel',
+  aanbeveling: 'Te vroeg voor franchise. Monitoren Intel-impact komende 2-3 jaar.'
+};
+WAX_MARKTANALYSE_DATA['rostock'] = {
+  kansen: ['Kuststad met toerisme-inkomsten', 'Universiteitsstad', 'Groeiende industrie Warnemuende'],
+  risicos: ['Lagere koopkracht (0.89)', 'Seizoensafhankelijk', 'Kleinere marktomvang (210k)'],
+  concurrenten: [{type:'Kleine salons',beschrijving:'5-6 lokale aanbieders'},{type:'Hotel-spa toerisme',beschrijving:'Basic beauty-aanbod'}],
+  potentie_score: 2,
+  potentie_uitleg: 'Beperkte markt met seizoenseffecten. Niet aanbevolen als eerste franchise.',
+  doelgroep: 'Werkende Rostocker, universitair personeel',
+  aanbeveling: 'Niet prioritair. Alleen bij sterke lokale basis.'
+};
+
+// Lookup functie met umlaut-fallback
+function getMarktanalyseLokaal(stadkey) {
+  if (WAX_MARKTANALYSE_DATA[stadkey]) return WAX_MARKTANALYSE_DATA[stadkey];
+  // Probeer umlaut-conversies
+  const variants = [
+    stadkey.replace(/ue/g, 'u').replace(/oe/g, 'o').replace(/ae/g, 'a'),
+    stadkey.replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ä/g, 'a'),
+    stadkey.replace(/ü/g, 'ue').replace(/ö/g, 'oe').replace(/ä/g, 'ae')
+  ];
+  for (const v of variants) {
+    if (WAX_MARKTANALYSE_DATA[v]) return WAX_MARKTANALYSE_DATA[v];
+  }
+  return null;
 }
 
 </script>
