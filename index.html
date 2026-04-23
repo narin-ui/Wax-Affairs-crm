@@ -1556,7 +1556,7 @@ function lookupStadt() {
     '</div>',
 
     '<div class="p-5 bg-gradient-to-br from-wax-50 to-white border-b border-gray-100">',
-    '<h4 class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">📅 ', + (L?'Jahresprojektion — was bedeutet das pro Jahr?':'Jaarprojectie — wat betekent dit per jaar?') + '</h4>',
+    '<h4 class="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-3">📅 '+(L?'Jahresprojektion — was bedeutet das pro Jahr?':'Jaarprojectie — wat betekent dit per jaar?') + '</h4>',
     '<div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-3">',
     '<div class="bg-white border border-wax-200 rounded-lg p-3"><div class="text-[10px] uppercase tracking-wider text-gray-500">'+(L?'Jahresumsatz':'Jaaromzet')+'</div><div class="text-xl font-bold text-gray-900">€ '+jaarOmzet.toLocaleString('de-DE')+'</div><div class="text-[10px] text-gray-500">'+realBehand+' Beh./mnd × 12</div></div>',
     '<div class="bg-white border border-wax-200 rounded-lg p-3"><div class="text-[10px] uppercase tracking-wider text-gray-500">EBITDA/'+(L?'Jahr':'jaar')+'</div><div class="text-xl font-bold text-gray-900">€ '+jaarEBITDA.toLocaleString('de-DE')+'</div><div class="text-[10px] text-gray-500">'+(L?'vor Bankrate':'vóór banklast')+'</div></div>',
@@ -2302,9 +2302,9 @@ function renderFriendchisePitch() {
           <p class="text-xs text-gray-600">${L?'Exklusivradius um Ihren Standort. Innerhalb dieses Bereichs eröffnen wir kein zweites Wax-Affairs-Studio.':'Exclusiviteitsradius rond jouw locatie. Binnen dit gebied openen we geen tweede Wax Affairs-studio.'}</p>
         </div>
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <div class="flex items-center gap-2 mb-3"><span class="text-xl">📅</span><strong class="text-gray-900">${L?'Kündigungsfrist':'Opzegtermijn'}</strong></div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">6 ${L?'Monate':'maanden'}</div>
-          <p class="text-xs text-gray-600">${L?'Vor Vertragsende schriftlich. Bei außerordentlicher Kündigung (Vertragsverletzung) gelten kürzere Fristen.':'Vóór contracteinde schriftelijk. Bij buitengewone opzegging (contractbreuk) gelden kortere termijnen.'}</p>
+          <div class="flex items-center gap-2 mb-3"><span class="text-xl">📅</span><strong class="text-gray-900">${L?'Kündigung':'Opzegging'}</strong></div>
+          <div class="text-lg font-bold text-gray-900 mb-1">${L?'3 Mon. vor Ablauf':'3 mnd. voor einde'}</div>
+          <p class="text-xs text-gray-600">${L?'Während der 5 Jahre: keine ordentliche Kündigung (wie bei jeder Festlaufzeit). Am Ende: 3 Monate vorher mitteilen, ob Sie verlängern. Außerordentliche Kündigung bei schwerwiegenden Gründen jederzeit möglich (§314 BGB).':'Tijdens de 5 jaar: geen gewone opzegging (zoals bij elke vaste looptijd). Aan het einde: 3 maanden vantevoren aangeven of je verlengt. Buitengewone opzegging bij zwaarwegende redenen altijd mogelijk (§314 BGB).'}</p>
         </div>
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
           <div class="flex items-center gap-2 mb-3"><span class="text-xl">💰</span><strong class="text-gray-900">${L?'Kaufpreis bei Austritt':'Koopprijs bij uitstap'}</strong></div>
@@ -2999,11 +2999,11 @@ function renderFriendchisePitch() {
             impact: L?'Investition in Gefahr, Marken-Konflikt.':'Investering op het spel, merk-conflict.',
             garantie: L?'Klare Ausstiegsregelung':'Duidelijke exit-regeling',
             maatregelen: L ? [
-              'Ausstieg jederzeit mit 6 Monaten Kündigungsfrist — keine Strafgebühren',
+              'Ausstieg am Vertragsende (nach 5 Jahren) mit 3 Monaten Vorankündigung — keine Strafgebühren',
               'Wax Affairs hat Vorkaufsrecht zum Marktwert (verhindert Fire-Sale)',
               'Alternatives Szenario: Sie verkaufen als Goodwill an einen neuen Friendchisee (Vermittlung durch HQ)'
             ] : [
-              'Uittreden altijd mogelijk met 6 maanden opzegtermijn — geen boetes',
+              'Uittreden aan het einde (na 5 jaar) met 3 maanden vooraankondiging — geen boetes',
               'Wax Affairs heeft voorkeursrecht tot marktwaarde (voorkomt fire-sale)',
               'Alternatief scenario: je verkoopt als goodwill aan nieuwe Friendchisee (bemiddeling via HQ)'
             ]
@@ -3076,7 +3076,7 @@ function renderFriendchisePitch() {
 
       { cat:'Vertrag & Laufzeit', q:'Wie lange ist der Franchise-Vertrag?', a:'Anfangszeit 5 Jahre. Automatische Verlängerung um 5 Jahre, sofern beide Parteien zufrieden sind. Keine versteckten Verlängerungsklauseln.' },
       { cat:'Vertrag & Laufzeit', q:'Kann ich meinen Friendchise verkaufen?', a:'Ja, nach 2 Jahren Betrieb. Wax Affairs hat Vorkaufsrecht zum Marktwert. Bei Verkauf an einen Dritten muss der Käufer unser Persona-Check bestehen und die Schulung absolvieren.' },
-      { cat:'Vertrag & Laufzeit', q:'Was passiert, wenn ich aussteigen möchte?', a:'6 Monate Kündigungsfrist, keine Strafen. Sie dürfen Ihr Studio schließen oder an eine neue Friendchisee verkaufen (wir helfen bei der Vermittlung). Die Nao-Restbestände kaufen wir zum Einkaufspreis zurück.' },
+      { cat:'Vertrag & Laufzeit', q:'Was passiert, wenn ich aussteigen möchte?', a:'Der Vertrag läuft 5 Jahre fest. Am Ende können Sie mit 3 Monaten Vorankündigung entscheiden, nicht zu verlängern — ohne Strafen. Vor Ablauf: außerordentliche Kündigung bei schwerwiegenden Gründen (§314 BGB). Sie dürfen Ihr Studio schließen oder verkaufen (wir vermitteln). Nao-Restbestände kaufen wir zum Einkaufspreis zurück.' },
 
       { cat:'Arbeiten im Alltag', q:'Muss ich selbst in der Kabine stehen?', a:'Nein. Viele unserer Friendchisees arbeiten 2-3 Tage pro Woche in der Kabine, der Rest der Zeit: Management, Marketing, Team-Führung. Es gibt Friendchisees, die gar nicht selbst waxen und das Studio rein als Unternehmerin führen.' },
       { cat:'Arbeiten im Alltag', q:'Wie viele Stunden pro Woche muss ich investieren?', a:'Im ersten Jahr: 45-60 Stunden. Ab Jahr 2 (wenn das Team läuft): 30-40 Stunden. Weniger als 30 Stunden funktioniert nicht — das Modell erfordert aktive Geschäftsführung.' },
@@ -3097,7 +3097,7 @@ function renderFriendchisePitch() {
 
       { cat:'Contract & looptijd', q:'Hoe lang is het franchise-contract?', a:'Initiële looptijd 5 jaar. Automatische verlenging met 5 jaar mits beide partijen tevreden zijn. Geen verborgen verlengingsclausules.' },
       { cat:'Contract & looptijd', q:'Kan ik mijn Friendchise verkopen?', a:'Ja, na 2 jaar operationeel. Wax Affairs heeft voorkeursrecht tot marktwaarde. Bij verkoop aan een derde moet de koper onze Persona-check doorstaan en de training afronden.' },
-      { cat:'Contract & looptijd', q:'Wat gebeurt er als ik wil stoppen?', a:'6 maanden opzegtermijn, geen boetes. Je mag je studio sluiten of verkopen aan een nieuwe Friendchisee (wij helpen bij bemiddeling). De resterende Nao-voorraad kopen we terug tegen inkoopprijs.' },
+      { cat:'Contract & looptijd', q:'Wat gebeurt er als ik wil stoppen?', a:'Het contract loopt 5 jaar vast. Aan het einde kun je met 3 maanden vooraankondiging besluiten niet te verlengen — zonder boetes. Voortijdig: buitengewone opzegging bij zwaarwegende redenen (§314 BGB). Je mag je studio sluiten of verkopen (wij bemiddelen). De Nao-voorraad kopen we terug tegen inkoopprijs.' },
 
       { cat:'Werken in de praktijk', q:'Moet ik zelf in de cabine staan?', a:'Nee. Veel van onze Friendchisees werken 2-3 dagen per week in de cabine, de rest van de tijd: management, marketing, team-leiding. Er zijn Friendchisees die niet zelf waxen en de studio puur als ondernemer runnen.' },
       { cat:'Werken in de praktijk', q:'Hoeveel uren per week moet ik erin stoppen?', a:'Het eerste jaar: 45-60 uur. Vanaf jaar 2 (wanneer het team draait): 30-40 uur. Minder dan 30 uur werkt niet — het model vereist actieve bedrijfsvoering.' },
