@@ -6743,6 +6743,10 @@ const BP_SECTIES = [
       const coreInhoud = pakket.coreInhoud || [];
       const addons = pakket.addons || [];
       const addonsTotaal = addons.reduce((s,a) => s + (a.bedrag || 0), 0);
+      const fitOut = bp.studioFitOut || {};
+      const fitOutItems = fitOut.items || [];
+      const fitOutItemsMin = fitOutItems.reduce((s,x) => s + (x.min || 0), 0);
+      const fitOutItemsMax = fitOutItems.reduce((s,x) => s + (x.max || 0), 0);
       const onboardingFee = coreBedrag; // legacy alias — overal core-only
       const royaltyPct = ft.royaltyPct ?? 5;
       const royaltyHigh = ft.royaltyHighPct ?? 6;
@@ -6753,8 +6757,8 @@ const BP_SECTIES = [
       const contractDuur = ft.contractDuur ?? ft.contractduur ?? '5 jaar, verlengbaar';
       const territoriaal = ft.territoriaal ?? 'Exclusieve radius';
       const minBestelling = ft.minBestelling ?? ft.minOrder ?? 200;
-      const fitOutMin = startup.studioFitOutMin ?? 20000;
-      const fitOutMax = startup.studioFitOutMax ?? 45000;
+      const fitOutMin = fitOutItems.length ? fitOutItemsMin : (startup.studioFitOutMin ?? 20000);
+      const fitOutMax = fitOutItems.length ? fitOutItemsMax : (startup.studioFitOutMax ?? 45000);
       const totaalMin = startup.totaalMin ?? (ft.investMin ?? 35000);
       const totaalMax = startup.totaalMax ?? (ft.investMax ?? 75000);
       const werkkapMnd = startup.werkkapitaalMnd ?? 3;
@@ -6881,27 +6885,21 @@ const BP_SECTIES = [
           </div>
           <div class="bg-gradient-to-br from-gray-50 to-white border border-gray-100 rounded-xl p-5">
             <div class="text-xs text-gray-600 uppercase tracking-wider font-semibold mb-1">Studio fit-out${infoIcon('Studio fit-out — ' + fe(fitOutMin) + '–' + fe(fitOutMax), {
-              bron: 'Wat het kost om een ruimte op te leveren als werkbare Wax Affairs-studio. Onderkant: bestaande beauty-ruimte overnemen. Bovenkant: volledig nieuw ingerichte unit.',
+              bron: 'Wat het kost om een ruimte op te leveren als werkbare Wax Affairs-studio. Onderkant: bestaande beauty-ruimte overnemen. Bovenkant: volledig nieuw ingerichte unit. Gedetailleerd overzicht staat onder "Fit-out componenten".',
               berekening: [
-                ['Huurborg (3 maanden)', '€3k – €6k'],
-                ['Verbouwing / inrichting', '€8k – €20k'],
-                ['Apparatuur (tafel, wax warmer, sterilisator)', '€3k – €7k'],
-                ['Meubilair (receptie, kasten, wachtruimte)', '€2k – €5k'],
-                ['Branding + signage', '€1k – €3k'],
-                ['Initiële NAO-voorraad', '€1,5k – €3k'],
-                ['Reserve / overig', '€1k – €3k'],
-                ['= Totaal', fe(fitOutMin) + '–' + fe(fitOutMax)]
+                ...fitOutItems.map(it => [it.label || '', fe(it.min || 0) + ' – ' + fe(it.max || 0)]),
+                ['= Totaal', fe(fitOutMin) + ' – ' + fe(fitOutMax)]
               ],
               doel: [
                 'Locatie met minimaal 20-30 m² werkruimte',
                 'Vergunning voor cosmetische behandelingen',
                 'Water + elektra geschikt voor professionele wax-apparatuur',
-                'Huurbare afsluitbare ruimte voor voorraad NAO'
+                'Afsluitbare ruimte voor NAO-voorraad'
               ],
-              extra: 'Bovenkant is bijna nooit nodig — bestaande kappers/beauty-ruimte overnemen scheelt snel €10-15k.'
+              extra: 'Bovenkant is bijna nooit nodig — een bestaande kappers/beauty-ruimte overnemen scheelt snel €10-15k.'
             })}</div>
             <div class="text-3xl font-bold text-gray-900">${fe(fitOutMin)}–${fe(fitOutMax)}</div>
-            <div class="text-xs text-gray-500 mt-1">Afhankelijk van locatie en grootte — huur, inrichting, apparatuur</div>
+            <div class="text-xs text-gray-500 mt-1">${fitOutItems.length} componenten · zie opsplitsing hieronder</div>
           </div>
           <div class="bg-gradient-to-br from-green-50 to-white border border-green-100 rounded-xl p-5">
             <div class="text-xs text-green-700 uppercase tracking-wider font-semibold mb-1">Totale investering${infoIcon('Totale investering — ' + fe(totaalMin) + '–' + fe(totaalMax), {
@@ -6926,6 +6924,34 @@ const BP_SECTIES = [
             <div class="text-xs text-gray-500 mt-1">Core: onboarding + fit-out + ${werkkapMnd} mnd werkkap.${addonsTotaal ? ` · extra's tot ${fe(addonsTotaal)}` : ''}</div>
           </div>
         </div>
+
+        ${fitOutItems.length ? `<!-- Studio fit-out: opsplitsing in componenten -->
+        <div class="border-t border-gray-100 pt-5 mt-5 mb-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h4 class="text-sm font-bold text-gray-900">Studio fit-out — wat zit erin?</h4>
+              <p class="text-xs text-gray-500">De ${fitOutItems.length} posten waar het fit-out-budget heen gaat. Per post min–max afhankelijk van locatie en keuzes.</p>
+            </div>
+            <button onclick="openModal('bp-studio-fitout')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+            ${fitOutItems.map(it => {
+              const isZero = (it.min || 0) === 0 && (it.max || 0) === 0;
+              const range = it.min === it.max ? fe(it.min || 0) : `${fe(it.min || 0)} – ${fe(it.max || 0)}`;
+              return `<div class="bg-white border border-gray-200 rounded-xl p-4">
+                <div class="flex items-baseline justify-between gap-2 mb-1">
+                  <div class="font-semibold text-sm text-gray-900">${it.label || ''}</div>
+                  <div class="font-bold text-gray-900 whitespace-nowrap text-sm">${isZero ? '—' : range}</div>
+                </div>
+                ${it.beschrijving ? `<p class="text-xs text-gray-500 leading-relaxed">${it.beschrijving}</p>` : ''}
+              </div>`;
+            }).join('')}
+          </div>
+          <div class="mt-3 flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <span class="text-xs text-gray-600">Totaal fit-out (som van alle posten):</span>
+            <span class="font-bold text-gray-900">${fe(fitOutItemsMin)} – ${fe(fitOutItemsMax)}</span>
+          </div>
+        </div>` : ''}
 
         ${addons.length ? `<!-- Optionele onboarding-extra's -->
         <div class="border-t border-gray-100 pt-5 mt-5 mb-5">
@@ -8585,6 +8611,7 @@ function openModal(type, id) {
   else if (type === 'bp-franchise-terms') content.innerHTML = modalBpFranchiseTerms();
   else if (type === 'bp-studio-pl') content.innerHTML = modalBpStudioPL();
   else if (type === 'bp-onboarding-pakket') content.innerHTML = modalBpOnboardingPakket();
+  else if (type === 'bp-studio-fitout') content.innerHTML = modalBpStudioFitOut();
   else if (type === 'bp-legal-fases') content.innerHTML = modalBpLegalFases();
   else if (type === 'bp-legal-punten') content.innerHTML = modalBpLegalPunten();
   else if (type === 'bp-startup-budget') content.innerHTML = modalBpStartupBudget();
@@ -10039,6 +10066,78 @@ async function verwijderAddon(idx) {
   await saveBp();
   openModal('bp-onboarding-pakket');
   renderBusinessplan();
+}
+
+// ─── MODAL: Studio Fit-out Componenten ───
+function modalBpStudioFitOut() {
+  if (!data.bp.studioFitOut) data.bp.studioFitOut = { items: [] };
+  if (!data.bp.studioFitOut.items) data.bp.studioFitOut.items = [];
+  const items = data.bp.studioFitOut.items;
+  const sumMin = items.reduce((s,x) => s + (x.min || 0), 0);
+  const sumMax = items.reduce((s,x) => s + (x.max || 0), 0);
+
+  return modalHeader('Studio fit-out — posten bewerken', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      <p class="text-xs text-gray-500 italic">Elke post heeft min en max. Totaal wordt live berekend en vervangt de hero-tegel op de Friendchise Model tab.</p>
+      ${items.map((it,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${it.label || 'Post ' + (i+1)}</span>
+          <button onclick="verwijderFitOutPost(${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <input type="text" value="${it.label||''}" onblur="updateFitOutPost(${i},'label',this.value,false)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Label (bv. Apparatuur)">
+        <textarea onblur="updateFitOutPost(${i},'beschrijving',this.value,false)" class="w-full px-3 py-2 border rounded-lg text-xs" rows="2" placeholder="Korte toelichting: wat valt eronder?">${it.beschrijving||''}</textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs text-gray-500 mb-1">Min (€)</label>
+            <input type="number" value="${it.min ?? 0}" onblur="updateFitOutPost(${i},'min',this.value,true)" class="w-full px-3 py-2 border rounded-lg text-sm" step="100">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-500 mb-1">Max (€)</label>
+            <input type="number" value="${it.max ?? 0}" onblur="updateFitOutPost(${i},'max',this.value,true)" class="w-full px-3 py-2 border rounded-lg text-sm" step="100">
+          </div>
+        </div>
+      </div>`).join('')}
+      <button onclick="voegFitOutPostToe()" class="btn-primary w-full py-3 rounded-lg font-medium">+ Post toevoegen</button>
+      <div class="p-3 bg-gray-50 rounded-lg text-xs text-gray-600">
+        <strong>Totaal fit-out:</strong> ${fe(sumMin)} – ${fe(sumMax)}
+      </div>
+    </div>`;
+}
+
+async function updateFitOutPost(idx, field, val, numeric) {
+  if (!data.bp.studioFitOut?.items?.[idx]) return;
+  if (numeric) { const n = parseFloat(val); data.bp.studioFitOut.items[idx][field] = isNaN(n) ? 0 : n; }
+  else data.bp.studioFitOut.items[idx][field] = val;
+  // Sync naar startupInvestering voor back-compat
+  syncFitOutNaarStartup();
+  await saveBp();
+}
+
+async function voegFitOutPostToe() {
+  if (!data.bp.studioFitOut) data.bp.studioFitOut = { items: [] };
+  if (!data.bp.studioFitOut.items) data.bp.studioFitOut.items = [];
+  data.bp.studioFitOut.items.push({ id: 'fo' + Date.now(), label: 'Nieuwe post', beschrijving: '', min: 0, max: 0 });
+  await saveBp();
+  openModal('bp-studio-fitout');
+}
+
+async function verwijderFitOutPost(idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  data.bp.studioFitOut.items.splice(idx, 1);
+  syncFitOutNaarStartup();
+  await saveBp();
+  openModal('bp-studio-fitout');
+  renderBusinessplan();
+}
+
+function syncFitOutNaarStartup() {
+  const items = data.bp.studioFitOut?.items || [];
+  if (!items.length) return;
+  const sumMin = items.reduce((s,x) => s + (x.min || 0), 0);
+  const sumMax = items.reduce((s,x) => s + (x.max || 0), 0);
+  if (!data.bp.startupInvestering) data.bp.startupInvestering = {};
+  data.bp.startupInvestering.studioFitOutMin = sumMin;
+  data.bp.startupInvestering.studioFitOutMax = sumMax;
 }
 
 async function snelTaakVanBP(form, sectieTitel) {
