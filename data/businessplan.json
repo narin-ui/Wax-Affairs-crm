@@ -113,5 +113,20 @@
     { "id": "k4", "kpi": "Bruto marge per revenue stream", "frequentie": "Kwartaal" },
     { "id": "k5", "kpi": "CAC en LTV per marketingkanaal", "frequentie": "Kwartaal" },
     { "id": "k6", "kpi": "Netto cash-positie + runway (maanden)", "frequentie": "Maandelijks" }
+  ],
+  "marktOmvang": [
+    { "id": "mo1", "label": "Globale hair removal markt", "waarde": "~$12B", "detail": "CAGR 5-6%", "kleur": "wax" },
+    { "id": "mo2", "label": "Duitsland waxing (top steden)", "waarde": "€250M-€1B", "detail": "jaarlijks adresseerbaar", "kleur": "gray" }
+  ],
+  "concurrenten": [
+    { "id": "c1", "naam": "Wax in the City", "regio": "DE", "omschrijving": "Sterk merk, maar geen training pipeline en geen structurele franchise-expansie." },
+    { "id": "c2", "naam": "European Wax Center", "regio": "USA", "omschrijving": "Bewezen franchise-model met membership, maar US-kostenstructuur en niet in Europa actief." },
+    { "id": "c3", "naam": "Lokale independents", "regio": "Overal", "omschrijving": "Lage prijs, maar inconsistente kwaliteit, geen training en geen merkbeleving." }
+  ],
+  "moat": [
+    { "id": "m1", "icon": "🎓", "titel": "Academy Pipeline", "omschrijving": "Gecertificeerde talent-pipeline — wie bij ons leert, kent onze standaard.", "kleur": "wax" },
+    { "id": "m2", "icon": "🧴", "titel": "NAO Producten", "omschrijving": "Exclusieve productlijn = verplichte wholesale = recurring revenue.", "kleur": "terra" },
+    { "id": "m3", "icon": "🏛️", "titel": "NL BV + IP", "omschrijving": "Innovation Box (9% op IP) + EU-trademark = structureel fiscaal en juridisch voordeel.", "kleur": "blue" },
+    { "id": "m4", "icon": "💡", "titel": "Lean HQ", "omschrijving": "Asset-light model, snel winstgevend, geen dure infrastructuur.", "kleur": "green" }
   ]
 }

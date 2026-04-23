@@ -4260,8 +4260,8 @@ const T = {
     bpRoadmapUitleg:'Een plan zonder taken is een dagdroom. Dit is waar we de strategie vertalen naar concrete acties — wie doet wat, wanneer, en hoever zijn we. Elke taak is toegewezen aan Simone (vak, producten, kwaliteit) of Narin (business, juridisch, financieel), verdeeld over fases. Klik op een vinkje om de status te wijzigen — open → bezig → klaar. Zo zie je in één oogopslag of we op koers liggen, of dat er iets moet worden herprioriteerd.',
     bpDecisionsTitel:'Besluiten & Actiepunten',bpDecisionsSub:'Wat we besluiten blijft staan, wat we afspreken wordt gedaan',
     bpDecisionsUitleg:'Deze pagina is jullie werkkopie tijdens elke meeting — één plek waar open vragen, genomen besluiten en nieuwe actiepunten landen. Alles wordt automatisch opgeslagen terwijl jullie typen. Zet actiepunten met een streepje op een eigen regel (bv. "- Simone: contact opnemen met Epifutur") en klik op "Actiepunten omzetten naar Taken" — dan verschijnen ze direct in de Roadmap, met de juiste toewijzing. Geen losse memo\'s meer, geen "wie zou dat ook alweer doen".',
-    bpMarketTitel:'Markt & Concurrentie',bpMarketSub:'Marktomvang en onze positie',
-    bpMarketUitleg:'De wereldwijde hair removal markt is ~$12 miljard en groeit 5-6% per jaar. In Duitsland is waxing een groeiende markt met sterke vraag in steden. Het probleem: de meeste studio\'s worden gerund door individuen zonder standaardisatie — inconsistente kwaliteit, geen training, geen merkbeleving. Wax Affairs lost dit op door craft en business samen te brengen in een schaalbaar franchise-concept.',
+    bpMarketTitel:'Markt & Concurrentie',bpMarketSub:'Waar we spelen en waarom wij winnen',
+    bpMarketUitleg:'De wereldwijde hair-removal markt is rond de $12 miljard en groeit met 5-6% per jaar. In Duitsland is waxing in de grote steden een duidelijk groeimarkt — alleen zit de aanbodkant scheef. Wax in the City heeft het merk, maar geen training-pipeline of franchise-machine. European Wax Center heeft het franchise-model, maar zit niet in Europa. En de honderden lokale independents leveren wisselende kwaliteit zonder merk of standaard. Daar stappen wij in: craft én business in één schaalbaar concept, met onze eigen academy als talent-pijplijn en NAO-producten als structurele marge. Niet de goedkoopste, wel de meest doordachte.',
     bewerken:'Bewerken',opslaan:'Opslaan',annuleren:'Annuleren',toevoegen:'Toevoegen',verwijderen:'Verwijderen',
     revenueStream:'Inkomstenstroom',naam:'Naam',beschrijving:'Beschrijving',model:'Verdienmodel',marge:'Marge',
     jaar:'Jaar',omzet:'Omzet',kosten:'Kosten',winst:'Winst',locaties:'Locaties',
@@ -4323,8 +4323,8 @@ const T = {
     bpRoadmapUitleg:'Ein Plan ohne Aufgaben ist ein Tagtraum. Hier übersetzen wir die Strategie in konkrete Aktionen — wer macht was, wann, und wie weit sind wir. Jede Aufgabe ist Simone (Handwerk, Produkte, Qualität) oder Narin (Business, Recht, Finanzen) zugewiesen, verteilt auf Phasen. Klicken Sie auf einen Haken, um den Status zu ändern — offen → in Arbeit → erledigt. So sieht man auf einen Blick, ob wir auf Kurs sind oder etwas neu priorisiert werden muss.',
     bpDecisionsTitel:'Entscheidungen & Aktionspunkte',bpDecisionsSub:'Was wir beschließen, bleibt stehen — was wir verabreden, wird getan',
     bpDecisionsUitleg:'Diese Seite ist Ihre Arbeitskopie für jedes Meeting — ein Ort, an dem offene Fragen, gefasste Entscheidungen und neue Aktionspunkte landen. Alles wird automatisch gespeichert, während Sie tippen. Setzen Sie Aktionspunkte mit einem Strich auf eine eigene Zeile (z.B. "- Simone: Epifutur kontaktieren") und klicken Sie auf "Aktionspunkte in Aufgaben umwandeln" — dann erscheinen sie direkt in der Roadmap, mit der richtigen Zuweisung. Keine losen Notizen mehr, kein "wer sollte das nochmal machen".',
-    bpMarketTitel:'Markt & Wettbewerb',bpMarketSub:'Marktgröße und unsere Position',
-    bpMarketUitleg:'Der weltweite Markt für Haarentfernung beträgt ~$12 Milliarden und wächst jährlich um 5-6%. In Deutschland ist Waxing ein wachsender Markt. Das Problem: Die meisten Studios werden von Einzelpersonen ohne Standardisierung betrieben. Wax Affairs löst dies durch die Kombination von Handwerk und Business in einem skalierbaren Franchise-Konzept.',
+    bpMarketTitel:'Markt & Wettbewerb',bpMarketSub:'Wo wir spielen — und warum wir gewinnen',
+    bpMarketUitleg:'Der weltweite Markt für Haarentfernung umfasst rund $12 Milliarden und wächst jährlich um 5-6%. In Deutschland ist Waxing in den großen Städten ein klarer Wachstumsmarkt — nur ist das Angebot schief verteilt. Wax in the City hat die Marke, aber keine Training-Pipeline und keine Franchise-Maschine. European Wax Center hat das Franchise-Modell, ist aber nicht in Europa. Und Hunderte lokaler Unabhängiger liefern schwankende Qualität ohne Marke oder Standard. Genau hier steigen wir ein: Handwerk und Business in einem skalierbaren Konzept, mit unserer eigenen Academy als Talentpipeline und NAO-Produkten als struktureller Marge. Nicht die Günstigsten, aber die Durchdachtesten.',
     bewerken:'Bearbeiten',opslaan:'Speichern',annuleren:'Abbrechen',toevoegen:'Hinzufügen',verwijderen:'Löschen',
     revenueStream:'Einnahmequelle',naam:'Name',beschrijving:'Beschreibung',model:'Geschäftsmodell',marge:'Marge',
     jaar:'Jahr',omzet:'Umsatz',kosten:'Kosten',winst:'Gewinn',locaties:'Standorte',
@@ -5212,33 +5212,79 @@ const BP_SECTIES = [
     }},
 
   { id:'market', icon:'🌍', tKey:'bpMarket',
-    content: () => `
+    content: () => {
+      const bp = data.bp || {};
+      const omvang = bp.marktOmvang || [];
+      const concurrenten = bp.concurrenten || [];
+      const moat = bp.moat || [];
+      const kleurBg = { wax:'bg-wax-50', gray:'bg-gray-50', blue:'bg-blue-50', green:'bg-green-50', terra:'bg-terra-50', yellow:'bg-yellow-50', purple:'bg-purple-50' };
+      const kleurAcc = { wax:'text-wax-700', gray:'text-gray-800', blue:'text-blue-700', green:'text-green-700', terra:'text-terra-700', yellow:'text-yellow-700', purple:'text-purple-700' };
+
+      return `
       <div class="grid lg:grid-cols-2 gap-6 mb-6">
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Marktomvang</h3>
+        <!-- Marktomvang -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">Marktomvang</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Waar het geld is, waar wij spelen</p>
+            </div>
+            <button onclick="openModal('bp-markt-omvang')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
           <div class="space-y-3">
-            <div class="p-4 bg-wax-50 rounded-xl text-center"><div class="text-xs text-gray-500">Globale hair removal markt</div><div class="text-2xl font-bold text-wax-700">~$12B</div><div class="text-xs text-gray-400">CAGR 5-6%</div></div>
-            <div class="p-4 bg-gray-50 rounded-xl text-center"><div class="text-xs text-gray-500">Duitsland waxing (top steden)</div><div class="text-2xl font-bold">€250M-€1B</div><div class="text-xs text-gray-400">jaarlijks adresseerbaar</div></div>
+            ${omvang.map(o => `
+              <div class="p-4 ${kleurBg[o.kleur]||'bg-gray-50'} rounded-xl text-center">
+                <div class="text-xs text-gray-500">${o.label||''}</div>
+                <div class="text-2xl font-bold ${kleurAcc[o.kleur]||'text-gray-900'} mt-0.5">${o.waarde||'—'}</div>
+                ${o.detail?`<div class="text-xs text-gray-400 mt-0.5">${o.detail}</div>`:''}
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen marktdata toegevoegd.</p>'}
           </div>
         </div>
-        <div class="bg-white rounded-xl border p-5">
-          <h3 class="font-bold text-gray-900 mb-3">Concurrenten</h3>
+
+        <!-- Concurrenten -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="font-bold text-gray-900 text-lg">Concurrenten</h3>
+              <p class="text-xs text-gray-500 mt-0.5">Wie er al is, wat ze missen</p>
+            </div>
+            <button onclick="openModal('bp-concurrenten')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
+          </div>
           <div class="space-y-2 text-sm">
-            <div class="p-3 border rounded-lg"><strong>Wax in the City (DE)</strong><p class="text-xs text-gray-400 mt-1">Sterk merk, geen training pipeline, geen franchise expansie</p></div>
-            <div class="p-3 border rounded-lg"><strong>European Wax Center (USA)</strong><p class="text-xs text-gray-400 mt-1">Bewezen franchise, membership model — maar US cost structure</p></div>
-            <div class="p-3 border rounded-lg"><strong>Lokale independents</strong><p class="text-xs text-gray-400 mt-1">Lage prijs, maar inconsistente kwaliteit en geen training</p></div>
+            ${concurrenten.map(c => `
+              <div class="p-3 border border-gray-100 rounded-lg">
+                <div class="flex items-baseline gap-2 flex-wrap">
+                  <strong class="text-gray-900">${c.naam||''}</strong>
+                  ${c.regio?`<span class="text-xs text-gray-400">${c.regio}</span>`:''}
+                </div>
+                ${c.omschrijving?`<p class="text-xs text-gray-500 mt-1 leading-relaxed">${c.omschrijving}</p>`:''}
+              </div>
+            `).join('') || '<p class="text-xs text-gray-400 italic">Nog geen concurrenten toegevoegd.</p>'}
           </div>
         </div>
       </div>
-      <div class="bg-white rounded-xl border p-5">
-        <h3 class="font-bold text-gray-900 mb-3">Onze Moat (Verdedigbaarheid)</h3>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div class="p-4 bg-wax-50 rounded-xl text-center"><div class="text-2xl mb-2">🎓</div><div class="text-sm font-bold">Academy Pipeline</div><div class="text-xs text-gray-500 mt-1">Gecertificeerde talent pipeline</div></div>
-          <div class="p-4 bg-terra-50 rounded-xl text-center"><div class="text-2xl mb-2">🧴</div><div class="text-sm font-bold">Não Producten</div><div class="text-xs text-gray-500 mt-1">Verplichte wholesale = recurring revenue</div></div>
-          <div class="p-4 bg-blue-50 rounded-xl text-center"><div class="text-2xl mb-2">🏛️</div><div class="text-sm font-bold">NL BV + IP</div><div class="text-xs text-gray-500 mt-1">Innovation Box 9% + EU trademark</div></div>
-          <div class="p-4 bg-green-50 rounded-xl text-center"><div class="text-2xl mb-2">💡</div><div class="text-sm font-bold">Lean HQ</div><div class="text-xs text-gray-500 mt-1">Snel winstgevend, asset-light model</div></div>
+
+      <!-- Moat -->
+      <div class="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-gray-900 text-lg">Onze Moat — Verdedigbaarheid</h3>
+            <p class="text-xs text-gray-500 mt-0.5">Waarom een concurrent ons niet zomaar kopieert</p>
+          </div>
+          <button onclick="openModal('bp-moat')" class="text-xs text-wax-600 hover:text-wax-700 font-medium">${t('bewerken')} →</button>
         </div>
-      </div>` },
+        <div class="grid md:grid-cols-2 lg:grid-cols-${Math.min(moat.length||1,4)} gap-3">
+          ${moat.map(m => `
+            <div class="p-4 ${kleurBg[m.kleur]||'bg-gray-50'} rounded-xl">
+              <div class="text-2xl mb-2">${m.icon||'✨'}</div>
+              <div class="text-sm font-bold text-gray-900">${m.titel||''}</div>
+              ${m.omschrijving?`<div class="text-xs text-gray-600 mt-1 leading-relaxed">${m.omschrijving}</div>`:''}
+            </div>
+          `).join('') || '<p class="text-xs text-gray-400 italic col-span-full">Nog geen moat-punten toegevoegd.</p>'}
+        </div>
+      </div>`;
+    }},
 ];
 
 let bpSectieIdx = 0;
@@ -5935,6 +5981,9 @@ function openModal(type, id) {
   else if (type === 'bp-marketing-budget') content.innerHTML = modalBpMarketingBudget();
   else if (type === 'bp-risicos') content.innerHTML = modalBpRisicos();
   else if (type === 'bp-kpis') content.innerHTML = modalBpKpis();
+  else if (type === 'bp-markt-omvang') content.innerHTML = modalBpMarktOmvang();
+  else if (type === 'bp-concurrenten') content.innerHTML = modalBpConcurrenten();
+  else if (type === 'bp-moat') content.innerHTML = modalBpMoat();
   else if (type === 'booking') content.innerHTML = modalBooking(arguments[2], arguments[3]);
   else if (type === 'booking-detail') content.innerHTML = modalBookingDetail(id);
   else if (type === 'studio') content.innerHTML = modalStudio();
@@ -7028,6 +7077,96 @@ async function verwijderRisicoKpi(arrKey, idx) {
   await saveBp();
   openModal(arrKey === 'risicos' ? 'bp-risicos' : 'bp-kpis');
   renderBusinessplan();
+}
+
+// ─── Generieke array editor helpers ───
+const MARKET_MODALS = { marktOmvang:'bp-markt-omvang', concurrenten:'bp-concurrenten', moat:'bp-moat' };
+
+async function voegMarketItemToe(arrKey, tpl) {
+  if (!data.bp[arrKey]) data.bp[arrKey] = [];
+  data.bp[arrKey].push({ id: arrKey + Date.now(), ...tpl });
+  await saveBp();
+  openModal(MARKET_MODALS[arrKey]);
+}
+
+async function verwijderMarketItem(arrKey, idx) {
+  if (!confirm(t('verwijderen')+'?')) return;
+  if (!data.bp[arrKey]) return;
+  data.bp[arrKey].splice(idx, 1);
+  await saveBp();
+  openModal(MARKET_MODALS[arrKey]);
+  renderBusinessplan();
+}
+
+const KLEUR_OPTIES = ['wax','gray','blue','green','terra','yellow','purple'];
+
+// ─── MODAL: Markt Omvang ───
+function modalBpMarktOmvang() {
+  if (!data.bp.marktOmvang) data.bp.marktOmvang = [];
+  const items = data.bp.marktOmvang;
+  return modalHeader('Marktomvang', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((o,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${o.label || 'Marktsegment ' + (i+1)}</span>
+          <button onclick="verwijderMarketItem('marktOmvang',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <input type="text" value="${o.label||''}" onblur="updateBpArr('marktOmvang',${i},'label',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Label (bv. Globale hair removal markt)">
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" value="${o.waarde||''}" onblur="updateBpArr('marktOmvang',${i},'waarde',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Waarde (bv. ~$12B)">
+          <input type="text" value="${o.detail||''}" onblur="updateBpArr('marktOmvang',${i},'detail',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Detail (bv. CAGR 5-6%)">
+        </div>
+        <select onchange="updateBpArr('marktOmvang',${i},'kleur',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm">
+          ${KLEUR_OPTIES.map(k => `<option value="${k}" ${o.kleur===k?'selected':''}>Kleur: ${k}</option>`).join('')}
+        </select>
+      </div>`).join('')}
+      <button onclick="voegMarketItemToe('marktOmvang',{label:'Nieuw segment',waarde:'',detail:'',kleur:'gray'})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Segment toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: Concurrenten ───
+function modalBpConcurrenten() {
+  if (!data.bp.concurrenten) data.bp.concurrenten = [];
+  const items = data.bp.concurrenten;
+  return modalHeader('Concurrenten', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((c,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${c.naam || 'Concurrent ' + (i+1)}</span>
+          <button onclick="verwijderMarketItem('concurrenten',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <input type="text" value="${c.naam||''}" onblur="updateBpArr('concurrenten',${i},'naam',this.value)" class="px-3 py-2 border rounded-lg text-sm col-span-2" placeholder="Naam">
+          <input type="text" value="${c.regio||''}" onblur="updateBpArr('concurrenten',${i},'regio',this.value)" class="px-3 py-2 border rounded-lg text-sm" placeholder="Regio (DE/USA)">
+        </div>
+        <textarea onblur="updateBpArr('concurrenten',${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Sterkte + zwakte">${c.omschrijving||''}</textarea>
+      </div>`).join('')}
+      <button onclick="voegMarketItemToe('concurrenten',{naam:'Nieuwe concurrent',regio:'',omschrijving:''})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Concurrent toevoegen</button>
+    </div>`;
+}
+
+// ─── MODAL: Moat ───
+function modalBpMoat() {
+  if (!data.bp.moat) data.bp.moat = [];
+  const items = data.bp.moat;
+  return modalHeader('Moat — Verdedigbaarheid', 'Bewerken') +
+    `<div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      ${items.map((m,i) => `<div class="border rounded-xl p-4 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-sm">${m.titel || 'Moat ' + (i+1)}</span>
+          <button onclick="verwijderMarketItem('moat',${i})" class="text-xs text-red-500 hover:text-red-700">${t('verwijderen')}</button>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+          <input type="text" value="${m.icon||''}" onblur="updateBpArr('moat',${i},'icon',this.value)" class="px-3 py-2 border rounded-lg text-sm text-center" placeholder="🎓">
+          <input type="text" value="${m.titel||''}" onblur="updateBpArr('moat',${i},'titel',this.value)" class="px-3 py-2 border rounded-lg text-sm col-span-3" placeholder="Titel">
+        </div>
+        <textarea onblur="updateBpArr('moat',${i},'omschrijving',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm" rows="2" placeholder="Waarom dit ons verdedigbaar maakt">${m.omschrijving||''}</textarea>
+        <select onchange="updateBpArr('moat',${i},'kleur',this.value)" class="w-full px-3 py-2 border rounded-lg text-sm">
+          ${KLEUR_OPTIES.map(k => `<option value="${k}" ${m.kleur===k?'selected':''}>Kleur: ${k}</option>`).join('')}
+        </select>
+      </div>`).join('')}
+      <button onclick="voegMarketItemToe('moat',{icon:'✨',titel:'Nieuw moat-punt',omschrijving:'',kleur:'gray'})" class="btn-primary w-full py-3 rounded-lg font-medium">+ Moat-punt toevoegen</button>
+    </div>`;
 }
 
 // ─── MODAL: BP Franchise Terms ───
