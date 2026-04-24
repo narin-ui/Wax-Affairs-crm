@@ -1798,7 +1798,7 @@ app.post('/api/adviesraad/chat', async (req, res) => {
 app.get('/api/adviesraad/personas', (req, res) => {
   if (!requireAuth(req, res)) return;
   const list = Object.entries(ADVIESRAAD_PERSONAS).map(([id, p]) => ({ id, naam: p.naam, expertise: p.expertise }));
-  res.json(list);
+  res.json({ personas: list, keyConfigured: !!process.env.ANTHROPIC_API_KEY });
 });
 
 

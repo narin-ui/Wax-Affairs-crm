@@ -480,6 +480,12 @@
       <strong>⚠️ Let op:</strong> dit zijn AI-gegenereerde antwoorden, geen bindend advies. Voor concrete juridische, fiscale of financiële beslissingen altijd een echte specialist raadplegen. Gebruik dit als sparring-partner, niet als vervanging.
     </div>
 
+    <div id="adviesraad-banner" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-900">
+      <strong>🔌 AI-features staan uit.</strong>
+      De <code class="px-1 py-0.5 bg-red-100 rounded text-[12px]">ANTHROPIC_API_KEY</code> ontbreekt in de Railway-omgeving, waardoor alle specialisten en quick actions niet kunnen reageren.
+      <div class="mt-2 text-[13px]">Admin: ga naar Railway → project → service → <strong>Variables</strong>, voeg <code class="px-1 py-0.5 bg-red-100 rounded text-[12px]">ANTHROPIC_API_KEY</code> toe (key via <a href="https://console.anthropic.com/" target="_blank" rel="noopener" class="underline">console.anthropic.com</a>). Railway redeployt automatisch.</div>
+    </div>
+
     <div class="grid lg:grid-cols-[260px_1fr] gap-6">
       <!-- Sidebar met persona-selectie -->
       <div class="space-y-2" id="adviesraad-personas">
@@ -1690,6 +1696,7 @@ function lookupStadt() {
 // ═══════════ ADVIESRAAD ═══════════
 let adviesraadCurrent = null;
 let adviesraadLastType = null; // onthoud laatste quick-action type voor "opslaan"
+let adviesraadKeyConfigured = true; // wordt gezet door renderAdviesraad()
 const adviesraadHistory = {};
 
 // Marketing quick-actions — per specialist 4 kant-en-klare content-generatie prompts
@@ -1716,19 +1723,28 @@ const MARKETING_QUICK_ACTIONS = {
 
 async function renderAdviesraad() {
   const sidebar = document.getElementById('adviesraad-personas');
+  const banner = document.getElementById('adviesraad-banner');
   if (!sidebar) return;
   if (!sidebar.querySelector("button")) {
     try {
       const r = await fetch('/api/adviesraad/personas');
-      const personas = await r.json();
+      const data = await r.json();
+      const personas = Array.isArray(data) ? data : (data.personas || []);
+      adviesraadKeyConfigured = Array.isArray(data) ? true : !!data.keyConfigured;
+      if (banner) banner.classList.toggle('hidden', adviesraadKeyConfigured);
       const emojiMap = { steuer:'💼', legal:'⚖️', hr:'👥', marketing:'🔍', sea:'🎯', social:'📱', sales:'💰', finance:'📊' };
       sidebar.innerHTML = '<div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Kies specialist</div>' +
-        personas.map(p => 
+        personas.map(p =>
           '<button onclick="adviesraadSelect(' + String.fromCharCode(39) + p.id + String.fromCharCode(39) + ')" id="persona-' + p.id + '" class="w-full text-left p-3 bg-white hover:bg-wax-50 border-2 border-gray-200 rounded-lg transition">' +
           '<div class="flex items-start gap-2"><span class="text-xl">' + (emojiMap[p.id] || '🎯') + '</span>' +
           '<div class="flex-1 min-w-0"><div class="font-semibold text-gray-900 text-sm">' + p.naam + '</div>' +
           '<div class="text-xs text-gray-500 mt-0.5">' + p.expertise + '</div></div></div></button>'
         ).join('');
+      const sendBtn = document.getElementById('adviesraad-send');
+      if (sendBtn && !adviesraadKeyConfigured) {
+        sendBtn.disabled = true;
+        sendBtn.title = 'ANTHROPIC_API_KEY ontbreekt in Railway';
+      }
     } catch (e) {
       sidebar.innerHTML = '<div class="text-sm text-red-600">Fout bij laden adviseurs. Check of ANTHROPIC_API_KEY is ingesteld.</div>';
     }
@@ -1747,11 +1763,15 @@ function adviesraadSelect(id) {
 
   // Quick actions bar voor marketing-specialists
   const quickActions = MARKETING_QUICK_ACTIONS[id];
+  const qaDisabled = !adviesraadKeyConfigured;
+  const qaBtnClass = qaDisabled
+    ? 'flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-medium text-gray-400 cursor-not-allowed'
+    : 'flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-wax-50 border border-wax-200 rounded-lg text-xs font-medium text-gray-700 hover:text-wax-700 transition';
   const quickActionsHtml = quickActions ? `
     <div class="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-wax-50/50 to-transparent">
-      <div class="text-[10px] font-bold uppercase tracking-wider text-wax-700 mb-2">⚡ Quick actions — direct uitvoeren</div>
+      <div class="text-[10px] font-bold uppercase tracking-wider text-wax-700 mb-2">⚡ Quick actions — direct uitvoeren${qaDisabled ? ' <span class="text-red-600 normal-case">(uit — API key ontbreekt)</span>' : ''}</div>
       <div class="flex flex-wrap gap-2">
-        ${quickActions.map((a, i) => `<button onclick="adviesraadQuickAction(${i})" class="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-wax-50 border border-wax-200 rounded-lg text-xs font-medium text-gray-700 hover:text-wax-700 transition">
+        ${quickActions.map((a, i) => `<button ${qaDisabled ? 'disabled title="ANTHROPIC_API_KEY ontbreekt in Railway"' : `onclick="adviesraadQuickAction(${i})"`} class="${qaBtnClass}">
           <span>${a.emoji}</span><span>${a.label}</span>
         </button>`).join('')}
       </div>
@@ -1835,6 +1855,7 @@ function escapeHtml(s) {
 
 async function adviesraadSend() {
   if (!adviesraadCurrent) { alert('Selecteer eerst een specialist links.'); return; }
+  if (!adviesraadKeyConfigured) { alert('AI staat uit — ANTHROPIC_API_KEY ontbreekt in Railway. Zie banner bovenaan.'); return; }
   const input = document.getElementById('adviesraad-input');
   const msg = (input.value || '').trim();
   if (!msg) return;
