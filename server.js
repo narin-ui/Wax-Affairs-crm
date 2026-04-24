@@ -1700,14 +1700,46 @@ const ADVIESRAAD_PERSONAS = {
 };
 
 const MARKTANALYSE_CACHE = {};
+
+// Gemini-helper — gebruikt Google AI Studio (gratis tier, 15 req/min).
+// messages: [{ role: 'user'|'assistant', content: '...' }, ...]
+async function callGemini({ systemPrompt, messages, maxTokens = 1500 }) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error('GEMINI_API_KEY not configured');
+  const contents = messages.map(m => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }]
+  }));
+  const body = {
+    contents,
+    generationConfig: { maxOutputTokens: maxTokens, temperature: 0.7 }
+  };
+  if (systemPrompt) body.systemInstruction = { parts: [{ text: systemPrompt }] };
+  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-goog-api-key': apiKey },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const errTxt = await r.text();
+    const err = new Error('Gemini API error');
+    err.status = r.status;
+    err.detail = errTxt.slice(0, 300);
+    throw err;
+  }
+  const data = await r.json();
+  const text = (data.candidates?.[0]?.content?.parts || [])
+    .map(p => p.text || '').join('').trim();
+  return text;
+}
+
 app.post('/api/marktanalyse', async (req, res) => {
   if (!requireAuth(req, res)) return;
   const { stadnaam, kaufkraft, categorie, mietMin, mietMax } = req.body || {};
   if (!stadnaam) return res.status(400).json({ error: 'stadnaam required' });
   const cacheKey = stadnaam.toLowerCase().trim();
   if (MARKTANALYSE_CACHE[cacheKey]) return res.json(MARKTANALYSE_CACHE[cacheKey]);
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured' });
+  if (!process.env.GEMINI_API_KEY) return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
   const systemPrompt = `Je bent een ervaren marktanalist voor beauty- en waxing-studios in Duitsland. Je kent de Duitse beauty-markt, stadsprofielen en concurrentie. Geef altijd concrete, stadspecifieke antwoorden — nooit generiek.`;
   const userPrompt = `Voor de stad ${stadnaam} (koopkracht-factor ${kaufkraft || 'onbekend'}, categorie ${categorie || '?'}, huur €${mietMin || '?'}-${mietMax || '?'}/m²), analyseer de marktkansen voor een nieuwe Braziliaanse waxing-studio (Wax Affairs franchise).
 
@@ -1731,15 +1763,11 @@ Geef terug als PURE JSON (geen markdown, geen tekst ervoor of erna):
 
 Score 1=laag / 5=zeer hoog. Wees stadspecifiek: noem wijken, doelgroepen, bekende beauty-ketens of salons die in Duitsland actief zijn (Hairfree, Sugaring Factory, Senzera, lokale salons). Antwoord in NEDERLANDS.`;
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1500, system: systemPrompt, messages: [{ role: 'user', content: userPrompt }] })
+    const text = await callGemini({
+      systemPrompt,
+      messages: [{ role: 'user', content: userPrompt }],
+      maxTokens: 1500
     });
-    if (!r.ok) { const errTxt = await r.text(); console.error('Marktanalyse API error:', r.status, errTxt.slice(0, 300)); return res.status(502).json({ error: 'Anthropic API error', status: r.status }); }
-    const data = await r.json();
-    const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('').trim();
-    // Parse JSON uit respons (strip markdown als die er toch in zit)
     let jsonText = text;
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) jsonText = jsonMatch[0];
@@ -1748,7 +1776,11 @@ Score 1=laag / 5=zeer hoog. Wees stadspecifiek: noem wijken, doelgroepen, bekend
     catch(err) { console.error('JSON parse fail:', jsonText.slice(0,200)); return res.status(500).json({ error: 'Parse error', raw: text.slice(0, 500) }); }
     MARKTANALYSE_CACHE[cacheKey] = parsed;
     res.json(parsed);
-  } catch (e) { console.error('Marktanalyse fail:', e); res.status(500).json({ error: String(e) }); }
+  } catch (e) {
+    console.error('Marktanalyse fail:', e, e.detail || '');
+    if (e.status) return res.status(502).json({ error: 'Gemini API error', status: e.status, detail: e.detail });
+    res.status(500).json({ error: String(e.message || e) });
+  }
 });
 
 app.post('/api/adviesraad/chat', async (req, res) => {
@@ -1757,8 +1789,7 @@ app.post('/api/adviesraad/chat', async (req, res) => {
   if (!persona || !message) return res.status(400).json({ error: 'persona and message required' });
   const p = ADVIESRAAD_PERSONAS[persona];
   if (!p) return res.status(400).json({ error: 'unknown persona' });
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured in Railway env' });
+  if (!process.env.GEMINI_API_KEY) return res.status(500).json({ error: 'GEMINI_API_KEY not configured in Railway env' });
   const msgs = [];
   if (Array.isArray(history)) {
     for (const h of history.slice(-10)) {
@@ -1767,38 +1798,19 @@ app.post('/api/adviesraad/chat', async (req, res) => {
   }
   msgs.push({ role: 'user', content: message });
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 1500,
-        system: p.systemPrompt,
-        messages: msgs
-      })
-    });
-    if (!r.ok) {
-      const errTxt = await r.text();
-      console.error('Anthropic API error:', r.status, errTxt.slice(0, 300));
-      return res.status(502).json({ error: 'Anthropic API error', status: r.status, detail: errTxt.slice(0, 200) });
-    }
-    const data = await r.json();
-    const text = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
+    const text = await callGemini({ systemPrompt: p.systemPrompt, messages: msgs, maxTokens: 1500 });
     res.json({ response: text, persona: p.naam });
   } catch (e) {
-    console.error('Adviesraad error:', e);
-    res.status(500).json({ error: String(e) });
+    console.error('Adviesraad error:', e, e.detail || '');
+    if (e.status) return res.status(502).json({ error: 'Gemini API error', status: e.status, detail: e.detail });
+    res.status(500).json({ error: String(e.message || e) });
   }
 });
 
 app.get('/api/adviesraad/personas', (req, res) => {
   if (!requireAuth(req, res)) return;
   const list = Object.entries(ADVIESRAAD_PERSONAS).map(([id, p]) => ({ id, naam: p.naam, expertise: p.expertise }));
-  res.json({ personas: list, keyConfigured: !!process.env.ANTHROPIC_API_KEY });
+  res.json({ personas: list, keyConfigured: !!process.env.GEMINI_API_KEY });
 });
 
 

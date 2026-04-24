@@ -482,8 +482,8 @@
 
     <div id="adviesraad-banner" class="hidden bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-sm text-red-900">
       <strong>🔌 AI-features staan uit.</strong>
-      De <code class="px-1 py-0.5 bg-red-100 rounded text-[12px]">ANTHROPIC_API_KEY</code> ontbreekt in de Railway-omgeving, waardoor alle specialisten en quick actions niet kunnen reageren.
-      <div class="mt-2 text-[13px]">Admin: ga naar Railway → project → service → <strong>Variables</strong>, voeg <code class="px-1 py-0.5 bg-red-100 rounded text-[12px]">ANTHROPIC_API_KEY</code> toe (key via <a href="https://console.anthropic.com/" target="_blank" rel="noopener" class="underline">console.anthropic.com</a>). Railway redeployt automatisch.</div>
+      De <code class="px-1 py-0.5 bg-red-100 rounded text-[12px]">GEMINI_API_KEY</code> ontbreekt in de Railway-omgeving, waardoor alle specialisten en quick actions niet kunnen reageren.
+      <div class="mt-2 text-[13px]">Admin: ga naar Railway → project → service → <strong>Variables</strong>, voeg <code class="px-1 py-0.5 bg-red-100 rounded text-[12px]">GEMINI_API_KEY</code> toe (gratis key via <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="underline">aistudio.google.com/apikey</a>). Railway redeployt automatisch.</div>
     </div>
 
     <div class="grid lg:grid-cols-[260px_1fr] gap-6">
@@ -1743,10 +1743,10 @@ async function renderAdviesraad() {
       const sendBtn = document.getElementById('adviesraad-send');
       if (sendBtn && !adviesraadKeyConfigured) {
         sendBtn.disabled = true;
-        sendBtn.title = 'ANTHROPIC_API_KEY ontbreekt in Railway';
+        sendBtn.title = 'GEMINI_API_KEY ontbreekt in Railway';
       }
     } catch (e) {
-      sidebar.innerHTML = '<div class="text-sm text-red-600">Fout bij laden adviseurs. Check of ANTHROPIC_API_KEY is ingesteld.</div>';
+      sidebar.innerHTML = '<div class="text-sm text-red-600">Fout bij laden adviseurs. Check of GEMINI_API_KEY is ingesteld.</div>';
     }
   }
 }
@@ -1771,7 +1771,7 @@ function adviesraadSelect(id) {
     <div class="px-5 py-3 border-b border-gray-100 bg-gradient-to-r from-wax-50/50 to-transparent">
       <div class="text-[10px] font-bold uppercase tracking-wider text-wax-700 mb-2">⚡ Quick actions — direct uitvoeren${qaDisabled ? ' <span class="text-red-600 normal-case">(uit — API key ontbreekt)</span>' : ''}</div>
       <div class="flex flex-wrap gap-2">
-        ${quickActions.map((a, i) => `<button ${qaDisabled ? 'disabled title="ANTHROPIC_API_KEY ontbreekt in Railway"' : `onclick="adviesraadQuickAction(${i})"`} class="${qaBtnClass}">
+        ${quickActions.map((a, i) => `<button ${qaDisabled ? 'disabled title="GEMINI_API_KEY ontbreekt in Railway"' : `onclick="adviesraadQuickAction(${i})"`} class="${qaBtnClass}">
           <span>${a.emoji}</span><span>${a.label}</span>
         </button>`).join('')}
       </div>
@@ -1855,7 +1855,7 @@ function escapeHtml(s) {
 
 async function adviesraadSend() {
   if (!adviesraadCurrent) { alert('Selecteer eerst een specialist links.'); return; }
-  if (!adviesraadKeyConfigured) { alert('AI staat uit — ANTHROPIC_API_KEY ontbreekt in Railway. Zie banner bovenaan.'); return; }
+  if (!adviesraadKeyConfigured) { alert('AI staat uit — GEMINI_API_KEY ontbreekt in Railway. Zie banner bovenaan.'); return; }
   const input = document.getElementById('adviesraad-input');
   const msg = (input.value || '').trim();
   if (!msg) return;
