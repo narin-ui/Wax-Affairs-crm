@@ -1,0 +1,45 @@
+{
+  "titel": {
+    "nl": "Nao by Wax Affairs productlijn",
+    "de": "Nao by Wax Affairs Produktlinie"
+  },
+  "introductie": {
+    "nl": "De WAX AFFAIRS productlijn — exclusief beschikbaar voor onze franchisees, ontwikkeld door Simone Costa op basis van haar 16+ jaar ervaring.",
+    "de": "Die WAX AFFAIRS Produktlinie — exklusiv für unsere Franchisees, entwickelt von Simone Costa auf Basis ihrer über 16-jährigen Erfahrung."
+  },
+  "usps": [
+    {
+      "nl": "Exclusieve toegang voor franchise-partners",
+      "de": "Exklusiver Zugang für Franchise-Partner"
+    },
+    {
+      "nl": "100% natuurlijk — geen synthetische ingrediënten",
+      "de": "100% natürlich — keine synthetischen Inhaltsstoffe"
+    },
+    {
+      "nl": "Volledig assortiment: wax, oliën, hydrolaat en poeder",
+      "de": "Vollständiges Sortiment: Wachs, Öle, Hydrolat und Puder"
+    },
+    {
+      "nl": "Groothandellevering rechtstreeks vanaf HQ, 15–25% bulk-korting",
+      "de": "Großhandelsbelieferung direkt von HQ, 15–25% Bulk-Rabatt"
+    },
+    {
+      "nl": "Retail-verkoop aan klanten voor extra marge in jouw studio",
+      "de": "Retail-Verkauf an Kundinnen für zusätzliche Marge in deinem Studio"
+    },
+    {
+      "nl": "Continue beschikbaarheid gegarandeerd",
+      "de": "Kontinuierliche Verfügbarkeit garantiert"
+    }
+  ],
+  "bulkKorting": {
+    "min": 15,
+    "max": 25,
+    "eenheid": "%"
+  },
+  "minBestelling": {
+    "bedrag": 200,
+    "valuta": "EUR"
+  }
+}
