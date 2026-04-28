@@ -1,0 +1,116 @@
+{
+  "titel": {
+    "nl": "Franchise Starter-Paket",
+    "de": "Franchise Starter-Paket"
+  },
+  "introductie": {
+    "nl": "Wat zit er op dag 1 in de eerste levering nadat het franchise-contract is getekend.",
+    "de": "Was in der ersten Lieferung nach Unterzeichnung enthalten ist."
+  },
+  "items": [
+    {
+      "id": "sp-01",
+      "titel": {
+        "nl": "Wax-warmer professioneel",
+        "de": "Wachswärmer professionell"
+      },
+      "detail": {
+        "nl": "Dubbele schaal",
+        "de": "Doppelte Schale"
+      },
+      "categorie": "apparatuur",
+      "aantal": 1
+    },
+    {
+      "id": "sp-02",
+      "titel": {
+        "nl": "WAX AFFAIRS wax-startvoorraad",
+        "de": "WAX AFFAIRS Wachs-Startbestand"
+      },
+      "detail": {
+        "nl": "6× wax (1 kg)",
+        "de": "6× Wachs (1 kg)"
+      },
+      "categorie": "voorraad",
+      "aantal": 6,
+      "eenheid": "kg"
+    },
+    {
+      "id": "sp-03",
+      "titel": {
+        "nl": "WAX AFFAIRS Aftercare-set compleet",
+        "de": "WAX AFFAIRS Aftercare-Komplettset"
+      },
+      "detail": {
+        "nl": "10× Post-Oil + 10× Hydrolaat + 5× Poeder",
+        "de": "10× Post-Oil + 10× Hydrolat + 5× Puder"
+      },
+      "categorie": "voorraad"
+    },
+    {
+      "id": "sp-04",
+      "titel": {
+        "nl": "Pre-Powder",
+        "de": "Pre-Powder"
+      },
+      "detail": {
+        "nl": "10 flessen (100 g)",
+        "de": "10 Flaschen (100 g)"
+      },
+      "categorie": "voorraad",
+      "aantal": 10
+    },
+    {
+      "id": "sp-05",
+      "titel": {
+        "nl": "Eenmalige materialen voor 3 maanden",
+        "de": "Einwegmaterial für 3 Monate"
+      },
+      "detail": {
+        "nl": "Spatels, vliesstroken, vlies-tafelafdekking, handschoenen",
+        "de": "Spatel, Vliesstreifen, Vlies-Liegenabdeckung, Handschuhe"
+      },
+      "categorie": "voorraad"
+    },
+    {
+      "id": "sp-06",
+      "titel": {
+        "nl": "Branding-Kit",
+        "de": "Branding-Kit"
+      },
+      "detail": {
+        "nl": "Logo-print, posters, QR-codes, uniform-patches",
+        "de": "Logo-Druck, Poster, QR-Codes, Uniform-Patches"
+      },
+      "categorie": "branding"
+    },
+    {
+      "id": "sp-07",
+      "titel": {
+        "nl": "Digitale Assets",
+        "de": "Digitale Assets"
+      },
+      "detail": {
+        "nl": "Logo-bestanden, Instagram-templates, menu-design",
+        "de": "Logo-Files, Instagram-Templates, Menu-Design"
+      },
+      "categorie": "digitaal"
+    },
+    {
+      "id": "sp-08",
+      "titel": {
+        "nl": "CRM-toegang + onboarding",
+        "de": "CRM-Zugang + Schulung"
+      },
+      "detail": {
+        "nl": "2 uur onboarding-sessie",
+        "de": "2h Onboarding"
+      },
+      "categorie": "training"
+    }
+  ],
+  "levering": {
+    "nl": "Geleverd binnen 14 dagen na contractondertekening. Inbegrepen in de onboarding-fee, geen extra kosten.",
+    "de": "Lieferung innerhalb von 14 Tagen nach Vertragsunterzeichnung. Enthalten in der Onboarding-Gebühr, keine zusätzlichen Kosten."
+  }
+}
