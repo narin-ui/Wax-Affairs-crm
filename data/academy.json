@@ -1331,7 +1331,7 @@
       "id": "academy",
       "titel": "Academy",
       "type": "academy",
-      "beschrijving": "Het complete Wax Affairs certificeringsprogramma. Intensieve in-person training over meerdere weken. Vereist ervaring met waxen. Na afronding ben je klaar om als franchise partner te starten.",
+      "beschrijving": "Het complete Wax Affairs certificeringsprogramma — 10 dagen intensieve praktijktraining op locatie in Wiesbaden, gegeven door Simone Costa. Wax-type per huidtype, techniek, temperatuur, timing. Voor- en nabehandeling met de WAX AFFAIRS productlijn. Praktijkexamen + officieel certificaat. Na de opleiding: doorlopende coaching met maandelijkse video-feedback, 2 advanced workshops per jaar in Wiesbaden, en toegang tot de WhatsApp-techniekgroep — levenslang.",
       "prijsRange": "€3.000 - €4.000",
       "icoon": "🏆",
       "kleur": "wax",
@@ -2446,8 +2446,54 @@
           ],
           "titel_de": "Business & Franchise Operations"
         }
-      ]
+      ],
+      "beschrijving_de": "Das komplette WAX AFFAIRS Zertifizierungsprogramm — 10 Tage intensive Vor-Ort-Schulung in Wiesbaden, geleitet von Simone Costa. Wachstyp pro Hauttyp, Technik, Temperatur, Timing. Vor- und Nachbehandlung mit der WAX AFFAIRS Produktlinie. Praxisprüfung und offizielles WAX AFFAIRS Zertifikat. Nach der Ausbildung: laufendes Coaching mit monatlichem Video-Feedback, 2 Advanced-Workshops pro Jahr in Wiesbaden und Zugang zur WhatsApp-Techniker-Gruppe — lebenslang.",
+      "inhouden": [
+        {
+          "nl": "10 dagen intensieve praktijktraining in Wiesbaden",
+          "de": "10 Tage intensive Vor-Ort-Schulung in Wiesbaden"
+        },
+        {
+          "nl": "Wax-type per huidtype, techniek, temperatuur, timing",
+          "de": "Wachstyp pro Hauttyp, Technik, Temperatur, Timing"
+        },
+        {
+          "nl": "Voor- en nabehandeling met de WAX AFFAIRS productlijn",
+          "de": "Vorbehandlung und Nachsorge mit der WAX AFFAIRS Produktlinie"
+        },
+        {
+          "nl": "Praktijkexamen en officieel WAX AFFAIRS certificaat",
+          "de": "Praxisprüfung und offizielles WAX AFFAIRS Zertifikat"
+        },
+        {
+          "nl": "Doorlopende coaching bij kwaliteitsvragen",
+          "de": "Laufendes Coaching bei Qualitätsfragen"
+        },
+        {
+          "nl": "3 opfris-sessies per jaar — levenslang",
+          "de": "3 Auffrisch-Sessions pro Jahr — lebenslang"
+        }
+      ],
+      "coachingItems": [
+        {
+          "nl": "Maandelijkse video-call met techniek-feedback",
+          "de": "Monatlicher Video-Call mit Technik-Feedback"
+        },
+        {
+          "nl": "2 advanced-workshops per jaar in Wiesbaden",
+          "de": "2 Advanced-Workshops pro Jahr in Wiesbaden"
+        },
+        {
+          "nl": "WhatsApp-groep voor acute techniek-vragen",
+          "de": "WhatsApp-Gruppe für akute Technik-Fragen"
+        }
+      ],
+      "leadTrainer": "Simone Costa",
+      "cadens": {
+        "nl": "Wekelijks maand 1–3, daarna maandelijks",
+        "de": "Wöchentlich Monate 1–3, dann monatlich"
+      }
     }
   ],
   "voortgang": {}
-}
+            }
