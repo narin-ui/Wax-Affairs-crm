@@ -7,6 +7,116 @@
     "whatsapp": "https://wa.me/491715643076",
     "openingstijden": "Ma-Vr 9:00-19:00, Za 9:00-15:00",
     "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "opgericht": 2013,
+    "kabines": 1,
+    "teamGrootte": 1,
+    "omzetJaar": 90000,
+    "auslastung": 80,
+    "averageTicket": 37,
+    "rol": {
+      "nl": "Solo-bewijs",
+      "de": "Solo-Beweis"
+    },
+    "tags": {
+      "nl": [
+        "Solo-bedrijf",
+        "Kleinstad-model",
+        "2 behandelingen/uur"
+      ],
+      "de": [
+        "Solo-Betrieb",
+        "Kleinstadt-Modell",
+        "2 Behandlungen/Stunde"
+      ]
+    },
+    "beschrijving": {
+      "nl": "Bewijs dat het Wax Affairs-model óók als solo-studio werkt. Eén cabine, één waxer, 6 effectieve uren per dag — en tot 2 behandelingen per uur dankzij het READY-protocol. Resultaat: ~€90.000 jaaromzet bij een gemiddeld ticket van €37.",
+      "de": "Beweis, dass das Wax-Affairs-Modell auch als Solo-Studio funktioniert. Eine Kabine, eine Waxerin, 6 effektive Stunden pro Tag — und bis zu 2 Behandlungen pro Stunde dank des READY-Protokolls. Das Ergebnis: ~€90.000 Jahresumsatz bei einem Durchschnittsticket von €37."
+    }
+  },
+  {
+    "id": "studio-wiesbaden",
+    "naam": "Wax Affairs Wiesbaden",
+    "adres": "Wiesbaden",
+    "telefoon": "+491708528346",
+    "whatsapp": "https://wa.me/491708528346",
+    "openingstijden": "Ma-Vr 9:00-19:00, Za 9:00-15:00",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "opgericht": 2012,
+    "kabines": 2,
+    "teamGrootte": 2,
+    "omzetJaar": 110000,
+    "auslastung": null,
+    "averageTicket": null,
+    "rol": {
+      "nl": "Opleidingslocatie",
+      "de": "Schulungsstandort"
+    },
+    "tags": {
+      "nl": [
+        "Centrum-locatie",
+        "Opleidingslocatie",
+        "Stedelijk model"
+      ],
+      "de": [
+        "Innenstadt-Lage",
+        "Schulungsstandort",
+        "Urbanes Modell"
+      ]
+    },
+    "beschrijving": {
+      "nl": "Met Wiesbaden hebben we bewezen dat het model ook in een stedelijke omgeving werkt. Sinds kort is Wiesbaden de officiële opleidingslocatie voor alle nieuwe franchisees — hier vindt de 10-daagse praktijktraining plaats.",
+      "de": "Mit Wiesbaden haben wir gezeigt, dass das Modell in einer urbanen Umgebung funktioniert. Ab sofort ist Wiesbaden der offizielle Schulungsstandort für alle neuen Franchisees — hier findet das 10-tägige Praxistraining statt."
+    }
+  },
+  {
+    "id": "studio-bad-homburg",
+    "naam": "Wax Affairs Bad Homburg",
+    "adres": "Bad Homburg",
+    "telefoon": "+4915124202898",
+    "whatsapp": "https://wa.me/4915124202898",
+    "openingstijden": "Ma-Vr 9:00-19:00, Za 9:00-15:00",
+    "actief": true,
+    "aangemaakt": "2026-04-07T00:00:00.000Z",
+    "opgericht": 2010,
+    "kabines": 2,
+    "teamGrootte": 4,
+    "omzetJaar": 202000,
+    "auslastung": 82,
+    "averageTicket": 42,
+    "stamkundenPct": 85,
+    "rol": {
+      "nl": "Flagship · Simone's eerste studio",
+      "de": "Flagship · Simones erstes Studio"
+    },
+    "tags": {
+      "nl": [
+        "Premium woon-locatie",
+        "85% stamklanten",
+        "Average Ticket €42"
+      ],
+      "de": [
+        "Premium-Wohnlage",
+        "85% Stammkundinnen",
+        "Average Ticket €42"
+      ]
+    },
+    "beschrijving": {
+      "nl": "Simone's eerste studio — hier werd het Wax-Affairs handwerksmodel meer dan een decennium lang geperfectioneerd. Dankzij het READY-protocol vinden tot 2 behandelingen per uur plaats, met een gemiddeld ticket van €42.",
+      "de": "Das erste Studio von Simone — hier wurde das Wax-Affairs-Handwerksmodell über mehr als ein Jahrzehnt perfektioniert. Dank des READY-Protokolls werden bis zu 2 Behandlungen pro Stunde durchgeführt, bei einem Durchschnittsticket von €42."
+    }
+  }
+][
+  {
+    "id": "studio-bad-soden",
+    "naam": "Wax Affairs Bad Soden",
+    "adres": "Bad Soden am Taunus",
+    "telefoon": "+491715643076",
+    "whatsapp": "https://wa.me/491715643076",
+    "openingstijden": "Ma-Vr 9:00-19:00, Za 9:00-15:00",
+    "actief": true,
     "aangemaakt": "2026-04-07T00:00:00.000Z"
   },
   {
