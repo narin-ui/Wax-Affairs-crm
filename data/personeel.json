@@ -3,7 +3,7 @@
     {
       "id": "mw-narin",
       "naam": "Narin Eggink",
-      "functie": "Co-Founder & CEO",
+      "functie": "Co-Founder & COO",
       "categorie": "Directie",
       "uurloon": 0,
       "contractUren": 40,
@@ -16,7 +16,8 @@
     {
       "id": "mw-simone",
       "naam": "Simone Costa",
-      "functie": "Co-Founder & Creative Director",
+      "functie": "CEO · Lead Trainer · Founder",
+      "functie_de": "CEO · Leitende Trainerin · Gründerin",
       "categorie": "Directie",
       "uurloon": 0,
       "contractUren": 40,
@@ -24,7 +25,53 @@
       "status": "actief",
       "email": "",
       "telefoon": "",
-      "notities": ""
+      "notities": "",
+      "herkomst": {
+        "nl": "🇧🇷 Braziliaanse roots · 🇩🇪 Sinds 2004 in Duitsland",
+        "de": "🇧🇷 Brasilianische Wurzeln · 🇩🇪 Seit 2004 in Deutschland"
+      },
+      "bio": {
+        "nl": "Simone kwam in 2004 vanuit Belo Horizonte naar Duitsland met één missie: het hoge niveau van het Braziliaanse waxing-vak naar Europa brengen. In 2010 opende ze haar eerste studio in Bad Homburg — één cabine, één wax-warmer, één principe: nooit concessies aan kwaliteit. Vandaag is ze één van de meest gevraagde waxing-experts in het Duitstalige gebied. Ze ontwikkelde eerst de NAO productlijn — haar eigen aftercare-systeem, geboren uit een leemte in de markt. Daaruit ontstond WAX AFFAIRS: een complete methode, een protocol, een merk.",
+        "de": "Simone kam 2004 aus Belo Horizonte nach Deutschland mit einer klaren Mission: das hohe Niveau des Waxing-Handwerks, das sie in Brasilien kennengelernt hatte, hier aufzubauen. 2010 eröffnete sie ihr erstes Studio in Bad Homburg — eine Kabine, ein Wachswärmer, ein Prinzip: niemals Kompromisse bei Qualität. Heute ist sie eine der gefragtesten Waxing-Expertinnen im deutschsprachigen Raum. Sie entwickelte zunächst die NAO-Produktlinie — ihr erstes eigenes Aftercare-System, entstanden aus dem Bedürfnis heraus, das es auf dem Markt einfach nicht gab. Daraus wurde WAX AFFAIRS: eine vollständige Methode, ein Protokoll, eine Marke."
+      },
+      "quote": {
+        "nl": "Ik leer niet alleen techniek. Ik leer hoe je met je handen een relatie opbouwt met de huid van een vrouw — en hoe je daarvan een leven maakt dat je écht hebt gewenst.",
+        "de": "Ich unterrichte nicht nur Technik. Ich unterrichte, wie man mit den Händen eine Beziehung zur Haut einer Frau aufbaut — und wie man daraus ein Leben macht, das man sich wirklich gewünscht hat."
+      },
+      "expertises": {
+        "nl": [
+          "Braziliaans waxing (alle lichaamsdelen)",
+          "Gezichtswax-specialist (mannen + vrouwen)",
+          "Huidtype-diagnostiek (Fitzpatrick I-VI)",
+          "Productformulering (WAX AFFAIRS productlijn)",
+          "Op- en bijscholing van waxers",
+          "Kwaliteitscontrole en salon-standaarden"
+        ],
+        "de": [
+          "Brasilianisches Waxing (alle Körperbereiche)",
+          "Gesichtswax-Spezialistin (Männer + Frauen)",
+          "Hauttyp-Diagnostik (Fitzpatrick I-VI)",
+          "Produktformulierung (WAX AFFAIRS Linie)",
+          "Aus- und Weiterbildung von Waxerinnen",
+          "Qualitätskontrolle und Salon-Standards"
+        ]
+      },
+      "learningOutcomes": {
+        "nl": [
+          "Elke waxing-techniek veilig en precies uitvoeren — ook onder tijdsdruk",
+          "Wax en temperatuur correct kiezen voor elk Fitzpatrick-type",
+          "Een professioneel intakegesprek voeren dat vertrouwen schept",
+          "Huidreacties vroeg herkennen — en weten hoe je reageert",
+          "Het READY-protocol van WAX AFFAIRS volledig toepassen"
+        ],
+        "de": [
+          "Jede Waxing-Technik sicher und präzise ausführen — auch unter Zeitdruck",
+          "Wachs und Temperatur für jeden Fitzpatrick-Typ richtig wählen",
+          "Ein professionelles Erstgespräch führen, das Vertrauen schafft",
+          "Hautreaktionen früh erkennen — und wissen, wie man reagiert",
+          "Das READY-Protokoll von WAX AFFAIRS vollständig anwenden"
+        ]
+      }
     },
     {
       "id": "mw-1",
